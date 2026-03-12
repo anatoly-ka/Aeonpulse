@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Aeonpulse.Views.RefreshingPopup"
+             BackgroundColor="#80000000"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Content>
+        <Grid VerticalOptions="Center"
+              HorizontalOptions="Center"
+              Margin="24,0">
+
+            <Frame BackgroundColor="{StaticResource CardBackground}"
+                   CornerRadius="16"
+                   Padding="32"
+                   HasShadow="True"
+                   BorderColor="{StaticResource CyberPurple}">
+
+                <VerticalStackLayout Spacing="16"
+                                     HorizontalOptions="Center">
+
+                    <!-- Spinner -->
+                    <ActivityIndicator IsRunning="True"
+                                       Color="{StaticResource CyberCyan}"
+                                       WidthRequest="40"
+                                       HeightRequest="40"
+                                       HorizontalOptions="Center" />
+
+                    <!-- Message -->
+                    <Label Text="Refreshing..."
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{StaticResource CyberCyan}" />
+
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

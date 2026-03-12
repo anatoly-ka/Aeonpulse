@@ -1,0 +1,700 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Aeonpulse.ViewModels"
+             xmlns:converters="clr-namespace:Aeonpulse.Converters"
+             x:Class="Aeonpulse.Views.MainPage"
+             BackgroundColor="{StaticResource SpaceDarker}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+            <converters:InverseBoolConverter x:Key="InverseBool" />
+            <converters:BoolToImageSourceConverter x:Key="BoolToImageSource" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.BindingContext>
+        <viewmodels:MainViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto,Auto,*" MinimumWidthRequest="393" MinimumHeightRequest="852">
+        
+        <!-- Top Navigation Bar -->
+        <Border Grid.Row="0"
+                x:Name="NavBar"
+                BackgroundColor="{StaticResource SpaceDark}"
+                Padding="16,12">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <!-- Left Section -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="12">
+                    <!-- Logo -->
+                    <Image Source="aeonpulse.png" 
+                           WidthRequest="24" 
+                           HeightRequest="24">
+                    </Image>
+
+                    <!-- Aeonpulse Text -->
+                    <Label Text="AeonPulse" 
+                           FontSize="24" 
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource CyberCyan}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLogoTapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+
+                <!-- Menu Button -->
+                <Button Grid.Column="2"
+                        Text="☰"
+                        FontSize="24"
+                        TextColor="{StaticResource CyberCyan}"
+                        BackgroundColor="Transparent"
+                        WidthRequest="48"
+                        HeightRequest="48"
+                        Clicked="OnMenuClicked" />
+            </Grid>
+        </Border>
+
+        <!-- Timeline Heading -->
+        <Border Grid.Row="1"
+                x:Name="TimelineHeading"
+                Padding="16,12"
+                BackgroundColor="{StaticResource SpaceDarker}">
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                <HorizontalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnTimelineHeadingTapped" />
+                </HorizontalStackLayout.GestureRecognizers>
+
+                <Label FontSize="22" TextColor="#E5E5E5" Opacity="0.9" VerticalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding BaseDateName}" 
+                                  FontAttributes="Bold" 
+                                  TextColor="White" />
+                            <Span Text=" on " />
+                            <Span Text="{Binding BaseDateValue}" 
+                                  FontAttributes="Bold" 
+                                  TextColor="White" />
+                            <Span Text=":" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </HorizontalStackLayout>
+        </Border>
+
+        <!-- Main Content - Scrollable Ticker Sections -->
+        <ScrollView Grid.Row="2" Padding="16">
+            <VerticalStackLayout Spacing="16">
+                
+                <!-- Lab Section -->
+                <Border Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <!-- Section Header -->
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0" 
+                                   Text="Lab" 
+                                   Style="{StaticResource SubtitleLabel}"
+                                   TextColor="{StaticResource CyberCyan}" 
+                                   VerticalOptions="Center" />
+                            <ImageButton Grid.Column="1"
+                                    Source="{Binding LabExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
+                                    WidthRequest="24"
+                                    HeightRequest="24"
+                                    BackgroundColor="Transparent"
+                                    Command="{Binding ToggleLabCommand}" />
+                        </Grid>
+                        
+                        <!-- Ticker Cards -->
+                        <VerticalStackLayout Spacing="12" IsVisible="{Binding LabExpanded}">
+                            <!-- Time Jubilees -->
+                            <Border BackgroundColor="#121628" 
+                                    StrokeThickness="1"
+                                    Stroke="{StaticResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <Label Grid.Column="0" 
+                                               Text="📅" 
+                                               FontSize="24" 
+                                               VerticalOptions="Center" 
+                                               Margin="0,0,8,0" />
+                                        <Label Grid.Column="1" 
+                                               Text="Time Jubilees" 
+                                               Style="{StaticResource BaseLabel}"
+                                               TextColor="{StaticResource CyberPurple}"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center" />
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <ImageButton
+                                                Source="info.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Clicked="OnTimeJubileesInfoClicked" />
+                                            <ImageButton
+                                                Source="refresh.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding RefreshTimeJubileesCommand}" />
+                                            <ImageButton
+                                                Source="{Binding TimeJubileesExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding ToggleTimeJubileesCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                    
+                                    <Label Text="{Binding TimeJubilees.BriefText}" 
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeMedium}" />
+                                    
+                                    <Label Text="{Binding TimeJubilees.FullText}" 
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeSmall}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding TimeJubileesExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+                            
+                            <!-- Countdown -->
+                            <Border BackgroundColor="#121628" 
+                                    StrokeThickness="1"
+                                    Stroke="{StaticResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <Label Grid.Column="0" 
+                                               Text="⏱️" 
+                                               FontSize="24" 
+                                               VerticalOptions="Center" 
+                                               Margin="0,0,8,0" />
+                                        <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                            <Label Text="Countdown" 
+                                                   Style="{StaticResource BaseLabel}"
+                                                   TextColor="{StaticResource CyberPurple}"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="LIVE" 
+                                                   FontSize="10"
+                                                   TextColor="{StaticResource NeonGreen}"
+                                                   BackgroundColor="#1A3A1A"
+                                                   Padding="4,2"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <ImageButton
+                                                Source="info.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Clicked="OnCountdownInfoClicked" />
+                                            <ImageButton
+                                                Source="{Binding CountdownExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding ToggleCountdownCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                    
+                                    <Label Text="{Binding Countdown.BriefText}" 
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeMedium}" />
+                                    
+                                    <Label Text="{Binding Countdown.FullText}" 
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeSmall}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding CountdownExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+                            
+                            <!-- Life Odometer -->
+                            <Border BackgroundColor="#121628" 
+                                    StrokeThickness="1"
+                                    Stroke="{StaticResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <Label Grid.Column="0" 
+                                               Text="❤️" 
+                                               FontSize="24" 
+                                               VerticalOptions="Center" 
+                                               Margin="0,0,8,0" />
+                                        <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                            <Label Text="Life Odometer" 
+                                                   Style="{StaticResource BaseLabel}"
+                                                   TextColor="{StaticResource CyberPurple}"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="LIVE" 
+                                                   FontSize="10"
+                                                   TextColor="{StaticResource NeonGreen}"
+                                                   BackgroundColor="#1A3A1A"
+                                                   Padding="4,2"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <ImageButton
+                                                Source="info.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Clicked="OnLifeOdometerInfoClicked" />
+                                            <ImageButton
+                                                Source="{Binding LifeOdometerExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding ToggleLifeOdometerCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                    
+                                    <Label Text="{Binding LifeOdometer.BriefText}" 
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeMedium}" />
+                                    
+                                    <Label Text="{Binding LifeOdometer.FullText}" 
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeSmall}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding LifeOdometerExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Cosmos Section -->
+                <Border Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <!-- Section Header -->
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0" 
+                                   Text="Cosmos" 
+                                   Style="{StaticResource SubtitleLabel}"
+                                   TextColor="{StaticResource CyberCyan}" 
+                                   VerticalOptions="Center" />
+                            <ImageButton Grid.Column="1"
+                                    Source="{Binding CosmosExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
+                                    WidthRequest="24"
+                                    HeightRequest="24"
+                                    BackgroundColor="Transparent"
+                                    Command="{Binding ToggleCosmosCommand}" />
+                        </Grid>
+
+                        <!-- Ticker Cards -->
+                        <VerticalStackLayout Spacing="12" IsVisible="{Binding CosmosExpanded}">
+                            <!-- Alien Anniversaries -->
+                            <Border BackgroundColor="#121628"
+                                    StrokeThickness="1"
+                                    Stroke="{StaticResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="👽"
+                                               FontSize="24"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <Label Grid.Column="1"
+                                               Text="Alien Anniversaries"
+                                               Style="{StaticResource BaseLabel}"
+                                               TextColor="{StaticResource CyberPurple}"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center" />
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <ImageButton
+                                                Source="info.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Clicked="OnAlienAnniversariesInfoClicked" />
+                                            <ImageButton
+                                                Source="refresh.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding RefreshAlienAnniversariesCommand}" />
+                                            <ImageButton
+                                                Source="{Binding AlienAnniversariesExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding ToggleAlienAnniversariesCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <Label Text="{Binding AlienAnniversaries.BriefText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeMedium}" />
+
+                                    <Label Text="{Binding AlienAnniversaries.FullText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeSmall}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding AlienAnniversariesExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- Galactic Commute -->
+                            <Border BackgroundColor="#121628"
+                                    StrokeThickness="1"
+                                    Stroke="{StaticResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="🚀"
+                                               FontSize="24"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                            <Label Text="Galactic Commute"
+                                                   Style="{StaticResource BaseLabel}"
+                                                   TextColor="{StaticResource CyberPurple}"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="LIVE"
+                                                   FontSize="10"
+                                                   TextColor="{StaticResource NeonGreen}"
+                                                   BackgroundColor="#1A3A1A"
+                                                   Padding="4,2"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <ImageButton
+                                                Source="info.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Clicked="OnGalacticCommuteInfoClicked" />
+                                            <ImageButton
+                                                Source="{Binding GalacticCommuteExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding ToggleGalacticCommuteCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <Label Text="{Binding GalacticCommute.BriefText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeMedium}" />
+
+                                    <Label Text="{Binding GalacticCommute.FullText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeSmall}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding GalacticCommuteExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- Photon Path -->
+                            <Border BackgroundColor="#121628"
+                                    StrokeThickness="1"
+                                    Stroke="{StaticResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="💡"
+                                               FontSize="24"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                            <Label Text="Photon Path"
+                                                   Style="{StaticResource BaseLabel}"
+                                                   TextColor="{StaticResource CyberPurple}"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="LIVE"
+                                                   FontSize="10"
+                                                   TextColor="{StaticResource NeonGreen}"
+                                                   BackgroundColor="#1A3A1A"
+                                                   Padding="4,2"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <ImageButton
+                                                Source="info.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Clicked="OnPhotonPathInfoClicked" />
+                                            <ImageButton
+                                                Source="{Binding PhotonPathExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding TogglePhotonPathCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <Label Text="{Binding PhotonPath.BriefText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeMedium}" />
+
+                                    <Label Text="{Binding PhotonPath.FullText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeSmall}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding PhotonPathExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Mirror Section -->
+                <Border Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <!-- Section Header -->
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Text="Mirror"
+                                   Style="{StaticResource SubtitleLabel}"
+                                   TextColor="{StaticResource CyberCyan}"
+                                   VerticalOptions="Center" />
+                            <ImageButton Grid.Column="1"
+                                    Source="{Binding MirrorExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
+                                    WidthRequest="24"
+                                    HeightRequest="24"
+                                    BackgroundColor="Transparent"
+                                    Command="{Binding ToggleMirrorCommand}" />
+                        </Grid>
+
+                        <!-- Ticker Cards -->
+                        <VerticalStackLayout Spacing="12" IsVisible="{Binding MirrorExpanded}">
+                            <!-- Human Birth Rank -->
+                            <Border BackgroundColor="#121628"
+                                    StrokeThickness="1"
+                                    Stroke="{StaticResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="🏅"
+                                               FontSize="24"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <Label Grid.Column="1"
+                                               Text="Human Birth Rank"
+                                               Style="{StaticResource BaseLabel}"
+                                               TextColor="{StaticResource CyberPurple}"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center" />
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <ImageButton
+                                                Source="info.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Clicked="OnHumanBirthRankInfoClicked" />
+                                            <ImageButton
+                                                Source="{Binding HumanBirthRankExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding ToggleHumanBirthRankCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <Label Text="{Binding HumanBirthRank.BriefText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeMedium}" />
+
+                                    <Label Text="{Binding HumanBirthRank.FullText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeSmall}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding HumanBirthRankExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- Birth Rune -->
+                            <Border BackgroundColor="#121628"
+                                    StrokeThickness="1"
+                                    Stroke="{StaticResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="🔮"
+                                               FontSize="24"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <Label Grid.Column="1"
+                                               Text="Birth Rune"
+                                               Style="{StaticResource BaseLabel}"
+                                               TextColor="{StaticResource CyberPurple}"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center" />
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <ImageButton
+                                                Source="info.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Clicked="OnBirthRuneInfoClicked" />
+                                            <ImageButton
+                                                Source="{Binding BirthRuneExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding ToggleBirthRuneCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <Label Text="{Binding BirthRune.BriefText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeMedium}" />
+
+                                    <Label Text="{Binding BirthRune.FullText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeSmall}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding BirthRuneExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- Personal Year -->
+                            <Border BackgroundColor="#121628"
+                                    StrokeThickness="1"
+                                    Stroke="{StaticResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="🗓️"
+                                               FontSize="24"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <Label Grid.Column="1"
+                                               Text="Personal Year"
+                                               Style="{StaticResource BaseLabel}"
+                                               TextColor="{StaticResource CyberPurple}"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center" />
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <ImageButton
+                                                Source="info.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Clicked="OnPersonalYearInfoClicked" />
+                                            <ImageButton
+                                                Source="{Binding PersonalYearExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding TogglePersonalYearCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <Label Text="{Binding PersonalYear.BriefText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeMedium}" />
+
+                                    <Label Text="{Binding PersonalYear.FullText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeSmall}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding PersonalYearExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Eco-Echoes Section -->
+                <Border Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+                        <!-- Section Header -->
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Text="Eco-Echoes"
+                                   Style="{StaticResource SubtitleLabel}"
+                                   TextColor="{StaticResource CyberCyan}"
+                                   VerticalOptions="Center" />
+                            <ImageButton Grid.Column="1"
+                                    Source="{Binding EcoExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
+                                    WidthRequest="24"
+                                    HeightRequest="24"
+                                    BackgroundColor="Transparent"
+                                    Command="{Binding ToggleEcoCommand}" />
+                        </Grid>
+
+                        <!-- Ticker Cards -->
+                        <VerticalStackLayout Spacing="12" IsVisible="{Binding EcoExpanded}">
+                            <!-- Global Exhale -->
+                            <Border BackgroundColor="#121628"
+                                    StrokeThickness="1"
+                                    Stroke="{StaticResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="🌿"
+                                               FontSize="24"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <Label Grid.Column="1"
+                                               Text="Global Exhale"
+                                               Style="{StaticResource BaseLabel}"
+                                               TextColor="{StaticResource CyberPurple}"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center" />
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <ImageButton
+                                                Source="info.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Clicked="OnGlobalExhaleInfoClicked" />
+                                            <ImageButton
+                                                Source="refresh.png"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding RefreshGlobalExhaleCommand}" />
+                                            <ImageButton
+                                                Source="{Binding GlobalExhaleExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding ToggleGlobalExhaleCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <Label Text="{Binding GlobalExhale.BriefText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeMedium}" />
+
+                                    <Label Text="{Binding GlobalExhale.FullText}"
+                                           TextColor="{StaticResource TextGray}"
+                                           FontSize="{StaticResource FontSizeSmall}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding GlobalExhaleExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

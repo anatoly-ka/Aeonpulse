@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Aeonpulse.Views.ChangeDatePopup"
+             BackgroundColor="#80000000"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Content>
+        <Grid VerticalOptions="Center"
+              HorizontalOptions="Center"
+              Margin="24,0">
+
+            <Frame BackgroundColor="{StaticResource CardBackground}"
+                   CornerRadius="16"
+                   Padding="24"
+                   HasShadow="True"
+                   BorderColor="{StaticResource CyberPurple}">
+
+                <VerticalStackLayout Spacing="16">
+
+                    <!-- Title -->
+                    <Label Text="Change Date"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{StaticResource CyberCyan}" />
+
+                    <!-- Descriptive text -->
+                    <Label Text="Track metrics from any significant life event - your birthday, graduation, wedding, or any milestone that matters to you."
+                           FontSize="13"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           TextColor="{StaticResource TextGray}" />
+
+                    <!-- Divider -->
+                    <BoxView HeightRequest="1"
+                             Color="{StaticResource CyberPurple}"
+                             Opacity="0.4"
+                             HorizontalOptions="Fill" />
+
+                    <!-- Event Name -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Event Name"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource CyberPurple}" />
+                        <Frame Padding="10,8"
+                               CornerRadius="8"
+                               BorderColor="{StaticResource CyberPurple}"
+                               BackgroundColor="{StaticResource SpaceDark}"
+                               HasShadow="False">
+                            <Entry x:Name="EventNameEntry"
+                                   Placeholder="e.g. My Birthday"
+                                   PlaceholderColor="{StaticResource TextGray}"
+                                   TextColor="{StaticResource TextWhite}"
+                                   BackgroundColor="Transparent"
+                                   FontSize="15"
+                                   ReturnType="Next" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Date -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Date"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource CyberPurple}" />
+                        <Frame Padding="10,4"
+                               CornerRadius="8"
+                               BorderColor="{StaticResource CyberPurple}"
+                               BackgroundColor="{StaticResource SpaceDark}"
+                               HasShadow="False">
+                            <DatePicker x:Name="EventDatePicker"
+                                        TextColor="{StaticResource TextWhite}"
+                                        BackgroundColor="Transparent"
+                                        FontSize="15"
+                                        Format="yyyy-MM-dd"
+                                        HorizontalOptions="Fill" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Divider -->
+                    <BoxView HeightRequest="1"
+                             Color="{StaticResource CyberPurple}"
+                             Opacity="0.4"
+                             HorizontalOptions="Fill" />
+
+                    <!-- Buttons -->
+                    <Grid ColumnDefinitions="*,12,*"
+                          HorizontalOptions="Fill">
+
+                        <Button Grid.Column="0"
+                                x:Name="CloseButton"
+                                Text="Close"
+                                Clicked="OnCloseClicked"
+                                BackgroundColor="{StaticResource SpaceDark}"
+                                TextColor="{StaticResource TextGray}"
+                                CornerRadius="8"
+                                FontSize="15"
+                                HeightRequest="44"
+                                BorderColor="{StaticResource CyberPurple}"
+                                BorderWidth="1" />
+
+                        <Button Grid.Column="2"
+                                x:Name="OkButton"
+                                Text="OK"
+                                Clicked="OnOkClicked"
+                                BackgroundColor="{StaticResource CyberPurple}"
+                                TextColor="{StaticResource SpaceDarker}"
+                                CornerRadius="8"
+                                FontSize="15"
+                                FontAttributes="Bold"
+                                HeightRequest="44" />
+
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

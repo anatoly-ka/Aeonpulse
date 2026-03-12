@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Aeonpulse.Views.DeepDivePopup"
+             BackgroundColor="#80000000"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Content>
+        <!-- Single grid filling the page; the Frame's top margin is set in code-behind
+             to align its top edge with the bottom of the Timeline Heading. -->
+        <Grid HorizontalOptions="Fill"
+              VerticalOptions="Fill"
+              x:Name="PopupContainer">
+
+            <!-- Transparent tap-to-dismiss background -->
+            <BoxView Color="Transparent"
+                     InputTransparent="False">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCloseClicked" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <!-- Popup panel: top margin is applied in code-behind to align with Timeline Heading -->
+            <Frame x:Name="PopupFrame"
+                   BackgroundColor="{StaticResource CardBackground}"
+                   CornerRadius="16"
+                   Padding="0"
+                   HasShadow="True"
+                   BorderColor="{StaticResource CyberPurple}"
+                   Margin="24,0,24,24"
+                   VerticalOptions="Fill">
+
+                <Grid RowDefinitions="Auto,*,Auto">
+
+                    <!-- Non-scrollable heading -->
+                    <VerticalStackLayout Grid.Row="0" Spacing="0" Padding="24,20,24,0">
+                        <Label x:Name="TitleLabel"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource CyberCyan}" />
+
+                        <BoxView HeightRequest="1"
+                                 Color="{StaticResource CyberPurple}"
+                                 Opacity="0.4"
+                                 HorizontalOptions="Fill"
+                                 Margin="0,16,0,0" />
+                    </VerticalStackLayout>
+
+                    <!-- Scrollable content -->
+                    <ScrollView Grid.Row="1" Padding="24,16">
+                        <VerticalStackLayout Spacing="16">
+
+                            <!-- Section 1: The Methodology -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label x:Name="Section1TitleLabel"
+                                       FontSize="13"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource CyberPurple}" />
+                                <Label x:Name="Section1TextLabel"
+                                       FontSize="13"
+                                       TextColor="{StaticResource TextGray}"
+                                       LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+
+                            <!-- Divider -->
+                            <BoxView HeightRequest="1"
+                                     Color="{StaticResource CyberPurple}"
+                                     Opacity="0.4"
+                                     HorizontalOptions="Fill" />
+
+                            <!-- Section 2: Data Sources & Attribution -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label x:Name="Section2TitleLabel"
+                                       FontSize="13"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource CyberPurple}" />
+                                <Label x:Name="Section2TextLabel"
+                                       FontSize="13"
+                                       TextColor="{StaticResource TextGray}"
+                                       LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <!-- Non-scrollable footer -->
+                    <VerticalStackLayout Grid.Row="2" Padding="24,0,24,20" Spacing="0">
+                        <BoxView HeightRequest="1"
+                                 Color="{StaticResource CyberPurple}"
+                                 Opacity="0.4"
+                                 HorizontalOptions="Fill"
+                                 Margin="0,0,0,16" />
+                        <Button Text="Close"
+                                Clicked="OnCloseClicked"
+                                HorizontalOptions="Center"
+                                WidthRequest="160"
+                                BackgroundColor="{StaticResource SpaceDark}"
+                                TextColor="{StaticResource TextGray}"
+                                CornerRadius="8"
+                                FontSize="15"
+                                HeightRequest="44"
+                                BorderColor="{StaticResource CyberPurple}"
+                                BorderWidth="1" />
+                    </VerticalStackLayout>
+
+                </Grid>
+            </Frame>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
