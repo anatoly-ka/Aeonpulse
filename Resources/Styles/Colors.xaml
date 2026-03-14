@@ -10,9 +10,12 @@
     <Color x:Key="CyberPurple">#BD93F9</Color>
     <Color x:Key="CyberPink">#FF79C6</Color>
     <Color x:Key="NeonGreen">#50FA7B</Color>
+    <Color x:Key="NeonGreenDark">#1A3A1A</Color>
     <Color x:Key="TextWhite">#FFFFFF</Color>
+    <Color x:Key="TextDim">#E5E5E5</Color>
     <Color x:Key="TextGray">#B0B0B0</Color>
     <Color x:Key="CardBackground">#1A1F3A</Color>
+    <Color x:Key="CardDark">#121628</Color>
     
     <!-- Opacity Values -->
     <x:Double x:Key="Opacity90">0.9</x:Double>

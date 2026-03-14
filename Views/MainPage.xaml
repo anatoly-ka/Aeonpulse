@@ -68,16 +68,16 @@
                     <TapGestureRecognizer Tapped="OnTimelineHeadingTapped" />
                 </HorizontalStackLayout.GestureRecognizers>
 
-                <Label FontSize="{StaticResource FontSizeTitle}" TextColor="#E5E5E5" Opacity="0.9" VerticalOptions="Center">
+                <Label FontSize="{StaticResource FontSizeTitle}" TextColor="{StaticResource TextDim}" Opacity="0.9" VerticalOptions="Center">
                     <Label.FormattedText>
                         <FormattedString>
                             <Span Text="{Binding BaseDateName}" 
                                   FontAttributes="Bold" 
-                                  TextColor="White" />
+                                  TextColor="{StaticResource TextWhite}" />
                             <Span Text=" on " />
                             <Span Text="{Binding BaseDateValue}" 
                                   FontAttributes="Bold" 
-                                  TextColor="White" />
+                                  TextColor="{StaticResource TextWhite}" />
                             <Span Text=":" />
                         </FormattedString>
                     </Label.FormattedText>
@@ -110,7 +110,7 @@
                         <!-- Ticker Cards -->
                         <VerticalStackLayout Spacing="12" IsVisible="{Binding LabExpanded}">
                             <!-- Time Jubilees -->
-                            <Border BackgroundColor="#121628" 
+                            <Border BackgroundColor="{StaticResource CardDark}" 
                                     StrokeThickness="1"
                                     Stroke="{StaticResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -163,7 +163,7 @@
                             </Border>
                             
                             <!-- Countdown -->
-                            <Border BackgroundColor="#121628" 
+                            <Border BackgroundColor="{StaticResource CardDark}" 
                                     StrokeThickness="1"
                                     Stroke="{StaticResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -183,7 +183,7 @@
                                             <Label Text="LIVE" 
                                                    FontSize="{StaticResource FontSizeSmall}"
                                                    TextColor="{StaticResource NeonGreen}"
-                                                   BackgroundColor="#1A3A1A"
+                                                   BackgroundColor="{StaticResource NeonGreenDark}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -216,7 +216,7 @@
                             </Border>
                             
                             <!-- Life Odometer -->
-                            <Border BackgroundColor="#121628" 
+                            <Border BackgroundColor="{StaticResource CardDark}" 
                                     StrokeThickness="1"
                                     Stroke="{StaticResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -236,7 +236,7 @@
                                             <Label Text="LIVE" 
                                                    FontSize="{StaticResource FontSizeSmall}"
                                                    TextColor="{StaticResource NeonGreen}"
-                                                   BackgroundColor="#1A3A1A"
+                                                   BackgroundColor="{StaticResource NeonGreenDark}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -292,7 +292,7 @@
                         <!-- Ticker Cards -->
                         <VerticalStackLayout Spacing="12" IsVisible="{Binding CosmosExpanded}">
                             <!-- Alien Anniversaries -->
-                            <Border BackgroundColor="#121628"
+                            <Border BackgroundColor="{StaticResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{StaticResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -345,7 +345,7 @@
                             </Border>
 
                             <!-- Galactic Commute -->
-                            <Border BackgroundColor="#121628"
+                            <Border BackgroundColor="{StaticResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{StaticResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -365,7 +365,7 @@
                                             <Label Text="LIVE"
                                                    FontSize="{StaticResource FontSizeSmall}"
                                                    TextColor="{StaticResource NeonGreen}"
-                                                   BackgroundColor="#1A3A1A"
+                                                   BackgroundColor="{StaticResource NeonGreenDark}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -398,7 +398,7 @@
                             </Border>
 
                             <!-- Photon Path -->
-                            <Border BackgroundColor="#121628"
+                            <Border BackgroundColor="{StaticResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{StaticResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -418,7 +418,7 @@
                                             <Label Text="LIVE"
                                                    FontSize="{StaticResource FontSizeSmall}"
                                                    TextColor="{StaticResource NeonGreen}"
-                                                   BackgroundColor="#1A3A1A"
+                                                   BackgroundColor="{StaticResource NeonGreenDark}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -474,7 +474,7 @@
                         <!-- Ticker Cards -->
                         <VerticalStackLayout Spacing="12" IsVisible="{Binding MirrorExpanded}">
                             <!-- Human Birth Rank -->
-                            <Border BackgroundColor="#121628"
+                            <Border BackgroundColor="{StaticResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{StaticResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -521,7 +521,7 @@
                             </Border>
 
                             <!-- Birth Rune -->
-                            <Border BackgroundColor="#121628"
+                            <Border BackgroundColor="{StaticResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{StaticResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -568,7 +568,7 @@
                             </Border>
 
                             <!-- Personal Year -->
-                            <Border BackgroundColor="#121628"
+                            <Border BackgroundColor="{StaticResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{StaticResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -638,7 +638,7 @@
                         <!-- Ticker Cards -->
                         <VerticalStackLayout Spacing="12" IsVisible="{Binding EcoExpanded}">
                             <!-- Global Exhale -->
-                            <Border BackgroundColor="#121628"
+                            <Border BackgroundColor="{StaticResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{StaticResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
