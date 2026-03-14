@@ -1,8 +1,8 @@
+using Aeonpulse.Models; // Add this line if TickerData is in the Models namespace
+using Aeonpulse.Services;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using Aeonpulse.Models;
-using Aeonpulse.Services;
 
 namespace Aeonpulse.ViewModels
 {
@@ -39,6 +39,23 @@ namespace Aeonpulse.ViewModels
         {
             get => _useMetric;
             set { _useMetric = value; OnPropertyChanged(); UpdateAllCalculations(); }
+        }
+
+        private string _colorScheme = ThemeService.DefaultDark;
+        public string ColorScheme
+        {
+            get => _colorScheme;
+            set
+            {
+                if (_colorScheme == value)
+                    return;
+                _colorScheme = value;
+                OnPropertyChanged();
+                // Apply the scheme immediately so every DynamicResource binding updates
+                ThemeService.Instance.ApplyScheme(_colorScheme);
+                // Persist the user's choice across app restarts
+                Preferences.Default.Set("ColorScheme", _colorScheme);
+            }
         }
 
         // Subsection Expanded States
@@ -258,6 +275,11 @@ namespace Aeonpulse.ViewModels
         public MainViewModel()
         {
             _calculationService = new CalculationService();
+
+            // Restore persisted colour scheme (defaults to DefaultDark on first run)
+            var savedScheme = Preferences.Default.Get("ColorScheme", ThemeService.DefaultDark);
+            _colorScheme = savedScheme;
+            ThemeService.Instance.ApplyScheme(_colorScheme);
 
             // Initialize section commands
             ToggleLabCommand = new Command(() => LabExpanded = !LabExpanded);

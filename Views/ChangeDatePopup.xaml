@@ -10,11 +10,11 @@
               HorizontalOptions="Center"
               Margin="24,0">
 
-            <Frame BackgroundColor="{StaticResource CardBackground}"
+            <Frame BackgroundColor="{DynamicResource CardBackground}"
                    CornerRadius="16"
                    Padding="24"
                    HasShadow="True"
-                   BorderColor="{StaticResource CyberPurple}">
+                   BorderColor="{DynamicResource CyberPurple}">
 
                 <VerticalStackLayout Spacing="16">
 
@@ -23,18 +23,18 @@
                            FontSize="{StaticResource FontSizeTitle}"
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
-                           TextColor="{StaticResource CyberCyan}" />
+                           TextColor="{DynamicResource CyberCyan}" />
 
                     <!-- Descriptive text -->
                     <Label Text="Track metrics from any significant life event - your birthday, graduation, wedding, or any milestone that matters to you."
                            FontSize="{StaticResource FontSizeMedium}"
                            HorizontalOptions="Center"
                            HorizontalTextAlignment="Center"
-                           TextColor="{StaticResource TextGray}" />
+                           TextColor="{DynamicResource TextGray}" />
 
                     <!-- Divider -->
                     <BoxView HeightRequest="1"
-                             Color="{StaticResource CyberPurple}"
+                             Color="{DynamicResource CyberPurple}"
                              Opacity="0.4"
                              HorizontalOptions="Fill" />
 
@@ -43,16 +43,16 @@
                         <Label Text="Event Name"
                                FontSize="{StaticResource FontSizeMedium}"
                                FontAttributes="Bold"
-                               TextColor="{StaticResource CyberPurple}" />
+                               TextColor="{DynamicResource CyberPurple}" />
                         <Frame Padding="10,8"
                                CornerRadius="8"
-                               BorderColor="{StaticResource CyberPurple}"
-                               BackgroundColor="{StaticResource SpaceDark}"
+                               BorderColor="{DynamicResource CyberPurple}"
+                               BackgroundColor="{DynamicResource SpaceDark}"
                                HasShadow="False">
                             <Entry x:Name="EventNameEntry"
                                    Placeholder="e.g. My Birthday"
-                                   PlaceholderColor="{StaticResource TextGray}"
-                                   TextColor="{StaticResource TextWhite}"
+                                   PlaceholderColor="{DynamicResource TextGray}"
+                                   TextColor="{DynamicResource TextWhite}"
                                    BackgroundColor="Transparent"
                                    FontSize="{StaticResource FontSizeLarge}"
                                    ReturnType="Next" />
@@ -64,14 +64,14 @@
                         <Label Text="Date"
                                FontSize="{StaticResource FontSizeMedium}"
                                FontAttributes="Bold"
-                               TextColor="{StaticResource CyberPurple}" />
+                               TextColor="{DynamicResource CyberPurple}" />
                         <Frame Padding="10,4"
                                CornerRadius="8"
-                               BorderColor="{StaticResource CyberPurple}"
-                               BackgroundColor="{StaticResource SpaceDark}"
+                               BorderColor="{DynamicResource CyberPurple}"
+                               BackgroundColor="{DynamicResource SpaceDark}"
                                HasShadow="False">
                             <DatePicker x:Name="EventDatePicker"
-                                        TextColor="{StaticResource TextWhite}"
+                                        TextColor="{DynamicResource TextWhite}"
                                         BackgroundColor="Transparent"
                                         FontSize="{StaticResource FontSizeLarge}"
                                         Format="yyyy-MM-dd"
@@ -81,7 +81,7 @@
 
                     <!-- Divider -->
                     <BoxView HeightRequest="1"
-                             Color="{StaticResource CyberPurple}"
+                             Color="{DynamicResource CyberPurple}"
                              Opacity="0.4"
                              HorizontalOptions="Fill" />
 
@@ -93,20 +93,20 @@
                                 x:Name="CloseButton"
                                 Text="Close"
                                 Clicked="OnCloseClicked"
-                                BackgroundColor="{StaticResource SpaceDark}"
-                                TextColor="{StaticResource TextGray}"
+                                BackgroundColor="{DynamicResource SpaceDark}"
+                                TextColor="{DynamicResource TextGray}"
                                 CornerRadius="8"
                                 FontSize="{StaticResource FontSizeLarge}"
                                 HeightRequest="44"
-                                BorderColor="{StaticResource CyberPurple}"
+                                BorderColor="{DynamicResource CyberPurple}"
                                 BorderWidth="1" />
 
                         <Button Grid.Column="2"
                                 x:Name="OkButton"
                                 Text="OK"
                                 Clicked="OnOkClicked"
-                                BackgroundColor="{StaticResource CyberPurple}"
-                                TextColor="{StaticResource SpaceDarker}"
+                                BackgroundColor="{DynamicResource CyberPurple}"
+                                TextColor="{DynamicResource SpaceDarker}"
                                 CornerRadius="8"
                                 FontSize="{StaticResource FontSizeLarge}"
                                 FontAttributes="Bold"

@@ -3,39 +3,44 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Cyberpunk Color Palette -->
-    <Color x:Key="SpaceDark">#0A0E27</Color>
-    <Color x:Key="SpaceDarker">#060812</Color>
-    <Color x:Key="CyberCyan">#00E5FF</Color>
-    <Color x:Key="CyberPurple">#BD93F9</Color>
-    <Color x:Key="CyberPink">#FF79C6</Color>
-    <Color x:Key="NeonGreen">#50FA7B</Color>
-    <Color x:Key="NeonGreenDark">#1A3A1A</Color>
-    <Color x:Key="TextWhite">#FFFFFF</Color>
-    <Color x:Key="TextDim">#E5E5E5</Color>
-    <Color x:Key="TextGray">#B0B0B0</Color>
-    <Color x:Key="CardBackground">#1A1F3A</Color>
-    <Color x:Key="CardDark">#121628</Color>
-    
+    <!-- ==================================================================
+         DEFAULT DARK — Cyberpunk Color Palette
+         High Contrast Dark equivalents are listed as comments beside each
+         entry. The runtime swap is performed by ThemeService.ApplyScheme().
+         Rule: avg(R,G,B) <= 128 → #000000 (Black), > 128 → #FFFFFF (White)
+    ======================================================================== -->
+    <Color x:Key="SpaceDark">#0A0E27</Color>          <!-- HC: #000000  avg=17  -->
+    <Color x:Key="SpaceDarker">#060812</Color>        <!-- HC: #000000  avg=7   -->
+    <Color x:Key="CyberCyan">#00E5FF</Color>          <!-- HC: #FFFFFF  avg=156 -->
+    <Color x:Key="CyberPurple">#BD93F9</Color>        <!-- HC: #FFFFFF  avg=181 -->
+    <Color x:Key="CyberPink">#FF79C6</Color>          <!-- HC: #FFFFFF  avg=155 -->
+    <Color x:Key="NeonGreen">#50FA7B</Color>          <!-- HC: #FFFFFF  avg=143 -->
+    <Color x:Key="NeonGreenDark">#1A3A1A</Color>      <!-- HC: #000000  avg=29  -->
+    <Color x:Key="TextWhite">#FFFFFF</Color>          <!-- HC: #FFFFFF  avg=255 -->
+    <Color x:Key="TextDim">#E5E5E5</Color>            <!-- HC: #FFFFFF  avg=229 -->
+    <Color x:Key="TextGray">#B0B0B0</Color>           <!-- HC: #FFFFFF  avg=176 -->
+    <Color x:Key="CardBackground">#1A1F3A</Color>     <!-- HC: #000000  avg=28  -->
+    <Color x:Key="CardDark">#121628</Color>           <!-- HC: #000000  avg=19  -->
+
     <!-- Opacity Values -->
     <x:Double x:Key="Opacity90">0.9</x:Double>
     <x:Double x:Key="Opacity80">0.8</x:Double>
     <x:Double x:Key="Opacity60">0.6</x:Double>
     <x:Double x:Key="Opacity20">0.2</x:Double>
     <x:Double x:Key="Opacity10">0.1</x:Double>
-    
+
     <!-- Font Sizes -->
     <x:Double x:Key="FontSizeSmall">12</x:Double>
     <x:Double x:Key="FontSizeMedium">14</x:Double>
     <x:Double x:Key="FontSizeLarge">16</x:Double>
     <x:Double x:Key="FontSizeXLarge">20</x:Double>
     <x:Double x:Key="FontSizeTitle">24</x:Double>
-    
+
     <!-- Spacing -->
     <x:Double x:Key="SpacingSmall">8</x:Double>
     <x:Double x:Key="SpacingMedium">16</x:Double>
     <x:Double x:Key="SpacingLarge">24</x:Double>
-    
+
     <!-- Border Radius -->
     <x:Double x:Key="BorderRadiusSmall">8</x:Double>
     <x:Double x:Key="BorderRadiusMedium">12</x:Double>

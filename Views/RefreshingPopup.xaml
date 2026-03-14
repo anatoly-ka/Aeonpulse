@@ -10,18 +10,18 @@
               HorizontalOptions="Center"
               Margin="24,0">
 
-            <Frame BackgroundColor="{StaticResource CardBackground}"
+            <Frame BackgroundColor="{DynamicResource CardBackground}"
                    CornerRadius="16"
                    Padding="32"
                    HasShadow="True"
-                   BorderColor="{StaticResource CyberPurple}">
+                   BorderColor="{DynamicResource CyberPurple}">
 
                 <VerticalStackLayout Spacing="16"
                                      HorizontalOptions="Center">
 
                     <!-- Spinner -->
                     <ActivityIndicator IsRunning="True"
-                                       Color="{StaticResource CyberCyan}"
+                                       Color="{DynamicResource CyberCyan}"
                                        WidthRequest="40"
                                        HeightRequest="40"
                                        HorizontalOptions="Center" />
@@ -31,7 +31,7 @@
                            FontSize="{StaticResource FontSizeXLarge}"
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
-                           TextColor="{StaticResource CyberCyan}" />
+                           TextColor="{DynamicResource CyberCyan}" />
 
                 </VerticalStackLayout>
             </Frame>

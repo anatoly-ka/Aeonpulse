@@ -22,11 +22,11 @@
 
             <!-- Popup panel: top margin is applied in code-behind to align with Timeline Heading -->
             <Frame x:Name="PopupFrame"
-                   BackgroundColor="{StaticResource CardBackground}"
+                   BackgroundColor="{DynamicResource CardBackground}"
                    CornerRadius="16"
                    Padding="0"
                    HasShadow="True"
-                   BorderColor="{StaticResource CyberPurple}"
+                   BorderColor="{DynamicResource CyberPurple}"
                    Margin="24,0,24,24"
                    VerticalOptions="Fill">
 
@@ -38,10 +38,10 @@
                                FontSize="{StaticResource FontSizeTitle}"
                                FontAttributes="Bold"
                                HorizontalOptions="Center"
-                               TextColor="{StaticResource CyberCyan}" />
+                               TextColor="{DynamicResource CyberCyan}" />
 
                         <BoxView HeightRequest="1"
-                                 Color="{StaticResource CyberPurple}"
+                                 Color="{DynamicResource CyberPurple}"
                                  Opacity="0.4"
                                  HorizontalOptions="Fill"
                                  Margin="0,16,0,0" />
@@ -56,16 +56,16 @@
                                 <Label x:Name="Section1TitleLabel"
                                        FontSize="{StaticResource FontSizeMedium}"
                                        FontAttributes="Bold"
-                                       TextColor="{StaticResource CyberPurple}" />
+                                       TextColor="{DynamicResource CyberPurple}" />
                                 <Label x:Name="Section1TextLabel"
                                        FontSize="{StaticResource FontSizeMedium}"
-                                       TextColor="{StaticResource TextGray}"
+                                       TextColor="{DynamicResource TextGray}"
                                        LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
 
                             <!-- Divider -->
                             <BoxView HeightRequest="1"
-                                     Color="{StaticResource CyberPurple}"
+                                     Color="{DynamicResource CyberPurple}"
                                      Opacity="0.4"
                                      HorizontalOptions="Fill" />
 
@@ -74,10 +74,10 @@
                                 <Label x:Name="Section2TitleLabel"
                                        FontSize="{StaticResource FontSizeMedium}"
                                        FontAttributes="Bold"
-                                       TextColor="{StaticResource CyberPurple}" />
+                                       TextColor="{DynamicResource CyberPurple}" />
                                 <Label x:Name="Section2TextLabel"
                                        FontSize="{StaticResource FontSizeMedium}"
-                                       TextColor="{StaticResource TextGray}"
+                                       TextColor="{DynamicResource TextGray}"
                                        LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
 
@@ -87,7 +87,7 @@
                     <!-- Non-scrollable footer -->
                     <VerticalStackLayout Grid.Row="2" Padding="24,0,24,20" Spacing="0">
                         <BoxView HeightRequest="1"
-                                 Color="{StaticResource CyberPurple}"
+                                 Color="{DynamicResource CyberPurple}"
                                  Opacity="0.4"
                                  HorizontalOptions="Fill"
                                  Margin="0,0,0,16" />
@@ -95,12 +95,12 @@
                                 Clicked="OnCloseClicked"
                                 HorizontalOptions="Center"
                                 WidthRequest="160"
-                                BackgroundColor="{StaticResource SpaceDark}"
-                                TextColor="{StaticResource TextGray}"
+                                BackgroundColor="{DynamicResource SpaceDark}"
+                                TextColor="{DynamicResource TextGray}"
                                 CornerRadius="8"
                                 FontSize="{StaticResource FontSizeLarge}"
                                 HeightRequest="44"
-                                BorderColor="{StaticResource CyberPurple}"
+                                BorderColor="{DynamicResource CyberPurple}"
                                 BorderWidth="1" />
                     </VerticalStackLayout>
 
