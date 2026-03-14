@@ -268,18 +268,18 @@ await Navigation.PushAsync(new SettingsPage());
 
 ### Android
 ```bash
-dotnet publish -f net8.0-android -c Release
+dotnet publish -f net9.0-android -c Release
 ```
-Output: `bin/Release/net8.0-android/publish/`
+Output: `bin/Release/net9.0-android/publish/`
 
 ### iOS (requires Mac)
 ```bash
-dotnet publish -f net8.0-ios -c Release
+dotnet publish -f net9.0-ios -c Release
 ```
 
 ### Windows
 ```bash
-dotnet publish -f net8.0-windows10.0.19041.0 -c Release
+dotnet publish -f net9.0-windows10.0.19041.0 -c Release
 ```
 
 ## Testing
