@@ -3,7 +3,7 @@ using Microsoft.Maui.Controls;
 namespace Aeonpulse.Services
 {
     /// <summary>
-    /// Singleton service that applies one of two colour schemes to the
+    /// Singleton service that applies one of several available colour schemes to the
     /// application's merged resource dictionary at runtime.
     /// </summary>
     public class ThemeService
@@ -13,8 +13,9 @@ namespace Aeonpulse.Services
         private ThemeService() { }
 
         // --- Scheme identifiers -----------------------------------------------
-        public const string DefaultDark     = "DefaultDark";
-        public const string HighContrastDark = "HighContrastDark";
+        public const string DefaultDark        = "DefaultDark";
+        public const string HighContrastDark   = "HighContrastDark";
+        public const string HighContrastLight  = "HighContrastLight";
 
         // --- Default Dark palette ---------------------------------------------
         private static readonly Dictionary<string, Color> _defaultColors = new()
@@ -34,8 +35,9 @@ namespace Aeonpulse.Services
         };
 
         // --- High Contrast Dark palette ----------------------------------------
-        // Rule: avg(R,G,B) <= 128 -> Black, > 128 -> White
-        private static readonly Dictionary<string, Color> _highContrastColors = new()
+        // Rule: taking R,G,B from the Default Dark and then:
+        // avg(R,G,B) <= 128 -> Black, > 128 -> White
+        private static readonly Dictionary<string, Color> _highContrastDarkColors = new()
         {
             { "SpaceDark",       Colors.Black   },   // avg=17
             { "SpaceDarker",     Colors.Black   },   // avg=7
@@ -51,6 +53,24 @@ namespace Aeonpulse.Services
             { "CardDark",        Colors.Black   },   // avg=19
         };
 
+        // --- High Contrast Light palette ----------------------------------------
+        // Exact inverse of High Contrast Dark: Black -> White, White -> Black.
+        private static readonly Dictionary<string, Color> _highContrastLightColors = new()
+        {
+            { "SpaceDark",       Colors.White   },
+            { "SpaceDarker",     Colors.White   },
+            { "CyberCyan",       Colors.Black   },
+            { "CyberPurple",     Colors.Black   },
+            { "CyberPink",       Colors.Black   },
+            { "NeonGreen",       Colors.Black   },
+            { "NeonGreenDark",   Colors.White   },
+            { "TextWhite",       Colors.Black   },
+            { "TextDim",         Colors.Black   },
+            { "TextGray",        Colors.Black   },
+            { "CardBackground",  Colors.White   },
+            { "CardDark",        Colors.White   },
+        };
+
         // --- Active scheme -------------------------------------------------------
         private string _currentScheme = DefaultDark;
         public string CurrentScheme => _currentScheme;
@@ -62,9 +82,12 @@ namespace Aeonpulse.Services
         {
             _currentScheme = scheme;
 
-            var palette = scheme == HighContrastDark
-                ? _highContrastColors
-                : _defaultColors;
+            var palette = scheme switch
+            {
+                HighContrastDark  => _highContrastDarkColors,
+                HighContrastLight => _highContrastLightColors,
+                _                 => _defaultColors,
+            };
 
             var resources = Application.Current?.Resources;
             if (resources is null)

@@ -21,8 +21,9 @@ namespace Aeonpulse.Views
             ImperialRadio.IsChecked = !_viewModel.UseMetric;
 
             // Initialise radio buttons to match the persisted colour scheme
-            DefaultDarkRadio.IsChecked  = _viewModel.ColorScheme == ThemeService.DefaultDark;
-            HighContrastRadio.IsChecked = _viewModel.ColorScheme == ThemeService.HighContrastDark;
+            DefaultDarkRadio.IsChecked        = _viewModel.ColorScheme == ThemeService.DefaultDark;
+            HighContrastDarkRadio.IsChecked   = _viewModel.ColorScheme == ThemeService.HighContrastDark;
+            HighContrastLightRadio.IsChecked  = _viewModel.ColorScheme == ThemeService.HighContrastLight;
 
             _initialising = false;
         }

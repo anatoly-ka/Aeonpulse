@@ -60,7 +60,7 @@
                             ColumnSpacing pushes radios away from labels consistently.
                         -->
                         <Grid ColumnDefinitions="Auto,*"
-                              RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
                               ColumnSpacing="16"
                               RowSpacing="8">
 
@@ -153,9 +153,9 @@
                                      HeightRequest="4"
                                      Color="Transparent" />
 
-                            <!-- Row 3: Color Scheme label (spans both radio rows via RowSpan) -->
+                            <!-- Row 3: Color Scheme label (spans all radio rows via RowSpan) -->
                             <Label Grid.Row="3" Grid.Column="0"
-                                   Grid.RowSpan="2"
+                                   Grid.RowSpan="3"
                                    Text="Color Scheme"
                                    FontSize="{StaticResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
@@ -204,7 +204,7 @@
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
-                                <RadioButton x:Name="HighContrastRadio"
+                                <RadioButton x:Name="HighContrastDarkRadio"
                                              Value="HighContrastDark"
                                              GroupName="ColorScheme"
                                              CheckedChanged="OnColorSchemeChanged">
@@ -232,6 +232,44 @@
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
                                 <Label Text="High Contrast Dark"
+                                       FontSize="{StaticResource FontSizeMedium}"
+                                       TextColor="{DynamicResource CyberCyan}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <!-- Row 5: High Contrast Light radio -->
+                            <HorizontalStackLayout Grid.Row="5" Grid.Column="1"
+                                                   Spacing="6"
+                                                   HorizontalOptions="Start"
+                                                   VerticalOptions="Center">
+                                <RadioButton x:Name="HighContrastLightRadio"
+                                             Value="HighContrastLight"
+                                             GroupName="ColorScheme"
+                                             CheckedChanged="OnColorSchemeChanged">
+                                    <RadioButton.ControlTemplate>
+                                        <ControlTemplate>
+                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
+                                                <Ellipse Grid.Column="0"
+                                                         WidthRequest="16"
+                                                         HeightRequest="16"
+                                                         Stroke="{DynamicResource CyberCyan}"
+                                                         StrokeThickness="2"
+                                                         Fill="Transparent" />
+                                                <Ellipse x:Name="InnerDot"
+                                                         Grid.Column="0"
+                                                         WidthRequest="8"
+                                                         HeightRequest="8"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         Fill="{DynamicResource CyberCyan}"
+                                                         IsVisible="{TemplateBinding IsChecked}" />
+                                                <ContentPresenter Grid.Column="1"
+                                                                  VerticalOptions="Center" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </RadioButton.ControlTemplate>
+                                </RadioButton>
+                                <Label Text="High Contrast Light"
                                        FontSize="{StaticResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
