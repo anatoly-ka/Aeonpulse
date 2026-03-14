@@ -32,7 +32,7 @@
                     <!-- Title -->
                     <VerticalStackLayout Grid.Row="0" Spacing="0" Padding="24,20,24,0">
                         <Label Text="AeonPulse"
-                               FontSize="22"
+                               FontSize="{StaticResource FontSizeTitle}"
                                FontAttributes="Bold"
                                HorizontalOptions="Center"
                                TextColor="{StaticResource CyberCyan}" />
@@ -49,7 +49,7 @@
 
                         <!-- Settings Section -->
                         <Label Text="Settings"
-                               FontSize="13"
+                               FontSize="{StaticResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{StaticResource CyberPurple}" />
 
@@ -58,12 +58,12 @@
                               VerticalOptions="Center">
                             <Label Grid.Column="0"
                                    Text="Unit System"
-                                   FontSize="14"
+                                   FontSize="{StaticResource FontSizeMedium}"
                                    TextColor="{StaticResource TextGray}"
                                    VerticalOptions="Center" />
                             <Label Grid.Column="1"
                                    Text="Imperial"
-                                   FontSize="13"
+                                   FontSize="{StaticResource FontSizeMedium}"
                                    TextColor="{StaticResource CyberCyan}"
                                    VerticalOptions="Center"
                                    Margin="0,0,4,0" />
@@ -75,7 +75,7 @@
                                     VerticalOptions="Center" />
                             <Label Grid.Column="3"
                                    Text="Metric"
-                                   FontSize="13"
+                                   FontSize="{StaticResource FontSizeMedium}"
                                    TextColor="{StaticResource CyberCyan}"
                                    VerticalOptions="Center"
                                    Margin="4,0,0,0" />
@@ -89,20 +89,20 @@
 
                         <!-- About Section -->
                         <Label Text="About"
-                               FontSize="13"
+                               FontSize="{StaticResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{StaticResource CyberPurple}" />
 
                         <VerticalStackLayout Spacing="6">
                             <Label Text="AeonPulse v0.1.0"
-                                   FontSize="13"
+                                   FontSize="{StaticResource FontSizeMedium}"
                                    TextColor="{StaticResource TextGray}" />
                             <Label Text="Track life metrics and milestones in a visually striking cyberpunk aesthetic."
-                                   FontSize="13"
+                                   FontSize="{StaticResource FontSizeMedium}"
                                    TextColor="{StaticResource TextGray}"
                                    LineBreakMode="WordWrap" />
                             <Label Text="Created with passion for time, data, and cosmic wonder."
-                                   FontSize="13"
+                                   FontSize="{StaticResource FontSizeMedium}"
                                    TextColor="{StaticResource TextGray}"
                                    LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
@@ -123,7 +123,7 @@
                                 BackgroundColor="{StaticResource SpaceDark}"
                                 TextColor="{StaticResource TextGray}"
                                 CornerRadius="8"
-                                FontSize="15"
+                                FontSize="{StaticResource FontSizeLarge}"
                                 HeightRequest="44"
                                 BorderColor="{StaticResource CyberPurple}"
                                 BorderWidth="1" />

@@ -20,14 +20,14 @@
 
                     <!-- Title -->
                     <Label Text="Change Date"
-                           FontSize="22"
+                           FontSize="{StaticResource FontSizeTitle}"
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
                            TextColor="{StaticResource CyberCyan}" />
 
                     <!-- Descriptive text -->
                     <Label Text="Track metrics from any significant life event - your birthday, graduation, wedding, or any milestone that matters to you."
-                           FontSize="13"
+                           FontSize="{StaticResource FontSizeMedium}"
                            HorizontalOptions="Center"
                            HorizontalTextAlignment="Center"
                            TextColor="{StaticResource TextGray}" />
@@ -41,7 +41,7 @@
                     <!-- Event Name -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Event Name"
-                               FontSize="13"
+                               FontSize="{StaticResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{StaticResource CyberPurple}" />
                         <Frame Padding="10,8"
@@ -54,7 +54,7 @@
                                    PlaceholderColor="{StaticResource TextGray}"
                                    TextColor="{StaticResource TextWhite}"
                                    BackgroundColor="Transparent"
-                                   FontSize="15"
+                                   FontSize="{StaticResource FontSizeLarge}"
                                    ReturnType="Next" />
                         </Frame>
                     </VerticalStackLayout>
@@ -62,7 +62,7 @@
                     <!-- Date -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Date"
-                               FontSize="13"
+                               FontSize="{StaticResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{StaticResource CyberPurple}" />
                         <Frame Padding="10,4"
@@ -73,7 +73,7 @@
                             <DatePicker x:Name="EventDatePicker"
                                         TextColor="{StaticResource TextWhite}"
                                         BackgroundColor="Transparent"
-                                        FontSize="15"
+                                        FontSize="{StaticResource FontSizeLarge}"
                                         Format="yyyy-MM-dd"
                                         HorizontalOptions="Fill" />
                         </Frame>
@@ -96,7 +96,7 @@
                                 BackgroundColor="{StaticResource SpaceDark}"
                                 TextColor="{StaticResource TextGray}"
                                 CornerRadius="8"
-                                FontSize="15"
+                                FontSize="{StaticResource FontSizeLarge}"
                                 HeightRequest="44"
                                 BorderColor="{StaticResource CyberPurple}"
                                 BorderWidth="1" />
@@ -108,7 +108,7 @@
                                 BackgroundColor="{StaticResource CyberPurple}"
                                 TextColor="{StaticResource SpaceDarker}"
                                 CornerRadius="8"
-                                FontSize="15"
+                                FontSize="{StaticResource FontSizeLarge}"
                                 FontAttributes="Bold"
                                 HeightRequest="44" />
 

@@ -28,7 +28,7 @@
 
                     <!-- Message -->
                     <Label Text="Refreshing..."
-                           FontSize="20"
+                           FontSize="{StaticResource FontSizeXLarge}"
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
                            TextColor="{StaticResource CyberCyan}" />

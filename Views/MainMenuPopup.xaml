@@ -33,7 +33,7 @@
 
                     <!-- Title -->
                     <Label Text="AeonPulse"
-                           FontSize="22"
+                           FontSize="{StaticResource FontSizeTitle}"
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
                            TextColor="{StaticResource CyberCyan}"
@@ -60,7 +60,7 @@
                                VerticalOptions="Center" />
                         <Label Grid.Column="1"
                                Text="Change Date"
-                               FontSize="15"
+                               FontSize="{StaticResource FontSizeLarge}"
                                TextColor="{StaticResource TextGray}"
                                VerticalOptions="Center" />
                     </Grid>
@@ -79,7 +79,7 @@
                                VerticalOptions="Center" />
                         <Label Grid.Column="1"
                                Text="Settings"
-                               FontSize="15"
+                               FontSize="{StaticResource FontSizeLarge}"
                                TextColor="{StaticResource TextGray}"
                                VerticalOptions="Center" />
                     </Grid>
@@ -98,7 +98,7 @@
                                VerticalOptions="Center" />
                         <Label Grid.Column="1"
                                Text="Exit"
-                               FontSize="15"
+                               FontSize="{StaticResource FontSizeLarge}"
                                TextColor="{StaticResource TextGray}"
                                VerticalOptions="Center" />
                     </Grid>
@@ -119,7 +119,7 @@
                                 BackgroundColor="{StaticResource SpaceDark}"
                                 TextColor="{StaticResource TextGray}"
                                 CornerRadius="8"
-                                FontSize="15"
+                                FontSize="{StaticResource FontSizeLarge}"
                                 HeightRequest="44"
                                 BorderColor="{StaticResource CyberPurple}"
                                 BorderWidth="1" />

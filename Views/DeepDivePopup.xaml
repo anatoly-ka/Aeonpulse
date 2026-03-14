@@ -35,7 +35,7 @@
                     <!-- Non-scrollable heading -->
                     <VerticalStackLayout Grid.Row="0" Spacing="0" Padding="24,20,24,0">
                         <Label x:Name="TitleLabel"
-                               FontSize="22"
+                               FontSize="{StaticResource FontSizeTitle}"
                                FontAttributes="Bold"
                                HorizontalOptions="Center"
                                TextColor="{StaticResource CyberCyan}" />
@@ -54,11 +54,11 @@
                             <!-- Section 1: The Methodology -->
                             <VerticalStackLayout Spacing="8">
                                 <Label x:Name="Section1TitleLabel"
-                                       FontSize="13"
+                                       FontSize="{StaticResource FontSizeMedium}"
                                        FontAttributes="Bold"
                                        TextColor="{StaticResource CyberPurple}" />
                                 <Label x:Name="Section1TextLabel"
-                                       FontSize="13"
+                                       FontSize="{StaticResource FontSizeMedium}"
                                        TextColor="{StaticResource TextGray}"
                                        LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
@@ -72,11 +72,11 @@
                             <!-- Section 2: Data Sources & Attribution -->
                             <VerticalStackLayout Spacing="8">
                                 <Label x:Name="Section2TitleLabel"
-                                       FontSize="13"
+                                       FontSize="{StaticResource FontSizeMedium}"
                                        FontAttributes="Bold"
                                        TextColor="{StaticResource CyberPurple}" />
                                 <Label x:Name="Section2TextLabel"
-                                       FontSize="13"
+                                       FontSize="{StaticResource FontSizeMedium}"
                                        TextColor="{StaticResource TextGray}"
                                        LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
@@ -98,7 +98,7 @@
                                 BackgroundColor="{StaticResource SpaceDark}"
                                 TextColor="{StaticResource TextGray}"
                                 CornerRadius="8"
-                                FontSize="15"
+                                FontSize="{StaticResource FontSizeLarge}"
                                 HeightRequest="44"
                                 BorderColor="{StaticResource CyberPurple}"
                                 BorderWidth="1" />
