@@ -20,14 +20,14 @@
 
                     <!-- Title -->
                     <Label Text="Change Date"
-                           FontSize="{StaticResource FontSizeTitle}"
+                           FontSize="{DynamicResource FontSizeTitle}"
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
                            TextColor="{DynamicResource CyberCyan}" />
 
                     <!-- Descriptive text -->
                     <Label Text="Track metrics from any significant life event - your birthday, graduation, wedding, or any milestone that matters to you."
-                           FontSize="{StaticResource FontSizeMedium}"
+                           FontSize="{DynamicResource FontSizeMedium}"
                            HorizontalOptions="Center"
                            HorizontalTextAlignment="Center"
                            TextColor="{DynamicResource TextGray}" />
@@ -41,7 +41,7 @@
                     <!-- Event Name -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Event Name"
-                               FontSize="{StaticResource FontSizeMedium}"
+                               FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
                         <Frame Padding="10,8"
@@ -54,7 +54,7 @@
                                    PlaceholderColor="{DynamicResource TextGray}"
                                    TextColor="{DynamicResource TextWhite}"
                                    BackgroundColor="Transparent"
-                                   FontSize="{StaticResource FontSizeLarge}"
+                                   FontSize="{DynamicResource FontSizeLarge}"
                                    ReturnType="Next" />
                         </Frame>
                     </VerticalStackLayout>
@@ -62,7 +62,7 @@
                     <!-- Date -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Date"
-                               FontSize="{StaticResource FontSizeMedium}"
+                               FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
                         <Frame Padding="10,4"
@@ -73,7 +73,7 @@
                             <DatePicker x:Name="EventDatePicker"
                                         TextColor="{DynamicResource TextWhite}"
                                         BackgroundColor="Transparent"
-                                        FontSize="{StaticResource FontSizeLarge}"
+                                        FontSize="{DynamicResource FontSizeLarge}"
                                         Format="yyyy-MM-dd"
                                         HorizontalOptions="Fill" />
                         </Frame>

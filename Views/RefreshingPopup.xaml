@@ -28,11 +28,10 @@
 
                     <!-- Message -->
                     <Label Text="Refreshing..."
-                           FontSize="{StaticResource FontSizeXLarge}"
+                           FontSize="{DynamicResource FontSizeXLarge}"
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
                            TextColor="{DynamicResource CyberCyan}" />
-
                 </VerticalStackLayout>
             </Frame>
         </Grid>

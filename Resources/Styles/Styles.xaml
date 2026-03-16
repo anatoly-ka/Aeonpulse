@@ -6,16 +6,16 @@
     <!-- Base Styles -->
     <Style x:Key="BaseLabel" TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource TextWhite}" />
-        <Setter Property="FontSize" Value="{StaticResource FontSizeLarge}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeLarge}" />
     </Style>
 
     <Style x:Key="TitleLabel" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle}" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
     <Style x:Key="SubtitleLabel" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeXLarge}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeXLarge}" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 

@@ -49,7 +49,7 @@
 
                         <!-- Settings Section -->
                         <Label Text="Settings"
-                               FontSize="{StaticResource FontSizeMedium}"
+                               FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
 
@@ -60,7 +60,7 @@
                             ColumnSpacing pushes radios away from labels consistently.
                         -->
                         <Grid ColumnDefinitions="Auto,*"
-                              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                               ColumnSpacing="16"
                               RowSpacing="8">
 
@@ -68,7 +68,7 @@
                             <Label Grid.Row="0" Grid.Column="0"
                                    Grid.RowSpan="2"
                                    Text="Unit System"
-                                   FontSize="{StaticResource FontSizeMedium}"
+                                   FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
 
@@ -105,7 +105,7 @@
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
                                 <Label Text="Metric"
-                                       FontSize="{StaticResource FontSizeMedium}"
+                                       FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
@@ -143,21 +143,21 @@
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
                                 <Label Text="Imperial"
-                                       FontSize="{StaticResource FontSizeMedium}"
+                                       FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 2: spacer between parameter groups -->
+                            <!-- Row 2: spacer between Unit System and Color Scheme -->
                             <BoxView Grid.Row="2" Grid.ColumnSpan="2"
                                      HeightRequest="4"
                                      Color="Transparent" />
 
-                            <!-- Row 3: Color Scheme label (spans all radio rows via RowSpan) -->
+                            <!-- Row 3: Color Scheme label (spans all three radio rows via RowSpan) -->
                             <Label Grid.Row="3" Grid.Column="0"
                                    Grid.RowSpan="3"
                                    Text="Color Scheme"
-                                   FontSize="{StaticResource FontSizeMedium}"
+                                   FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
 
@@ -194,7 +194,7 @@
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
                                 <Label Text="Default Dark"
-                                       FontSize="{StaticResource FontSizeMedium}"
+                                       FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
@@ -232,7 +232,7 @@
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
                                 <Label Text="High Contrast Dark"
-                                       FontSize="{StaticResource FontSizeMedium}"
+                                       FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
@@ -270,7 +270,134 @@
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
                                 <Label Text="High Contrast Light"
-                                       FontSize="{StaticResource FontSizeMedium}"
+                                       FontSize="{DynamicResource FontSizeMedium}"
+                                       TextColor="{DynamicResource CyberCyan}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <!-- Row 6: spacer between Color Scheme and Text Size -->
+                            <BoxView Grid.Row="6" Grid.ColumnSpan="2"
+                                     HeightRequest="4"
+                                     Color="Transparent" />
+
+                            <!-- Row 7: Text Size label (spans all three radio rows via RowSpan) -->
+                            <Label Grid.Row="7" Grid.Column="0"
+                                   Grid.RowSpan="3"
+                                   Text="Text Size"
+                                   FontSize="{DynamicResource FontSizeMedium}"
+                                   TextColor="{DynamicResource TextGray}"
+                                   VerticalOptions="Center" />
+
+                            <!-- Row 7: Small radio -->
+                            <HorizontalStackLayout Grid.Row="7" Grid.Column="1"
+                                                   Spacing="6"
+                                                   HorizontalOptions="Start"
+                                                   VerticalOptions="Center">
+                                <RadioButton x:Name="TextSizeSmallRadio"
+                                             Value="Small"
+                                             GroupName="TextSize"
+                                             CheckedChanged="OnTextSizeChanged">
+                                    <RadioButton.ControlTemplate>
+                                        <ControlTemplate>
+                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
+                                                <Ellipse Grid.Column="0"
+                                                         WidthRequest="16"
+                                                         HeightRequest="16"
+                                                         Stroke="{DynamicResource CyberCyan}"
+                                                         StrokeThickness="2"
+                                                         Fill="Transparent" />
+                                                <Ellipse x:Name="InnerDot"
+                                                         Grid.Column="0"
+                                                         WidthRequest="8"
+                                                         HeightRequest="8"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         Fill="{DynamicResource CyberCyan}"
+                                                         IsVisible="{TemplateBinding IsChecked}" />
+                                                <ContentPresenter Grid.Column="1"
+                                                                  VerticalOptions="Center" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </RadioButton.ControlTemplate>
+                                </RadioButton>
+                                <Label Text="Small"
+                                       FontSize="{DynamicResource FontSizeMedium}"
+                                       TextColor="{DynamicResource CyberCyan}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <!-- Row 8: Normal radio -->
+                            <HorizontalStackLayout Grid.Row="8" Grid.Column="1"
+                                                   Spacing="6"
+                                                   HorizontalOptions="Start"
+                                                   VerticalOptions="Center">
+                                <RadioButton x:Name="TextSizeNormalRadio"
+                                             Value="Normal"
+                                             GroupName="TextSize"
+                                             CheckedChanged="OnTextSizeChanged">
+                                    <RadioButton.ControlTemplate>
+                                        <ControlTemplate>
+                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
+                                                <Ellipse Grid.Column="0"
+                                                         WidthRequest="16"
+                                                         HeightRequest="16"
+                                                         Stroke="{DynamicResource CyberCyan}"
+                                                         StrokeThickness="2"
+                                                         Fill="Transparent" />
+                                                <Ellipse x:Name="InnerDot"
+                                                         Grid.Column="0"
+                                                         WidthRequest="8"
+                                                         HeightRequest="8"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         Fill="{DynamicResource CyberCyan}"
+                                                         IsVisible="{TemplateBinding IsChecked}" />
+                                                <ContentPresenter Grid.Column="1"
+                                                                  VerticalOptions="Center" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </RadioButton.ControlTemplate>
+                                </RadioButton>
+                                <Label Text="Normal"
+                                       FontSize="{DynamicResource FontSizeMedium}"
+                                       TextColor="{DynamicResource CyberCyan}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <!-- Row 9: Large radio -->
+                            <HorizontalStackLayout Grid.Row="9" Grid.Column="1"
+                                                   Spacing="6"
+                                                   HorizontalOptions="Start"
+                                                   VerticalOptions="Center">
+                                <RadioButton x:Name="TextSizeLargeRadio"
+                                             Value="Large"
+                                             GroupName="TextSize"
+                                             CheckedChanged="OnTextSizeChanged">
+                                    <RadioButton.ControlTemplate>
+                                        <ControlTemplate>
+                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
+                                                <Ellipse Grid.Column="0"
+                                                         WidthRequest="16"
+                                                         HeightRequest="16"
+                                                         Stroke="{DynamicResource CyberCyan}"
+                                                         StrokeThickness="2"
+                                                         Fill="Transparent" />
+                                                <Ellipse x:Name="InnerDot"
+                                                         Grid.Column="0"
+                                                         WidthRequest="8"
+                                                         HeightRequest="8"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         Fill="{DynamicResource CyberCyan}"
+                                                         IsVisible="{TemplateBinding IsChecked}" />
+                                                <ContentPresenter Grid.Column="1"
+                                                                  VerticalOptions="Center" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </RadioButton.ControlTemplate>
+                                </RadioButton>
+                                <Label Text="Large"
+                                       FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
@@ -285,20 +412,20 @@
 
                         <!-- About Section -->
                         <Label Text="About"
-                               FontSize="{StaticResource FontSizeMedium}"
+                               FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
 
                         <VerticalStackLayout Spacing="6">
                             <Label Text="AeonPulse v0.1.0"
-                                   FontSize="{StaticResource FontSizeMedium}"
+                                   FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}" />
                             <Label Text="Track life metrics and milestones in a visually striking cyberpunk aesthetic."
-                                   FontSize="{StaticResource FontSizeMedium}"
+                                   FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap" />
                             <Label Text="Created with passion for time, data, and cosmic wonder."
-                                   FontSize="{StaticResource FontSizeMedium}"
+                                   FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
@@ -319,7 +446,7 @@
                                 BackgroundColor="{DynamicResource SpaceDark}"
                                 TextColor="{DynamicResource TextGray}"
                                 CornerRadius="8"
-                                FontSize="{StaticResource FontSizeLarge}"
+                                FontSize="{DynamicResource FontSizeLarge}"
                                 HeightRequest="44"
                                 BorderColor="{DynamicResource CyberPurple}"
                                 BorderWidth="1" />

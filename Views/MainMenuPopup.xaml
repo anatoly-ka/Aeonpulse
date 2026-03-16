@@ -34,7 +34,7 @@
 
                     <!-- Title -->
                     <Label Text="AeonPulse"
-                           FontSize="{StaticResource FontSizeTitle}"
+                           FontSize="{DynamicResource FontSizeTitle}"
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
                            TextColor="{DynamicResource CyberCyan}"
@@ -62,7 +62,7 @@
                                helpers:ImageTint.Color="{DynamicResource CyberCyan}" />
                         <Label Grid.Column="1"
                                Text="Change Date"
-                               FontSize="{StaticResource FontSizeLarge}"
+                               FontSize="{DynamicResource FontSizeLarge}"
                                TextColor="{DynamicResource TextGray}"
                                VerticalOptions="Center" />
                     </Grid>
@@ -82,7 +82,7 @@
                                helpers:ImageTint.Color="{DynamicResource CyberCyan}" />
                         <Label Grid.Column="1"
                                Text="Settings"
-                               FontSize="{StaticResource FontSizeLarge}"
+                               FontSize="{DynamicResource FontSizeLarge}"
                                TextColor="{DynamicResource TextGray}"
                                VerticalOptions="Center" />
                     </Grid>
@@ -102,7 +102,7 @@
                                helpers:ImageTint.Color="{DynamicResource CyberCyan}" />
                         <Label Grid.Column="1"
                                Text="Exit"
-                               FontSize="{StaticResource FontSizeLarge}"
+                               FontSize="{DynamicResource FontSizeLarge}"
                                TextColor="{DynamicResource TextGray}"
                                VerticalOptions="Center" />
                     </Grid>
@@ -123,7 +123,7 @@
                                 BackgroundColor="{DynamicResource SpaceDark}"
                                 TextColor="{DynamicResource TextGray}"
                                 CornerRadius="8"
-                                FontSize="{StaticResource FontSizeLarge}"
+                                FontSize="{DynamicResource FontSizeLarge}"
                                 HeightRequest="44"
                                 BorderColor="{DynamicResource CyberPurple}"
                                 BorderWidth="1" />

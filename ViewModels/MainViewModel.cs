@@ -58,6 +58,23 @@ namespace Aeonpulse.ViewModels
             }
         }
 
+        private string _textSize = FontSizeService.Normal;
+        public string TextSize
+        {
+            get => _textSize;
+            set
+            {
+                if (_textSize == value)
+                    return;
+                _textSize = value;
+                OnPropertyChanged();
+                // Apply the preset immediately so every DynamicResource FontSize binding updates
+                FontSizeService.Instance.ApplyPreset(_textSize);
+                // Persist the user's choice across app restarts
+                Preferences.Default.Set("TextSize", _textSize);
+            }
+        }
+
         // Subsection Expanded States
         private bool _labExpanded = true;
         public bool LabExpanded
@@ -280,6 +297,11 @@ namespace Aeonpulse.ViewModels
             var savedScheme = Preferences.Default.Get("ColorScheme", ThemeService.DefaultDark);
             _colorScheme = savedScheme;
             ThemeService.Instance.ApplyScheme(_colorScheme);
+
+            // Restore persisted text size (defaults to Normal on first run)
+            var savedTextSize = Preferences.Default.Get("TextSize", FontSizeService.Normal);
+            _textSize = savedTextSize;
+            FontSizeService.Instance.ApplyPreset(_textSize);
 
             // Initialize section commands
             ToggleLabCommand = new Command(() => LabExpanded = !LabExpanded);

@@ -20,10 +20,15 @@ namespace Aeonpulse.Views
             MetricRadio.IsChecked   =  _viewModel.UseMetric;
             ImperialRadio.IsChecked = !_viewModel.UseMetric;
 
-            // Initialise radio buttons to match the persisted colour scheme
-            DefaultDarkRadio.IsChecked        = _viewModel.ColorScheme == ThemeService.DefaultDark;
-            HighContrastDarkRadio.IsChecked   = _viewModel.ColorScheme == ThemeService.HighContrastDark;
-            HighContrastLightRadio.IsChecked  = _viewModel.ColorScheme == ThemeService.HighContrastLight;
+            // Initialise colour scheme radio buttons to match the persisted value
+            DefaultDarkRadio.IsChecked       = _viewModel.ColorScheme == ThemeService.DefaultDark;
+            HighContrastDarkRadio.IsChecked  = _viewModel.ColorScheme == ThemeService.HighContrastDark;
+            HighContrastLightRadio.IsChecked = _viewModel.ColorScheme == ThemeService.HighContrastLight;
+
+            // Initialise text size radio buttons to match the persisted value
+            TextSizeSmallRadio.IsChecked  = _viewModel.TextSize == FontSizeService.Small;
+            TextSizeNormalRadio.IsChecked = _viewModel.TextSize == FontSizeService.Normal;
+            TextSizeLargeRadio.IsChecked  = _viewModel.TextSize == FontSizeService.Large;
 
             _initialising = false;
         }
@@ -51,6 +56,20 @@ namespace Aeonpulse.Views
 
             // Setting ColorScheme calls ThemeService.ApplyScheme() and persists the choice
             _viewModel.ColorScheme = scheme;
+        }
+
+        private void OnTextSizeChanged(object sender, CheckedChangedEventArgs e)
+        {
+            // Only react to the radio that just became checked; ignore uncheck events
+            // and events fired during InitializeComponent
+            if (_initialising || !e.Value)
+                return;
+
+            var radio = (RadioButton)sender;
+            var preset = radio.Value?.ToString() ?? FontSizeService.Normal;
+
+            // Setting TextSize calls FontSizeService.ApplyPreset() and persists the choice
+            _viewModel.TextSize = preset;
         }
 
         private async void OnCloseClicked(object sender, EventArgs e)

@@ -37,7 +37,7 @@
 
                     <!-- Aeonpulse Text -->
                     <Label Text="AeonPulse"
-                           FontSize="{StaticResource FontSizeTitle}"
+                           FontSize="{DynamicResource FontSizeTitle}"
                            FontAttributes="Bold"
                            TextColor="{DynamicResource CyberCyan}"
                            VerticalOptions="Center">
@@ -50,7 +50,7 @@
                 <!-- Menu Button -->
                 <Button Grid.Column="2"
                         Text="☰"
-                        FontSize="{StaticResource FontSizeTitle}"
+                        FontSize="{DynamicResource FontSizeTitle}"
                         TextColor="{DynamicResource CyberCyan}"
                         BackgroundColor="Transparent"
                         WidthRequest="48"
@@ -69,7 +69,7 @@
                     <TapGestureRecognizer Tapped="OnTimelineHeadingTapped" />
                 </HorizontalStackLayout.GestureRecognizers>
 
-                <Label FontSize="{StaticResource FontSizeTitle}" TextColor="{DynamicResource TextDim}" Opacity="0.9" VerticalOptions="Center">
+                <Label FontSize="{DynamicResource FontSizeTitle}" TextColor="{DynamicResource TextDim}" Opacity="0.9" VerticalOptions="Center">
                     <Label.FormattedText>
                         <FormattedString>
                             <Span Text="{Binding BaseDateName}"
@@ -117,7 +117,7 @@
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <Label Grid.Column="0"
                                                Text="📅"
-                                               FontSize="{StaticResource FontSizeTitle}"
+                                               FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <Label Grid.Column="1"
@@ -146,10 +146,10 @@
                                     </Grid>
                                     <Label Text="{Binding TimeJubilees.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}" />
                                     <Label Text="{Binding TimeJubilees.FullText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding TimeJubileesExpanded}" />
                                 </VerticalStackLayout>
@@ -165,7 +165,7 @@
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <Label Grid.Column="0"
                                                Text="⏱️"
-                                               FontSize="{StaticResource FontSizeTitle}"
+                                               FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
@@ -174,7 +174,7 @@
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
                                             <Label Text="LIVE"
-                                                   FontSize="{StaticResource FontSizeSmall}"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
                                                    Padding="4,2"
@@ -195,10 +195,10 @@
                                     </Grid>
                                     <Label Text="{Binding Countdown.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}" />
                                     <Label Text="{Binding Countdown.FullText}"
                                             TextColor="{DynamicResource TextGray}"
-                                            FontSize="{StaticResource FontSizeMedium}"
+                                            FontSize="{DynamicResource FontSizeMedium}"
                                             LineBreakMode="WordWrap"
                                             IsVisible="{Binding CountdownExpanded}" />
                                 </VerticalStackLayout>
@@ -214,7 +214,7 @@
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <Label Grid.Column="0"
                                                Text="❤️"
-                                               FontSize="{StaticResource FontSizeTitle}"
+                                               FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
@@ -223,7 +223,7 @@
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
                                             <Label Text="LIVE"
-                                                   FontSize="{StaticResource FontSizeSmall}"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
                                                    Padding="4,2"
@@ -244,10 +244,10 @@
                                     </Grid>
                                     <Label Text="{Binding LifeOdometer.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}" />
                                     <Label Text="{Binding LifeOdometer.FullText}"
                                             TextColor="{DynamicResource TextGray}"
-                                            FontSize="{StaticResource FontSizeMedium}"
+                                            FontSize="{DynamicResource FontSizeMedium}"
                                             LineBreakMode="WordWrap"
                                             IsVisible="{Binding LifeOdometerExpanded}" />
                                 </VerticalStackLayout>
@@ -283,7 +283,7 @@
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <Label Grid.Column="0"
                                                Text="👽"
-                                               FontSize="{StaticResource FontSizeTitle}"
+                                               FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <Label Grid.Column="1"
@@ -295,24 +295,27 @@
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
                                             <ImageButton
                                                 Style="{StaticResource ThemedIconButton}"
+                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                 Source="info.png"
                                                 Clicked="OnAlienAnniversariesInfoClicked" />
                                             <ImageButton
                                                 Style="{StaticResource ThemedIconButton}"
+                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                 Source="refresh.png"
                                                 Command="{Binding RefreshAlienAnniversariesCommand}" />
                                             <ImageButton
                                                 Style="{StaticResource ThemedIconButton}"
+                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                 Source="{Binding AlienAnniversariesExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
                                                 Command="{Binding ToggleAlienAnniversariesCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
                                     <Label Text="{Binding AlienAnniversaries.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}" />
                                     <Label Text="{Binding AlienAnniversaries.FullText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding AlienAnniversariesExpanded}" />
                                 </VerticalStackLayout>
@@ -328,7 +331,7 @@
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <Label Grid.Column="0"
                                                Text="🚀"
-                                               FontSize="{StaticResource FontSizeTitle}"
+                                               FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
@@ -337,7 +340,7 @@
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
                                             <Label Text="LIVE"
-                                                   FontSize="{StaticResource FontSizeSmall}"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
                                                    Padding="4,2"
@@ -358,10 +361,10 @@
                                     </Grid>
                                     <Label Text="{Binding GalacticCommute.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}" />
                                     <Label Text="{Binding GalacticCommute.FullText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding GalacticCommuteExpanded}" />
                                 </VerticalStackLayout>
@@ -377,7 +380,7 @@
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <Label Grid.Column="0"
                                                Text="💡"
-                                               FontSize="{StaticResource FontSizeTitle}"
+                                               FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
@@ -386,7 +389,7 @@
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
                                             <Label Text="LIVE"
-                                                   FontSize="{StaticResource FontSizeSmall}"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
                                                    Padding="4,2"
@@ -408,11 +411,11 @@
 
                                     <Label Text="{Binding PhotonPath.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}" />
 
                                     <Label Text="{Binding PhotonPath.FullText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding PhotonPathExpanded}" />
                                 </VerticalStackLayout>
@@ -450,7 +453,7 @@
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <Label Grid.Column="0"
                                                Text="🏅"
-                                               FontSize="{StaticResource FontSizeTitle}"
+                                               FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <Label Grid.Column="1"
@@ -475,11 +478,11 @@
 
                                     <Label Text="{Binding HumanBirthRank.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}" />
 
                                     <Label Text="{Binding HumanBirthRank.FullText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding HumanBirthRankExpanded}" />
                                 </VerticalStackLayout>
@@ -495,7 +498,7 @@
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <Label Grid.Column="0"
                                                Text="🔮"
-                                               FontSize="{StaticResource FontSizeTitle}"
+                                               FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <Label Grid.Column="1"
@@ -520,11 +523,11 @@
 
                                     <Label Text="{Binding BirthRune.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}" />
 
                                     <Label Text="{Binding BirthRune.FullText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding BirthRuneExpanded}" />
                                 </VerticalStackLayout>
@@ -540,7 +543,7 @@
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <Label Grid.Column="0"
                                                Text="🗓️"
-                                               FontSize="{StaticResource FontSizeTitle}"
+                                               FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <Label Grid.Column="1"
@@ -565,11 +568,11 @@
 
                                     <Label Text="{Binding PersonalYear.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}" />
 
                                     <Label Text="{Binding PersonalYear.FullText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding PersonalYearExpanded}" />
                                 </VerticalStackLayout>
@@ -607,7 +610,7 @@
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <Label Grid.Column="0"
                                                Text="🌿"
-                                               FontSize="{StaticResource FontSizeTitle}"
+                                               FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <Label Grid.Column="1"
@@ -637,11 +640,11 @@
 
                                     <Label Text="{Binding GlobalExhale.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}" />
 
                                     <Label Text="{Binding GlobalExhale.FullText}"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{StaticResource FontSizeMedium}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding GlobalExhaleExpanded}" />
                                 </VerticalStackLayout>
