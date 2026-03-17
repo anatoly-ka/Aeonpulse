@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:resources="clr-namespace:Aeonpulse.Resources"
              x:Class="Aeonpulse.Views.ChangeDatePopup"
              BackgroundColor="#80000000"
              Shell.NavBarIsVisible="False">
@@ -19,14 +20,14 @@
                 <VerticalStackLayout Spacing="16">
 
                     <!-- Title -->
-                    <Label Text="Change Date"
+                    <Label Text="{x:Static resources:AppResources.ChangeDate_Title}"
                            FontSize="{DynamicResource FontSizeTitle}"
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
                            TextColor="{DynamicResource CyberCyan}" />
 
                     <!-- Descriptive text -->
-                    <Label Text="Track metrics from any significant life event - your birthday, graduation, wedding, or any milestone that matters to you."
+                    <Label Text="{x:Static resources:AppResources.ChangeDate_Description}"
                            FontSize="{DynamicResource FontSizeMedium}"
                            HorizontalOptions="Center"
                            HorizontalTextAlignment="Center"
@@ -40,7 +41,7 @@
 
                     <!-- Event Name -->
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Event Name"
+                        <Label Text="{x:Static resources:AppResources.ChangeDate_BaseDateNameLabel}"
                                FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
@@ -50,7 +51,7 @@
                                BackgroundColor="{DynamicResource SpaceDark}"
                                HasShadow="False">
                             <Entry x:Name="EventNameEntry"
-                                   Placeholder="e.g. My Birthday"
+                                   Placeholder="{x:Static resources:AppResources.ChangeDate_BaseDateNamePlaceholder}"
                                    PlaceholderColor="{DynamicResource TextGray}"
                                    TextColor="{DynamicResource TextWhite}"
                                    BackgroundColor="Transparent"
@@ -61,7 +62,7 @@
 
                     <!-- Date -->
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Date"
+                        <Label Text="{x:Static resources:AppResources.ChangeDate_BaseDateLabel}"
                                FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
@@ -91,7 +92,7 @@
 
                         <Button Grid.Column="0"
                                 x:Name="CloseButton"
-                                Text="Close"
+                                Text="{x:Static resources:AppResources.ChangeDate_ButtonClose}"
                                 Clicked="OnCloseClicked"
                                 BackgroundColor="{DynamicResource SpaceDark}"
                                 TextColor="{DynamicResource TextGray}"
@@ -103,7 +104,7 @@
 
                         <Button Grid.Column="2"
                                 x:Name="OkButton"
-                                Text="OK"
+                                Text="{x:Static resources:AppResources.ChangeDate_ButtonOK}"
                                 Clicked="OnOkClicked"
                                 BackgroundColor="{DynamicResource CyberPurple}"
                                 TextColor="{DynamicResource SpaceDarker}"

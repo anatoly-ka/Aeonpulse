@@ -1,0 +1,1208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Default_BaseDateName" xml:space="preserve">
+    <value>I was born</value>
+    <comment>MainViewModel.cs</comment>
+  </data>
+  <data name="Timeline_BaseDatePreposition" xml:space="preserve">
+    <value>on</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>AeonPulse</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Section_LabTitle" xml:space="preserve">
+    <value>Lab</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Section_CosmosTitle" xml:space="preserve">
+    <value>Cosmos</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Section_MirrorTitle" xml:space="preserve">
+    <value>Mirror</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Section_EcoEchoesTitle" xml:space="preserve">
+    <value>Eco-Echoes</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Badge_LIVE" xml:space="preserve">
+    <value>LIVE</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="UnitMetric_Km" xml:space="preserve">
+    <value>km</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitMetric_KmTemplate" xml:space="preserve">
+    <value>{0} km</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitMetric_MKm" xml:space="preserve">
+    <value>million km</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitMetric_MKmTemplate" xml:space="preserve">
+    <value>{0} million km</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitMetric_BKm" xml:space="preserve">
+    <value>billion km</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitMetric_BKmTemplate" xml:space="preserve">
+    <value>{0} billion km</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_Miles" xml:space="preserve">
+    <value>miles</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_MilesTemplate" xml:space="preserve">
+    <value>{0} miles</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_MMiles" xml:space="preserve">
+    <value>million miles</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_MMilesTemplate" xml:space="preserve">
+    <value>{0} million miles</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_BMiles" xml:space="preserve">
+    <value>billion miles</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_BMilesTemplate" xml:space="preserve">
+    <value>{0} billion miles</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_LightYears" xml:space="preserve">
+    <value>light-years</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_LightYearsTemplate" xml:space="preserve">
+    <value>{lightYears:F2} light-years</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Seconds" xml:space="preserve">
+    <value>seconds</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_SecondsTemplate" xml:space="preserve">
+    <value>{0} seconds</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Minutes" xml:space="preserve">
+    <value>minutes</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_MinutesTemplate" xml:space="preserve">
+    <value>{0} minutes</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Hours" xml:space="preserve">
+    <value>hours</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_HoursTemplate" xml:space="preserve">
+    <value>{0} hours</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Days" xml:space="preserve">
+    <value>days</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_DaysTemplate" xml:space="preserve">
+    <value>{0} days</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Weeks" xml:space="preserve">
+    <value>weeks</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_WeeksTemplate" xml:space="preserve">
+    <value>{0} weeks</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Months" xml:space="preserve">
+    <value>months</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_MonthsTemplate" xml:space="preserve">
+    <value>{0} months</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Years" xml:space="preserve">
+    <value>years</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_YearsTemplate" xml:space="preserve">
+    <value>{0} years</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Tease_Title" xml:space="preserve">
+    <value>AeonPulse</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Tease_ButtonOK" xml:space="preserve">
+    <value>OK</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_MethodTitle" xml:space="preserve">
+    <value>The Methodology</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_SourceTitle" xml:space="preserve">
+    <value>Data Sources &#38; Attribution</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_TimeJubileesTitle" xml:space="preserve">
+    <value>Time Jubilees</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_TimeJubileesBrief" xml:space="preserve">
+    <value>Next milestone: {nextJubilee} on {nearestJubileeDate:d}</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_TimeJubileesFull" xml:space="preserve">
+    <value>Since {baseDateName} on {baseDate:d}, incredible milestones of time have passed. The next big marker is {nextJubilee} on {nearestJubileeDate:d}!</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_TimeJubileesTitle" xml:space="preserve">
+    <value>Time Jubilees</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_TimeJubileesMethod" xml:space="preserve">
+    <value>The word "Jubilee" itself comes from "yobel" (Hebrew), the ram's horn, which was sounded on the Day of Atonement (the 10th day of the 7th month) to proclaim the year. Jubilees are celebrated in round numbers because they symbolize a complete, intentional "reset" of life, land, and faith, stemming from various traditions. For example, 10th Year (Decennalia) is rooted in Roman tradition (e.g., Constantine) to mark a decade of rule. Numbers that are "round" (ending in 0, 5, 10, 100, etc.) or containing same digits (111, 33, etc.) appear "nice" or satisfying to us primarily because of processing fluency—they are much easier for our brains to remember, and understand compared to specific, precise numbers. This preference is rooted in both cognitive psychology and evolutionary history.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_TimeJubileesSource" xml:space="preserve">
+    <value>Detailed breakdown of the exact time units remaining until your next major life milestone based on proprietary base-10 mathematics.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_CountdownTitle" xml:space="preserve">
+    <value>Countdown</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_CountdownBrief_HoursOnly" xml:space="preserve">
+    <value>{hrs}h : {mins}m : {secs}s until next anniversary</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_CountdownBrief_DaysHours" xml:space="preserve">
+    <value>{days} days {hrs}h : {mins}m until next anniversary</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_CountdownBrief_DaysOnly" xml:space="preserve">
+    <value>{days} days until next anniversary</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_CountdownFull_HoursOnly" xml:space="preserve">
+    <value>We're counting the seconds! Only {hrs} hours, {mins} minutes, and {secs} seconds left until you hit the next anniversary on {nearest:d}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_CountdownFull_WithDays" xml:space="preserve">
+    <value>We're counting the seconds! Only {days} days, {hrs} hours, {mins} minutes, and {secs} seconds left until you hit the next anniversary on {nearest:d}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_CountdownTitle" xml:space="preserve">
+    <value>Countdown</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_CountdownMethod" xml:space="preserve">
+    <value>Calculating the time units remaining until your closest next major milestone from the Time Jubilees.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_CountdownSource" xml:space="preserve">
+    <value>Detailed breakdown of the exact time units remaining until your next major life milestone based on proprietary base-10 mathematics.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_LifeOdometerTitle" xml:space="preserve">
+    <value>Life Odometer</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_LifeOdometerBrief" xml:space="preserve">
+    <value>{heartbeats:N0} heartbeats and {breaths:N0} breaths</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_LifeOdometerFull" xml:space="preserve">
+    <value>Approximately {heartbeats:N0} heartbeats have drummed and {breaths:N0} breaths have been processed since {baseDateName} on {baseDate:d}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_LifeOdometerTitle" xml:space="preserve">
+    <value>Life Odometer</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_LifeOdometerMethod" xml:space="preserve">
+    <value>A medical breakdown of average heart rates (70 bpm) and respiratory cycles (16 breaths/min) used to calculate your biological mileage.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_LifeOdometerSource" xml:space="preserve">
+    <value>Calculation based on the data provided by the National Center for Biotechnology Information (NCBI) of the National Library of Medicine (NIH).</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_AlienAnniversariesTitle" xml:space="preserve">
+    <value>Alien Anniversaries</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_AlienAnniversariesBrief" xml:space="preserve">
+    <value>{marsYears:F2} years on Mars, {venusYears:F2} on Venus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_AlienAnniversariesFull" xml:space="preserve">
+    <value>Since {baseDateName} on {baseDate:d}, the planets have finished their laps at different speeds. On Mars, this timeline has spanned {marsYears:F2} Martian years, while on Venus, this timeline has spanned {venusYears:F2} Venusian years.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_AlienAnniversariesTitle" xml:space="preserve">
+    <value>Alien Anniversaries</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_AlienAnniversariesMethod" xml:space="preserve">
+    <value>Planetary orbital mechanics is the study of how objects in space move under the influence of gravity, primarily dictated by Kepler's laws and Newton's law of universal gravitation. Planets move in elliptical orbits around the Sun, with orbital speeds increasing as they get closer to the Sun. Timekeeping on other planets requires translating Earth days into local days (sols) and years based on their rotation and orbital periods. A "sol" is the name for a 24-hour, 39-minute, 35-second solar day on Mars, just about 40 minutes longer than an Earth day. A year on Mars lasts 669.6 sols, which is equivalent to 687 Earth days (almost two Earth years). Venus is a strange planet with a "retrograde" rotation (spins backward) and a year that is shorter than its day. Venus completes one orbit in 225 Earth days, but takes 243 Earth days to rotate once. Therefore, a day on Venus is longer than a year on Venus.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_AlienAnniversariesSource" xml:space="preserve">
+    <value>Data courtesy of the NASA Jet Propulsion Laboratory (JPL) Horizons On-Line Ephemeris System.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_GalacticCommuteTitle" xml:space="preserve">
+    <value>Galactic Commute</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_GalacticCommuteBrief" xml:space="preserve">
+    <value>{distance} through the Galaxy</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_GalacticCommuteFull" xml:space="preserve">
+    <value>Since {baseDate:d}, Earth has hitched a ride for a {distance} {fullDistance}journey around the center of the Milky Way.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_GalacticCommuteTitle" xml:space="preserve">
+    <value>Galactic Commute</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_GalacticCommuteMethod" xml:space="preserve">
+    <value>Our Solar System orbits the Milky Way's center at a speed of approximately 220-230 km/s (514,000 mph), completing one revolution every 225-230 million years. This journey, known as a Galactic Year or Cosmic Year, moves the system through the galactic disk at about 1/1300 of the speed of light.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_GalacticCommuteSource" xml:space="preserve">
+    <value>Data courtesy of the NASA Jet Propulsion Laboratory (JPL) Horizons On-Line Ephemeris System.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathTitle" xml:space="preserve">
+    <value>Photon Path</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_PhotonPathHeliopause_Brief" xml:space="preserve">
+    <value>Light has reached the Heliopause</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathHeliopause_Full" xml:space="preserve">
+    <value>If a starship left at light speed on {baseDate:d}, it would have traveled {fullDistance}, and already reached the Heliopause - the boundary, roughly 11-12 billion miles (18-20 billion km) out, where solar wind is halted by the interstellar medium.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathSolarSystem_Brief" xml:space="preserve">
+    <value>Light is still within the Solar System</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathSolarSystem_Full" xml:space="preserve">
+    <value>If a starship left at light speed on {baseDate:d}, it would have traveled {fullDistance}, and is within our Solar System still.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathOortCloud_Brief" xml:space="preserve">
+    <value>Light has reached the Oort Cloud</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathOortCloud_Full" xml:space="preserve">
+    <value>If a starship left at light speed on {baseDate:d}, it would have traveled {fullDistance}, and already reached the Oort Cloud of our Solar System - the theoretical outer edge of the Sun's gravitational influence.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathInterstellar_Brief" xml:space="preserve">
+    <value>Light has reached interstellar space</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathInterstellar_Full" xml:space="preserve">
+    <value>If a starship left at light speed on {baseDate:d}, it would have traveled {distance} ({fullDistance}), and already reached interstellar space - the vast, mostly empty region between stars. The next stop is Proxima Centauri, located 4.246 light-years away.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathStar_BriefTemplate" xml:space="preserve">
+    <value>Light has reached {star.Name}</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathStar_FullTemplate" xml:space="preserve">
+    <value>If a starship left at light speed on {baseDate:d}, it would have traveled {distance} ({fullDistance}), and already reached {star.Name}, located {star.Ly} light-years away - {star.Info}</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_ProximaCentauri_Info" xml:space="preserve">
+    <value>a red dwarf star in the constellation Centaurus, the closest known star to the Sun</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_AlphaCentauri_Info" xml:space="preserve">
+    <value>a binary pair of Sun-like stars in the constellation Centaurus that, with Proxima, form a triple system</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_BarnardsStarInfo" xml:space="preserve">
+    <value>a red dwarf star in the constellation Ophiuchus with the largest proper motion of any known star</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Luhman16_Info" xml:space="preserve">
+    <value>a binary brown dwarf system in the constellation Vela, one of the closest to the Sun</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Lalande21185_Info" xml:space="preserve">
+    <value>a star in the constellation Ursa Major. One of the brightest red dwarfs near Earth, but still too dim at magnitude 7.52.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Sirius_Info" xml:space="preserve">
+    <value>a star in the constellation Canis Major. The brightest star in the night sky</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_EpsilonEridani_Info" xml:space="preserve">
+    <value>a visible young Sun-like star with a debris disk in the constellation Eridanus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Procyon_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Canis Minor and the eighth-brightest star in the night sky</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_61Cygni_Info" xml:space="preserve">
+    <value>a binary star system in the constellation Cygnus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_EpsilonIndi_Info" xml:space="preserve">
+    <value>a nearby star system in the constellation Indus with a brown dwarf companion</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_TauCeti_Info" xml:space="preserve">
+    <value>a Sun-like star in the constellation Cetus with a planetary system</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Groombridge1618_Info" xml:space="preserve">
+    <value>a nearby star in the constellation Ursa Major with a high proper motion</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Omicron2Eridani_Info" xml:space="preserve">
+    <value>a triple star system in the constellation Eridanus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_70Ophiuchi_Info" xml:space="preserve">
+    <value>a binary star system in the constellation Ophiuchus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Altair_Info" xml:space="preserve">
+    <value>the twelfth-brightest star in the night sky and the brightest star in the constellation Aquila</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_EtaCassiopeiae_Info" xml:space="preserve">
+    <value>a binary star system in the constellation Cassiopeia</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_36Ophiuchi_Info" xml:space="preserve">
+    <value>a triple star system in the constellation Ophiuchus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_DeltaPavonis_Info" xml:space="preserve">
+    <value>a nearby star in the constellation Pavo with a high metallicity, making it a candidate for hosting planets</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Vega_Info" xml:space="preserve">
+    <value>a star in the constellation Lyra. The fifth-brightest star in the night sky and the second-brightest star in the northern celestial hemisphere</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Fomalhaut_Info" xml:space="preserve">
+    <value>a bright star in the constellation Piscis Austrinus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Pollux_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Gemini</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Denebola_Info" xml:space="preserve">
+    <value>the second-brightest star in the constellation Leo</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Arcturus_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Boötes and the fourth-brightest star in the night sky</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Capella_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Auriga and the sixth-brightest star in the night sky</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Rasalhague_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Ophiuchus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alderamin_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Cepheus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Castor_Info" xml:space="preserve">
+    <value>a multiple star system in the constellation Gemini</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Caph_Info" xml:space="preserve">
+    <value>a star in the constellation Cassiopeia</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Aldebaran_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Taurus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_InAuriga_Info" xml:space="preserve">
+    <value>a star in the constellation Auriga</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Hamal_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Aries</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_InCepheus_Info" xml:space="preserve">
+    <value>a star in the constellation Cepheus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alphecca_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Corona Borealis</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Ankaa_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Phoenix</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Regulus_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Leo</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_InCentaurus_Info" xml:space="preserve">
+    <value>a star in the constellation Centaurus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_InUrsaMajor_Info" xml:space="preserve">
+    <value>a star in the constellation Ursa Major</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Sabik_Info" xml:space="preserve">
+    <value>a star in the constellation Ophiuchus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Gacrux_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Crux</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Algol_Info" xml:space="preserve">
+    <value>a star in the constellation Perseus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Diphda_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Cetus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alpheratz_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Andromeda</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alnair_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Grus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alkaid_Info" xml:space="preserve">
+    <value>the star at the end of the Big Dipper's handle in the constellation Ursa Major</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alhena_Info" xml:space="preserve">
+    <value>a star in the constellation Gemini</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Miaplacidus_Info" xml:space="preserve">
+    <value>the second-brightest star in the constellation Carina</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Algieba_Info" xml:space="preserve">
+    <value>a star in the constellation Leo</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Kochab_Info" xml:space="preserve">
+    <value>a star in the constellation Ursa Minor</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Elnath_Info" xml:space="preserve">
+    <value>a star in the constellation Taurus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Achernar_Info" xml:space="preserve">
+    <value>the brightest star in the constellation Eridanus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_PhotonPathTitle" xml:space="preserve">
+    <value>Photon Path</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_PhotonPathMethod" xml:space="preserve">
+    <value>Astronomical data showing which specific stars are currently being passed through by light emitted from Earth on a base date, traveling at the speed of light in a vacuum of 299,792,458 m/s. The HYG Star Database (v3.0) is a comprehensive catalog of stars, including their positions, distances, and other relevant data, which allows us to determine which stars the light from Earth has reached over time.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_PhotonPathSource" xml:space="preserve">
+    <value>Star Data from the HYG Star Database (v3.0), distributed under the Creative Commons Attribution-ShareAlike 2.5 License.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_HumanBirthRankTitle" xml:space="preserve">
+    <value>Human Birth Rank</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_HumanBirthRankPreXX_Brief" xml:space="preserve">
+    <value>One of the first 104,510,976,956 humans</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_HumanBirthRankPreXX_Full" xml:space="preserve">
+    <value>The moment when {baseDateName} is before the XX century, the number of humans have ever lived on Earth till 1900 is estimated as 104,510,976,956.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_HumanBirthRankPostXX_Brief" xml:space="preserve">
+    <value>Human #{estimatedRank:N0} on this date</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_HumanBirthRankPostXX_Full" xml:space="preserve">
+    <value>The moment when {baseDateName} marks the arrival of human #{estimatedRank:N0} in the story of Earth, out of all who have ever lived.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_HumanBirthRankTitle" xml:space="preserve">
+    <value>Human Birth Rank</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_HumanBirthRankMethod" xml:space="preserve">
+    <value>Demographic estimations based on historical global population models and UN data.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_HumanBirthRankSource" xml:space="preserve">
+    <value>World population statistics and projections courtesy of the United Nations, Department of Economic and Social Affairs, Population Division (2024 Revision). Historical estimates by Human Mortality Database (2025 revision) and the Population Reference Bureau (2024).</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_BirthRuneTitle" xml:space="preserve">
+    <value>Birth Rune</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_BirthRuneBrief_Template" xml:space="preserve">
+    <value>Date rune is {birthRune.Name}: {birthRune.Brief}</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_BirthRuneFull_Template" xml:space="preserve">
+    <value>According to Viking lore, {baseDate:d} is governed by the {birthRune.Name} rune: {birthRune.Full}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Fehu_Brief" xml:space="preserve">
+    <value>Success and rewards for hard work</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Fehu_Full" xml:space="preserve">
+    <value>Fehu is all about getting the rewards you've earned - think money, success, and good fortune from your hard work. It's a reminder to be thankful for what you have and to share your good luck with others, which can help you keep the good vibes going.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Uruz_Brief" xml:space="preserve">
+    <value>Good health and inner strength</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Uruz_Full" xml:space="preserve">
+    <value>Uruz is like a boost of pure energy and strength. It encourages you to tap into your inner power, stay resilient, and keep pushing through tough times. It's about feeling strong, healthy, and ready to take on whatever life throws at you.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Thurisaz_Brief" xml:space="preserve">
+    <value>Protection, caution, wait for the right moment</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Thurisaz_Full" xml:space="preserve">
+    <value>Thurisaz is your protective shield, inspired by Thor. It's telling you to pause and think things through before acting. Use your judgment, be careful, and don't rush - sometimes waiting for the right moment is the smartest move.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ansuz_Brief" xml:space="preserve">
+    <value>Communication and advice from wise people</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ansuz_Full" xml:space="preserve">
+    <value>Ansuz is all about clear communication and learning from those who've been around the block. Listen to wise friends or mentors, soak up their advice, and let it help you grow smarter and wiser yourself.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Raidho_Brief" xml:space="preserve">
+    <value>Journey, change, moving toward goals</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Raidho_Full" xml:space="preserve">
+    <value>Raidho is the rune for life's journey - whether you're traveling, moving, or just chasing your dreams. It encourages you to embrace changes, trust the process, and keep moving toward your goals, one step at a time.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Kenaz_Brief" xml:space="preserve">
+    <value>Intuition, clarity, hope</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Kenaz_Full" xml:space="preserve">
+    <value>Kenaz shines a light in dark or confusing times. It helps you find clarity, spark new ideas, and gives you hope when things feel tough. Trust your gut - sometimes your intuition leads you straight to the answers you need.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Gebo_Brief" xml:space="preserve">
+    <value>Harmony and giving in relationships</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Gebo_Full" xml:space="preserve">
+    <value>Gebo is all about give-and-take in relationships. When you're generous and open, you create harmony and attract kindness in return. It's a reminder that good things happen when you share and connect with others.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Wunjo_Brief" xml:space="preserve">
+    <value>Happiness and well-being</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Wunjo_Full" xml:space="preserve">
+    <value>Wunjo brings happiness and peaceful vibes. It's about enjoying the simple pleasures in life, feeling content, and spreading joy to those around you. Take time to relax and appreciate your own well-being.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Hagalaz_Brief" xml:space="preserve">
+    <value>Change, breaking old habits</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Hagalaz_Full" xml:space="preserve">
+    <value>Hagalaz shakes things up, but in a good way - it helps you break old, bad habits and make room for positive changes. Even if things feel chaotic, it's clearing the path for a fresh start and better days ahead.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Nauthiz_Brief" xml:space="preserve">
+    <value>Stay alert and patient in tough times</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Nauthiz_Full" xml:space="preserve">
+    <value>Naudhiz is your reminder to stay strong and patient when life gets tough. It's about facing obstacles head-on, staying alert, and learning from every challenge. Don't be afraid - you've got what it takes to get through.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Isa_Brief" xml:space="preserve">
+    <value>Patience, pause, don't rush decisions</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Isa_Full" xml:space="preserve">
+    <value>Isa is like a pause button, letting you know it's okay to slow down and take a break. Instead of rushing, use this time to reflect, be patient, and wait for things to clear up before making any big moves.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Jera_Brief" xml:space="preserve">
+    <value>Karma, reward comes with patience</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Jera_Full" xml:space="preserve">
+    <value>Jera reminds you that good things take time - like planting seeds and waiting for them to grow. Keep putting in effort, and your rewards will come, even if they take a while. Patience pays off in the end!</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Eihwaz_Brief" xml:space="preserve">
+    <value>Protection in pursuing goals, imagination helps</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Eihwaz_Full" xml:space="preserve">
+    <value>Eihwaz is your trusty sidekick when you're working toward your goals. It helps you stay safe and resilient, and encourages you to use your imagination to tackle challenges and find creative solutions.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Perthro_Brief" xml:space="preserve">
+    <value>Mysteries, secrets, surprises</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Perthro_Full" xml:space="preserve">
+    <value>Perthro is all about uncovering secrets and embracing surprises. It's a reminder to be open to unexpected twists and to trust that even mysteries can lead to important lessons and personal growth.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Algiz_Brief" xml:space="preserve">
+    <value>Protection, awareness, rely on friends</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Algiz_Full" xml:space="preserve">
+    <value>Algiz offers a protective vibe, keeping you safe from harm. It also encourages you to stay aware, rely on your friends and community, and look forward to happy times ahead.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Sowilo_Brief" xml:space="preserve">
+    <value>Health, relax, let go of worries</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Sowilo_Full" xml:space="preserve">
+    <value>Sowilo is all about feeling good and keeping your energy up. It tells you to relax, let go of worries, and take care of your body - because staying healthy makes everything else easier.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Tiwaz_Brief" xml:space="preserve">
+    <value>Success, willpower, victory, romance</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Tiwaz_Full" xml:space="preserve">
+    <value>Tiwaz gives you a boost of confidence and courage. Whether you're chasing goals or starting a new romance, this rune says keep going - you've got the willpower to win and come out on top.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Berkano_Brief" xml:space="preserve">
+    <value>Family, feminine energy, new beginnings</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Berkano_Full" xml:space="preserve">
+    <value>Berkano is all about nurturing, family, and new beginnings. It often signals happy events like weddings or births, and encourages you to embrace growth and positive changes in your personal life.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ehwaz_Brief" xml:space="preserve">
+    <value>Movement, change, travel, trust new directions</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ehwaz_Full" xml:space="preserve">
+    <value>Ehwaz is the rune for moving forward and adapting to new things. Whether you're traveling, changing jobs, or starting fresh, trust that these changes are leading you to something better.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Mannaz_Brief" xml:space="preserve">
+    <value>Teamwork, support, expanding contacts</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Mannaz_Full" xml:space="preserve">
+    <value>Mannaz is all about working together and building strong connections. It encourages you to reach out, accept support, and grow your network - success is easier when you're part of a team.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Laguz_Brief" xml:space="preserve">
+    <value>Intuition, imagination, spiritual connection</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Laguz_Full" xml:space="preserve">
+    <value>Laguz is your guide to trusting your intuition and going with the flow. It helps you tap into your creativity and spiritual side, so you can handle whatever comes your way with grace.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ingwaz_Brief" xml:space="preserve">
+    <value>Closure, fulfillment, new beginnings</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ingwaz_Full" xml:space="preserve">
+    <value>Ingwaz helps you wrap things up and start fresh. It's about feeling fulfilled, closing old chapters, and stepping confidently into new beginnings with a sense of peace.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Othala_Brief" xml:space="preserve">
+    <value>Heritage, material goods, advice from elders</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Othala_Full" xml:space="preserve">
+    <value>Othala connects you to your roots and family traditions. It's about appreciating what you've inherited - whether it's wisdom, values, or material things - and seeking guidance from elders and old friends when you need it.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Dagaz_Brief" xml:space="preserve">
+    <value>Growth, hope, optimism for new times</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Dagaz_Full" xml:space="preserve">
+    <value>Dagaz is like a sunrise after a tough night - bringing hope, growth, and positive change. It's a sign that things are looking up, so stay optimistic and keep moving forward.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_BirthRuneTitle" xml:space="preserve">
+    <value>Birth Rune</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_BirthRuneMethod" xml:space="preserve">
+    <value>The Elder Futhark is the oldest runic alphabet, used by Germanic tribes from approximately AD 150 to 800 for inscriptions on artifacts. It consists of 24 characters, divided into three families - groups of eight (aettir), named after its first six letters (F-U-Þ-A-R-K). The Elder Futhark birth rune system assigns specific runes to birth dates, often based on a 24-rune cycle linked to the Sun's position throughout the year. In the Norse mysticism, each rune is more than just a symbol; it is a richly meaningful sign embodying various aspects of life, nature, and the divine powers revered by the Norse and other Germanic peoples.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_BirthRuneSource" xml:space="preserve">
+    <value>Runic interpretations based on the Elder Futhark system of the historical Viking Age.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_PersonalYearTitle" xml:space="preserve">
+    <value>Personal Year</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_PersonalYearBrief_Template" xml:space="preserve">
+    <value>Year {curYear} is Numerology Year {personalYear}: {interpretations[personalYear - 1].Brief}</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PersonalYearFull_Template" xml:space="preserve">
+    <value>In Numerology, for those who were born on {baseDate:d}, year {curYear} is Personal Year {personalYear}: {interpretations[personalYear - 1].Full}</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear1_Brief" xml:space="preserve">
+    <value>New beginnings and fresh starts</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear1_Full" xml:space="preserve">
+    <value>Personal Year 1 is characterized by feelings of loneliness and challenges in relationships, as individuals seek greater independence and pursue new beginnings. This shift can cause tension with partners used to doing things together, leading to misunderstandings. People often do not realize their desire for solitude is influenced by this year's vibration, making it hard to explain their actions. The experience varies - some may face situations requiring assertiveness, and failing to seize these opportunities can result in loss or loneliness. Despite the challenges, Personal Year 1 offers a chance for renewal, rest from past responsibilities, and rewards for previous efforts. While important connections may be formed, romantic relationships typically begin in Personal Years 2 or 6.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear2_Brief" xml:space="preserve">
+    <value>Cooperation and partnerships</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear2_Full" xml:space="preserve">
+    <value>Personal Year 2 is a time for forming new relationships, increased cooperation, and sharing emotions. People become more understanding and prefer connecting with others rather than being alone. Ideas and opportunities from the previous year can now grow, and maintaining a peaceful environment is important to avoid stress and illness. Overall, it is a period of harmony, support, and personal growth.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear3_Brief" xml:space="preserve">
+    <value>Creativity and self-expression</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear3_Full" xml:space="preserve">
+    <value>The vibrations of the number three encourage mental activity, social interaction, and self-expression. This year is not suited for routine tasks; instead, it demands stimulating and imaginative pursuits to channel increased mental energy. If not properly directed, this energy can lead to irritability or sleep disturbances. The period also brings opportunities to resolve past relationships and issues, often through rational communication, which helps alleviate emotional distress. Additionally, it is an ideal time for studying, as mental energy reaches its peak.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear4_Brief" xml:space="preserve">
+    <value>Hard work and building foundations</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear4_Full" xml:space="preserve">
+    <value>Personal Year 4 is an active period requiring efficient energy management. People are prone to overwork, ignoring warning signs, and making impulsive decisions that can lead to setbacks. Challenges often arise, making security and future planning a priority; many prefer staying home and focusing on family. This year favors property purchases and investments, but individuals may seek support due to self-doubt and difficulty recognizing their progress. Effective organization and stress management are crucial to avoid health issues. By channeling energy constructively and learning to relax, Personal Year 4 can yield significant success.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear5_Brief" xml:space="preserve">
+    <value>Change and freedom</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear5_Full" xml:space="preserve">
+    <value>Personal Year 5 is marked by change and freedom, breaking away from previous constraints. Throughout these twelve months, individuals experience shifts internally and externally, prompting them to embrace new opportunities and let go of old habits. This year prioritizes both intellectual and physical independence, urging people to explore new ideas, enjoy solitude in nature, and make meaningful connections. The energy of number five encourages responsible adaptation, self-discipline, and focus, allowing for high levels of inspiration and progress when goals are set thoughtfully.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear6_Brief" xml:space="preserve">
+    <value>Responsibility and nurturing</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear6_Full" xml:space="preserve">
+    <value>Personal Year 6 is marked by increased responsibility, choices, and a focus on family and community. The discipline learned previously is tested as individuals become more aware of their impact on others and their surroundings. This period encourages helping others, balancing creative energy, and managing obligations without becoming overwhelmed. Maintaining personal peace is crucial to avoid bitterness and health issues. Support from loved ones is important for making decisions and sustaining healthy relationships. Year 6 is ideal for building new connections, strengthening existing ones, and resolving family conflicts, often resulting in greater harmony and attractiveness to others.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear7_Brief" xml:space="preserve">
+    <value>Analysis and understanding</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear7_Full" xml:space="preserve">
+    <value>The number seven is linked to emotional changes, challenges in relationships, and personal growth. During Personal Year 7, individuals face spiritual lessons and may experience loss or illness. This period encourages self-reliance, compassion, and understanding, both toward oneself and others. Helping others can put one's problems in perspective, fostering personal development. Approaching situations with patience and sincere support leads to meaningful progress in relationships and inner strength.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear8_Brief" xml:space="preserve">
+    <value>Attainment and capital gains</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear8_Full" xml:space="preserve">
+    <value>Personal Year 8 is a time to restore balance, build on past experience, and reap rewards from previous efforts. Success hinges on hard work and integrity, as karma reflects one's actions. This period offers opportunities for creativity and independence if energy is used wisely. Patience and wisdom help maintain strength and balance. Expect improvements in health, career, and relationships - act honestly, stay positive, and communicate effectively to achieve success.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear9_Brief" xml:space="preserve">
+    <value>Reflection and reaching out</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear9_Full" xml:space="preserve">
+    <value>Personal Year 9 marks the end of cycles and prepares individuals for new beginnings in Personal Year 1. This period can bring feelings of instability, prompting change even if it's uncomfortable. While it may cause confusion and difficulty - sometimes ending relationships or leading to significant life changes - it also offers growth in personal awareness and responsibility. People often reorganize priorities and take on new responsibilities, fostering self-development. Though challenging, Personal Year 9 provides valuable opportunities for learning and setting the stage for future progress.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_PersonalYearTitle" xml:space="preserve">
+    <value>Personal Year</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_PersonalYearMethod" xml:space="preserve">
+    <value>Numerology (known before the 20th century as arithmancy) is the belief in an occult, divine or mystical relationship between a number and metaphysical phenomena or ideas. It is also the study of the numerical value, via an alphanumeric system, of the letters in words and names (e.g. gematria). When numerology is applied to a person's name, it is a form of onomancy. It is often associated with astrology and other divinatory arts. Number symbolism is an ancient and pervasive aspect of human thought, deeply intertwined with religion, philosophy, mysticism, and mathematics. Different cultures and traditions have assigned specific meanings to numbers, often linking them to divine principles, cosmic forces, or natural patterns.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_PersonalYearSource" xml:space="preserve">
+    <value>Personal Year calculations based on the Pythagorean system of Numerology.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_GlobalExhaleTitle" xml:space="preserve">
+    <value>Global Exhale</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_GlobalExhaleMetric_BTonnes" xml:space="preserve">
+    <value>billion tonnes</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_GlobalExhaleImperial_BTons" xml:space="preserve">
+    <value>billion imperial tons</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_GlobalExhalePreXX_Brief" xml:space="preserve">
+    <value>Till 1900, {amount} of CO2 emitted</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_GlobalExhalePreXX_Full" xml:space="preserve">
+    <value>The moment when {baseDateName} is before the XX century - till 1900, humanity has released {amount} of CO2 into the atmosphere. Still a tiny amount compared to later times.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_GlobalExhalePostXX_Brief" xml:space="preserve">
+    <value>{amount} of CO2 emitted</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_GlobalExhalePostXX_Full" xml:space="preserve">
+    <value>Since {baseDateName} on {baseDate:d}, humanity has released {amount} of CO2 into the atmosphere. A massive global exhale.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_GlobalExhaleTitle" xml:space="preserve">
+    <value>Global Exhale</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_GlobalExhaleMethod" xml:space="preserve">
+    <value>Ecological statistics tracking global environmental shifts, forest coverage, and carbon cycles during your specific timeframe.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_GlobalExhaleSource" xml:space="preserve">
+    <value>Emissions data courtesy of the Global Carbon Project (GCP) and the Global Carbon Budget (GCB) of University of Exeter's Global Systems Institute.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Tease_Countdown" xml:space="preserve">
+    <value>Only {countdown.BriefText}! Time is flying, and I'm counting every second. Find your next big milestone.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Tease_Heartbeats" xml:space="preserve">
+    <value>My heart has drummed {lifeOdometer.BriefText.Split(" and ")[0]} since {baseDateValue}. My internal engine never stops! Check your vitals on AeonPulse.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Tease_Breaths" xml:space="preserve">
+    <value>My lungs have processed {lifeOdometer.BriefText.Split(" and ")[1]} since {baseDateValue}. And yours? Check your vitals on AeonPulse.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Tease_GalacticCommute" xml:space="preserve">
+    <value>Since {baseDateValue}, I've hitched a ride on Earth for a {galacticCommute.BriefText}. I'm literally a space traveler! How far have you traveled?</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="MainMenu_Title" xml:space="preserve">
+    <value>AeonPulse</value>
+    <comment>MainMenuPopup.xaml</comment>
+  </data>
+  <data name="MainMenu_ChangeDate" xml:space="preserve">
+    <value>Change Date</value>
+    <comment>MainMenuPopup.xaml</comment>
+  </data>
+  <data name="MainMenu_Settings" xml:space="preserve">
+    <value>Settings</value>
+    <comment>MainMenuPopup.xaml</comment>
+  </data>
+  <data name="MainMenu_Exit" xml:space="preserve">
+    <value>Exit</value>
+    <comment>MainMenuPopup.xaml</comment>
+  </data>
+  <data name="MainMenu_ButtonClose" xml:space="preserve">
+    <value>Close</value>
+    <comment>MainMenuPopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_Title" xml:space="preserve">
+    <value>Change Date</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_Description" xml:space="preserve">
+    <value>Track metrics from any significant life event - your birthday, graduation, wedding, or any milestone that matters to you.</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_BaseDateNameLabel" xml:space="preserve">
+    <value>Event Name</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_BaseDateNamePlaceholder" xml:space="preserve">
+    <value>e.g. My Birthday</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_BaseDateLabel" xml:space="preserve">
+    <value>Date</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_ButtonClose" xml:space="preserve">
+    <value>Close</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_ButtonOK" xml:space="preserve">
+    <value>OK</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>AeonPulse</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_SettingsTitle" xml:space="preserve">
+    <value>Settings</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_UnitsLabel" xml:space="preserve">
+    <value>Unit System</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_UnitsMetric" xml:space="preserve">
+    <value>Metric</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_UnitsImperial" xml:space="preserve">
+    <value>Imperial</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_PaletteLabel" xml:space="preserve">
+    <value>Color Scheme</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_PaletteDefault" xml:space="preserve">
+    <value>Default Dark</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_PaletteHighContrastDark" xml:space="preserve">
+    <value>High Contrast Dark</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_PaletteHighContrastLight" xml:space="preserve">
+    <value>High Contrast Light</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_TextSizeLabel" xml:space="preserve">
+    <value>Text Size</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_TextSizeSmall" xml:space="preserve">
+    <value>Small</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_TextSizeNormal" xml:space="preserve">
+    <value>Normal</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_TextSizeLarge" xml:space="preserve">
+    <value>Large</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_LanguageLabel" xml:space="preserve">
+    <value>Display Language</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_LanguageDefault" xml:space="preserve">
+    <value>Default</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_LanguageRussian" xml:space="preserve">
+    <value>Russian</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_AboutTitle" xml:space="preserve">
+    <value>About</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_AboutVersion" xml:space="preserve">
+    <value>AeonPulse v0.1.0</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_AboutDescription" xml:space="preserve">
+    <value>Track life metrics and milestones in a visually striking cyberpunk aesthetic.</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_AboutTagline" xml:space="preserve">
+    <value>Created with passion for time, data, and cosmic wonder.</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_ButtonClose" xml:space="preserve">
+    <value>Close</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Refreshing_Message" xml:space="preserve">
+    <value>Refreshing...</value>
+    <comment>RefreshingPopup.xaml</comment>
+  </data>
+</root>

@@ -1,5 +1,6 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:resources="clr-namespace:Aeonpulse.Resources"
              x:Class="Aeonpulse.Views.SettingsPopup"
              BackgroundColor="#80000000"
              Shell.NavBarIsVisible="False">
@@ -31,7 +32,7 @@
 
                     <!-- Title -->
                     <VerticalStackLayout Grid.Row="0" Spacing="0" Padding="24,20,24,0">
-                        <Label Text="AeonPulse"
+                        <Label Text="{x:Static resources:AppResources.Settings_Title}"
                                FontSize="{StaticResource FontSizeTitle}"
                                FontAttributes="Bold"
                                HorizontalOptions="Center"
@@ -48,7 +49,7 @@
                     <VerticalStackLayout Grid.Row="1" Spacing="16" Padding="24,16">
 
                         <!-- Settings Section -->
-                        <Label Text="Settings"
+                        <Label Text="{x:Static resources:AppResources.Settings_SettingsTitle}"
                                FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
@@ -60,14 +61,14 @@
                             ColumnSpacing pushes radios away from labels consistently.
                         -->
                         <Grid ColumnDefinitions="Auto,*"
-                              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                               ColumnSpacing="16"
                               RowSpacing="8">
 
                             <!-- Row 0: Unit System label (spans both radio rows via RowSpan) -->
                             <Label Grid.Row="0" Grid.Column="0"
                                    Grid.RowSpan="2"
-                                   Text="Unit System"
+                                   Text="{x:Static resources:AppResources.Settings_UnitsLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
@@ -104,7 +105,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="Metric"
+                                <Label Text="{x:Static resources:AppResources.Settings_UnitsMetric}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -142,7 +143,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="Imperial"
+                                <Label Text="{x:Static resources:AppResources.Settings_UnitsImperial}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -156,7 +157,7 @@
                             <!-- Row 3: Color Scheme label (spans all three radio rows via RowSpan) -->
                             <Label Grid.Row="3" Grid.Column="0"
                                    Grid.RowSpan="3"
-                                   Text="Color Scheme"
+                                   Text="{x:Static resources:AppResources.Settings_PaletteLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
@@ -193,7 +194,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="Default Dark"
+                                <Label Text="{x:Static resources:AppResources.Settings_PaletteDefault}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -231,7 +232,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="High Contrast Dark"
+                                <Label Text="{x:Static resources:AppResources.Settings_PaletteHighContrastDark}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -269,7 +270,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="High Contrast Light"
+                                <Label Text="{x:Static resources:AppResources.Settings_PaletteHighContrastLight}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -283,7 +284,7 @@
                             <!-- Row 7: Text Size label (spans all three radio rows via RowSpan) -->
                             <Label Grid.Row="7" Grid.Column="0"
                                    Grid.RowSpan="3"
-                                   Text="Text Size"
+                                   Text="{x:Static resources:AppResources.Settings_TextSizeLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
@@ -320,7 +321,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="Small"
+                                <Label Text="{x:Static resources:AppResources.Settings_TextSizeSmall}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -358,7 +359,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="Normal"
+                                <Label Text="{x:Static resources:AppResources.Settings_TextSizeNormal}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -396,7 +397,131 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="Large"
+                                <Label Text="{x:Static resources:AppResources.Settings_TextSizeLarge}"
+                                       FontSize="{DynamicResource FontSizeMedium}"
+                                       TextColor="{DynamicResource CyberCyan}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <!-- Row 10: spacer between Text Size and Display Language -->
+                            <BoxView Grid.Row="10" Grid.ColumnSpan="2"
+                                     HeightRequest="4"
+                                     Color="Transparent" />
+
+                            <!-- Row 11: Display Language label (spans all three radio rows via RowSpan) -->
+                            <Label Grid.Row="11" Grid.Column="0"
+                                   Grid.RowSpan="3"
+                                   Text="{x:Static resources:AppResources.Settings_LanguageLabel}"
+                                   FontSize="{DynamicResource FontSizeMedium}"
+                                   TextColor="{DynamicResource TextGray}"
+                                   VerticalOptions="Center" />
+
+                            <!-- Row 11: Default radio -->
+                            <HorizontalStackLayout Grid.Row="11" Grid.Column="1"
+                                                   Spacing="6"
+                                                   HorizontalOptions="Start"
+                                                   VerticalOptions="Center">
+                                <RadioButton x:Name="LangDefaultRadio"
+                                             Value="Default"
+                                             GroupName="DisplayLanguage">
+                                    <RadioButton.ControlTemplate>
+                                        <ControlTemplate>
+                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
+                                                <Ellipse Grid.Column="0"
+                                                         WidthRequest="16"
+                                                         HeightRequest="16"
+                                                         Stroke="{DynamicResource CyberCyan}"
+                                                         StrokeThickness="2"
+                                                         Fill="Transparent" />
+                                                <Ellipse x:Name="InnerDot"
+                                                         Grid.Column="0"
+                                                         WidthRequest="8"
+                                                         HeightRequest="8"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         Fill="{DynamicResource CyberCyan}"
+                                                         IsVisible="{TemplateBinding IsChecked}" />
+                                                <ContentPresenter Grid.Column="1"
+                                                                  VerticalOptions="Center" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </RadioButton.ControlTemplate>
+                                </RadioButton>
+                                <Label Text="{x:Static resources:AppResources.Settings_LanguageDefault}"
+                                       FontSize="{DynamicResource FontSizeMedium}"
+                                       TextColor="{DynamicResource CyberCyan}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <!-- Row 12: English radio -->
+                            <HorizontalStackLayout Grid.Row="12" Grid.Column="1"
+                                                   Spacing="6"
+                                                   HorizontalOptions="Start"
+                                                   VerticalOptions="Center">
+                                <RadioButton x:Name="LangEnglishRadio"
+                                             Value="English"
+                                             GroupName="DisplayLanguage">
+                                    <RadioButton.ControlTemplate>
+                                        <ControlTemplate>
+                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
+                                                <Ellipse Grid.Column="0"
+                                                         WidthRequest="16"
+                                                         HeightRequest="16"
+                                                         Stroke="{DynamicResource CyberCyan}"
+                                                         StrokeThickness="2"
+                                                         Fill="Transparent" />
+                                                <Ellipse x:Name="InnerDot"
+                                                         Grid.Column="0"
+                                                         WidthRequest="8"
+                                                         HeightRequest="8"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         Fill="{DynamicResource CyberCyan}"
+                                                         IsVisible="{TemplateBinding IsChecked}" />
+                                                <ContentPresenter Grid.Column="1"
+                                                                  VerticalOptions="Center" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </RadioButton.ControlTemplate>
+                                </RadioButton>
+                                <Label Text="{x:Static resources:AppResources.Settings_LanguageEnglish}"
+                                       FontSize="{DynamicResource FontSizeMedium}"
+                                       TextColor="{DynamicResource CyberCyan}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <!-- Row 13: Russian radio -->
+                            <HorizontalStackLayout Grid.Row="13" Grid.Column="1"
+                                                   Spacing="6"
+                                                   HorizontalOptions="Start"
+                                                   VerticalOptions="Center">
+                                <RadioButton x:Name="LangRussianRadio"
+                                             Value="Russian"
+                                             GroupName="DisplayLanguage">
+                                    <RadioButton.ControlTemplate>
+                                        <ControlTemplate>
+                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
+                                                <Ellipse Grid.Column="0"
+                                                         WidthRequest="16"
+                                                         HeightRequest="16"
+                                                         Stroke="{DynamicResource CyberCyan}"
+                                                         StrokeThickness="2"
+                                                         Fill="Transparent" />
+                                                <Ellipse x:Name="InnerDot"
+                                                         Grid.Column="0"
+                                                         WidthRequest="8"
+                                                         HeightRequest="8"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         Fill="{DynamicResource CyberCyan}"
+                                                         IsVisible="{TemplateBinding IsChecked}" />
+                                                <ContentPresenter Grid.Column="1"
+                                                                  VerticalOptions="Center" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </RadioButton.ControlTemplate>
+                                </RadioButton>
+                                <Label Text="{x:Static resources:AppResources.Settings_LanguageRussian}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -411,20 +536,20 @@
                                  HorizontalOptions="Fill" />
 
                         <!-- About Section -->
-                        <Label Text="About"
+                        <Label Text="{x:Static resources:AppResources.Settings_AboutTitle}"
                                FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
 
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="AeonPulse v0.1.0"
+                            <Label Text="{x:Static resources:AppResources.Settings_AboutVersion}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}" />
-                            <Label Text="Track life metrics and milestones in a visually striking cyberpunk aesthetic."
+                            <Label Text="{x:Static resources:AppResources.Settings_AboutDescription}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap" />
-                            <Label Text="Created with passion for time, data, and cosmic wonder."
+                            <Label Text="{x:Static resources:AppResources.Settings_AboutTagline}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap" />
@@ -439,7 +564,7 @@
                                  Opacity="0.4"
                                  HorizontalOptions="Fill"
                                  Margin="0,0,0,16" />
-                        <Button Text="Close"
+                        <Button Text="{x:Static resources:AppResources.Settings_ButtonClose}"
                                 Clicked="OnCloseClicked"
                                 HorizontalOptions="Center"
                                 WidthRequest="160"

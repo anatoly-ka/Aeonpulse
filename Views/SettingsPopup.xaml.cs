@@ -30,6 +30,11 @@ namespace Aeonpulse.Views
             TextSizeNormalRadio.IsChecked = _viewModel.TextSize == FontSizeService.Normal;
             TextSizeLargeRadio.IsChecked  = _viewModel.TextSize == FontSizeService.Large;
 
+            // Initialise display language radio buttons - default to "Default" for now
+            LangDefaultRadio.IsChecked = true;
+            LangEnglishRadio.IsChecked = false;
+            LangRussianRadio.IsChecked = false;
+
             _initialising = false;
         }
 

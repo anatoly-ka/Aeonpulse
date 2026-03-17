@@ -1,4 +1,5 @@
 using Aeonpulse.Models; // Add this line if TickerData is in the Models namespace
+using Aeonpulse.Resources;
 using Aeonpulse.Services;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -13,7 +14,7 @@ namespace Aeonpulse.ViewModels
 
         #region Properties
 
-        private string _baseDateName = "I was born";
+        private string _baseDateName = AppResources.Default_BaseDateName;
         public string BaseDateName
         {
             get => _baseDateName;

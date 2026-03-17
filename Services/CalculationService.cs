@@ -1,6 +1,7 @@
 using Aeonpulse.Models;
 using System;
 using System.Linq;
+using Aeonpulse.Resources;
 
 namespace Aeonpulse.Services
 {
@@ -102,7 +103,7 @@ namespace Aeonpulse.Services
                 nearestJubileeDate = nearestJubileeYearsDate;
                 daysTillNearestJubilee = daysToYearsJubilee;
                 nearestJubileeValue = nearestJubileeYears;
-                nearestJubileeUnit = "years";
+                nearestJubileeUnit = AppResources.Unit_Years;
             }
 
             // Months
@@ -114,7 +115,7 @@ namespace Aeonpulse.Services
                 nearestJubileeDate = nearestJubileeMonthsDate;
                 daysTillNearestJubilee = daysToMonthsJubilee;
                 nearestJubileeValue = nearestJubileeMonths;
-                nearestJubileeUnit = "months";
+                nearestJubileeUnit = AppResources.Unit_Months;
             }
 
             // Weeks
@@ -126,7 +127,7 @@ namespace Aeonpulse.Services
                 nearestJubileeDate = nearestJubileeWeeksDate;
                 daysTillNearestJubilee = daysToWeeksJubilee;
                 nearestJubileeValue = nearestJubileeWeeks;
-                nearestJubileeUnit = "weeks";
+                nearestJubileeUnit = AppResources.Unit_Weeks;
             }
 
             // Days
@@ -138,7 +139,7 @@ namespace Aeonpulse.Services
                 nearestJubileeDate = nearestJubileeDaysDate;
                 daysTillNearestJubilee = daysToDaysJubilee;
                 nearestJubileeValue = nearestJubileeDays;
-                nearestJubileeUnit = "days";
+                nearestJubileeUnit = AppResources.Unit_Days;
             }
 
             // Hours
@@ -150,7 +151,7 @@ namespace Aeonpulse.Services
                 nearestJubileeDate = nearestJubileeHoursDate;
                 daysTillNearestJubilee = daysToHoursJubilee;
                 nearestJubileeValue = nearestJubileeHours;
-                nearestJubileeUnit = "hours";
+                nearestJubileeUnit = AppResources.Unit_Hours;
             }
 
             // Minutes
@@ -162,7 +163,7 @@ namespace Aeonpulse.Services
                 nearestJubileeDate = nearestJubileeMinutesDate;
                 daysTillNearestJubilee = daysToMinutesJubilee;
                 nearestJubileeValue = nearestJubileeMinutes;
-                nearestJubileeUnit = "minutes";
+                nearestJubileeUnit = AppResources.Unit_Minutes;
             }
 
             // Seconds
@@ -174,7 +175,7 @@ namespace Aeonpulse.Services
                 nearestJubileeDate = nearestJubileeSecondsDate;
                 daysTillNearestJubilee = daysToSecondsJubilee;
                 nearestJubileeValue = nearestJubileeSeconds;
-                nearestJubileeUnit = "seconds";
+                nearestJubileeUnit = AppResources.Unit_Seconds;
             }
 
             string nextJubilee = $"{nearestJubileeValue:N0} {nearestJubileeUnit}";
@@ -295,26 +296,26 @@ namespace Aeonpulse.Services
             if (useMetric)
             {
                 if (kmTraveled > 1000000000)
-                    distance = $"{(kmTraveled / 1000000000):F2} billion km";
+                    distance = $"{(kmTraveled / 1000000000):F2} {AppResources.UnitMetric_BKm}";
                 else if (kmTraveled > 1000000)
-                    distance = $"{(kmTraveled / 1000000):F2} million km";
+                    distance = $"{(kmTraveled / 1000000):F2} {AppResources.UnitMetric_MKm}";
                 else
                 {
-                    distance = $"{kmTraveled:N0} km";
+                    distance = $"{kmTraveled:N0} {AppResources.UnitMetric_Km}";
                     fullDistance = ""; // same as distance - no need
                 }
             }
             else
             {
                 double miles = kmTraveled * 0.621371;
-                fullDistance = $"({miles:N0} miles) ";
+                fullDistance = $"({miles:N0} {AppResources.UnitImperial_Miles}) ";
                 if (miles > 1000000000)
-                    distance = $"{(miles / 1000000000):F2} billion miles";
+                    distance = $"{(miles / 1000000000):F2} {AppResources.UnitImperial_BMiles}";
                 else if (miles > 1000000)
-                    distance = $"{(miles / 1000000):F2} million miles";
+                    distance = $"{(miles / 1000000):F2} {AppResources.UnitImperial_MMiles}";
                 else
                 {
-                    distance = $"{miles:N0} miles";
+                    distance = $"{miles:N0} {AppResources.UnitImperial_Miles}";
                     fullDistance = ""; // same as distance - no need
                 }
             }
@@ -334,64 +335,64 @@ namespace Aeonpulse.Services
         {
             var stars = new[]
             {
-                new { Name = "Proxima Centauri", Ly =  4.246d, Info = "a red dwarf star in the constellation Centaurus, the closest known star to the Sun" },
-                new { Name = "Alpha Centauri", Ly =  4.321d, Info = "a binary pair of Sun-like stars in the constellation Centaurus that, with Proxima, form a triple system" },
-                new { Name = "Barnard's Star", Ly =  5.963d, Info = "a red dwarf star in the constellation Ophiuchus with the largest proper motion of any known star" },
-                new { Name = "Luhman 16", Ly =  6.5d, Info = "a binary brown dwarf system in the constellation Vela, one of the closest to the Sun" },
-                new { Name = "Lalande 21185", Ly =  8.29d, Info = "a star in the constellation Ursa Major. One of the brightest red dwarfs near Earth, but still too dim at magnitude 7.52." },
-                new { Name = "Sirius", Ly =  8.71d, Info = "a star in the constellation Canis Major. The brightest star in the night sky" },
-                new { Name = "Epsilon Eridani (Ran)", Ly =  10.47d, Info = "a visible young Sun-like star with a debris disk in the constellation Eridanus" },
-                new { Name = "Procyon", Ly =  11.46d, Info = "the brightest star in the constellation Canis Minor and the eighth-brightest star in the night sky" },
-                new { Name = "61 Cygni", Ly =  11.4d, Info = "a binary star system in the constellation Cygnus" },
-                new { Name = "Epsilon Indi", Ly =  11.87d, Info = "a nearby star system in the constellation Indus with a brown dwarf companion" },
-                new { Name = "Tau Ceti", Ly =  11.91d, Info = "a Sun-like star in the constellation Cetus with a planetary system" },
-                new { Name = "Groombridge 1618", Ly =  15.89d, Info = "a nearby star in the constellation Ursa Major with a high proper motion" },
-                new { Name = "Omicron2 Eridani (Keid)", Ly =  16.33d, Info = "a triple star system in the constellation Eridanus" },
-                new { Name = "70 Ophiuchi", Ly =  16.71d, Info = "a binary star system in the constellation Ophiuchus" },
-                new { Name = "Altair", Ly =  16.73d, Info = "the twelfth-brightest star in the night sky and the brightest star in the constellation Aquila" },
-                new { Name = "Alsafi", Ly =  18d, Info = "a star in the constellation Cepheus" },
-                new { Name = "Eta Cassiopeiae (Achird)", Ly =  19.33d, Info = "a binary star system in the constellation Cassiopeia" },
-                new { Name = "36 Ophiuchi (Guniibuu)", Ly =  19.5d, Info = "a triple star system in the constellation Ophiuchus" },
-                new { Name = "Delta Pavonis", Ly =  19.89d, Info = "a nearby star in the constellation Pavo with a high metallicity, making it a candidate for hosting planets" },
-                new { Name = "Vega", Ly =  25d, Info = "a star in the constellation Lyra. The fifth-brightest star in the night sky and the second-brightest star in the northern celestial hemisphere" },
-                new { Name = "Fomalhaut", Ly =  25.13d, Info = "a bright star in the constellation Piscis Austrinus" },
-                new { Name = "Pollux", Ly =  33.78d, Info = "the brightest star in the constellation Gemini" },
-                new { Name = "Denebola", Ly =  35.9d, Info = "the second-brightest star in the constellation Leo" },
-                new { Name = "Arcturus", Ly =  36.7d, Info = "the brightest star in the constellation Boötes and the fourth-brightest star in the night sky" },
-                new { Name = "Capella", Ly =  42.9d, Info = "the brightest star in the constellation Auriga and the sixth-brightest star in the night sky" },
-                new { Name = "Rasalhague", Ly =  47.8d, Info = "the brightest star in the constellation Ophiuchus" },
-                new { Name = "Alderamin", Ly =  49.1d, Info = "the brightest star in the constellation Cepheus" },
-                new { Name = "Castor", Ly =  51.6d, Info = "a multiple star system in the constellation Gemini" },
-                new { Name = "Caph", Ly =  53.1d, Info = "a star in the constellation Cassiopeia" },
-                new { Name = "Menkent", Ly =  58.8d, Info = "a star in the constellation Centaurus" },
-                new { Name = "Aldebaran", Ly =  65.1d, Info = "the brightest star in the constellation Taurus" },
-                new { Name = "Larawag", Ly =  66d, Info = "a star in the constellation Auriga" },
-                new { Name = "Hamal", Ly =  66.3d, Info = "the brightest star in the constellation Aries" },
-                new { Name = "Aljanah", Ly =  72d, Info = "a star in the constellation Cepheus" },
-                new { Name = "Alphecca", Ly =  75d, Info = "the brightest star in the constellation Corona Borealis" },
-                new { Name = "Ankaa", Ly =  77d, Info = "the brightest star in the constellation Phoenix" },
-                new { Name = "Merak", Ly =  79.1d, Info = "a star in the constellation Ursa Major" },
-                new { Name = "Regulus", Ly =  79.3d, Info = "the brightest star in the constellation Leo" },
-                new { Name = "Alsephina", Ly =  80.6d, Info = "a star in the constellation Centaurus" },
-                new { Name = "Menkalinan", Ly =  81.1d, Info = "a star in the constellation Auriga" },
-                new { Name = "Alioth", Ly =  82.6d, Info = "a star in the constellation Ursa Major" },
-                new { Name = "Mizar", Ly =  83d, Info = "a star in the constellation Ursa Major" },
-                new { Name = "Phecda", Ly =  83.2d, Info = "a star in the constellation Ursa Major" },
-                new { Name = "Sabik", Ly =  88d, Info = "a star in the constellation Ophiuchus" },
-                new { Name = "Gacrux", Ly =  88.6d, Info = "the brightest star in the constellation Crux" },
-                new { Name = "Algol", Ly =  94d, Info = "a star in the constellation Perseus" },
-                new { Name = "Diphda", Ly =  96.3d, Info = "the brightest star in the constellation Cetus" },
-                new { Name = "Alpheratz", Ly =  97d, Info = "the brightest star in the constellation Andromeda" },
-                new { Name = "Alnair", Ly =  101d, Info = "the brightest star in the constellation Grus" },
-                new { Name = "Alkaid", Ly =  103.9d, Info = "the star at the end of the Big Dipper's handle in the constellation Ursa Major" },
-                new { Name = "Alhena", Ly =  109d, Info = "a star in the constellation Gemini" },
-                new { Name = "Miaplacidus", Ly =  113.2d, Info = "the second-brightest star in the constellation Carina" },
-                new { Name = "Dubhe", Ly =  123d, Info = "a star in the constellation Ursa Major" },
-                new { Name = "Muhlifain", Ly =  130d, Info = "a star in the constellation Cepheus" },
-                new { Name = "Algieba", Ly =  130.3d, Info = "a star in the constellation Leo" },
-                new { Name = "Kochab", Ly =  130.9d, Info = "a star in the constellation Ursa Minor" },
-                new { Name = "Elnath", Ly =  134d, Info = "a star in the constellation Taurus" },
-                new { Name = "Achernar", Ly =  139d, Info = "the brightest star in the constellation Eridanus" }
+                new { Name = "Proxima Centauri", Ly =  4.246d, Info = AppResources.Star_ProximaCentauri_Info },
+                new { Name = "Alpha Centauri", Ly =  4.321d, Info = AppResources.Star_AlphaCentauri_Info },
+                new { Name = "Barnard's Star", Ly =  5.963d, Info = AppResources.Star_BarnardsStarInfo },
+                new { Name = "Luhman 16", Ly =  6.5d, Info = AppResources.Star_Luhman16_Info },
+                new { Name = "Lalande 21185", Ly =  8.29d, Info = AppResources.Star_Lalande21185_Info },
+                new { Name = "Sirius", Ly =  8.71d, Info = AppResources.Star_Sirius_Info },
+                new { Name = "Epsilon Eridani (Ran)", Ly =  10.47d, Info = AppResources.Star_EpsilonEridani_Info },
+                new { Name = "Procyon", Ly =  11.46d, Info = AppResources.Star_Procyon_Info },
+                new { Name = "61 Cygni", Ly =  11.4d, Info = AppResources.Star_61Cygni_Info },
+                new { Name = "Epsilon Indi", Ly =  11.87d, Info = AppResources.Star_EpsilonIndi_Info },
+                new { Name = "Tau Ceti", Ly =  11.91d, Info = AppResources.Star_TauCeti_Info },
+                new { Name = "Groombridge 1618", Ly =  15.89d, Info = AppResources.Star_Groombridge1618_Info },
+                new { Name = "Omicron2 Eridani (Keid)", Ly =  16.33d, Info = AppResources.Star_Omicron2Eridani_Info },
+                new { Name = "70 Ophiuchi", Ly =  16.71d, Info = AppResources.Star_70Ophiuchi_Info },
+                new { Name = "Altair", Ly =  16.73d, Info = AppResources.Star_Altair_Info },
+                new { Name = "Alsafi", Ly =  18d, Info = AppResources.Star_InCepheus_Info },
+                new { Name = "Eta Cassiopeiae (Achird)", Ly =  19.33d, Info = AppResources.Star_EtaCassiopeiae_Info },
+                new { Name = "36 Ophiuchi (Guniibuu)", Ly =  19.5d, Info = AppResources.Star_36Ophiuchi_Info },
+                new { Name = "Delta Pavonis", Ly =  19.89d, Info = AppResources.Star_DeltaPavonis_Info },
+                new { Name = "Vega", Ly =  25d, Info = AppResources.Star_Vega_Info },
+                new { Name = "Fomalhaut", Ly =  25.13d, Info = AppResources.Star_Fomalhaut_Info },
+                new { Name = "Pollux", Ly =  33.78d, Info = AppResources.Star_Pollux_Info },
+                new { Name = "Denebola", Ly =  35.9d, Info = AppResources.Star_Denebola_Info },
+                new { Name = "Arcturus", Ly =  36.7d, Info = AppResources.Star_Arcturus_Info },
+                new { Name = "Capella", Ly =  42.9d, Info = AppResources.Star_Capella_Info },
+                new { Name = "Rasalhague", Ly =  47.8d, Info = AppResources.Star_Rasalhague_Info },
+                new { Name = "Alderamin", Ly =  49.1d, Info = AppResources.Star_Alderamin_Info },
+                new { Name = "Castor", Ly =  51.6d, Info = AppResources.Star_Castor_Info },
+                new { Name = "Caph", Ly =  53.1d, Info = AppResources.Star_Caph_Info },
+                new { Name = "Menkent", Ly =  58.8d, Info = AppResources.Star_InCentaurus_Info },
+                new { Name = "Aldebaran", Ly =  65.1d, Info = AppResources.Star_Aldebaran_Info },
+                new { Name = "Larawag", Ly =  66d, Info = AppResources.Star_InAuriga_Info },
+                new { Name = "Hamal", Ly =  66.3d, Info = AppResources.Star_Hamal_Info },
+                new { Name = "Aljanah", Ly =  72d, Info = AppResources.Star_InCepheus_Info },
+                new { Name = "Alphecca", Ly =  75d, Info = AppResources.Star_Alphecca_Info },
+                new { Name = "Ankaa", Ly =  77d, Info = AppResources.Star_Ankaa_Info },
+                new { Name = "Merak", Ly =  79.1d, Info = AppResources.Star_InUrsaMajor_Info },
+                new { Name = "Regulus", Ly =  79.3d, Info = AppResources.Star_Regulus_Info },
+                new { Name = "Alsephina", Ly =  80.6d, Info = AppResources.Star_InCentaurus_Info },
+                new { Name = "Menkalinan", Ly =  81.1d, Info = AppResources.Star_InAuriga_Info },
+                new { Name = "Alioth", Ly =  82.6d, Info = AppResources.Star_InUrsaMajor_Info },
+                new { Name = "Mizar", Ly =  83d, Info = AppResources.Star_InUrsaMajor_Info },
+                new { Name = "Phecda", Ly =  83.2d, Info = AppResources.Star_InUrsaMajor_Info },
+                new { Name = "Sabik", Ly =  88d, Info = AppResources.Star_Sabik_Info },
+                new { Name = "Gacrux", Ly =  88.6d, Info = AppResources.Star_Gacrux_Info },
+                new { Name = "Algol", Ly =  94d, Info = AppResources.Star_Algol_Info },
+                new { Name = "Diphda", Ly =  96.3d, Info = AppResources.Star_Diphda_Info },
+                new { Name = "Alpheratz", Ly =  97d, Info = AppResources.Star_Alpheratz_Info },
+                new { Name = "Alnair", Ly =  101d, Info = AppResources.Star_Alnair_Info },
+                new { Name = "Alkaid", Ly =  103.9d, Info = AppResources.Star_Alkaid_Info },
+                new { Name = "Alhena", Ly =  109d, Info = AppResources.Star_Alhena_Info },
+                new { Name = "Miaplacidus", Ly =  113.2d, Info = AppResources.Star_Miaplacidus_Info },
+                new { Name = "Dubhe", Ly =  123d, Info = AppResources.Star_InUrsaMajor_Info },
+                new { Name = "Muhlifain", Ly =  130d, Info = AppResources.Star_InCepheus_Info },
+                new { Name = "Algieba", Ly =  130.3d, Info = AppResources.Star_Algieba_Info },
+                new { Name = "Kochab", Ly =  130.9d, Info = AppResources.Star_Kochab_Info },
+                new { Name = "Elnath", Ly =  134d, Info = AppResources.Star_Elnath_Info },
+                new { Name = "Achernar", Ly =  139d, Info = AppResources.Star_Achernar_Info }
             };
 
             DateTime now = DateTime.Now;
@@ -520,30 +521,30 @@ namespace Aeonpulse.Services
         {
             var runes = new[]
             {
-                new { Name = "Fehu (ᚠ)", From = "5-29", To = "6-14", Brief = "Success and rewards for hard work", Full = "Fehu is all about getting the rewards you've earned - think money, success, and good fortune from your hard work. It's a reminder to be thankful for what you have and to share your good luck with others, which can help you keep the good vibes going." },
-                new { Name = "Uruz (ᚢ)", From = "6-14", To = "6-29", Brief = "Good health and inner strength", Full = "Uruz is like a boost of pure energy and strength. It encourages you to tap into your inner power, stay resilient, and keep pushing through tough times. It's about feeling strong, healthy, and ready to take on whatever life throws at you." },
-                new { Name = "Thurisaz (ᚦ)", From = "6-29", To = "7-13", Brief = "Protection, caution, wait for the right moment", Full = "Thurisaz is your protective shield, inspired by Thor. It's telling you to pause and think things through before acting. Use your judgment, be careful, and don't rush - sometimes waiting for the right moment is the smartest move." },
-                new { Name = "Ansuz (ᚨ)", From = "7-13", To = "7-29", Brief = "Communication and advice from wise people", Full = "Ansuz is all about clear communication and learning from those who've been around the block. Listen to wise friends or mentors, soak up their advice, and let it help you grow smarter and wiser yourself." },
-                new { Name = "Raidho (ᚱ)", From = "7-29", To = "8-13", Brief = "Journey, change, moving toward goals", Full = "Raidho is the rune for life's journey - whether you're traveling, moving, or just chasing your dreams. It encourages you to embrace changes, trust the process, and keep moving toward your goals, one step at a time." },
-                new { Name = "Kenaz (ᚲ)", From = "8-13", To = "8-28", Brief = "Intuition, clarity, hope", Full = "Kenaz shines a light in dark or confusing times. It helps you find clarity, spark new ideas, and gives you hope when things feel tough. Trust your gut - sometimes your intuition leads you straight to the answers you need." },
-                new { Name = "Gebo (ᚷ)", From = "8-28", To = "9-13", Brief = "Harmony and giving in relationships", Full = "Gebo is all about give-and-take in relationships. When you're generous and open, you create harmony and attract kindness in return. It's a reminder that good things happen when you share and connect with others." },
-                new { Name = "Wunjo (ᚹ)", From = "9-13", To = "9-28", Brief = "Happiness and well-being", Full = "Wunjo brings happiness and peaceful vibes. It's about enjoying the simple pleasures in life, feeling content, and spreading joy to those around you. Take time to relax and appreciate your own well-being." },
-                new { Name = "Hagalaz (ᚺ/ᚻ)", From = "9-28", To = "10-13", Brief = "Change, breaking old habits", Full = "Hagalaz shakes things up, but in a good way - it helps you break old, bad habits and make room for positive changes. Even if things feel chaotic, it's clearing the path for a fresh start and better days ahead." },
-                new { Name = "Nauthiz (ᚾ)", From = "10-13", To = "10-28", Brief = "Stay alert and patient in tough times", Full = "Naudhiz is your reminder to stay strong and patient when life gets tough. It's about facing obstacles head-on, staying alert, and learning from every challenge. Don't be afraid - you've got what it takes to get through." },
-                new { Name = "Isa (ᛁ)", From = "10-28", To = "11-13", Brief = "Patience, pause, don't rush decisions", Full = "Isa is like a pause button, letting you know it's okay to slow down and take a break. Instead of rushing, use this time to reflect, be patient, and wait for things to clear up before making any big moves." },
-                new { Name = "Jera (ᚼ)", From = "11-13", To = "11-28", Brief = "Karma, reward comes with patience", Full = "Jera reminds you that good things take time - like planting seeds and waiting for them to grow. Keep putting in effort, and your rewards will come, even if they take a while. Patience pays off in the end!" },
-                new { Name = "Eihwaz (ᚽ)", From = "11-28", To = "0-13", Brief = "Protection in pursuing goals, imagination helps", Full = "Eihwaz is your trusty sidekick when you're working toward your goals. It helps you stay safe and resilient, and encourages you to use your imagination to tackle challenges and find creative solutions." },
-                new { Name = "Perthro (ᚹ)", From = "0-13", To = "0-28", Brief = "Mysteries, secrets, surprises", Full = "Perthro is all about uncovering secrets and embracing surprises. It's a reminder to be open to unexpected twists and to trust that even mysteries can lead to important lessons and personal growth." },
-                new { Name = "Algiz (ᛉ)", From = "0-28", To = "1-13", Brief = "Protection, awareness, rely on friends", Full = "Algiz offers a protective vibe, keeping you safe from harm. It also encourages you to stay aware, rely on your friends and community, and look forward to happy times ahead." },
-                new { Name = "Sowilo (ᛊ)", From = "1-13", To = "1-27", Brief = "Health, relax, let go of worries", Full = "Sowilo is all about feeling good and keeping your energy up. It tells you to relax, let go of worries, and take care of your body - because staying healthy makes everything else easier." },
-                new { Name = "Tiwaz (ᛏ)", From = "1-27", To = "2-14", Brief = "Success, willpower, victory, romance", Full = "Tiwaz gives you a boost of confidence and courage. Whether you're chasing goals or starting a new romance, this rune says keep going - you've got the willpower to win and come out on top." },
-                new { Name = "Berkano (ᛒ)", From = "2-14", To = "2-30", Brief = "Family, feminine energy, new beginnings", Full = "Berkano is all about nurturing, family, and new beginnings. It often signals happy events like weddings or births, and encourages you to embrace growth and positive changes in your personal life." },
-                new { Name = "Ehwaz (ᛖ)", From = "2-30", To = "3-14", Brief = "Movement, change, travel, trust new directions", Full = "Ehwaz is the rune for moving forward and adapting to new things. Whether you're traveling, changing jobs, or starting fresh, trust that these changes are leading you to something better." },
-                new { Name = "Mannaz (ᛗ)", From = "3-14", To = "3-29", Brief = "Teamwork, support, expanding contacts", Full = "Mannaz is all about working together and building strong connections. It encourages you to reach out, accept support, and grow your network - success is easier when you're part of a team." },
-                new { Name = "Laguz (ᛚ)", From = "3-29", To = "4-14", Brief = "Intuition, imagination, spiritual connection", Full = "Laguz is your guide to trusting your intuition and going with the flow. It helps you tap into your creativity and spiritual side, so you can handle whatever comes your way with grace." },
-                new { Name = "Ingwaz (ᛝ)", From = "4-14", To = "4-29", Brief = "Closure, fulfillment, new beginnings", Full = "Ingwaz helps you wrap things up and start fresh. It's about feeling fulfilled, closing old chapters, and stepping confidently into new beginnings with a sense of peace." },
-                new { Name = "Othala (ᛟ)", From = "4-29", To = "5-14", Brief = "Heritage, material goods, advice from elders", Full = "Othala connects you to your roots and family traditions. It's about appreciating what you've inherited - whether it's wisdom, values, or material things - and seeking guidance from elders and old friends when you need it." },
-                new { Name = "Dagaz (ᛞ)", From = "5-14", To = "5-29", Brief = "Growth, hope, optimism for new times", Full = "Dagaz is like a sunrise after a tough night - bringing hope, growth, and positive change. It's a sign that things are looking up, so stay optimistic and keep moving forward." }
+                new { Name = "Fehu (ᚠ)", From = "5-29", To = "6-14", Brief = AppResources.Rune_Fehu_Brief, Full = AppResources.Rune_Fehu_Full },
+                new { Name = "Uruz (ᚢ)", From = "6-14", To = "6-29", Brief = AppResources.Rune_Uruz_Brief, Full = AppResources.Rune_Uruz_Full },
+                new { Name = "Thurisaz (ᚦ)", From = "6-29", To = "7-13", Brief = AppResources.Rune_Thurisaz_Brief, Full = AppResources.Rune_Thurisaz_Full },
+                new { Name = "Ansuz (ᚨ)", From = "7-13", To = "7-29", Brief = AppResources.Rune_Ansuz_Brief, Full = AppResources.Rune_Ansuz_Full },
+                new { Name = "Raidho (ᚱ)", From = "7-29", To = "8-13", Brief = AppResources.Rune_Raidho_Brief, Full = AppResources.Rune_Raidho_Full },
+                new { Name = "Kenaz (ᚲ)", From = "8-13", To = "8-28", Brief = AppResources.Rune_Kenaz_Brief, Full = AppResources.Rune_Kenaz_Full },
+                new { Name = "Gebo (ᚷ)", From = "8-28", To = "9-13", Brief = AppResources.Rune_Gebo_Brief, Full = AppResources.Rune_Gebo_Full },
+                new { Name = "Wunjo (ᚹ)", From = "9-13", To = "9-28", Brief = AppResources.Rune_Wunjo_Brief, Full = AppResources.Rune_Wunjo_Full },
+                new { Name = "Hagalaz (ᚺ/ᚻ)", From = "9-28", To = "10-13", Brief = AppResources.Rune_Hagalaz_Brief, Full = AppResources.Rune_Hagalaz_Full },
+                new { Name = "Nauthiz (ᚾ)", From = "10-13", To = "10-28", Brief = AppResources.Rune_Nauthiz_Brief, Full = AppResources.Rune_Nauthiz_Full },
+                new { Name = "Isa (ᛁ)", From = "10-28", To = "11-13", Brief = AppResources.Rune_Isa_Brief, Full = AppResources.Rune_Isa_Full },
+                new { Name = "Jera (ᚼ)", From = "11-13", To = "11-28", Brief = AppResources.Rune_Jera_Brief, Full = AppResources.Rune_Jera_Full },
+                new { Name = "Eihwaz (ᚽ)", From = "11-28", To = "0-13", Brief = AppResources.Rune_Eihwaz_Brief, Full = AppResources.Rune_Eihwaz_Full },
+                new { Name = "Perthro (ᚹ)", From = "0-13", To = "0-28", Brief = AppResources.Rune_Perthro_Brief, Full = AppResources.Rune_Perthro_Full },
+                new { Name = "Algiz (ᛉ)", From = "0-28", To = "1-13", Brief = AppResources.Rune_Algiz_Brief, Full = AppResources.Rune_Algiz_Full },
+                new { Name = "Sowilo (ᛊ)", From = "1-13", To = "1-27", Brief = AppResources.Rune_Sowilo_Brief, Full = AppResources.Rune_Sowilo_Full },
+                new { Name = "Tiwaz (ᛏ)", From = "1-27", To = "2-14", Brief = AppResources.Rune_Tiwaz_Brief, Full = AppResources.Rune_Tiwaz_Full },
+                new { Name = "Berkano (ᛒ)", From = "2-14", To = "2-30", Brief = AppResources.Rune_Berkano_Brief, Full = AppResources.Rune_Berkano_Full },
+                new { Name = "Ehwaz (ᛖ)", From = "2-30", To = "3-14", Brief = AppResources.Rune_Ehwaz_Brief, Full = AppResources.Rune_Ehwaz_Full },
+                new { Name = "Mannaz (ᛗ)", From = "3-14", To = "3-29", Brief = AppResources.Rune_Mannaz_Brief, Full = AppResources.Rune_Mannaz_Full },
+                new { Name = "Laguz (ᛚ)", From = "3-29", To = "4-14", Brief = AppResources.Rune_Laguz_Brief, Full = AppResources.Rune_Laguz_Full },
+                new { Name = "Ingwaz (ᛝ)", From = "4-14", To = "4-29", Brief = AppResources.Rune_Ingwaz_Brief, Full = AppResources.Rune_Ingwaz_Full },
+                new { Name = "Othala (ᛟ)", From = "4-29", To = "5-14", Brief = AppResources.Rune_Othala_Brief, Full = AppResources.Rune_Othala_Full },
+                new { Name = "Dagaz (ᛞ)", From = "5-14", To = "5-29", Brief = AppResources.Rune_Dagaz_Brief, Full = AppResources.Rune_Dagaz_Full }
             };
 
             int year = baseDate.Year;
@@ -593,15 +594,15 @@ namespace Aeonpulse.Services
 
             var interpretations = new[]
             {
-                new { Brief = "New beginnings and fresh starts", Full = "Personal Year 1 is characterized by feelings of loneliness and challenges in relationships, as individuals seek greater independence and pursue new beginnings. This shift can cause tension with partners used to doing things together, leading to misunderstandings. People often do not realize their desire for solitude is influenced by this year's vibration, making it hard to explain their actions. The experience varies - some may face situations requiring assertiveness, and failing to seize these opportunities can result in loss or loneliness. Despite the challenges, Personal Year 1 offers a chance for renewal, rest from past responsibilities, and rewards for previous efforts. While important connections may be formed, romantic relationships typically begin in Personal Years 2 or 6." },
-                new { Brief = "Cooperation and partnerships", Full = "Personal Year 2 is a time for forming new relationships, increased cooperation, and sharing emotions. People become more understanding and prefer connecting with others rather than being alone. Ideas and opportunities from the previous year can now grow, and maintaining a peaceful environment is important to avoid stress and illness. Overall, it is a period of harmony, support, and personal growth." },
-                new { Brief = "Creativity and self-expression", Full = "The vibrations of the number three encourage mental activity, social interaction, and self-expression. This year is not suited for routine tasks; instead, it demands stimulating and imaginative pursuits to channel increased mental energy. If not properly directed, this energy can lead to irritability or sleep disturbances. The period also brings opportunities to resolve past relationships and issues, often through rational communication, which helps alleviate emotional distress. Additionally, it is an ideal time for studying, as mental energy reaches its peak." },
-                new { Brief = "Hard work and building foundations", Full = "Personal Year 4 is an active period requiring efficient energy management. People are prone to overwork, ignoring warning signs, and making impulsive decisions that can lead to setbacks. Challenges often arise, making security and future planning a priority; many prefer staying home and focusing on family. This year favors property purchases and investments, but individuals may seek support due to self-doubt and difficulty recognizing their progress. Effective organization and stress management are crucial to avoid health issues. By channeling energy constructively and learning to relax, Personal Year 4 can yield significant success." },
-                new { Brief = "Change and freedom", Full = "Personal Year 5 is marked by change and freedom, breaking away from previous constraints. Throughout these twelve months, individuals experience shifts internally and externally, prompting them to embrace new opportunities and let go of old habits. This year prioritizes both intellectual and physical independence, urging people to explore new ideas, enjoy solitude in nature, and make meaningful connections. The energy of number five encourages responsible adaptation, self-discipline, and focus, allowing for high levels of inspiration and progress when goals are set thoughtfully." },
-                new { Brief = "Responsibility and nurturing", Full = "Personal Year 6 is marked by increased responsibility, choices, and a focus on family and community. The discipline learned previously is tested as individuals become more aware of their impact on others and their surroundings. This period encourages helping others, balancing creative energy, and managing obligations without becoming overwhelmed. Maintaining personal peace is crucial to avoid bitterness and health issues. Support from loved ones is important for making decisions and sustaining healthy relationships. Year 6 is ideal for building new connections, strengthening existing ones, and resolving family conflicts, often resulting in greater harmony and attractiveness to others." },
-                new { Brief = "Analysis and understanding", Full = "The number seven is linked to emotional changes, challenges in relationships, and personal growth. During Personal Year 7, individuals face spiritual lessons and may experience loss or illness. This period encourages self-reliance, compassion, and understanding, both toward oneself and others. Helping others can put one's problems in perspective, fostering personal development. Approaching situations with patience and sincere support leads to meaningful progress in relationships and inner strength." },
-                new { Brief = "Attainment and capital gains", Full = "Personal Year 8 is a time to restore balance, build on past experience, and reap rewards from previous efforts. Success hinges on hard work and integrity, as karma reflects one's actions. This period offers opportunities for creativity and independence if energy is used wisely. Patience and wisdom help maintain strength and balance. Expect improvements in health, career, and relationships - act honestly, stay positive, and communicate effectively to achieve success." },
-                new { Brief = "Reflection and reaching out", Full = "Personal Year 9 marks the end of cycles and prepares individuals for new beginnings in Personal Year 1. This period can bring feelings of instability, prompting change even if it's uncomfortable. While it may cause confusion and difficulty - sometimes ending relationships or leading to significant life changes - it also offers growth in personal awareness and responsibility. People often reorganize priorities and take on new responsibilities, fostering self-development. Though challenging, Personal Year 9 provides valuable opportunities for learning and setting the stage for future progress." }
+                new { Brief = AppResources.PersonalYear1_Brief, Full = AppResources.PersonalYear1_Full },
+                new { Brief = AppResources.PersonalYear2_Brief, Full = AppResources.PersonalYear2_Full },
+                new { Brief = AppResources.PersonalYear3_Brief, Full = AppResources.PersonalYear3_Full },
+                new { Brief = AppResources.PersonalYear4_Brief, Full = AppResources.PersonalYear4_Full },
+                new { Brief = AppResources.PersonalYear5_Brief, Full = AppResources.PersonalYear5_Full },
+                new { Brief = AppResources.PersonalYear6_Brief, Full = AppResources.PersonalYear6_Full },
+                new { Brief = AppResources.PersonalYear7_Brief, Full = AppResources.PersonalYear7_Full },
+                new { Brief = AppResources.PersonalYear8_Brief, Full = AppResources.PersonalYear8_Full },
+                new { Brief = AppResources.PersonalYear9_Brief, Full = AppResources.PersonalYear9_Full }
             };
 
             return new TickerData
@@ -632,7 +633,7 @@ namespace Aeonpulse.Services
             int baseYears = (int)((baseDate - year1900).TotalDays / 365.25);
 
             double totalCO2 = 11.77; // billion tons of CO2 emitted till 1900
-            string amount = useMetric ? $"{totalCO2} billion tonnes" : $"{(totalCO2 * 0.984252):F2} billion imperial tons";
+            string amount = useMetric ? $"{totalCO2} {AppResources.Ticker_GlobalExhaleMetric_BTonnes}" : $"{(totalCO2 * 0.984252):F2} {AppResources.Ticker_GlobalExhaleImperial_BTons}";
 
             if (baseYears < 0)
             {
@@ -656,7 +657,7 @@ namespace Aeonpulse.Services
             double totalCO2Base = 0.0008 / 3 * Math.Pow(x1, 3) - 0.0122 / 2 * Math.Pow(x1, 2) + 0.6859 * x1;
             double totalCO2Now = 0.0008 / 3 * Math.Pow(x2, 3) - 0.0122 / 2 * Math.Pow(x2, 2) + 0.6859 * x2;
             totalCO2 = totalCO2Now - totalCO2Base;
-            amount = useMetric ? $"{totalCO2:F2} billion tonnes" : $"{(totalCO2 * 0.984252):F2} billion imperial tons";
+            amount = useMetric ? $"{totalCO2:F2} {AppResources.Ticker_GlobalExhaleMetric_BTonnes}" : $"{(totalCO2 * 0.984252):F2} {AppResources.Ticker_GlobalExhaleImperial_BTons}";
 
             return new TickerData
             {
