@@ -1065,7 +1065,11 @@
     <value>Since {baseDateValue}, I've hitched a ride on Earth for a {galacticCommute.BriefText}. I'm literally a space traveler! How far have you traveled?</value>
     <comment>CalculationService.cs</comment>
   </data>
-  <data name="MainMenu_Title" xml:space="preserve">
+	<data name="Info_ButtonClose" xml:space="preserve">
+    <value>Close</value>
+    <comment>DeepDivePopup.xaml</comment>
+  </data>
+	<data name="MainMenu_Title" xml:space="preserve">
     <value>AeonPulse</value>
     <comment>MainMenuPopup.xaml</comment>
   </data>
@@ -1204,5 +1208,333 @@
   <data name="Refreshing_Message" xml:space="preserve">
     <value>Refreshing...</value>
     <comment>RefreshingPopup.xaml</comment>
+  </data>
+  <data name="Star_ProximaCentauri_Name" xml:space="preserve">
+    <value>Proxima Centauri</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_AlphaCentauri_Name" xml:space="preserve">
+    <value>Alpha Centauri</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_BarnardsStarName" xml:space="preserve">
+    <value>Barnard's Star</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Luhman16_Name" xml:space="preserve">
+    <value>Luhman 16</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Lalande21185_Name" xml:space="preserve">
+    <value>Lalande 21185</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Sirius_Name" xml:space="preserve">
+    <value>Sirius</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_EpsilonEridani_Name" xml:space="preserve">
+    <value>Epsilon Eridani (Ran)</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Procyon_Name" xml:space="preserve">
+    <value>Procyon</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_61Cygni_Name" xml:space="preserve">
+    <value>61 Cygni</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_EpsilonIndi_Name" xml:space="preserve">
+    <value>Epsilon Indi</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_TauCeti_Name" xml:space="preserve">
+    <value>Tau Ceti</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Groombridge1618_Name" xml:space="preserve">
+    <value>Groombridge 1618</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Omicron2Eridani_Name" xml:space="preserve">
+    <value>Omicron2 Eridani (Keid)</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_70Ophiuchi_Name" xml:space="preserve">
+    <value>70 Ophiuchi</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Altair_Name" xml:space="preserve">
+    <value>Altair</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alsafi_Name" xml:space="preserve">
+    <value>Alsafi</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_EtaCassiopeiae_Name" xml:space="preserve">
+    <value>Eta Cassiopeiae (Achird)</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_36Ophiuchi_Name" xml:space="preserve">
+    <value>36 Ophiuchi (Guniibuu)</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_DeltaPavonis_Name" xml:space="preserve">
+    <value>Delta Pavonis</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Vega_Name" xml:space="preserve">
+    <value>Vega</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Fomalhaut_Name" xml:space="preserve">
+    <value>Fomalhaut</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Pollux_Name" xml:space="preserve">
+    <value>Pollux</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Denebola_Name" xml:space="preserve">
+    <value>Denebola</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Arcturus_Name" xml:space="preserve">
+    <value>Arcturus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Capella_Name" xml:space="preserve">
+    <value>Capella</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Rasalhague_Name" xml:space="preserve">
+    <value>Rasalhague</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alderamin_Name" xml:space="preserve">
+    <value>Alderamin</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Castor_Name" xml:space="preserve">
+    <value>Castor</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Caph_Name" xml:space="preserve">
+    <value>Caph</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Menkent_Name" xml:space="preserve">
+    <value>Menkent</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Aldebaran_Name" xml:space="preserve">
+    <value>Aldebaran</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Larawag_Name" xml:space="preserve">
+    <value>Larawag</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Hamal_Name" xml:space="preserve">
+    <value>Hamal</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Aljanah_Name" xml:space="preserve">
+    <value>Aljanah</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alphecca_Name" xml:space="preserve">
+    <value>Alphecca</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Ankaa_Name" xml:space="preserve">
+    <value>Ankaa</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Merak_Name" xml:space="preserve">
+    <value>Merak</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Regulus_Name" xml:space="preserve">
+    <value>Regulus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alsephina_Name" xml:space="preserve">
+    <value>Alsephina</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Menkalinan_Name" xml:space="preserve">
+    <value>Menkalinan</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alioth_Name" xml:space="preserve">
+    <value>Alioth</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Mizar_Name" xml:space="preserve">
+    <value>Mizar</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Phecda_Name" xml:space="preserve">
+    <value>Phecda</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Sabik_Name" xml:space="preserve">
+    <value>Sabik</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Gacrux_Name" xml:space="preserve">
+    <value>Gacrux</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Algol_Name" xml:space="preserve">
+    <value>Algol</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Diphda_Name" xml:space="preserve">
+    <value>Diphda</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alpheratz_Name" xml:space="preserve">
+    <value>Alpheratz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alnair_Name" xml:space="preserve">
+    <value>Alnair</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alkaid_Name" xml:space="preserve">
+    <value>Alkaid</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alhena_Name" xml:space="preserve">
+    <value>Alhena</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Miaplacidus_Name" xml:space="preserve">
+    <value>Miaplacidus</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Dubhe_Name" xml:space="preserve">
+    <value>Dubhe</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Muhlifain_Name" xml:space="preserve">
+    <value>Muhlifain</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Algieba_Name" xml:space="preserve">
+    <value>Algieba</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Kochab_Name" xml:space="preserve">
+    <value>Kochab</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Elnath_Name" xml:space="preserve">
+    <value>Elnath</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Achernar_Name" xml:space="preserve">
+    <value>Achernar</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Fehu_Name" xml:space="preserve">
+    <value>Fehu</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Uruz_Name" xml:space="preserve">
+    <value>Uruz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Thurisaz_Name" xml:space="preserve">
+    <value>Thurisaz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ansuz_Name" xml:space="preserve">
+    <value>Ansuz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Raidho_Name" xml:space="preserve">
+    <value>Raidho</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Kenaz_Name" xml:space="preserve">
+    <value>Kenaz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Gebo_Name" xml:space="preserve">
+    <value>Gebo</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Wunjo_Name" xml:space="preserve">
+    <value>Wunjo</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Hagalaz_Name" xml:space="preserve">
+    <value>Hagalaz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Nauthiz_Name" xml:space="preserve">
+    <value>Nauthiz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Isa_Name" xml:space="preserve">
+    <value>Isa</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Jera_Name" xml:space="preserve">
+    <value>Jera</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Eihwaz_Name" xml:space="preserve">
+    <value>Eihwaz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Perthro_Name" xml:space="preserve">
+    <value>Perthro</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Algiz_Name" xml:space="preserve">
+    <value>Algiz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Sowilo_Name" xml:space="preserve">
+    <value>Sowilo</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Tiwaz_Name" xml:space="preserve">
+    <value>Tiwaz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Berkano_Name" xml:space="preserve">
+    <value>Berkano</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ehwaz_Name" xml:space="preserve">
+    <value>Ehwaz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Mannaz_Name" xml:space="preserve">
+    <value>Mannaz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Laguz_Name" xml:space="preserve">
+    <value>Laguz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ingwaz_Name" xml:space="preserve">
+    <value>Ingwaz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Othala_Name" xml:space="preserve">
+    <value>Othala</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Dagaz_Name" xml:space="preserve">
+    <value>Dagaz</value>
+    <comment>CalculationService.cs</comment>
   </data>
 </root>

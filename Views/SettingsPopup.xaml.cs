@@ -1,5 +1,6 @@
 using Aeonpulse.Services;
 using Aeonpulse.ViewModels;
+using Aeonpulse.Resources;
 
 namespace Aeonpulse.Views
 {
@@ -46,7 +47,7 @@ namespace Aeonpulse.Views
                 return;
 
             var radio = (RadioButton)sender;
-            _viewModel.UseMetric = radio.Value?.ToString() == "Metric";
+            _viewModel.UseMetric = radio.Value?.ToString() == AppResources.Settings_UnitsMetric; // "Metric"
         }
 
         private void OnColorSchemeChanged(object sender, CheckedChangedEventArgs e)

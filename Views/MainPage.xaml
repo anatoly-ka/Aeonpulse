@@ -76,7 +76,9 @@
                             <Span Text="{Binding BaseDateName}"
                                   FontAttributes="Bold"
                                   TextColor="{DynamicResource TextWhite}" />
-                            <Span Text=" on " />
+                            <Span Text=" " />
+                            <Span Text="{x:Static resources:AppResources.Timeline_BaseDatePreposition}" />
+                            <Span Text=" " />
                             <Span Text="{Binding BaseDateValue}"
                                   FontAttributes="Bold"
                                   TextColor="{DynamicResource TextWhite}" />

@@ -182,8 +182,14 @@ namespace Aeonpulse.Services
 
             return new TickerData
             {
-                BriefText = $"Next milestone: {nextJubilee} on {nearestJubileeDate:d}",
-                FullText = $"Since {baseDateName} on {baseDate:d}, incredible milestones of time have passed. The next big marker is {nextJubilee} on {nearestJubileeDate:d}!"
+                BriefText = AppResources.Ticker_TimeJubileesBrief
+                    .Replace("{nextJubilee}", nextJubilee)
+                    .Replace("{nearestJubileeDate:d}", nearestJubileeDate.ToString("d")),
+                FullText = AppResources.Ticker_TimeJubileesFull
+                    .Replace("{baseDateName}", baseDateName)
+                    .Replace("{baseDate:d}", baseDate.ToString("d"))
+                    .Replace("{nextJubilee}", nextJubilee)
+                    .Replace("{nearestJubileeDate:d}", nearestJubileeDate.ToString("d"))
             };
         }
 
@@ -215,19 +221,35 @@ namespace Aeonpulse.Services
 
             if (seconds < 86400) // less than a day
             {
-                countdown = $"{hrs}h : {mins}m : {secs}s until next anniversary";
-                countdownFull = $"We're counting the seconds! Only {hrs} hours, {mins} minutes, and {secs} seconds left until you hit the next anniversary on {nearest:d}.";
+                countdown = AppResources.Ticker_CountdownBrief_HoursOnly
+                    .Replace("{hrs}", hrs.ToString())
+                    .Replace("{mins}", mins.ToString())
+                    .Replace("{secs}", secs.ToString());
+                countdownFull = AppResources.Ticker_CountdownFull_HoursOnly
+                    .Replace("{hrs}", hrs.ToString())
+                    .Replace("{mins}", mins.ToString())
+                    .Replace("{secs}", secs.ToString())
+                    .Replace("{nearest:d}", nearest.ToString("d"));
             }
             else // more than a day
             {
-                countdownFull = $"We're counting the seconds! Only {days} days, {hrs} hours, {mins} minutes, and {secs} seconds left until you hit the next anniversary on {nearest:d}.";
+                countdownFull = AppResources.Ticker_CountdownFull_WithDays
+                    .Replace("{days}", days.ToString())
+                    .Replace("{hrs}", hrs.ToString())
+                    .Replace("{mins}", mins.ToString())
+                    .Replace("{secs}", secs.ToString())
+                    .Replace("{nearest:d}", nearest.ToString("d"));
                 if (seconds < 2592000) // more than a day but less than a month
                 {
-                    countdown = $"{days} days {hrs}h : {mins}m until next anniversary";
+                    countdown = AppResources.Ticker_CountdownBrief_DaysHours
+                        .Replace("{days}", days.ToString())
+                        .Replace("{hrs}", hrs.ToString())
+                        .Replace("{mins}", mins.ToString());
                 }
                 else // more than a month
                 {
-                    countdown = $"{days} days until next anniversary";
+                    countdown = AppResources.Ticker_CountdownBrief_DaysOnly
+                        .Replace("{days}", days.ToString());
                 }
             }
 
@@ -252,8 +274,14 @@ namespace Aeonpulse.Services
 
             return new TickerData
             {
-                BriefText = $"{heartbeats:N0} heartbeats and {breaths:N0} breaths",
-                FullText = $"Approximately {heartbeats:N0} heartbeats have drummed and {breaths:N0} breaths have been processed since {baseDateName} on {baseDate:d}."
+                BriefText = AppResources.Ticker_LifeOdometerBrief
+                    .Replace("{heartbeats:N0}", heartbeats.ToString("N0"))
+                    .Replace("{breaths:N0}", breaths.ToString("N0")),
+                FullText = AppResources.Ticker_LifeOdometerFull
+                    .Replace("{heartbeats:N0}", heartbeats.ToString("N0"))
+                    .Replace("{breaths:N0}", breaths.ToString("N0"))
+                    .Replace("{baseDateName}", baseDateName)
+                    .Replace("{baseDate:d}", baseDate.ToString("d"))
             };
         }
 
@@ -274,8 +302,14 @@ namespace Aeonpulse.Services
 
             return new TickerData
             {
-                BriefText = $"{marsYears:F2} years on Mars, {venusYears:F2} on Venus",
-                FullText = $"Since {baseDateName} on {baseDate:d}, the planets have finished their laps at different speeds. On Mars, this timeline has spanned {marsYears:F2} Martian years, while on Venus, this timeline has spanned {venusYears:F2} Venusian years."
+                BriefText = AppResources.Ticker_AlienAnniversariesBrief
+                    .Replace("{marsYears:F2}", marsYears.ToString("F2"))
+                    .Replace("{venusYears:F2}", venusYears.ToString("F2")),
+                FullText = AppResources.Ticker_AlienAnniversariesFull
+                    .Replace("{baseDateName}", baseDateName)
+                    .Replace("{baseDate:d}", baseDate.ToString("d"))
+                    .Replace("{marsYears:F2}", marsYears.ToString("F2"))
+                    .Replace("{venusYears:F2}", venusYears.ToString("F2"))
             };
         }
 
@@ -322,8 +356,12 @@ namespace Aeonpulse.Services
 
             return new TickerData
             {
-                BriefText = $"{distance} through the Galaxy",
-                FullText = $"Since {baseDate:d}, Earth has hitched a ride for a {distance} {fullDistance}journey around the center of the Milky Way."
+                BriefText = AppResources.Ticker_GalacticCommuteBrief
+                    .Replace("{distance}", distance),
+                FullText = AppResources.Ticker_GalacticCommuteFull
+                    .Replace("{baseDate:d}", baseDate.ToString("d"))
+                    .Replace("{distance}", distance)
+                    .Replace("{fullDistance}", fullDistance)
             };
         }
 
@@ -335,64 +373,64 @@ namespace Aeonpulse.Services
         {
             var stars = new[]
             {
-                new { Name = "Proxima Centauri", Ly =  4.246d, Info = AppResources.Star_ProximaCentauri_Info },
-                new { Name = "Alpha Centauri", Ly =  4.321d, Info = AppResources.Star_AlphaCentauri_Info },
-                new { Name = "Barnard's Star", Ly =  5.963d, Info = AppResources.Star_BarnardsStarInfo },
-                new { Name = "Luhman 16", Ly =  6.5d, Info = AppResources.Star_Luhman16_Info },
-                new { Name = "Lalande 21185", Ly =  8.29d, Info = AppResources.Star_Lalande21185_Info },
-                new { Name = "Sirius", Ly =  8.71d, Info = AppResources.Star_Sirius_Info },
-                new { Name = "Epsilon Eridani (Ran)", Ly =  10.47d, Info = AppResources.Star_EpsilonEridani_Info },
-                new { Name = "Procyon", Ly =  11.46d, Info = AppResources.Star_Procyon_Info },
-                new { Name = "61 Cygni", Ly =  11.4d, Info = AppResources.Star_61Cygni_Info },
-                new { Name = "Epsilon Indi", Ly =  11.87d, Info = AppResources.Star_EpsilonIndi_Info },
-                new { Name = "Tau Ceti", Ly =  11.91d, Info = AppResources.Star_TauCeti_Info },
-                new { Name = "Groombridge 1618", Ly =  15.89d, Info = AppResources.Star_Groombridge1618_Info },
-                new { Name = "Omicron2 Eridani (Keid)", Ly =  16.33d, Info = AppResources.Star_Omicron2Eridani_Info },
-                new { Name = "70 Ophiuchi", Ly =  16.71d, Info = AppResources.Star_70Ophiuchi_Info },
-                new { Name = "Altair", Ly =  16.73d, Info = AppResources.Star_Altair_Info },
-                new { Name = "Alsafi", Ly =  18d, Info = AppResources.Star_InCepheus_Info },
-                new { Name = "Eta Cassiopeiae (Achird)", Ly =  19.33d, Info = AppResources.Star_EtaCassiopeiae_Info },
-                new { Name = "36 Ophiuchi (Guniibuu)", Ly =  19.5d, Info = AppResources.Star_36Ophiuchi_Info },
-                new { Name = "Delta Pavonis", Ly =  19.89d, Info = AppResources.Star_DeltaPavonis_Info },
-                new { Name = "Vega", Ly =  25d, Info = AppResources.Star_Vega_Info },
-                new { Name = "Fomalhaut", Ly =  25.13d, Info = AppResources.Star_Fomalhaut_Info },
-                new { Name = "Pollux", Ly =  33.78d, Info = AppResources.Star_Pollux_Info },
-                new { Name = "Denebola", Ly =  35.9d, Info = AppResources.Star_Denebola_Info },
-                new { Name = "Arcturus", Ly =  36.7d, Info = AppResources.Star_Arcturus_Info },
-                new { Name = "Capella", Ly =  42.9d, Info = AppResources.Star_Capella_Info },
-                new { Name = "Rasalhague", Ly =  47.8d, Info = AppResources.Star_Rasalhague_Info },
-                new { Name = "Alderamin", Ly =  49.1d, Info = AppResources.Star_Alderamin_Info },
-                new { Name = "Castor", Ly =  51.6d, Info = AppResources.Star_Castor_Info },
-                new { Name = "Caph", Ly =  53.1d, Info = AppResources.Star_Caph_Info },
-                new { Name = "Menkent", Ly =  58.8d, Info = AppResources.Star_InCentaurus_Info },
-                new { Name = "Aldebaran", Ly =  65.1d, Info = AppResources.Star_Aldebaran_Info },
-                new { Name = "Larawag", Ly =  66d, Info = AppResources.Star_InAuriga_Info },
-                new { Name = "Hamal", Ly =  66.3d, Info = AppResources.Star_Hamal_Info },
-                new { Name = "Aljanah", Ly =  72d, Info = AppResources.Star_InCepheus_Info },
-                new { Name = "Alphecca", Ly =  75d, Info = AppResources.Star_Alphecca_Info },
-                new { Name = "Ankaa", Ly =  77d, Info = AppResources.Star_Ankaa_Info },
-                new { Name = "Merak", Ly =  79.1d, Info = AppResources.Star_InUrsaMajor_Info },
-                new { Name = "Regulus", Ly =  79.3d, Info = AppResources.Star_Regulus_Info },
-                new { Name = "Alsephina", Ly =  80.6d, Info = AppResources.Star_InCentaurus_Info },
-                new { Name = "Menkalinan", Ly =  81.1d, Info = AppResources.Star_InAuriga_Info },
-                new { Name = "Alioth", Ly =  82.6d, Info = AppResources.Star_InUrsaMajor_Info },
-                new { Name = "Mizar", Ly =  83d, Info = AppResources.Star_InUrsaMajor_Info },
-                new { Name = "Phecda", Ly =  83.2d, Info = AppResources.Star_InUrsaMajor_Info },
-                new { Name = "Sabik", Ly =  88d, Info = AppResources.Star_Sabik_Info },
-                new { Name = "Gacrux", Ly =  88.6d, Info = AppResources.Star_Gacrux_Info },
-                new { Name = "Algol", Ly =  94d, Info = AppResources.Star_Algol_Info },
-                new { Name = "Diphda", Ly =  96.3d, Info = AppResources.Star_Diphda_Info },
-                new { Name = "Alpheratz", Ly =  97d, Info = AppResources.Star_Alpheratz_Info },
-                new { Name = "Alnair", Ly =  101d, Info = AppResources.Star_Alnair_Info },
-                new { Name = "Alkaid", Ly =  103.9d, Info = AppResources.Star_Alkaid_Info },
-                new { Name = "Alhena", Ly =  109d, Info = AppResources.Star_Alhena_Info },
-                new { Name = "Miaplacidus", Ly =  113.2d, Info = AppResources.Star_Miaplacidus_Info },
-                new { Name = "Dubhe", Ly =  123d, Info = AppResources.Star_InUrsaMajor_Info },
-                new { Name = "Muhlifain", Ly =  130d, Info = AppResources.Star_InCepheus_Info },
-                new { Name = "Algieba", Ly =  130.3d, Info = AppResources.Star_Algieba_Info },
-                new { Name = "Kochab", Ly =  130.9d, Info = AppResources.Star_Kochab_Info },
-                new { Name = "Elnath", Ly =  134d, Info = AppResources.Star_Elnath_Info },
-                new { Name = "Achernar", Ly =  139d, Info = AppResources.Star_Achernar_Info }
+                new { Name = AppResources.Star_ProximaCentauri_Name,  Ly =  4.246d,  Info = AppResources.Star_ProximaCentauri_Info },
+                new { Name = AppResources.Star_AlphaCentauri_Name,    Ly =  4.321d,  Info = AppResources.Star_AlphaCentauri_Info },
+                new { Name = AppResources.Star_BarnardsStarName,      Ly =  5.963d,  Info = AppResources.Star_BarnardsStarInfo },
+                new { Name = AppResources.Star_Luhman16_Name,         Ly =  6.5d,    Info = AppResources.Star_Luhman16_Info },
+                new { Name = AppResources.Star_Lalande21185_Name,     Ly =  8.29d,   Info = AppResources.Star_Lalande21185_Info },
+                new { Name = AppResources.Star_Sirius_Name,           Ly =  8.71d,   Info = AppResources.Star_Sirius_Info },
+                new { Name = AppResources.Star_EpsilonEridani_Name,   Ly =  10.47d,  Info = AppResources.Star_EpsilonEridani_Info },
+                new { Name = AppResources.Star_Procyon_Name,          Ly =  11.46d,  Info = AppResources.Star_Procyon_Info },
+                new { Name = AppResources.Star_61Cygni_Name,          Ly =  11.4d,   Info = AppResources.Star_61Cygni_Info },
+                new { Name = AppResources.Star_EpsilonIndi_Name,      Ly =  11.87d,  Info = AppResources.Star_EpsilonIndi_Info },
+                new { Name = AppResources.Star_TauCeti_Name,          Ly =  11.91d,  Info = AppResources.Star_TauCeti_Info },
+                new { Name = AppResources.Star_Groombridge1618_Name,  Ly =  15.89d,  Info = AppResources.Star_Groombridge1618_Info },
+                new { Name = AppResources.Star_Omicron2Eridani_Name,  Ly =  16.33d,  Info = AppResources.Star_Omicron2Eridani_Info },
+                new { Name = AppResources.Star_70Ophiuchi_Name,       Ly =  16.71d,  Info = AppResources.Star_70Ophiuchi_Info },
+                new { Name = AppResources.Star_Altair_Name,           Ly =  16.73d,  Info = AppResources.Star_Altair_Info },
+                new { Name = AppResources.Star_Alsafi_Name,           Ly =  18d,     Info = AppResources.Star_InCepheus_Info },
+                new { Name = AppResources.Star_EtaCassiopeiae_Name,   Ly =  19.33d,  Info = AppResources.Star_EtaCassiopeiae_Info },
+                new { Name = AppResources.Star_36Ophiuchi_Name,       Ly =  19.5d,   Info = AppResources.Star_36Ophiuchi_Info },
+                new { Name = AppResources.Star_DeltaPavonis_Name,     Ly =  19.89d,  Info = AppResources.Star_DeltaPavonis_Info },
+                new { Name = AppResources.Star_Vega_Name,             Ly =  25d,     Info = AppResources.Star_Vega_Info },
+                new { Name = AppResources.Star_Fomalhaut_Name,        Ly =  25.13d,  Info = AppResources.Star_Fomalhaut_Info },
+                new { Name = AppResources.Star_Pollux_Name,           Ly =  33.78d,  Info = AppResources.Star_Pollux_Info },
+                new { Name = AppResources.Star_Denebola_Name,         Ly =  35.9d,   Info = AppResources.Star_Denebola_Info },
+                new { Name = AppResources.Star_Arcturus_Name,         Ly =  36.7d,   Info = AppResources.Star_Arcturus_Info },
+                new { Name = AppResources.Star_Capella_Name,          Ly =  42.9d,   Info = AppResources.Star_Capella_Info },
+                new { Name = AppResources.Star_Rasalhague_Name,       Ly =  47.8d,   Info = AppResources.Star_Rasalhague_Info },
+                new { Name = AppResources.Star_Alderamin_Name,        Ly =  49.1d,   Info = AppResources.Star_Alderamin_Info },
+                new { Name = AppResources.Star_Castor_Name,           Ly =  51.6d,   Info = AppResources.Star_Castor_Info },
+                new { Name = AppResources.Star_Caph_Name,             Ly =  53.1d,   Info = AppResources.Star_Caph_Info },
+                new { Name = AppResources.Star_Menkent_Name,          Ly =  58.8d,   Info = AppResources.Star_InCentaurus_Info },
+                new { Name = AppResources.Star_Aldebaran_Name,        Ly =  65.1d,   Info = AppResources.Star_Aldebaran_Info },
+                new { Name = AppResources.Star_Larawag_Name,          Ly =  66d,     Info = AppResources.Star_InAuriga_Info },
+                new { Name = AppResources.Star_Hamal_Name,            Ly =  66.3d,   Info = AppResources.Star_Hamal_Info },
+                new { Name = AppResources.Star_Aljanah_Name,          Ly =  72d,     Info = AppResources.Star_InCepheus_Info },
+                new { Name = AppResources.Star_Alphecca_Name,         Ly =  75d,     Info = AppResources.Star_Alphecca_Info },
+                new { Name = AppResources.Star_Ankaa_Name,            Ly =  77d,     Info = AppResources.Star_Ankaa_Info },
+                new { Name = AppResources.Star_Merak_Name,            Ly =  79.1d,   Info = AppResources.Star_InUrsaMajor_Info },
+                new { Name = AppResources.Star_Regulus_Name,          Ly =  79.3d,   Info = AppResources.Star_Regulus_Info },
+                new { Name = AppResources.Star_Alsephina_Name,        Ly =  80.6d,   Info = AppResources.Star_InCentaurus_Info },
+                new { Name = AppResources.Star_Menkalinan_Name,       Ly =  81.1d,   Info = AppResources.Star_InAuriga_Info },
+                new { Name = AppResources.Star_Alioth_Name,           Ly =  82.6d,   Info = AppResources.Star_InUrsaMajor_Info },
+                new { Name = AppResources.Star_Mizar_Name,            Ly =  83d,     Info = AppResources.Star_InUrsaMajor_Info },
+                new { Name = AppResources.Star_Phecda_Name,           Ly =  83.2d,   Info = AppResources.Star_InUrsaMajor_Info },
+                new { Name = AppResources.Star_Sabik_Name,            Ly =  88d,     Info = AppResources.Star_Sabik_Info },
+                new { Name = AppResources.Star_Gacrux_Name,           Ly =  88.6d,   Info = AppResources.Star_Gacrux_Info },
+                new { Name = AppResources.Star_Algol_Name,            Ly =  94d,     Info = AppResources.Star_Algol_Info },
+                new { Name = AppResources.Star_Diphda_Name,           Ly =  96.3d,   Info = AppResources.Star_Diphda_Info },
+                new { Name = AppResources.Star_Alpheratz_Name,        Ly =  97d,     Info = AppResources.Star_Alpheratz_Info },
+                new { Name = AppResources.Star_Alnair_Name,           Ly =  101d,    Info = AppResources.Star_Alnair_Info },
+                new { Name = AppResources.Star_Alkaid_Name,           Ly =  103.9d,  Info = AppResources.Star_Alkaid_Info },
+                new { Name = AppResources.Star_Alhena_Name,           Ly =  109d,    Info = AppResources.Star_Alhena_Info },
+                new { Name = AppResources.Star_Miaplacidus_Name,      Ly =  113.2d,  Info = AppResources.Star_Miaplacidus_Info },
+                new { Name = AppResources.Star_Dubhe_Name,            Ly =  123d,    Info = AppResources.Star_InUrsaMajor_Info },
+                new { Name = AppResources.Star_Muhlifain_Name,        Ly =  130d,    Info = AppResources.Star_InCepheus_Info },
+                new { Name = AppResources.Star_Algieba_Name,          Ly =  130.3d,  Info = AppResources.Star_Algieba_Info },
+                new { Name = AppResources.Star_Kochab_Name,           Ly =  130.9d,  Info = AppResources.Star_Kochab_Info },
+                new { Name = AppResources.Star_Elnath_Name,           Ly =  134d,    Info = AppResources.Star_Elnath_Info },
+                new { Name = AppResources.Star_Achernar_Name,         Ly =  139d,    Info = AppResources.Star_Achernar_Info }
             };
 
             DateTime now = DateTime.Now;
@@ -402,8 +440,8 @@ namespace Aeonpulse.Services
             double kmTraveled = seconds * 299792.458;
             double lightYears = kmTraveled / 9460730472580.8;
 
-            string distance = $"{lightYears:F2} light-years";
-            string fullDistance = useMetric ? $"{(kmTraveled / 1000000):F2} million km" : $"{(kmTraveled * 0.621371 / 1000000):F2} million miles";
+            string distance = $"{lightYears:F2} {AppResources.Unit_LightYears}";
+            string fullDistance = useMetric ? $"{(kmTraveled / 1000000):F2} {AppResources.UnitMetric_MKm}" : $"{(kmTraveled * 0.621371 / 1000000):F2} {AppResources.UnitImperial_MMiles}";
 
             string bText = "";
             string fText = "";
@@ -412,24 +450,33 @@ namespace Aeonpulse.Services
             {
                 if (kmTraveled > 11000000000)
                 {
-                    bText = "Light has reached the Heliopause";
-                    fText = $"If a starship left at light speed on {baseDate:d}, it would have traveled {fullDistance}, and already reached the Heliopause - the boundary, roughly 11-12 billion miles (18-20 billion km) out, where solar wind is halted by the interstellar medium.";
+                    bText = AppResources.Ticker_PhotonPathHeliopause_Brief;
+                    fText = AppResources.Ticker_PhotonPathHeliopause_Full
+                        .Replace("{baseDate:d}", baseDate.ToString("d"))
+                        .Replace("{fullDistance}", fullDistance);
                 }
                 else
                 {
-                    bText = "Light is still within the Solar System";
-                    fText = $"If a starship left at light speed on {baseDate:d}, it would have traveled {fullDistance}, and is within our Solar System still.";
+                    bText = AppResources.Ticker_PhotonPathSolarSystem_Brief;
+                    fText = AppResources.Ticker_PhotonPathSolarSystem_Full
+                        .Replace("{baseDate:d}", baseDate.ToString("d"))
+                        .Replace("{fullDistance}", fullDistance);
                 }
             }
             else if (lightYears < 1.5)
             {
-                bText = "Light has reached the Oort Cloud";
-                fText = $"If a starship left at light speed on {baseDate:d}, it would have traveled {fullDistance}, and already reached the Oort Cloud of our Solar System - the theoretical outer edge of the Sun's gravitational influence.";
+                bText = AppResources.Ticker_PhotonPathOortCloud_Brief;
+                fText = AppResources.Ticker_PhotonPathOortCloud_Full
+                    .Replace("{baseDate:d}", baseDate.ToString("d"))
+                    .Replace("{fullDistance}", fullDistance);
             }
             else if (lightYears < 4.246)
             {
-                bText = "Light has reached interstellar space";
-                fText = $"If a starship left at light speed on {baseDate:d}, it would have traveled {distance} ({fullDistance}), and already reached interstellar space - the vast, mostly empty region between stars. The next stop is Proxima Centauri, located 4.246 light-years away.";
+                bText = AppResources.Ticker_PhotonPathInterstellar_Brief;
+                fText = AppResources.Ticker_PhotonPathInterstellar_Full
+                    .Replace("{baseDate:d}", baseDate.ToString("d"))
+                    .Replace("{distance}", distance)
+                    .Replace("{fullDistance}", fullDistance);
             }
             else
             {
@@ -437,8 +484,15 @@ namespace Aeonpulse.Services
                 {
                     if (lightYears < star.Ly)
                         break;
-                    bText = $"Light has reached {star.Name}";
-                    fText = $"If a starship left at light speed on {baseDate:d}, it would have traveled {distance} ({fullDistance}), and already reached {star.Name}, located {star.Ly} light-years away - {star.Info}";
+                    bText = AppResources.Ticker_PhotonPathStar_BriefTemplate
+                        .Replace("{star.Name}", star.Name);
+                    fText = AppResources.Ticker_PhotonPathStar_FullTemplate
+                        .Replace("{baseDate:d}", baseDate.ToString("d"))
+                        .Replace("{distance}", distance)
+                        .Replace("{fullDistance}", fullDistance)
+                        .Replace("{star.Name}", star.Name)
+                        .Replace("{star.Ly}", star.Ly.ToString())
+                        .Replace("{star.Info}", star.Info);
                 }
             }
 
@@ -489,8 +543,9 @@ namespace Aeonpulse.Services
             {
                 return new TickerData
                 {
-                    BriefText = "One of the first 104,510,976,956 humans",
-                    FullText = $"The moment when {baseDateName} is before the XX century, the number of humans have ever lived on Earth till 1900 is estimated as 104,510,976,956."
+                    BriefText = AppResources.Ticker_HumanBirthRankPreXX_Brief,
+                    FullText = AppResources.Ticker_HumanBirthRankPreXX_Full
+                        .Replace("{baseDateName}", baseDateName)
                 };
             }
             else if (days < 18262) // before 1950
@@ -508,8 +563,11 @@ namespace Aeonpulse.Services
 
             return new TickerData
             {
-                BriefText = $"Human #{estimatedRank:N0} on this date",
-                FullText = $"The moment when {baseDateName} marks the arrival of human #{estimatedRank:N0} in the story of Earth, out of all who have ever lived."
+                BriefText = AppResources.Ticker_HumanBirthRankPostXX_Brief
+                    .Replace("{estimatedRank:N0}", estimatedRank.ToString("N0")),
+                FullText = AppResources.Ticker_HumanBirthRankPostXX_Full
+                    .Replace("{baseDateName}", baseDateName)
+                    .Replace("{estimatedRank:N0}", estimatedRank.ToString("N0"))
             };
         }
 
@@ -521,30 +579,30 @@ namespace Aeonpulse.Services
         {
             var runes = new[]
             {
-                new { Name = "Fehu (ᚠ)", From = "5-29", To = "6-14", Brief = AppResources.Rune_Fehu_Brief, Full = AppResources.Rune_Fehu_Full },
-                new { Name = "Uruz (ᚢ)", From = "6-14", To = "6-29", Brief = AppResources.Rune_Uruz_Brief, Full = AppResources.Rune_Uruz_Full },
-                new { Name = "Thurisaz (ᚦ)", From = "6-29", To = "7-13", Brief = AppResources.Rune_Thurisaz_Brief, Full = AppResources.Rune_Thurisaz_Full },
-                new { Name = "Ansuz (ᚨ)", From = "7-13", To = "7-29", Brief = AppResources.Rune_Ansuz_Brief, Full = AppResources.Rune_Ansuz_Full },
-                new { Name = "Raidho (ᚱ)", From = "7-29", To = "8-13", Brief = AppResources.Rune_Raidho_Brief, Full = AppResources.Rune_Raidho_Full },
-                new { Name = "Kenaz (ᚲ)", From = "8-13", To = "8-28", Brief = AppResources.Rune_Kenaz_Brief, Full = AppResources.Rune_Kenaz_Full },
-                new { Name = "Gebo (ᚷ)", From = "8-28", To = "9-13", Brief = AppResources.Rune_Gebo_Brief, Full = AppResources.Rune_Gebo_Full },
-                new { Name = "Wunjo (ᚹ)", From = "9-13", To = "9-28", Brief = AppResources.Rune_Wunjo_Brief, Full = AppResources.Rune_Wunjo_Full },
-                new { Name = "Hagalaz (ᚺ/ᚻ)", From = "9-28", To = "10-13", Brief = AppResources.Rune_Hagalaz_Brief, Full = AppResources.Rune_Hagalaz_Full },
-                new { Name = "Nauthiz (ᚾ)", From = "10-13", To = "10-28", Brief = AppResources.Rune_Nauthiz_Brief, Full = AppResources.Rune_Nauthiz_Full },
-                new { Name = "Isa (ᛁ)", From = "10-28", To = "11-13", Brief = AppResources.Rune_Isa_Brief, Full = AppResources.Rune_Isa_Full },
-                new { Name = "Jera (ᚼ)", From = "11-13", To = "11-28", Brief = AppResources.Rune_Jera_Brief, Full = AppResources.Rune_Jera_Full },
-                new { Name = "Eihwaz (ᚽ)", From = "11-28", To = "0-13", Brief = AppResources.Rune_Eihwaz_Brief, Full = AppResources.Rune_Eihwaz_Full },
-                new { Name = "Perthro (ᚹ)", From = "0-13", To = "0-28", Brief = AppResources.Rune_Perthro_Brief, Full = AppResources.Rune_Perthro_Full },
-                new { Name = "Algiz (ᛉ)", From = "0-28", To = "1-13", Brief = AppResources.Rune_Algiz_Brief, Full = AppResources.Rune_Algiz_Full },
-                new { Name = "Sowilo (ᛊ)", From = "1-13", To = "1-27", Brief = AppResources.Rune_Sowilo_Brief, Full = AppResources.Rune_Sowilo_Full },
-                new { Name = "Tiwaz (ᛏ)", From = "1-27", To = "2-14", Brief = AppResources.Rune_Tiwaz_Brief, Full = AppResources.Rune_Tiwaz_Full },
-                new { Name = "Berkano (ᛒ)", From = "2-14", To = "2-30", Brief = AppResources.Rune_Berkano_Brief, Full = AppResources.Rune_Berkano_Full },
-                new { Name = "Ehwaz (ᛖ)", From = "2-30", To = "3-14", Brief = AppResources.Rune_Ehwaz_Brief, Full = AppResources.Rune_Ehwaz_Full },
-                new { Name = "Mannaz (ᛗ)", From = "3-14", To = "3-29", Brief = AppResources.Rune_Mannaz_Brief, Full = AppResources.Rune_Mannaz_Full },
-                new { Name = "Laguz (ᛚ)", From = "3-29", To = "4-14", Brief = AppResources.Rune_Laguz_Brief, Full = AppResources.Rune_Laguz_Full },
-                new { Name = "Ingwaz (ᛝ)", From = "4-14", To = "4-29", Brief = AppResources.Rune_Ingwaz_Brief, Full = AppResources.Rune_Ingwaz_Full },
-                new { Name = "Othala (ᛟ)", From = "4-29", To = "5-14", Brief = AppResources.Rune_Othala_Brief, Full = AppResources.Rune_Othala_Full },
-                new { Name = "Dagaz (ᛞ)", From = "5-14", To = "5-29", Brief = AppResources.Rune_Dagaz_Brief, Full = AppResources.Rune_Dagaz_Full }
+                new { Name = AppResources.Rune_Fehu_Name,     Symbol = "ᚠ", From = "5-29",  To = "6-14",  Brief = AppResources.Rune_Fehu_Brief,     Full = AppResources.Rune_Fehu_Full },
+                new { Name = AppResources.Rune_Uruz_Name,     Symbol = "ᚢ", From = "6-14",  To = "6-29",  Brief = AppResources.Rune_Uruz_Brief,     Full = AppResources.Rune_Uruz_Full },
+                new { Name = AppResources.Rune_Thurisaz_Name, Symbol = "ᚦ", From = "6-29",  To = "7-13",  Brief = AppResources.Rune_Thurisaz_Brief, Full = AppResources.Rune_Thurisaz_Full },
+                new { Name = AppResources.Rune_Ansuz_Name,    Symbol = "ᚨ", From = "7-13",  To = "7-29",  Brief = AppResources.Rune_Ansuz_Brief,    Full = AppResources.Rune_Ansuz_Full },
+                new { Name = AppResources.Rune_Raidho_Name,   Symbol = "ᚱ", From = "7-29",  To = "8-13",  Brief = AppResources.Rune_Raidho_Brief,   Full = AppResources.Rune_Raidho_Full },
+                new { Name = AppResources.Rune_Kenaz_Name,    Symbol = "ᚲ", From = "8-13",  To = "8-28",  Brief = AppResources.Rune_Kenaz_Brief,    Full = AppResources.Rune_Kenaz_Full },
+                new { Name = AppResources.Rune_Gebo_Name,     Symbol = "ᚷ", From = "8-28",  To = "9-13",  Brief = AppResources.Rune_Gebo_Brief,     Full = AppResources.Rune_Gebo_Full },
+                new { Name = AppResources.Rune_Wunjo_Name,    Symbol = "ᚹ", From = "9-13",  To = "9-28",  Brief = AppResources.Rune_Wunjo_Brief,    Full = AppResources.Rune_Wunjo_Full },
+                new { Name = AppResources.Rune_Hagalaz_Name,  Symbol = "ᚻ", From = "9-28",  To = "10-13", Brief = AppResources.Rune_Hagalaz_Brief,  Full = AppResources.Rune_Hagalaz_Full },
+                new { Name = AppResources.Rune_Nauthiz_Name,  Symbol = "ᚾ", From = "10-13", To = "10-28", Brief = AppResources.Rune_Nauthiz_Brief,  Full = AppResources.Rune_Nauthiz_Full },
+                new { Name = AppResources.Rune_Isa_Name,      Symbol = "ᛁ", From = "10-28", To = "11-13", Brief = AppResources.Rune_Isa_Brief,      Full = AppResources.Rune_Isa_Full },
+                new { Name = AppResources.Rune_Jera_Name,     Symbol = "ᚼ", From = "11-13", To = "11-28", Brief = AppResources.Rune_Jera_Brief,     Full = AppResources.Rune_Jera_Full },
+                new { Name = AppResources.Rune_Eihwaz_Name,   Symbol = "ᚽ", From = "11-28", To = "0-13",  Brief = AppResources.Rune_Eihwaz_Brief,   Full = AppResources.Rune_Eihwaz_Full },
+                new { Name = AppResources.Rune_Perthro_Name,  Symbol = "ᚹ", From = "0-13",  To = "0-28",  Brief = AppResources.Rune_Perthro_Brief,  Full = AppResources.Rune_Perthro_Full },
+                new { Name = AppResources.Rune_Algiz_Name,    Symbol = "ᛉ", From = "0-28",  To = "1-13",  Brief = AppResources.Rune_Algiz_Brief,    Full = AppResources.Rune_Algiz_Full },
+                new { Name = AppResources.Rune_Sowilo_Name,   Symbol = "ᛊ", From = "1-13",  To = "1-27",  Brief = AppResources.Rune_Sowilo_Brief,   Full = AppResources.Rune_Sowilo_Full },
+                new { Name = AppResources.Rune_Tiwaz_Name,    Symbol = "ᛏ", From = "1-27",  To = "2-14",  Brief = AppResources.Rune_Tiwaz_Brief,    Full = AppResources.Rune_Tiwaz_Full },
+                new { Name = AppResources.Rune_Berkano_Name,  Symbol = "ᛒ", From = "2-14",  To = "2-30",  Brief = AppResources.Rune_Berkano_Brief,  Full = AppResources.Rune_Berkano_Full },
+                new { Name = AppResources.Rune_Ehwaz_Name,    Symbol = "ᛖ", From = "2-30",  To = "3-14",  Brief = AppResources.Rune_Ehwaz_Brief,    Full = AppResources.Rune_Ehwaz_Full },
+                new { Name = AppResources.Rune_Mannaz_Name,   Symbol = "ᛗ", From = "3-14",  To = "3-29",  Brief = AppResources.Rune_Mannaz_Brief,   Full = AppResources.Rune_Mannaz_Full },
+                new { Name = AppResources.Rune_Laguz_Name,    Symbol = "ᛚ", From = "3-29",  To = "4-14",  Brief = AppResources.Rune_Laguz_Brief,    Full = AppResources.Rune_Laguz_Full },
+                new { Name = AppResources.Rune_Ingwaz_Name,   Symbol = "ᛝ", From = "4-14",  To = "4-29",  Brief = AppResources.Rune_Ingwaz_Brief,   Full = AppResources.Rune_Ingwaz_Full },
+                new { Name = AppResources.Rune_Othala_Name,   Symbol = "ᛟ", From = "4-29",  To = "5-14",  Brief = AppResources.Rune_Othala_Brief,   Full = AppResources.Rune_Othala_Full },
+                new { Name = AppResources.Rune_Dagaz_Name,    Symbol = "ᛞ", From = "5-14",  To = "5-29",  Brief = AppResources.Rune_Dagaz_Brief,    Full = AppResources.Rune_Dagaz_Full }
             };
 
             int year = baseDate.Year;
@@ -567,8 +625,13 @@ namespace Aeonpulse.Services
 
             return new TickerData
             {
-                BriefText = $"Date rune is {birthRune.Name}: {birthRune.Brief}",
-                FullText = $"According to Viking lore, {baseDate:d} is governed by the {birthRune.Name} rune: {birthRune.Full}."
+                BriefText = AppResources.Ticker_BirthRuneBrief_Template
+                    .Replace("{birthRune.Name}", $"{birthRune.Name} ({birthRune.Symbol})")
+                    .Replace("{birthRune.Brief}", birthRune.Brief),
+                FullText = AppResources.Ticker_BirthRuneFull_Template
+                    .Replace("{baseDate:d}", baseDate.ToString("d"))
+                    .Replace("{birthRune.Name}", $"{birthRune.Name} ({birthRune.Symbol})")
+                    .Replace("{birthRune.Full}", birthRune.Full)
             };
         }
 
@@ -607,8 +670,15 @@ namespace Aeonpulse.Services
 
             return new TickerData
             {
-                BriefText = $"Year {curYear} is Numerology Year {personalYear}: {interpretations[personalYear - 1].Brief}",
-                FullText = $"In Numerology, for those who were born on {baseDate:d}, year {curYear} is Personal Year {personalYear}: {interpretations[personalYear - 1].Full}"
+                BriefText = AppResources.Ticker_PersonalYearBrief_Template
+                    .Replace("{curYear}", curYear.ToString())
+                    .Replace("{personalYear}", personalYear.ToString())
+                    .Replace("{interpretations[personalYear - 1].Brief}", interpretations[personalYear - 1].Brief),
+                FullText = AppResources.Ticker_PersonalYearFull_Template
+                    .Replace("{baseDate:d}", baseDate.ToString("d"))
+                    .Replace("{curYear}", curYear.ToString())
+                    .Replace("{personalYear}", personalYear.ToString())
+                    .Replace("{interpretations[personalYear - 1].Full}", interpretations[personalYear - 1].Full)
             };
         }
 
@@ -639,8 +709,11 @@ namespace Aeonpulse.Services
             {
                 return new TickerData
                 {
-                    BriefText = $"Till 1900, {amount} of CO2 emitted",
-                    FullText = $"The moment when {baseDateName} is before the XX century - till 1900, humanity has released {amount} of CO2 into the atmosphere. Still a tiny amount compared to later times."
+                    BriefText = AppResources.Ticker_GlobalExhalePreXX_Brief
+                        .Replace("{amount}", amount),
+                    FullText = AppResources.Ticker_GlobalExhalePreXX_Full
+                        .Replace("{baseDateName}", baseDateName)
+                        .Replace("{amount}", amount)
                 };
             }
 
@@ -661,8 +734,12 @@ namespace Aeonpulse.Services
 
             return new TickerData
             {
-                BriefText = $"{amount} of CO2 emitted",
-                FullText = $"Since {baseDateName} on {baseDate:d}, humanity has released {amount} of CO2 into the atmosphere. A massive global exhale."
+                BriefText = AppResources.Ticker_GlobalExhalePostXX_Brief
+                    .Replace("{amount}", amount),
+                FullText = AppResources.Ticker_GlobalExhalePostXX_Full
+                    .Replace("{baseDateName}", baseDateName)
+                    .Replace("{baseDate:d}", baseDate.ToString("d"))
+                    .Replace("{amount}", amount)
             };
         }
 

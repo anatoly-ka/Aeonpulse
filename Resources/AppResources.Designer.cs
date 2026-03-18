@@ -205,6 +205,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Info_ButtonClose {
+            get {
+                return ResourceManager.GetString("Info_ButtonClose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Calculating the time units remaining until your closest next major milestone from the Time Jubilees..
         /// </summary>
         public static string Info_CountdownMethod {
@@ -673,6 +682,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Algiz.
+        /// </summary>
+        public static string Rune_Algiz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Algiz_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Communication and advice from wise people.
         /// </summary>
         public static string Rune_Ansuz_Brief {
@@ -687,6 +705,15 @@ namespace Aeonpulse.Resources {
         public static string Rune_Ansuz_Full {
             get {
                 return ResourceManager.GetString("Rune_Ansuz_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ansuz.
+        /// </summary>
+        public static string Rune_Ansuz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Ansuz_Name", resourceCulture);
             }
         }
         
@@ -709,6 +736,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Berkano.
+        /// </summary>
+        public static string Rune_Berkano_Name {
+            get {
+                return ResourceManager.GetString("Rune_Berkano_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Growth, hope, optimism for new times.
         /// </summary>
         public static string Rune_Dagaz_Brief {
@@ -723,6 +759,15 @@ namespace Aeonpulse.Resources {
         public static string Rune_Dagaz_Full {
             get {
                 return ResourceManager.GetString("Rune_Dagaz_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dagaz.
+        /// </summary>
+        public static string Rune_Dagaz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Dagaz_Name", resourceCulture);
             }
         }
         
@@ -745,6 +790,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ehwaz.
+        /// </summary>
+        public static string Rune_Ehwaz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Ehwaz_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Protection in pursuing goals, imagination helps.
         /// </summary>
         public static string Rune_Eihwaz_Brief {
@@ -759,6 +813,15 @@ namespace Aeonpulse.Resources {
         public static string Rune_Eihwaz_Full {
             get {
                 return ResourceManager.GetString("Rune_Eihwaz_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Eihwaz.
+        /// </summary>
+        public static string Rune_Eihwaz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Eihwaz_Name", resourceCulture);
             }
         }
         
@@ -781,6 +844,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fehu.
+        /// </summary>
+        public static string Rune_Fehu_Name {
+            get {
+                return ResourceManager.GetString("Rune_Fehu_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Harmony and giving in relationships.
         /// </summary>
         public static string Rune_Gebo_Brief {
@@ -795,6 +867,15 @@ namespace Aeonpulse.Resources {
         public static string Rune_Gebo_Full {
             get {
                 return ResourceManager.GetString("Rune_Gebo_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gebo.
+        /// </summary>
+        public static string Rune_Gebo_Name {
+            get {
+                return ResourceManager.GetString("Rune_Gebo_Name", resourceCulture);
             }
         }
         
@@ -817,6 +898,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hagalaz.
+        /// </summary>
+        public static string Rune_Hagalaz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Hagalaz_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Closure, fulfillment, new beginnings.
         /// </summary>
         public static string Rune_Ingwaz_Brief {
@@ -831,6 +921,15 @@ namespace Aeonpulse.Resources {
         public static string Rune_Ingwaz_Full {
             get {
                 return ResourceManager.GetString("Rune_Ingwaz_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ingwaz.
+        /// </summary>
+        public static string Rune_Ingwaz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Ingwaz_Name", resourceCulture);
             }
         }
         
@@ -853,6 +952,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Isa.
+        /// </summary>
+        public static string Rune_Isa_Name {
+            get {
+                return ResourceManager.GetString("Rune_Isa_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Karma, reward comes with patience.
         /// </summary>
         public static string Rune_Jera_Brief {
@@ -867,6 +975,15 @@ namespace Aeonpulse.Resources {
         public static string Rune_Jera_Full {
             get {
                 return ResourceManager.GetString("Rune_Jera_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jera.
+        /// </summary>
+        public static string Rune_Jera_Name {
+            get {
+                return ResourceManager.GetString("Rune_Jera_Name", resourceCulture);
             }
         }
         
@@ -889,6 +1006,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kenaz.
+        /// </summary>
+        public static string Rune_Kenaz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Kenaz_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Intuition, imagination, spiritual connection.
         /// </summary>
         public static string Rune_Laguz_Brief {
@@ -903,6 +1029,15 @@ namespace Aeonpulse.Resources {
         public static string Rune_Laguz_Full {
             get {
                 return ResourceManager.GetString("Rune_Laguz_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Laguz.
+        /// </summary>
+        public static string Rune_Laguz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Laguz_Name", resourceCulture);
             }
         }
         
@@ -925,6 +1060,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mannaz.
+        /// </summary>
+        public static string Rune_Mannaz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Mannaz_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stay alert and patient in tough times.
         /// </summary>
         public static string Rune_Nauthiz_Brief {
@@ -939,6 +1083,15 @@ namespace Aeonpulse.Resources {
         public static string Rune_Nauthiz_Full {
             get {
                 return ResourceManager.GetString("Rune_Nauthiz_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nauthiz.
+        /// </summary>
+        public static string Rune_Nauthiz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Nauthiz_Name", resourceCulture);
             }
         }
         
@@ -961,6 +1114,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Othala.
+        /// </summary>
+        public static string Rune_Othala_Name {
+            get {
+                return ResourceManager.GetString("Rune_Othala_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mysteries, secrets, surprises.
         /// </summary>
         public static string Rune_Perthro_Brief {
@@ -975,6 +1137,15 @@ namespace Aeonpulse.Resources {
         public static string Rune_Perthro_Full {
             get {
                 return ResourceManager.GetString("Rune_Perthro_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Perthro.
+        /// </summary>
+        public static string Rune_Perthro_Name {
+            get {
+                return ResourceManager.GetString("Rune_Perthro_Name", resourceCulture);
             }
         }
         
@@ -997,6 +1168,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Raidho.
+        /// </summary>
+        public static string Rune_Raidho_Name {
+            get {
+                return ResourceManager.GetString("Rune_Raidho_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Health, relax, let go of worries.
         /// </summary>
         public static string Rune_Sowilo_Brief {
@@ -1011,6 +1191,15 @@ namespace Aeonpulse.Resources {
         public static string Rune_Sowilo_Full {
             get {
                 return ResourceManager.GetString("Rune_Sowilo_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sowilo.
+        /// </summary>
+        public static string Rune_Sowilo_Name {
+            get {
+                return ResourceManager.GetString("Rune_Sowilo_Name", resourceCulture);
             }
         }
         
@@ -1033,6 +1222,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Thurisaz.
+        /// </summary>
+        public static string Rune_Thurisaz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Thurisaz_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Success, willpower, victory, romance.
         /// </summary>
         public static string Rune_Tiwaz_Brief {
@@ -1047,6 +1245,15 @@ namespace Aeonpulse.Resources {
         public static string Rune_Tiwaz_Full {
             get {
                 return ResourceManager.GetString("Rune_Tiwaz_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tiwaz.
+        /// </summary>
+        public static string Rune_Tiwaz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Tiwaz_Name", resourceCulture);
             }
         }
         
@@ -1069,6 +1276,15 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Uruz.
+        /// </summary>
+        public static string Rune_Uruz_Name {
+            get {
+                return ResourceManager.GetString("Rune_Uruz_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Happiness and well-being.
         /// </summary>
         public static string Rune_Wunjo_Brief {
@@ -1083,6 +1299,15 @@ namespace Aeonpulse.Resources {
         public static string Rune_Wunjo_Full {
             get {
                 return ResourceManager.GetString("Rune_Wunjo_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wunjo.
+        /// </summary>
+        public static string Rune_Wunjo_Name {
+            get {
+                return ResourceManager.GetString("Rune_Wunjo_Name", resourceCulture);
             }
         }
         
@@ -1330,11 +1555,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 36 Ophiuchi (Guniibuu).
+        /// </summary>
+        public static string Star_36Ophiuchi_Name {
+            get {
+                return ResourceManager.GetString("Star_36Ophiuchi_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a binary star system in the constellation Cygnus.
         /// </summary>
         public static string Star_61Cygni_Info {
             get {
                 return ResourceManager.GetString("Star_61Cygni_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 61 Cygni.
+        /// </summary>
+        public static string Star_61Cygni_Name {
+            get {
+                return ResourceManager.GetString("Star_61Cygni_Name", resourceCulture);
             }
         }
         
@@ -1348,11 +1591,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 70 Ophiuchi.
+        /// </summary>
+        public static string Star_70Ophiuchi_Name {
+            get {
+                return ResourceManager.GetString("Star_70Ophiuchi_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the brightest star in the constellation Eridanus.
         /// </summary>
         public static string Star_Achernar_Info {
             get {
                 return ResourceManager.GetString("Star_Achernar_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Achernar.
+        /// </summary>
+        public static string Star_Achernar_Name {
+            get {
+                return ResourceManager.GetString("Star_Achernar_Name", resourceCulture);
             }
         }
         
@@ -1366,11 +1627,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Aldebaran.
+        /// </summary>
+        public static string Star_Aldebaran_Name {
+            get {
+                return ResourceManager.GetString("Star_Aldebaran_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the brightest star in the constellation Cepheus.
         /// </summary>
         public static string Star_Alderamin_Info {
             get {
                 return ResourceManager.GetString("Star_Alderamin_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alderamin.
+        /// </summary>
+        public static string Star_Alderamin_Name {
+            get {
+                return ResourceManager.GetString("Star_Alderamin_Name", resourceCulture);
             }
         }
         
@@ -1384,11 +1663,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Algieba.
+        /// </summary>
+        public static string Star_Algieba_Name {
+            get {
+                return ResourceManager.GetString("Star_Algieba_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a star in the constellation Perseus.
         /// </summary>
         public static string Star_Algol_Info {
             get {
                 return ResourceManager.GetString("Star_Algol_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Algol.
+        /// </summary>
+        public static string Star_Algol_Name {
+            get {
+                return ResourceManager.GetString("Star_Algol_Name", resourceCulture);
             }
         }
         
@@ -1402,11 +1699,47 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alhena.
+        /// </summary>
+        public static string Star_Alhena_Name {
+            get {
+                return ResourceManager.GetString("Star_Alhena_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alioth.
+        /// </summary>
+        public static string Star_Alioth_Name {
+            get {
+                return ResourceManager.GetString("Star_Alioth_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aljanah.
+        /// </summary>
+        public static string Star_Aljanah_Name {
+            get {
+                return ResourceManager.GetString("Star_Aljanah_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the star at the end of the Big Dipper&apos;s handle in the constellation Ursa Major.
         /// </summary>
         public static string Star_Alkaid_Info {
             get {
                 return ResourceManager.GetString("Star_Alkaid_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alkaid.
+        /// </summary>
+        public static string Star_Alkaid_Name {
+            get {
+                return ResourceManager.GetString("Star_Alkaid_Name", resourceCulture);
             }
         }
         
@@ -1420,11 +1753,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alnair.
+        /// </summary>
+        public static string Star_Alnair_Name {
+            get {
+                return ResourceManager.GetString("Star_Alnair_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a binary pair of Sun-like stars in the constellation Centaurus that, with Proxima, form a triple system.
         /// </summary>
         public static string Star_AlphaCentauri_Info {
             get {
                 return ResourceManager.GetString("Star_AlphaCentauri_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alpha Centauri.
+        /// </summary>
+        public static string Star_AlphaCentauri_Name {
+            get {
+                return ResourceManager.GetString("Star_AlphaCentauri_Name", resourceCulture);
             }
         }
         
@@ -1438,11 +1789,47 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alphecca.
+        /// </summary>
+        public static string Star_Alphecca_Name {
+            get {
+                return ResourceManager.GetString("Star_Alphecca_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the brightest star in the constellation Andromeda.
         /// </summary>
         public static string Star_Alpheratz_Info {
             get {
                 return ResourceManager.GetString("Star_Alpheratz_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alpheratz.
+        /// </summary>
+        public static string Star_Alpheratz_Name {
+            get {
+                return ResourceManager.GetString("Star_Alpheratz_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alsafi.
+        /// </summary>
+        public static string Star_Alsafi_Name {
+            get {
+                return ResourceManager.GetString("Star_Alsafi_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alsephina.
+        /// </summary>
+        public static string Star_Alsephina_Name {
+            get {
+                return ResourceManager.GetString("Star_Alsephina_Name", resourceCulture);
             }
         }
         
@@ -1456,11 +1843,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Altair.
+        /// </summary>
+        public static string Star_Altair_Name {
+            get {
+                return ResourceManager.GetString("Star_Altair_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the brightest star in the constellation Phoenix.
         /// </summary>
         public static string Star_Ankaa_Info {
             get {
                 return ResourceManager.GetString("Star_Ankaa_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ankaa.
+        /// </summary>
+        public static string Star_Ankaa_Name {
+            get {
+                return ResourceManager.GetString("Star_Ankaa_Name", resourceCulture);
             }
         }
         
@@ -1474,11 +1879,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Arcturus.
+        /// </summary>
+        public static string Star_Arcturus_Name {
+            get {
+                return ResourceManager.GetString("Star_Arcturus_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a red dwarf star in the constellation Ophiuchus with the largest proper motion of any known star.
         /// </summary>
         public static string Star_BarnardsStarInfo {
             get {
                 return ResourceManager.GetString("Star_BarnardsStarInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Barnard&apos;s Star.
+        /// </summary>
+        public static string Star_BarnardsStarName {
+            get {
+                return ResourceManager.GetString("Star_BarnardsStarName", resourceCulture);
             }
         }
         
@@ -1492,11 +1915,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Capella.
+        /// </summary>
+        public static string Star_Capella_Name {
+            get {
+                return ResourceManager.GetString("Star_Capella_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a star in the constellation Cassiopeia.
         /// </summary>
         public static string Star_Caph_Info {
             get {
                 return ResourceManager.GetString("Star_Caph_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Caph.
+        /// </summary>
+        public static string Star_Caph_Name {
+            get {
+                return ResourceManager.GetString("Star_Caph_Name", resourceCulture);
             }
         }
         
@@ -1510,11 +1951,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Castor.
+        /// </summary>
+        public static string Star_Castor_Name {
+            get {
+                return ResourceManager.GetString("Star_Castor_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a nearby star in the constellation Pavo with a high metallicity, making it a candidate for hosting planets.
         /// </summary>
         public static string Star_DeltaPavonis_Info {
             get {
                 return ResourceManager.GetString("Star_DeltaPavonis_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delta Pavonis.
+        /// </summary>
+        public static string Star_DeltaPavonis_Name {
+            get {
+                return ResourceManager.GetString("Star_DeltaPavonis_Name", resourceCulture);
             }
         }
         
@@ -1528,11 +1987,38 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Denebola.
+        /// </summary>
+        public static string Star_Denebola_Name {
+            get {
+                return ResourceManager.GetString("Star_Denebola_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the brightest star in the constellation Cetus.
         /// </summary>
         public static string Star_Diphda_Info {
             get {
                 return ResourceManager.GetString("Star_Diphda_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diphda.
+        /// </summary>
+        public static string Star_Diphda_Name {
+            get {
+                return ResourceManager.GetString("Star_Diphda_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dubhe.
+        /// </summary>
+        public static string Star_Dubhe_Name {
+            get {
+                return ResourceManager.GetString("Star_Dubhe_Name", resourceCulture);
             }
         }
         
@@ -1546,11 +2032,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Elnath.
+        /// </summary>
+        public static string Star_Elnath_Name {
+            get {
+                return ResourceManager.GetString("Star_Elnath_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a visible young Sun-like star with a debris disk in the constellation Eridanus.
         /// </summary>
         public static string Star_EpsilonEridani_Info {
             get {
                 return ResourceManager.GetString("Star_EpsilonEridani_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Epsilon Eridani (Ran).
+        /// </summary>
+        public static string Star_EpsilonEridani_Name {
+            get {
+                return ResourceManager.GetString("Star_EpsilonEridani_Name", resourceCulture);
             }
         }
         
@@ -1564,11 +2068,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Epsilon Indi.
+        /// </summary>
+        public static string Star_EpsilonIndi_Name {
+            get {
+                return ResourceManager.GetString("Star_EpsilonIndi_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a binary star system in the constellation Cassiopeia.
         /// </summary>
         public static string Star_EtaCassiopeiae_Info {
             get {
                 return ResourceManager.GetString("Star_EtaCassiopeiae_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Eta Cassiopeiae (Achird).
+        /// </summary>
+        public static string Star_EtaCassiopeiae_Name {
+            get {
+                return ResourceManager.GetString("Star_EtaCassiopeiae_Name", resourceCulture);
             }
         }
         
@@ -1582,11 +2104,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fomalhaut.
+        /// </summary>
+        public static string Star_Fomalhaut_Name {
+            get {
+                return ResourceManager.GetString("Star_Fomalhaut_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the brightest star in the constellation Crux.
         /// </summary>
         public static string Star_Gacrux_Info {
             get {
                 return ResourceManager.GetString("Star_Gacrux_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gacrux.
+        /// </summary>
+        public static string Star_Gacrux_Name {
+            get {
+                return ResourceManager.GetString("Star_Gacrux_Name", resourceCulture);
             }
         }
         
@@ -1600,11 +2140,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Groombridge 1618.
+        /// </summary>
+        public static string Star_Groombridge1618_Name {
+            get {
+                return ResourceManager.GetString("Star_Groombridge1618_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the brightest star in the constellation Aries.
         /// </summary>
         public static string Star_Hamal_Info {
             get {
                 return ResourceManager.GetString("Star_Hamal_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hamal.
+        /// </summary>
+        public static string Star_Hamal_Name {
+            get {
+                return ResourceManager.GetString("Star_Hamal_Name", resourceCulture);
             }
         }
         
@@ -1654,11 +2212,38 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kochab.
+        /// </summary>
+        public static string Star_Kochab_Name {
+            get {
+                return ResourceManager.GetString("Star_Kochab_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a star in the constellation Ursa Major. One of the brightest red dwarfs near Earth, but still too dim at magnitude 7.52..
         /// </summary>
         public static string Star_Lalande21185_Info {
             get {
                 return ResourceManager.GetString("Star_Lalande21185_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lalande 21185.
+        /// </summary>
+        public static string Star_Lalande21185_Name {
+            get {
+                return ResourceManager.GetString("Star_Lalande21185_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Larawag.
+        /// </summary>
+        public static string Star_Larawag_Name {
+            get {
+                return ResourceManager.GetString("Star_Larawag_Name", resourceCulture);
             }
         }
         
@@ -1672,11 +2257,74 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Luhman 16.
+        /// </summary>
+        public static string Star_Luhman16_Name {
+            get {
+                return ResourceManager.GetString("Star_Luhman16_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Menkalinan.
+        /// </summary>
+        public static string Star_Menkalinan_Name {
+            get {
+                return ResourceManager.GetString("Star_Menkalinan_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Menkent.
+        /// </summary>
+        public static string Star_Menkent_Name {
+            get {
+                return ResourceManager.GetString("Star_Menkent_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Merak.
+        /// </summary>
+        public static string Star_Merak_Name {
+            get {
+                return ResourceManager.GetString("Star_Merak_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the second-brightest star in the constellation Carina.
         /// </summary>
         public static string Star_Miaplacidus_Info {
             get {
                 return ResourceManager.GetString("Star_Miaplacidus_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Miaplacidus.
+        /// </summary>
+        public static string Star_Miaplacidus_Name {
+            get {
+                return ResourceManager.GetString("Star_Miaplacidus_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mizar.
+        /// </summary>
+        public static string Star_Mizar_Name {
+            get {
+                return ResourceManager.GetString("Star_Mizar_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Muhlifain.
+        /// </summary>
+        public static string Star_Muhlifain_Name {
+            get {
+                return ResourceManager.GetString("Star_Muhlifain_Name", resourceCulture);
             }
         }
         
@@ -1690,11 +2338,38 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Omicron2 Eridani (Keid).
+        /// </summary>
+        public static string Star_Omicron2Eridani_Name {
+            get {
+                return ResourceManager.GetString("Star_Omicron2Eridani_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phecda.
+        /// </summary>
+        public static string Star_Phecda_Name {
+            get {
+                return ResourceManager.GetString("Star_Phecda_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the brightest star in the constellation Gemini.
         /// </summary>
         public static string Star_Pollux_Info {
             get {
                 return ResourceManager.GetString("Star_Pollux_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pollux.
+        /// </summary>
+        public static string Star_Pollux_Name {
+            get {
+                return ResourceManager.GetString("Star_Pollux_Name", resourceCulture);
             }
         }
         
@@ -1708,11 +2383,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Procyon.
+        /// </summary>
+        public static string Star_Procyon_Name {
+            get {
+                return ResourceManager.GetString("Star_Procyon_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a red dwarf star in the constellation Centaurus, the closest known star to the Sun.
         /// </summary>
         public static string Star_ProximaCentauri_Info {
             get {
                 return ResourceManager.GetString("Star_ProximaCentauri_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proxima Centauri.
+        /// </summary>
+        public static string Star_ProximaCentauri_Name {
+            get {
+                return ResourceManager.GetString("Star_ProximaCentauri_Name", resourceCulture);
             }
         }
         
@@ -1726,11 +2419,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rasalhague.
+        /// </summary>
+        public static string Star_Rasalhague_Name {
+            get {
+                return ResourceManager.GetString("Star_Rasalhague_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the brightest star in the constellation Leo.
         /// </summary>
         public static string Star_Regulus_Info {
             get {
                 return ResourceManager.GetString("Star_Regulus_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Regulus.
+        /// </summary>
+        public static string Star_Regulus_Name {
+            get {
+                return ResourceManager.GetString("Star_Regulus_Name", resourceCulture);
             }
         }
         
@@ -1744,11 +2455,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sabik.
+        /// </summary>
+        public static string Star_Sabik_Name {
+            get {
+                return ResourceManager.GetString("Star_Sabik_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a star in the constellation Canis Major. The brightest star in the night sky.
         /// </summary>
         public static string Star_Sirius_Info {
             get {
                 return ResourceManager.GetString("Star_Sirius_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sirius.
+        /// </summary>
+        public static string Star_Sirius_Name {
+            get {
+                return ResourceManager.GetString("Star_Sirius_Name", resourceCulture);
             }
         }
         
@@ -1762,11 +2491,29 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tau Ceti.
+        /// </summary>
+        public static string Star_TauCeti_Name {
+            get {
+                return ResourceManager.GetString("Star_TauCeti_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a star in the constellation Lyra. The fifth-brightest star in the night sky and the second-brightest star in the northern celestial hemisphere.
         /// </summary>
         public static string Star_Vega_Info {
             get {
                 return ResourceManager.GetString("Star_Vega_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vega.
+        /// </summary>
+        public static string Star_Vega_Name {
+            get {
+                return ResourceManager.GetString("Star_Vega_Name", resourceCulture);
             }
         }
         
