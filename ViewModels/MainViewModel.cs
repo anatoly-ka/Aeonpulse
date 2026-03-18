@@ -1,4 +1,4 @@
-using Aeonpulse.Models; // Add this line if TickerData is in the Models namespace
+using Aeonpulse.Models;
 using Aeonpulse.Resources;
 using Aeonpulse.Services;
 using System.ComponentModel;
@@ -12,7 +12,41 @@ namespace Aeonpulse.ViewModels
         private readonly CalculationService _calculationService;
         private System.Timers.Timer _updateTimer;
 
+        #region Language constants
+
+        public const string LangDefault = "Default";
+        public const string LangEnglish = "English";
+        public const string LangRussian = "Russian";
+
+        /// <summary>
+        /// Applies a display-language choice by setting the thread cultures and
+        /// AppResources.Culture. "Default" restores the original OS culture.
+        /// Static so it can be called from App.xaml.cs before the VM is created.
+        /// </summary>
+        public static void ApplyLanguage(string language)
+        {
+            System.Globalization.CultureInfo culture = language switch
+            {
+                LangEnglish => new System.Globalization.CultureInfo("en"),
+                LangRussian => new System.Globalization.CultureInfo("ru"),
+                _           => System.Globalization.CultureInfo.InstalledUICulture
+            };
+
+            System.Globalization.CultureInfo.DefaultThreadCurrentCulture   = culture;
+            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+            AppResources.Culture = culture;
+        }
+
+        #endregion
+
         #region Properties
+
+        /// <summary>
+        /// Live-bindable wrapper for all AppResources strings.
+        /// Call <see cref="LocalizedResources.Invalidate"/> after a language change
+        /// to push every new string to the UI at once.
+        /// </summary>
+        public LocalizedResources Loc { get; } = LocalizedResources.Instance;
 
         private string _baseDateName = AppResources.Default_BaseDateName;
         public string BaseDateName
@@ -27,6 +61,13 @@ namespace Aeonpulse.ViewModels
             get => _baseDateValue;
             set { _baseDateValue = value; OnPropertyChanged(); }
         }
+
+        /// <summary>
+        /// Culture-aware short date string for display only.
+        /// Formatted using the current UI culture so it respects the active locale.
+        /// </summary>
+        public string BaseDateDisplay =>
+            _baseDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture);
 
         private DateTime _baseDate = new DateTime(1965, 7, 24);
         public DateTime BaseDate
@@ -73,6 +114,29 @@ namespace Aeonpulse.ViewModels
                 FontSizeService.Instance.ApplyPreset(_textSize);
                 // Persist the user's choice across app restarts
                 Preferences.Default.Set("TextSize", _textSize);
+            }
+        }
+
+        private string _displayLanguage = LangDefault;
+        public string DisplayLanguage
+        {
+            get => _displayLanguage;
+            set
+            {
+                if (_displayLanguage == value)
+                    return;
+                _displayLanguage = value;
+                OnPropertyChanged();
+                // Apply the language immediately
+                ApplyLanguage(_displayLanguage);
+                // Persist the user's choice across app restarts
+                Preferences.Default.Set("DisplayLanguage", _displayLanguage);
+                // Push all new AppResources strings to every bound Label
+                Loc.Invalidate();
+                // Also re-run all ticker calculations, as many strings are resource-driven
+                UpdateAllCalculations();
+                // BaseDateDisplay uses CurrentUICulture for date formatting
+                OnPropertyChanged(nameof(BaseDateDisplay));
             }
         }
 
@@ -304,6 +368,11 @@ namespace Aeonpulse.ViewModels
             _textSize = savedTextSize;
             FontSizeService.Instance.ApplyPreset(_textSize);
 
+            // Restore persisted display language (defaults to Default on first run)
+            var savedLanguage = Preferences.Default.Get("DisplayLanguage", LangDefault);
+            _displayLanguage = savedLanguage;
+            // ApplyLanguage was already called in App.xaml.cs, no need to call again
+
             // Initialize section commands
             ToggleLabCommand = new Command(() => LabExpanded = !LabExpanded);
             ToggleCosmosCommand = new Command(() => CosmosExpanded = !CosmosExpanded);
@@ -383,7 +452,17 @@ namespace Aeonpulse.ViewModels
             GalacticCommute = _calculationService.CalculateGalacticCommute(BaseDate, BaseDateValue, UseMetric);
             PhotonPath = _calculationService.CalculatePhotonPath(BaseDate, BaseDateValue, UseMetric);
 
-            TeaseText = _calculationService.GetRandomTeaseText(Countdown, LifeOdometer, GalacticCommute, GlobalExhale, BaseDateName, BaseDateValue);
+            // Provide default values for heartbeats and breaths (set to 0 if not available)
+            TeaseText = _calculationService.GetRandomTeaseText(
+                Countdown,
+                LifeOdometer,
+                GalacticCommute,
+                GlobalExhale,
+                BaseDateName,
+                BaseDateValue,
+                0, // heartbeats
+                0  // breaths
+            );
         }
 
         /// <summary>
@@ -399,10 +478,11 @@ namespace Aeonpulse.ViewModels
             _baseDateValue = date;
             _baseDate = DateTime.Parse(date);
 
-            // Notify UI of all three changes
+            // Notify UI of all changes
             OnPropertyChanged(nameof(BaseDateName));
             OnPropertyChanged(nameof(BaseDateValue));
             OnPropertyChanged(nameof(BaseDate));
+            OnPropertyChanged(nameof(BaseDateDisplay));
 
             // Recalculate all tickers once, with all three values now consistent
             UpdateAllCalculations();

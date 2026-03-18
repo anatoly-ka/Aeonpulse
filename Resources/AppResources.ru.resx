@@ -1,0 +1,1540 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Default_BaseDateName" xml:space="preserve">
+    <value>Я родился</value>
+    <comment>MainViewModel.cs</comment>
+  </data>
+  <data name="Timeline_BaseDatePreposition" xml:space="preserve">
+    <value></value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>AeonPulse</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Section_LabTitle" xml:space="preserve">
+    <value>Лаборатория</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Section_CosmosTitle" xml:space="preserve">
+    <value>Космос</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Section_MirrorTitle" xml:space="preserve">
+    <value>Зеркало</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Section_EcoEchoesTitle" xml:space="preserve">
+    <value>Эко-Эхо</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Badge_LIVE" xml:space="preserve">
+    <value>LIVE</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="UnitMetric_Km" xml:space="preserve">
+    <value>км</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitMetric_KmTemplate" xml:space="preserve">
+    <value>{0} км</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitMetric_MKm" xml:space="preserve">
+    <value>миллионов км</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitMetric_MKmTemplate" xml:space="preserve">
+    <value>{0} миллионов км</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitMetric_BKm" xml:space="preserve">
+    <value>миллиардов км</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitMetric_BKmTemplate" xml:space="preserve">
+    <value>{0} миллиардов км</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_Miles" xml:space="preserve">
+    <value>миль</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_MilesTemplate" xml:space="preserve">
+    <value>{0} миль</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_MMiles" xml:space="preserve">
+    <value>миллионов миль</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_MMilesTemplate" xml:space="preserve">
+    <value>{0} миллионов миль</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_BMiles" xml:space="preserve">
+    <value>миллиардов миль</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_BMilesTemplate" xml:space="preserve">
+    <value>{0} миллиардов миль</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_LightYears" xml:space="preserve">
+    <value>световых лет</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_LightYearsTemplate" xml:space="preserve">
+    <value>{lightYears:F2} световых лет</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Seconds" xml:space="preserve">
+    <value>секунд</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_SecondsTemplate" xml:space="preserve">
+    <value>{0} секунд</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Minutes" xml:space="preserve">
+    <value>минут</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_MinutesTemplate" xml:space="preserve">
+    <value>{0} минут</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Hours" xml:space="preserve">
+    <value>часов</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_HoursTemplate" xml:space="preserve">
+    <value>{0} часов</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Days" xml:space="preserve">
+    <value>дней</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_DaysTemplate" xml:space="preserve">
+    <value>{0} дней</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Weeks" xml:space="preserve">
+    <value>недель</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_WeeksTemplate" xml:space="preserve">
+    <value>{0} недель</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Months" xml:space="preserve">
+    <value>месяцев</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_MonthsTemplate" xml:space="preserve">
+    <value>{0} месяцев</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_Years" xml:space="preserve">
+    <value>лет</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Unit_YearsTemplate" xml:space="preserve">
+    <value>{0} лет</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Tease_Title" xml:space="preserve">
+    <value>AeonPulse</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Tease_ButtonOK" xml:space="preserve">
+    <value>OK</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_MethodTitle" xml:space="preserve">
+    <value>Методология</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_SourceTitle" xml:space="preserve">
+    <value>Источники данных и атрибуция</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_TimeJubileesTitle" xml:space="preserve">
+    <value>Юбилеи</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_TimeJubileesBrief" xml:space="preserve">
+    <value>Следующая дата: {nextJubilee} будет {nearestJubileeDate:d}</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_TimeJubileesFull" xml:space="preserve">
+    <value>С момента {baseDateName} {baseDate:d} произшло невероятное количество важных событий. Следующая важная веха - {nextJubilee} будет {nearestJubileeDate:d}!</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_TimeJubileesTitle" xml:space="preserve">
+    <value>Юбилеи</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_TimeJubileesMethod" xml:space="preserve">
+    <value>Само слово "юбилей" происходит от «yobel» (иврит) - бараньего рога, в который трубили в День искупления (10-й день 7-го месяца), чтобы объявить о наступлении нового года. Юбилеи отмечаются круглыми числами, потому что такие числа символизируют полную «перезагрузку» жизни, или земли, или веры, или ... - исходя из различных традиций. Например, отмечание 10-го года (Деценналия) уходит корнями в древнеримскую традицию (например, к императору Константину) и обозначает десятилетие правления. Числа, которые считаются «круглыми» (оканчивающиеся на 0, 5, 10, 100 и т.д.) или содержат одинаковые цифры (111, 33 и т.д.), кажутся нам «приятными» или привлекательными в первую очередь из-за легкости обработки информации - нашему мозгу гораздо легче их запоминать и понимать по сравнению с конкретными, точными числами. Это предпочтение коренится как в когнитивной психологии, так и в эволюционной истории.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_TimeJubileesSource" xml:space="preserve">
+    <value>Подробный расчет точного количества оставшихся единиц времени до следующего важного жизненного этапа основан на повсевместно используемой десятичной системе счисления.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_CountdownTitle" xml:space="preserve">
+    <value>Обратный отсчет</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_CountdownBrief_HoursOnly" xml:space="preserve">
+    <value>{hrs}ч : {mins}м : {secs}с до следующей годовщины</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_CountdownBrief_DaysHours" xml:space="preserve">
+    <value>{days} дней {hrs}ч : {mins}м до следующей годовщины</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_CountdownBrief_DaysOnly" xml:space="preserve">
+    <value>{days} дней до следующей годовщины</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_CountdownFull_HoursOnly" xml:space="preserve">
+    <value>Мы считаем секунды! Осталось всего {hrs} часов, {mins} минут и {secs} секунд до следующей годовщины {nearest:d}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_CountdownFull_WithDays" xml:space="preserve">
+    <value>Мы считаем секунды! Осталось всего {days} дней, {hrs} часов, {mins} минут и {secs} секунд до следующей годовщины {nearest:d}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_CountdownTitle" xml:space="preserve">
+    <value>Обратный отсчет</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_CountdownMethod" xml:space="preserve">
+    <value>Расчет оставшегося количества времени до ближайшей годовщины со дня указанной даты.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_CountdownSource" xml:space="preserve">
+    <value>Подробный расчет точного количества оставшихся единиц времени до следующего важного жизненного этапа основан на повсевместно используемой десятичной системе счисления.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_LifeOdometerTitle" xml:space="preserve">
+    <value>Счетчик жизни</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_LifeOdometerBrief" xml:space="preserve">
+    <value>{heartbeats:N0} сердцебиений и {breaths:N0} вдохов</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_LifeOdometerFull" xml:space="preserve">
+    <value>Примерно {heartbeats:N0} сердцебиений отбило ритм, и {breaths:N0} вдохов было сделано, начиная с {baseDateName} {baseDate:d}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_LifeOdometerTitle" xml:space="preserve">
+    <value>Счетчик жизни</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_LifeOdometerMethod" xml:space="preserve">
+    <value>Для расчета используются медицинские данные о средней частоте сердечных сокращений (70 ударов в минуту) и дыхательных циклов (16 вдохов в минуту).</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_LifeOdometerSource" xml:space="preserve">
+    <value>Расчеты основаны на данных, предоставленных National Center for Biotechnology Information (NCBI) от National Library of Medicine (NIH).</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_AlienAnniversariesTitle" xml:space="preserve">
+    <value>Пришелец?</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_AlienAnniversariesBrief" xml:space="preserve">
+    <value>{marsYears:F2} лет на Марсе, {venusYears:F2} на Венере</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_AlienAnniversariesFull" xml:space="preserve">
+    <value>Планеты совершают свои обороты вокруг Солнца с различной скоростью. Начиная с {baseDate:d} ({baseDateName}), на Марсе прошло {marsYears:F2} марсианских лет, а на Венере - {venusYears:F2} венерианских лет.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_AlienAnniversariesTitle" xml:space="preserve">
+    <value>Пришелец?</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_AlienAnniversariesMethod" xml:space="preserve">
+    <value>Планетарная орбитальная механика - это наука об движении объектов в космосе под воздействием гравитации, в основном подчиняющаяся законам Кеплера, основанных на законе всемирного тяготения Ньютона. Планеты движутся по эллиптическим орбитам вокруг Солнца, при этом, чем ближе к Солнцу, тем выше скорость вращения. Для измерения времени на других планетах необходимо переводить земные сутки в местные сутки (так называемые "солы") и годы, исходя из периодов их вращения и орбитального движения. "Сол" - это название солнечных суток на Марсе, которые длятся 24 часа, 39-минут и 35 секунд в земных единицах, что примерно на 40 минут дольше, чем земные сутки. Год на Марсе длится 669,6 солов, что эквивалентно 687 земным сутки (почти двум земным годам). Венера - странная планета с "ретроградным" вращением (вращается по направлению, противоположному направлению вращения остальных планет) и годом, который короче её суток. Венера совершает один оборот за 225 земных суток, но для одного оборота вокруг своей оси ей требуется 243 земных суток - таким образом сутки на Венере длятся дольше, чем год на Венере.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_AlienAnniversariesSource" xml:space="preserve">
+    <value>Данные предоставлены Horizons On-Line Ephemeris System от NASA Jet Propulsion Laboratory (JPL).</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_GalacticCommuteTitle" xml:space="preserve">
+    <value>Сквозь Галактику</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_GalacticCommuteBrief" xml:space="preserve">
+    <value>{distance} сквозь Галактику</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_GalacticCommuteFull" xml:space="preserve">
+    <value>Начиная с {baseDate:d}, Земля совершила путешествие вокруг центра Млечного пути длиной {distance} {fullDistance}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_GalacticCommuteTitle" xml:space="preserve">
+    <value>Сквозь Галактику</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_GalacticCommuteMethod" xml:space="preserve">
+    <value>Наша Солнечная система вращается вокруг центра Млечного пути со скоростью приблизительно 220-230 км/с (514 000 миль/час), совершая один оборот каждые 225-230 миллионов лет. По этому маршруту, известному как "Галактический год" или "Космический год", Солнечная система перемещается по галактическому диску со скоростью примерно в 1/1300 от скорости света.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_GalacticCommuteSource" xml:space="preserve">
+    <value>Данные предоставлены Horizons On-Line Ephemeris System от NASA Jet Propulsion Laboratory (JPL).</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathTitle" xml:space="preserve">
+    <value>Путь фотона</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_PhotonPathHeliopause_Brief" xml:space="preserve">
+    <value>Свет достиг гелиопаузы</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathHeliopause_Full" xml:space="preserve">
+    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел {fullDistance} и уже достиг гелиопаузы - границы, расположенной примерно в 18-20 миллиардах км (11-12 миллиардах миль) от Земли, где солнечный ветер сталкивается с межзвездной средой.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathSolarSystem_Brief" xml:space="preserve">
+    <value>Свет по-прежнему находится в пределах Солнечной системы.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathSolarSystem_Full" xml:space="preserve">
+    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он преодолел бы {fullDistance}, но до сих пор находился бы в пределах нашей Солнечной системы.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathOortCloud_Brief" xml:space="preserve">
+    <value>Свет достиг облака Оорта.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathOortCloud_Full" xml:space="preserve">
+    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел {fullDistance} и уже достиг облака Оорта нашей Солнечной системы - теоретической внешней границы гравитационного влияния Солнца.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathInterstellar_Brief" xml:space="preserve">
+    <value>Свет достиг межзвездного пространства.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathInterstellar_Full" xml:space="preserve">
+    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел {distance} ({fullDistance}) и уже достиг бы межзвездного пространства - обширной, в основном пустой области между звездами. Следующая остановка - Проксима Центавра, расположенная в 4,246 световых годах от нас.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathStar_BriefTemplate" xml:space="preserve">
+    <value>Свет достиг {star.Name}</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathStar_FullTemplate" xml:space="preserve">
+    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел {distance} ({fullDistance}) и уже достиг бы {star.Name}, расположенной в {star.Ly} световых лет от нас - {star.Info}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_ProximaCentauri_Info" xml:space="preserve">
+    <value>красный карлик в созвездии Центавра, ближайшая к Солнцу известная звезда</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_AlphaCentauri_Info" xml:space="preserve">
+    <value>двойная пара похожих на Солнце звезд в созвездии Центавра, которые вместе с Проксимой Центавра образуют тройную систему</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_BarnardsStarInfo" xml:space="preserve">
+    <value>красный карлик в созвездии Змееносца с наибольшим "собственным движением" среди всех известных звёзд (самым быстрым изменением координат звёзд на небесной сфере)</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Luhman16_Info" xml:space="preserve">
+    <value>двойная система коричневых карликов в созвездии Вела, одна из ближайших к Солнцу</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Lalande21185_Info" xml:space="preserve">
+    <value>звезда в созвездии Большая Медведица. Один из самых ярких красных карликов вблизи Земли, но все же слишком тусклый - его звездная величина составляет 7,52</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Sirius_Info" xml:space="preserve">
+    <value>звезда в созвездии Большого Пса. Самая яркая звезда на ночном небе</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_EpsilonEridani_Info" xml:space="preserve">
+    <value>видимая невооруженным глазом молодая звезда в созвездии Эридана, похожая на Солнце, с диском из обломков</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Procyon_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Малого Пса и восьмая по яркости звезда на ночном небе</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_61Cygni_Info" xml:space="preserve">
+    <value>двойная звёздная система в созвездии Лебедя</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_EpsilonIndi_Info" xml:space="preserve">
+    <value>ближайшая к Земле звёздная система в созвездии Индейца, в которой есть корченевый карлик</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_TauCeti_Info" xml:space="preserve">
+    <value>звезда, похожая на Солнце, в созвездии Кита, имеющая планетную систему</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Groombridge1618_Info" xml:space="preserve">
+    <value>ближайшая к Земле звезда в созвездии Большая Медведица с высоким "собственным движением" (быстрым изменением координат звёзд на небесной сфере)</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Omicron2Eridani_Info" xml:space="preserve">
+    <value>тройная звездная система в созвездии Эридана</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_70Ophiuchi_Info" xml:space="preserve">
+    <value>двойная звёздная система в созвездии Змееносца</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Altair_Info" xml:space="preserve">
+    <value>двенадцатая по яркости звезда на ночном небе и самая яркая звезда в созвездии Орла</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_EtaCassiopeiae_Info" xml:space="preserve">
+    <value>двойная звёздная система в созвездии Кассиопеи</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_36Ophiuchi_Info" xml:space="preserve">
+    <value>тройная звёздная система в созвездии Змееносца</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_DeltaPavonis_Info" xml:space="preserve">
+    <value>ближайшая к Земле звезда в созвездии Павлина с высокой металличностью, что означает, что она, скорее всего, обладает планетами</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Vega_Info" xml:space="preserve">
+    <value>звезда в созвездии Лиры. Пятая по яркости звезда на ночном небе и вторая по яркости звезда в северном полушарии</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Fomalhaut_Info" xml:space="preserve">
+    <value>яркая звезда в созвездии Южной Рыбы</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Pollux_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Близнецов</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Denebola_Info" xml:space="preserve">
+    <value>вторая по яркости звезда в созвездии Льва</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Arcturus_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Волопаса и четвёртая по яркости звезда на ночном небе</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Capella_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Возничего и шестая по яркости звезда на ночном небе</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Rasalhague_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Змееносца</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alderamin_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Цефея</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Castor_Info" xml:space="preserve">
+    <value>многозвездная система в созвездии Близнецов</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Caph_Info" xml:space="preserve">
+    <value>звезда в созвездии Кассиопеи</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Aldebaran_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Тельца</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_InAuriga_Info" xml:space="preserve">
+    <value>звезда в созвездии Возничего</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Hamal_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Овна</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_InCepheus_Info" xml:space="preserve">
+    <value>звезда в созвездии Цефея</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alphecca_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Северная Корона</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Ankaa_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Феникса</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Regulus_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Льва</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_InCentaurus_Info" xml:space="preserve">
+    <value>звезда в созвездии Центавра</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_InUrsaMajor_Info" xml:space="preserve">
+    <value>звезда в созвездии Большая Медведица</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Sabik_Info" xml:space="preserve">
+    <value>звезда в созвездии Змееносца</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Gacrux_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Южного Креста</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Algol_Info" xml:space="preserve">
+    <value>звезда в созвездии Персея</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Diphda_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Кита</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alpheratz_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Андромеды</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alnair_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Журавля</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alkaid_Info" xml:space="preserve">
+    <value>звезда на конце ручки "ковша" в созвездии Большая Медведица</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alhena_Info" xml:space="preserve">
+    <value>звезда в созвездии Близнецов</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Miaplacidus_Info" xml:space="preserve">
+    <value>вторая по яркости звезда в созвездии Киля</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Algieba_Info" xml:space="preserve">
+    <value>звезда в созвездии Льва</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Kochab_Info" xml:space="preserve">
+    <value>звезда в созвездии Малая Медведица</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Elnath_Info" xml:space="preserve">
+    <value>звезда в созвездии Тельца</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Achernar_Info" xml:space="preserve">
+    <value>самая яркая звезда в созвездии Эридана</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_PhotonPathTitle" xml:space="preserve">
+    <value>Путь фотона</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_PhotonPathMethod" xml:space="preserve">
+    <value>Астрономические данные, показывающие, какие области космоса (гелиопауза, облако Оорта и т.д.) и звезды на данный момент прошел свет, излученный с Земли в указаную дату. Скоростью света в вакууме 299,792,458 м/с. База данных HYG Star Database (v3.0) - это всеобъемлющий каталог звезд, включающий их положения, расстояния и другие данные, который позволяет нам определить, каких звезд достиг свет с Земли за прошедшее время.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_PhotonPathSource" xml:space="preserve">
+    <value>Данные из HYG Star Database (v3.0) использованы в соответствии с лицензией Creative Commons Attribution-ShareAlike 2.5.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_HumanBirthRankTitle" xml:space="preserve">
+    <value>Один из рожденных</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_HumanBirthRankPreXX_Brief" xml:space="preserve">
+    <value>Один из первых 104,510,976,956 человек</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_HumanBirthRankPreXX_Full" xml:space="preserve">
+    <value>Дата "{baseDateName}" относится к периоду до XX века. По некоторым оценкам, число людей, когда-либо родившихся и живших на Земле до 1900 года, составляло 104 510 976 956 человек.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_HumanBirthRankPostXX_Brief" xml:space="preserve">
+    <value>Человек #{estimatedRank:N0} в этот день</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_HumanBirthRankPostXX_Full" xml:space="preserve">
+    <value>В день даты "{baseDateName}" на свет появился человек #{estimatedRank:N0} в истории Земли - среди всех людей, кто когда-либо родился и жил.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_HumanBirthRankTitle" xml:space="preserve">
+    <value>Один из рожденных</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_HumanBirthRankMethod" xml:space="preserve">
+    <value>Демографические оценки основаны на исторических глобальных моделях численности населения и данных ООН.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_HumanBirthRankSource" xml:space="preserve">
+    <value>Мировые статистические данные и прогнозы численности населения взяты из Population Division (2024 Revision), предоставленном Департаментом по экономическим и социальным вопросам ООН. Исторические оценки взяты из баз данных Human Mortality Database (2025 revision) и Population Reference Bureau (2024).</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_BirthRuneTitle" xml:space="preserve">
+    <value>Руна рождения</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_BirthRuneBrief_Template" xml:space="preserve">
+    <value>Руна рождения {birthRune.Name}: {birthRune.Brief}</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_BirthRuneFull_Template" xml:space="preserve">
+    <value>Согласно преданиям викингов, люди, рожденные {baseDate:d} подвержены влиянию руны {birthRune.Name}: {birthRune.Full}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Fehu_Brief" xml:space="preserve">
+    <value>Успех и награда за усердную работу</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Fehu_Full" xml:space="preserve">
+    <value>Феху - это о получении заслуженных наград: денег, успеха и удачи, достигнутых благодаря упорному труду. Это напоминание, что нужно быть благодарным за то, что у вас есть, и делиться своей удачей с другими, что поможет вам поддерживать позитивный настрой.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Uruz_Brief" xml:space="preserve">
+    <value>крепкое здоровье и внутренняя сила</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Uruz_Full" xml:space="preserve">
+    <value>Уруз - это как заряд чистой энергии и силы. Она побуждает вас раскрыть свою внутреннюю силу, оставаться стойким и продолжать двигаться вперед, преодолевая трудности. Она придает чувство силы, здоровье и готовность к любым жизненным испытаниям.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Thurisaz_Brief" xml:space="preserve">
+    <value>Защита, осторожность, ожидание подходящего момента</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Thurisaz_Full" xml:space="preserve">
+    <value>Турисаз - ваш защитный щит, вдохновлённый Тором. Эта руна призывает вас, прежде чем действовать, остановиться и всё обдумать. Используйте здравый смысл, будьте осторожны и не спешите - иногда ожидание подходящего момента является самым разумным решением.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ansuz_Brief" xml:space="preserve">
+    <value>Общение и советы от мудрых людей</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ansuz_Full" xml:space="preserve">
+    <value>В основе руны Ансуз лежит плотное общение с теми, кто уже многого добился, чтобы учиться у них. Прислушивайтесь к мудрым друзьям или наставникам, впитывайте их советы, и пусть они помогут вам стать умнее и мудрее.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Raidho_Brief" xml:space="preserve">
+    <value>Путешествие, перемены, движение к целям</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Raidho_Full" xml:space="preserve">
+    <value>Райдо - руна жизненного пути, будь то путешествие, переезд или просто погоня за мечтами. Она призывает принимать перемены, доверять процессу и двигаться к своим целям - шаг за шагом.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Kenaz_Brief" xml:space="preserve">
+    <value>Интуиция, ясность, надежда</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Kenaz_Full" xml:space="preserve">
+    <value>Руна Кеназ освещает путь в темные или запутанные времена. Она помогает обрести ясность, порождает новые идеи и дарит надежду, даже когда кажется, что все плохо. Доверьтесь своей интуиции - иногда она приводит вас прямо к нужным ответам.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Gebo_Brief" xml:space="preserve">
+    <value>Гармония и щедрость в отношениях</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Gebo_Full" xml:space="preserve">
+    <value>Гебо - это прежде всего взаимообмен в отношениях. Когда вы щедры и открыты, вы создаёте гармонию и привлекаете доброту в ответ. Это напоминание о том, что хорошие вещи происходят, когда вы делитесь и устанавливаете связь с другими.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Wunjo_Brief" xml:space="preserve">
+    <value>Счастье и благополучие</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Wunjo_Full" xml:space="preserve">
+    <value>Вунджо приносит счастье и умиротворение. Это наслаждение простыми радостями жизни, чувство удовлетворения и распространение радости среди окружающих. Найдите время, чтобы расслабиться и оценить собственное благополучие.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Hagalaz_Brief" xml:space="preserve">
+    <value>Перемены, отказ от старых привычек</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Hagalaz_Full" xml:space="preserve">
+    <value>Руна Хагалаз вносит разнообразие, но в хорошем смысле - она помогает избавиться от старых вредных привычек и освободить место для позитивных перемен. Даже если всё кажется хаотичным, она расчищает путь для новых начинаний и лучших дней.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Nauthiz_Brief" xml:space="preserve">
+    <value>Сохраняйте бдительность и терпение в трудные времена</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Nauthiz_Full" xml:space="preserve">
+    <value>Наудиз - это напоминание о том, что нужно оставаться сильным и терпеливым, даже когда жизнь становится трудной. Это о том, как смело встречать препятствия, сохранять бдительность и учиться на каждом испытании. Не бойтесь - у вас есть все необходимое, чтобы преодолеть трудности.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Isa_Brief" xml:space="preserve">
+    <value>Терпение, пауза, не торопитесь с принятием решений</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Isa_Full" xml:space="preserve">
+    <value>Иса - это как кнопка паузы, которая даёт понять, что можно замедлиться и сделать перерыв. Вместо того чтобы спешить, используйте это время для размышлений, будьте терпеливы и подождите, пока всё прояснится, прежде чем предпринимать какие-либо серьёзные действия.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Jera_Brief" xml:space="preserve">
+    <value>Награда приходит с терпением</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Jera_Full" xml:space="preserve">
+    <value>Джера напоминает, что на хорошие вещи нужно время - как на ожидание, пока прорастут посаженные семена. Продолжайте прилагать усилия, и ваши награды найдут вас, даже если это займет некоторое время. Терпение в конце концов окупается!</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Eihwaz_Brief" xml:space="preserve">
+    <value>Защита в достижении целей, воображение помогает</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Eihwaz_Full" xml:space="preserve">
+    <value>Руна Эйхваз - ваш верный помощник на пути к достижению целей. Она помогает вам оставаться в безопасности и проявлять стойкость, а также побуждает вас использовать свое воображение для решения сложных задач и поиска креативных решений.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Perthro_Brief" xml:space="preserve">
+    <value>Тайны, секреты, сюрпризы</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Perthro_Full" xml:space="preserve">
+    <value>Руна Пертро - это о раскрытии тайн и принятии неожиданностей. Это напоминание о том, что нужно быть открытым к неожиданным поворотам сюжета и верить, что даже загадки могут привести к важным урокам и личностному росту.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Algiz_Brief" xml:space="preserve">
+    <value>Защита, осведомленность, полагайтесь на друзей</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Algiz_Full" xml:space="preserve">
+    <value>Руна Алгиз создает ощущение защиты, оберегая вас от опасностей. Она также побуждает вас быть бдительными, полагаться на друзей и сообщество и с нетерпением ждать счастливых моментов в будущем.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Sowilo_Brief" xml:space="preserve">
+    <value>Здоровье, расслабление, отпустите тревоги</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Sowilo_Full" xml:space="preserve">
+    <value>Руна Совило - это прежде всего хорошее самочувствие и поддержание высокого уровня энергии. Она призывает расслабиться, отпустить заботы и позаботиться о своем теле, потому что здоровое состояние облегчает все остальное.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Tiwaz_Brief" xml:space="preserve">
+    <value>Успех, сила воли, победа, романтика</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Tiwaz_Full" xml:space="preserve">
+    <value>Руна Тиваз дарит вам уверенность и смелость. Независимо от того, стремитесь ли вы к своим целям или начинаете новые отношения, эта руна говорит: продолжайте двигаться вперед - у вас есть сила воли, чтобы победить и выйти победителем.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Berkano_Brief" xml:space="preserve">
+    <value>Семья, женская энергия, новые начинания</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Berkano_Full" xml:space="preserve">
+    <value>Руна Беркано - это знак заботы, семьи и новых начинаний. Она часто предвещает радостные события, такие как свадьбы или рождение детей, и призывает к личностному росту и позитивным переменам.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ehwaz_Brief" xml:space="preserve">
+    <value>Движение, перемены, путешествия, доверие, новые направления</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ehwaz_Full" xml:space="preserve">
+    <value>Руна Эхваз символизирует движение вперед и адаптацию к новым обстоятельствам. Путешествуете ли вы, меняете работу или начинаете все с чистого листа, верьте, что эти перемены ведут вас к чему-то лучшему.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Mannaz_Brief" xml:space="preserve">
+    <value>Командная работа, поддержка, расширение контактов</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Mannaz_Full" xml:space="preserve">
+    <value>Руна Манназ - это прежде всего сотрудничество и построение прочных связей. Она поощряет инициативность, принятие поддержки и расширение сети контактов - успех достигается легче, когда ты часть команды.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Laguz_Brief" xml:space="preserve">
+    <value>Интуиция, воображение, духовная связь</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Laguz_Full" xml:space="preserve">
+    <value>Руна Лагуз - ваш проводник в мир доверия интуиции и умения плыть по течению. Она поможет вам раскрыть свой творческий потенциал и вашу духовную сторону, чтобы вы могли с достоинством справляться со всеми трудностями, которые встретятся на вашем пути.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ingwaz_Brief" xml:space="preserve">
+    <value>Завершение, исполнение желаний, новые начинания</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ingwaz_Full" xml:space="preserve">
+    <value>Руна Ингваз помогает подвести итоги и начать все заново. Это о чувстве удовлетворения, закрытии старых глав и уверенном шаге навстречу новым начинаниям с чувством спокойствия.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Othala_Brief" xml:space="preserve">
+    <value>Культурное наследие, материальные блага, советы старших</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Othala_Full" xml:space="preserve">
+    <value>Отала помогает вам соединиться со своими корнями и семейными традициями. Речь идёт о том, чтобы ценить то, что вы унаследовали - будь то мудрость, ценности или материальные вещи - и обращаться за советом к старшим и старым друзьям, когда это необходимо.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Dagaz_Brief" xml:space="preserve">
+    <value>Рост, надежда, оптимизм в преддверии новых времен</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Dagaz_Full" xml:space="preserve">
+    <value>Руна Дагаз подобна восходу солнца после тяжелой ночи - она приносит надежду, рост и позитивные перемены. Это знак того, что дела идут на поправку, поэтому сохраняйте оптимизм и продолжайте двигаться вперед.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_BirthRuneTitle" xml:space="preserve">
+    <value>Руна рождения</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_BirthRuneMethod" xml:space="preserve">
+    <value>Старший Футарк - это древнейший рунический алфавит, использовавшийся германскими племенами примерно с 150 по 800 год н.э. для надписей на артефактах. Он состоит из 24 символов, разделенных на три семейства - группы по восемь символов (аэттир), названные по первым шести буквам (F-U-Þ-A-R-K). Руническая система рождения в Старшем Футарке присваивает определенные руны датам рождения, часто на основе 24-рунного цикла, связанного с положением Солнца в течение года. В скандинавской мистике каждая руна - это больше, чем просто символ: это знак с глубоким смыслом, отражающий различные аспекты жизни, природы и божественных сил, почитаемых скандинавами и другими германскими народами.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_BirthRuneSource" xml:space="preserve">
+    <value>Рунические интерпретации, основанные на системе Старшего Футарка исторической эпохи викингов.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_PersonalYearTitle" xml:space="preserve">
+    <value>Ваш год</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_PersonalYearBrief_Template" xml:space="preserve">
+    <value>Год {curYear} - это нумерологический год {personalYear}: {interpretations[personalYear - 1].Brief}</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PersonalYearFull_Template" xml:space="preserve">
+    <value>В нумерологии для тех, кто родился {baseDate:d}, год {curYear} - это личный год {personalYear}: {interpretations[personalYear - 1].Full}</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear1_Brief" xml:space="preserve">
+    <value>Новые начинания и новые старты</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear1_Full" xml:space="preserve">
+    <value>Личный Год 1 характеризуется чувством одиночества и трудностями в отношениях, поскольку люди стремятся к большей независимости и начинают всё с чистого листа. Этот сдвиг может вызывать напряжение в отношениях с партнерами, привыкшими делать всё вместе, что приводит к недопониманию. Люди часто не осознают, что их стремление к уединению обусловлено вибрацией этого года, что затрудняет объяснение их поведения. Опыт может быть разным - некоторые могут столкнуться с ситуациями, требующими проявления напористости, и неспособность воспользоваться этими возможностями может привести к потерям или одиночеству. Несмотря на трудности, Личный Год 1 предлагает шанс на обновление, отдых от прошлых обязанностей и вознаграждение за прошлые усилия. Хотя могут завязаться важные связи, романтические отношения обычно начинаются в Личном Году 2 или 6.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear2_Brief" xml:space="preserve">
+    <value>Сотрудничество и партнерство</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear2_Full" xml:space="preserve">
+    <value>Личный Год 2 - это время для формирования новых отношений, расширения сотрудничества и обмена эмоциями. Люди становятся более понимающими и предпочитают общаться с другими, а не быть в одиночестве. Идеи и возможности, зародившиеся в предыдущем году, теперь могут развиваться, а поддержание мирной обстановки важно для предотвращения стресса и болезней. В целом, это период гармонии, поддержки и личностного роста.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear3_Brief" xml:space="preserve">
+    <value>Творчество и самовыражение</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear3_Full" xml:space="preserve">
+    <value>Вибрации числа три стимулируют умственную активность, социальное взаимодействие и самовыражение. Личный Год 3 не подходит для рутинных задач - вместо этого он требует стимулирующих и творческих занятий, чтобы направить возросшую умственную энергию в нужное русло. Если эту энергию не направить должным образом, это может привести к раздражительности или нарушениям сна. Этот период также предоставляет возможности для разрешения прошлых отношений и проблем, часто посредством рационального общения, что помогает смягчить эмоциональное напряжение. Кроме того, это идеальное время для учебы, поскольку умственная энергия достигает своего пика.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear4_Brief" xml:space="preserve">
+    <value>Упорный труд и закладка фундамента</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear4_Full" xml:space="preserve">
+    <value>Личный Год 4 - активный период, требующий эффективного управления энергией. Люди склонны к переутомлению, игнорируют тревожные сигналы и принимают импульсивные решения, которые могут привести к неудачам. Часто возникают трудности, поэтому безопасность и планирование будущего становятся приоритетом; многие предпочитают оставаться дома и уделять внимание семье. Этот год благоприятен для покупки недвижимости и инвестиций, но люди могут обращаться за помощью из-за неуверенности в себе и трудностей в оценке своего прогресса. Эффективная организация и управление стрессом имеют решающее значение для предотвращения проблем со здоровьем. Направляя энергию в конструктивное русло и учась расслабляться, Личный Год 4 может принести значительные успехи.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear5_Brief" xml:space="preserve">
+    <value>Перемены и свобода</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear5_Full" xml:space="preserve">
+    <value>Личный Год 5 отмечен переменами и свободой, освобождением от прежних ограничений. В течение этих двенадцати месяцев люди переживают внутренние и внешние изменения, побуждающие их использовать новые возможности и отказываться от старых привычек. В этом году приоритет отдается как интеллектуальной, так и физической независимости, призывая людей исследовать новые идеи, наслаждаться уединением на природе и устанавливать значимые связи. Энергия числа пять способствует ответственной адаптации, самодисциплине и сосредоточенности, обеспечивая высокий уровень вдохновения и прогресса при продуманной постановке целей.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear6_Brief" xml:space="preserve">
+    <value>Ответственность и забота</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear6_Full" xml:space="preserve">
+    <value>Личный Год 6 характеризуется повышенной ответственностью, расширением выбора и сосредоточением на семье и обществе. Дисциплина, усвоенная ранее, подвергается испытанию, поскольку люди начинают лучше осознавать свое влияние на других и окружающий мир. Этот период способствует помощи другим, уравновешиванию творческой энергии и управлению обязанностями без перегрузки. Сохранение личного спокойствия имеет решающее значение для предотвращения горечи и проблем со здоровьем. Поддержка близких важна для принятия решений и поддержания здоровых отношений. Личный Год 6 идеально подходит для установления новых связей, укрепления существующих и разрешения семейных конфликтов, что часто приводит к большей гармонии и большей привлекательности для окружающих.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear7_Brief" xml:space="preserve">
+    <value>Анализ и понимание</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear7_Full" xml:space="preserve">
+    <value>Число семь связано с эмоциональными изменениями, трудностями в отношениях и личностным ростом. В течение Личного Года 7 люди сталкиваются с духовными уроками и могут пережить потери или болезни. Этот период способствует развитию самостоятельности, сострадания и понимания, как к себе, так и к другим. Помощь другим помогает взглянуть на свои проблемы с другой стороны, способствуя личностному развитию. Терпение и искренняя поддержка в различных ситуациях приводят к значительному прогрессу в отношениях и укреплению внутренней силы.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear8_Brief" xml:space="preserve">
+    <value>Достижения и прирост капитала</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear8_Full" xml:space="preserve">
+    <value>Личный Год 8 - это время восстановления баланса, использования накопленного опыта и пожинания плодов прошлых усилий. Успех зависит от упорного труда и честности, поскольку карма отражает поступки человека. Этот период предоставляет возможности для творчества и независимости, если энергия используется мудро. Терпение и мудрость помогают поддерживать силу и равновесие. Ожидайте улучшений в здоровье, карьере и отношениях - действуйте честно, оставайтесь позитивными и эффективно общайтесь, чтобы добиться успеха.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear9_Brief" xml:space="preserve">
+    <value>Размышление и установление контактов</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="PersonalYear9_Full" xml:space="preserve">
+    <value>Личный Год 9 знаменует собой завершение циклов и готовит людей к новым начинаниям в следующем году - Личном Году 1. Этот период может вызывать чувство нестабильности, побуждая к переменам, даже если они неприятны. Хотя он может вызывать замешательство и трудности - иногда приводя к разрыву отношений или значительным жизненным переменам - он также способствует росту самосознания и ответственности. Люди часто пересматривают приоритеты и берут на себя новые обязанности, способствуя саморазвитию. Несмотря на сложности, Личный Год 9 предоставляет ценные возможности для обучения и закладывает основу для будущего прогресса.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_PersonalYearTitle" xml:space="preserve">
+    <value>Ваш год</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_PersonalYearMethod" xml:space="preserve">
+    <value>Нумерология (известная до XX века как арифмантия) - это вера в оккультную, божественную или мистическую связь между числом и метафизическими явлениями или идеями. А также это изучение числового значения букв в словах и именах (например, гематрия) с помощью какой-либо буквенно-цифровой системы. Когда нумерология применяется к имени человека, это форма ономантии. Она часто ассоциируется с астрологией и другими гадательными искусствами. Символика чисел - древний и распространенный аспект человеческого мышления, глубоко переплетенный с религией, философией, мистицизмом и математикой. Различные культуры и традиции придавали числам определенные значения, часто связывая их с божественными принципами, космическими силами или природными закономерностями.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_PersonalYearSource" xml:space="preserve">
+    <value>Расчеты Личного Года основаны на пифагорейской системе нумерологии.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Ticker_GlobalExhaleTitle" xml:space="preserve">
+    <value>Дыхание мира</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_GlobalExhaleMetric_BTonnes" xml:space="preserve">
+    <value>миллиардов тонн</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_GlobalExhaleImperial_BTons" xml:space="preserve">
+    <value>миллиардов имперских (длинных)  тонн</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_GlobalExhalePreXX_Brief" xml:space="preserve">
+    <value>До 1900 года было выброшено {amount} CO2</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_GlobalExhalePreXX_Full" xml:space="preserve">
+    <value>Дата "{baseDateName}" до XX века. За весь период до 1900 года человечество произвело выброс в атмосферу {amount} CO2. Это всё ещё ничтожно мало по сравнению с более поздними периодами.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_GlobalExhalePostXX_Brief" xml:space="preserve">
+    <value>{amount} выброшенного CO2</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_GlobalExhalePostXX_Full" xml:space="preserve">
+    <value>Начиная с даты "{baseDateName}" {baseDate:d}, человечество произвело выброс в атмосферу {amount} CO2. Это невероятно масштабный глобальный выброс углекислого газа.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_GlobalExhaleTitle" xml:space="preserve">
+    <value>Дыхание мира</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_GlobalExhaleMethod" xml:space="preserve">
+    <value>Экологическая статистика, отслеживающая глобальные изменения окружающей среды, площадь лесных массивов и углеродные циклы в конкретный период времени.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_GlobalExhaleSource" xml:space="preserve">
+    <value>Данные о выбросах предоставлены проектом Global Carbon Project (GCP) и программой Global Carbon Budget (GCB) Института глобальных систем от University of Exeter.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Tease_Countdown" xml:space="preserve">
+    <value>Всего лишь {countdown.BriefText}! Время летит, и я считаю каждую секунду. Найдите свою следующую важную веху!</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Tease_Heartbeats" xml:space="preserve">
+    <value>Моё сердце бьёт {lifeOdometer.BriefText.Split(" and ")[0]} с {baseDateValue}. Мой внутренний двигатель никогда не останавливается! Проверьте свои показатели на AeonPulse.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Tease_Breaths" xml:space="preserve">
+    <value>Мои легкие сработали {lifeOdometer.BriefText.Split(" и ")[1]} раз с {baseDateValue}. А ваши? Проверьте свои показатели на AeonPulse.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Tease_GalacticCommute" xml:space="preserve">
+    <value>Начиная с даты, когда {baseDateValue}, я пропутешествовал вместе с нашей Землей {galacticCommute.BriefText}. Я буквально космический странник! А как далеко вы вояжировали?</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_ButtonClose" xml:space="preserve">
+    <value>Закрыть</value>
+    <comment>DeepDivePopup.xaml</comment>
+  </data>
+  <data name="MainMenu_Title" xml:space="preserve">
+    <value>AeonPulse</value>
+    <comment>MainMenuPopup.xaml</comment>
+  </data>
+  <data name="MainMenu_ChangeDate" xml:space="preserve">
+    <value>Задать дату</value>
+    <comment>MainMenuPopup.xaml</comment>
+  </data>
+  <data name="MainMenu_Settings" xml:space="preserve">
+    <value>Настройки</value>
+    <comment>MainMenuPopup.xaml</comment>
+  </data>
+  <data name="MainMenu_Exit" xml:space="preserve">
+    <value>Выход</value>
+    <comment>MainMenuPopup.xaml</comment>
+  </data>
+  <data name="MainMenu_ButtonClose" xml:space="preserve">
+    <value>Закрыть</value>
+    <comment>MainMenuPopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_Title" xml:space="preserve">
+    <value>Задать дату</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_Description" xml:space="preserve">
+    <value>Отслеживайте показатели, связанные с любым значимым событием в жизни - днем ​​рождения, выпускным, свадьбой или любой другой важной для вас вехой.</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_BaseDateNameLabel" xml:space="preserve">
+    <value>Название даты</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_BaseDateNamePlaceholder" xml:space="preserve">
+    <value>например, мой день рождения</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_BaseDateLabel" xml:space="preserve">
+    <value>Дата</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_ButtonClose" xml:space="preserve">
+    <value>Закрыть</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="ChangeDate_ButtonOK" xml:space="preserve">
+    <value>OK</value>
+    <comment>ChangeDatePopup.xaml</comment>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>AeonPulse</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_SettingsTitle" xml:space="preserve">
+    <value>Настройки</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_UnitsLabel" xml:space="preserve">
+    <value>Система единиц</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_UnitsMetric" xml:space="preserve">
+    <value>Метрическая</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_UnitsImperial" xml:space="preserve">
+    <value>Имперская</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_PaletteLabel" xml:space="preserve">
+    <value>Цветовая схема</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_PaletteDefault" xml:space="preserve">
+    <value>Темная (по умолчанию)</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_PaletteHighContrastDark" xml:space="preserve">
+    <value>Контрастная темная</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_PaletteHighContrastLight" xml:space="preserve">
+    <value>Контрастная светлая</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_TextSizeLabel" xml:space="preserve">
+    <value>Размер текста</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_TextSizeSmall" xml:space="preserve">
+    <value>Маленький</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_TextSizeNormal" xml:space="preserve">
+    <value>Нормальный</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_TextSizeLarge" xml:space="preserve">
+    <value>Большой</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_LanguageLabel" xml:space="preserve">
+    <value>Язык отображения</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_LanguageDefault" xml:space="preserve">
+    <value>По умолчанию</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_LanguageEnglish" xml:space="preserve">
+    <value>Английский</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_LanguageRussian" xml:space="preserve">
+    <value>Русский</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_AboutTitle" xml:space="preserve">
+    <value>О программе</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_AboutVersion" xml:space="preserve">
+    <value>AeonPulse v0.1.0</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_AboutDescription" xml:space="preserve">
+    <value>Отслеживайте показатели, связанные с любым значимым событием в жизни - днем ​​рождения, выпускным, свадьбой или любой другой важной для вас вехой.</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_AboutTagline" xml:space="preserve">
+    <value>Создано с любовью ко времени, данным и космическим чудесам.</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Settings_ButtonClose" xml:space="preserve">
+    <value>Закрыть</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
+  <data name="Refreshing_Message" xml:space="preserve">
+    <value>Обновление...</value>
+    <comment>RefreshingPopup.xaml</comment>
+  </data>
+  <data name="Star_ProximaCentauri_Name" xml:space="preserve">
+    <value>Проксима Центавра</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_AlphaCentauri_Name" xml:space="preserve">
+    <value>Альфа Центавра</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_BarnardsStarName" xml:space="preserve">
+    <value>Звезда Барнарда</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Luhman16_Name" xml:space="preserve">
+    <value>Луман 16</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Lalande21185_Name" xml:space="preserve">
+    <value>Лаланд 21185</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Sirius_Name" xml:space="preserve">
+    <value>Сириус</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_EpsilonEridani_Name" xml:space="preserve">
+    <value>Эпсилон Эридани (Ран)</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Procyon_Name" xml:space="preserve">
+    <value>Процион</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_61Cygni_Name" xml:space="preserve">
+    <value>61 Лебедь</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_EpsilonIndi_Name" xml:space="preserve">
+    <value>Эпсилон Инди</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_TauCeti_Name" xml:space="preserve">
+    <value>Тау Цети</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Groombridge1618_Name" xml:space="preserve">
+    <value>Грумбридж 1618</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Omicron2Eridani_Name" xml:space="preserve">
+    <value>Омикрон2 Эридана (Кеид)</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_70Ophiuchi_Name" xml:space="preserve">
+    <value>70 Офиучи</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Altair_Name" xml:space="preserve">
+    <value>Альтаир</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alsafi_Name" xml:space="preserve">
+    <value>Альсафи</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_EtaCassiopeiae_Name" xml:space="preserve">
+    <value>Эта Кассиопея (Ахирд)</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_36Ophiuchi_Name" xml:space="preserve">
+    <value>36 Офиучи (Гунибуу)</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_DeltaPavonis_Name" xml:space="preserve">
+    <value>Дельта Павонис</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Vega_Name" xml:space="preserve">
+    <value>Вега</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Fomalhaut_Name" xml:space="preserve">
+    <value>Фомальго</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Pollux_Name" xml:space="preserve">
+    <value>Поллукс</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Denebola_Name" xml:space="preserve">
+    <value>Денебола</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Arcturus_Name" xml:space="preserve">
+    <value>Арктур</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Capella_Name" xml:space="preserve">
+    <value>Капелла</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Rasalhague_Name" xml:space="preserve">
+    <value>Расальхаге</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alderamin_Name" xml:space="preserve">
+    <value>Альдерамин</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Castor_Name" xml:space="preserve">
+    <value>Кастор</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Caph_Name" xml:space="preserve">
+    <value>Каф</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Menkent_Name" xml:space="preserve">
+    <value>Менкент</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Aldebaran_Name" xml:space="preserve">
+    <value>Альдебаран</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Larawag_Name" xml:space="preserve">
+    <value>Лараваг</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Hamal_Name" xml:space="preserve">
+    <value>Хамал</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Aljanah_Name" xml:space="preserve">
+    <value>Алджана</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alphecca_Name" xml:space="preserve">
+    <value>Альфекка</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Ankaa_Name" xml:space="preserve">
+    <value>Анкаа</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Merak_Name" xml:space="preserve">
+    <value>Мерак</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Regulus_Name" xml:space="preserve">
+    <value>Регулус</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alsephina_Name" xml:space="preserve">
+    <value>Альсефина</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Menkalinan_Name" xml:space="preserve">
+    <value>Менкалинан</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alioth_Name" xml:space="preserve">
+    <value>Алиот</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Mizar_Name" xml:space="preserve">
+    <value>Мизар</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Phecda_Name" xml:space="preserve">
+    <value>Фекда</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Sabik_Name" xml:space="preserve">
+    <value>Сабик</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Gacrux_Name" xml:space="preserve">
+    <value>Гакрукс</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Algol_Name" xml:space="preserve">
+    <value>Алгол</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Diphda_Name" xml:space="preserve">
+    <value>Дифда</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alpheratz_Name" xml:space="preserve">
+    <value>Альферац</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alnair_Name" xml:space="preserve">
+    <value>Альнаир</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alkaid_Name" xml:space="preserve">
+    <value>Алкаид</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Alhena_Name" xml:space="preserve">
+    <value>Алена</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Miaplacidus_Name" xml:space="preserve">
+    <value>Миаплацидус</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Dubhe_Name" xml:space="preserve">
+    <value>Дубхе</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Muhlifain_Name" xml:space="preserve">
+    <value>Мухлифайн</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Algieba_Name" xml:space="preserve">
+    <value>Алгиеба</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Kochab_Name" xml:space="preserve">
+    <value>Кочаб</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Elnath_Name" xml:space="preserve">
+    <value>Элнат</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Star_Achernar_Name" xml:space="preserve">
+    <value>Ахернар</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Fehu_Name" xml:space="preserve">
+    <value>Феху</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Uruz_Name" xml:space="preserve">
+    <value>Уруз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Thurisaz_Name" xml:space="preserve">
+    <value>Турисаз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ansuz_Name" xml:space="preserve">
+    <value>Ансуз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Raidho_Name" xml:space="preserve">
+    <value>Райдо</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Kenaz_Name" xml:space="preserve">
+    <value>Кеназ</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Gebo_Name" xml:space="preserve">
+    <value>Гебо</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Wunjo_Name" xml:space="preserve">
+    <value>Вунджо</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Hagalaz_Name" xml:space="preserve">
+    <value>Хагалаз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Nauthiz_Name" xml:space="preserve">
+    <value>Наутиз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Isa_Name" xml:space="preserve">
+    <value>Иса</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Jera_Name" xml:space="preserve">
+    <value>Джера</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Eihwaz_Name" xml:space="preserve">
+    <value>Эйхваз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Perthro_Name" xml:space="preserve">
+    <value>Пертро</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Algiz_Name" xml:space="preserve">
+    <value>Альгиз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Sowilo_Name" xml:space="preserve">
+    <value>Совило</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Tiwaz_Name" xml:space="preserve">
+    <value>Тиваз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Berkano_Name" xml:space="preserve">
+    <value>Беркано</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ehwaz_Name" xml:space="preserve">
+    <value>Эхваз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Mannaz_Name" xml:space="preserve">
+    <value>Манназ</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Laguz_Name" xml:space="preserve">
+    <value>Лагуз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ingwaz_Name" xml:space="preserve">
+    <value>Ингваз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Othala_Name" xml:space="preserve">
+    <value>Отала</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Dagaz_Name" xml:space="preserve">
+    <value>Дагаз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+</root>

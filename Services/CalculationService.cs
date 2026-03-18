@@ -156,8 +156,16 @@ namespace Aeonpulse.Services
 
             // Minutes
             long nearestJubileeMinutes = FindNearestJubilee(passedMinutes);
-            DateTime nearestJubileeMinutesDate = baseDate.AddMinutes(nearestJubileeMinutes);
-            long daysToMinutesJubilee = (long)(nearestJubileeMinutesDate - now).TotalDays;
+            DateTime nearestJubileeMinutesDate;
+            long daysToMinutesJubilee = long.MaxValue;
+            try
+            {
+                nearestJubileeMinutesDate = baseDate.AddMinutes(nearestJubileeMinutes);
+                daysToMinutesJubilee = (long)(nearestJubileeMinutesDate - now).TotalDays;
+            }
+            catch (ArgumentOutOfRangeException)
+                { nearestJubileeMinutesDate = DateTime.MaxValue; }
+
             if (daysToMinutesJubilee > 0 && daysToMinutesJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeMinutesDate;
@@ -168,8 +176,16 @@ namespace Aeonpulse.Services
 
             // Seconds
             long nearestJubileeSeconds = FindNearestJubilee(passedSeconds);
-            DateTime nearestJubileeSecondsDate = baseDate.AddSeconds(nearestJubileeSeconds);
-            long daysToSecondsJubilee = (long)(nearestJubileeSecondsDate - now).TotalDays;
+            DateTime nearestJubileeSecondsDate;
+            long daysToSecondsJubilee = long.MaxValue;
+            try
+            {
+                nearestJubileeSecondsDate = baseDate.AddSeconds(nearestJubileeSeconds);
+                daysToSecondsJubilee = (long)(nearestJubileeSecondsDate - now).TotalDays;
+            }
+            catch (ArgumentOutOfRangeException)
+                { nearestJubileeSecondsDate = DateTime.MaxValue; }
+
             if (daysToSecondsJubilee > 0 && daysToSecondsJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeSecondsDate;
@@ -747,17 +763,22 @@ namespace Aeonpulse.Services
 
         #region Tease Text
 
-        public string GetRandomTeaseText(TickerData countdown, TickerData lifeOdometer, TickerData galacticCommute, TickerData globalExhale, string baseDateName, string baseDateValue)
+        public string GetRandomTeaseText(
+            TickerData countdown, TickerData lifeOdometer,
+            TickerData galacticCommute, TickerData globalExhale,
+            string baseDateName, string baseDateValue,
+            long heartbeats, long breaths)   // <-- pass raw values
         {
-            var teases = new[]
+            /*var teases = new[]
             {
-                $"Only {countdown.BriefText}! Time is flying, and I'm counting every second. Find your next big milestone.",
-                $"My heart has drummed {lifeOdometer.BriefText.Split(" and ")[0]} since {baseDateValue}. My internal engine never stops! Check your vitals on AeonPulse.",
-                $"My lungs have processed {lifeOdometer.BriefText.Split(" and ")[1]} since {baseDateValue}. And yours? Check your vitals on AeonPulse.",
-                $"Since {baseDateValue}, I've hitched a ride on Earth for a {galacticCommute.BriefText}. I'm literally a space traveler! How far have you traveled?"
+                string.Format(AppResources.Tease_Countdown,        countdown.BriefText),
+                string.Format(AppResources.Tease_Heartbeats,       heartbeats.ToString("N0"), baseDateValue),
+                string.Format(AppResources.Tease_Breaths,          breaths.ToString("N0"),    baseDateValue),
+                string.Format(AppResources.Tease_GalacticCommute,  baseDateValue, galacticCommute.BriefText),
             };
-
-            return teases[new Random().Next(teases.Length)];
+            return teases[new Random().Next(teases.Length)];*/
+            return AppResources.Tease_Countdown
+                .Replace("{countdown.BriefText}", countdown.BriefText);
         }
 
         #endregion

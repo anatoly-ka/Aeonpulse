@@ -75,7 +75,6 @@
                                         TextColor="{DynamicResource TextWhite}"
                                         BackgroundColor="Transparent"
                                         FontSize="{DynamicResource FontSizeLarge}"
-                                        Format="yyyy-MM-dd"
                                         HorizontalOptions="Fill" />
                         </Frame>
                     </VerticalStackLayout>

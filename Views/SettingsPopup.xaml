@@ -1,6 +1,5 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:resources="clr-namespace:Aeonpulse.Resources"
              x:Class="Aeonpulse.Views.SettingsPopup"
              BackgroundColor="#80000000"
              Shell.NavBarIsVisible="False">
@@ -32,7 +31,7 @@
 
                     <!-- Title -->
                     <VerticalStackLayout Grid.Row="0" Spacing="0" Padding="24,20,24,0">
-                        <Label Text="{x:Static resources:AppResources.Settings_Title}"
+                        <Label Text="{Binding Loc.Settings_Title}"
                                FontSize="{StaticResource FontSizeTitle}"
                                FontAttributes="Bold"
                                HorizontalOptions="Center"
@@ -49,26 +48,20 @@
                     <VerticalStackLayout Grid.Row="1" Spacing="16" Padding="24,16">
 
                         <!-- Settings Section -->
-                        <Label Text="{x:Static resources:AppResources.Settings_SettingsTitle}"
+                        <Label Text="{Binding Loc.Settings_SettingsTitle}"
                                FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
 
-                        <!--
-                            Single shared grid for ALL parameter rows.
-                            Column 0 (Auto) = parameter labels  — sized to the widest label.
-                            Column 1 (*)    = radio buttons     — all share the same left edge.
-                            ColumnSpacing pushes radios away from labels consistently.
-                        -->
                         <Grid ColumnDefinitions="Auto,*"
                               RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                               ColumnSpacing="16"
                               RowSpacing="8">
 
-                            <!-- Row 0: Unit System label (spans both radio rows via RowSpan) -->
+                            <!-- Row 0: Unit System label -->
                             <Label Grid.Row="0" Grid.Column="0"
                                    Grid.RowSpan="2"
-                                   Text="{x:Static resources:AppResources.Settings_UnitsLabel}"
+                                   Text="{Binding Loc.Settings_UnitsLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
@@ -105,7 +98,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="{x:Static resources:AppResources.Settings_UnitsMetric}"
+                                <Label Text="{Binding Loc.Settings_UnitsMetric}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -143,21 +136,21 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="{x:Static resources:AppResources.Settings_UnitsImperial}"
+                                <Label Text="{Binding Loc.Settings_UnitsImperial}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 2: spacer between Unit System and Color Scheme -->
+                            <!-- Row 2: spacer -->
                             <BoxView Grid.Row="2" Grid.ColumnSpan="2"
                                      HeightRequest="4"
                                      Color="Transparent" />
 
-                            <!-- Row 3: Color Scheme label (spans all three radio rows via RowSpan) -->
+                            <!-- Row 3: Color Scheme label -->
                             <Label Grid.Row="3" Grid.Column="0"
                                    Grid.RowSpan="3"
-                                   Text="{x:Static resources:AppResources.Settings_PaletteLabel}"
+                                   Text="{Binding Loc.Settings_PaletteLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
@@ -194,7 +187,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="{x:Static resources:AppResources.Settings_PaletteDefault}"
+                                <Label Text="{Binding Loc.Settings_PaletteDefault}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -232,7 +225,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="{x:Static resources:AppResources.Settings_PaletteHighContrastDark}"
+                                <Label Text="{Binding Loc.Settings_PaletteHighContrastDark}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -270,21 +263,21 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="{x:Static resources:AppResources.Settings_PaletteHighContrastLight}"
+                                <Label Text="{Binding Loc.Settings_PaletteHighContrastLight}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 6: spacer between Color Scheme and Text Size -->
+                            <!-- Row 6: spacer -->
                             <BoxView Grid.Row="6" Grid.ColumnSpan="2"
                                      HeightRequest="4"
                                      Color="Transparent" />
 
-                            <!-- Row 7: Text Size label (spans all three radio rows via RowSpan) -->
+                            <!-- Row 7: Text Size label -->
                             <Label Grid.Row="7" Grid.Column="0"
                                    Grid.RowSpan="3"
-                                   Text="{x:Static resources:AppResources.Settings_TextSizeLabel}"
+                                   Text="{Binding Loc.Settings_TextSizeLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
@@ -321,7 +314,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="{x:Static resources:AppResources.Settings_TextSizeSmall}"
+                                <Label Text="{Binding Loc.Settings_TextSizeSmall}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -359,7 +352,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="{x:Static resources:AppResources.Settings_TextSizeNormal}"
+                                <Label Text="{Binding Loc.Settings_TextSizeNormal}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -397,21 +390,21 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="{x:Static resources:AppResources.Settings_TextSizeLarge}"
+                                <Label Text="{Binding Loc.Settings_TextSizeLarge}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 10: spacer between Text Size and Display Language -->
+                            <!-- Row 10: spacer -->
                             <BoxView Grid.Row="10" Grid.ColumnSpan="2"
                                      HeightRequest="4"
                                      Color="Transparent" />
 
-                            <!-- Row 11: Display Language label (spans all three radio rows via RowSpan) -->
+                            <!-- Row 11: Display Language label -->
                             <Label Grid.Row="11" Grid.Column="0"
                                    Grid.RowSpan="3"
-                                   Text="{x:Static resources:AppResources.Settings_LanguageLabel}"
+                                   Text="{Binding Loc.Settings_LanguageLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
@@ -423,7 +416,8 @@
                                                    VerticalOptions="Center">
                                 <RadioButton x:Name="LangDefaultRadio"
                                              Value="Default"
-                                             GroupName="DisplayLanguage">
+                                             GroupName="DisplayLanguage"
+                                             CheckedChanged="OnDisplayLanguageChanged">
                                     <RadioButton.ControlTemplate>
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
@@ -447,7 +441,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="{x:Static resources:AppResources.Settings_LanguageDefault}"
+                                <Label Text="{Binding Loc.Settings_LanguageDefault}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -460,7 +454,8 @@
                                                    VerticalOptions="Center">
                                 <RadioButton x:Name="LangEnglishRadio"
                                              Value="English"
-                                             GroupName="DisplayLanguage">
+                                             GroupName="DisplayLanguage"
+                                             CheckedChanged="OnDisplayLanguageChanged">
                                     <RadioButton.ControlTemplate>
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
@@ -484,7 +479,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="{x:Static resources:AppResources.Settings_LanguageEnglish}"
+                                <Label Text="{Binding Loc.Settings_LanguageEnglish}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -497,7 +492,8 @@
                                                    VerticalOptions="Center">
                                 <RadioButton x:Name="LangRussianRadio"
                                              Value="Russian"
-                                             GroupName="DisplayLanguage">
+                                             GroupName="DisplayLanguage"
+                                             CheckedChanged="OnDisplayLanguageChanged">
                                     <RadioButton.ControlTemplate>
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
@@ -521,7 +517,7 @@
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
-                                <Label Text="{x:Static resources:AppResources.Settings_LanguageRussian}"
+                                <Label Text="{Binding Loc.Settings_LanguageRussian}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -536,20 +532,20 @@
                                  HorizontalOptions="Fill" />
 
                         <!-- About Section -->
-                        <Label Text="{x:Static resources:AppResources.Settings_AboutTitle}"
+                        <Label Text="{Binding Loc.Settings_AboutTitle}"
                                FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
 
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="{x:Static resources:AppResources.Settings_AboutVersion}"
+                            <Label Text="{Binding Loc.Settings_AboutVersion}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}" />
-                            <Label Text="{x:Static resources:AppResources.Settings_AboutDescription}"
+                            <Label Text="{Binding Loc.Settings_AboutDescription}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap" />
-                            <Label Text="{x:Static resources:AppResources.Settings_AboutTagline}"
+                            <Label Text="{Binding Loc.Settings_AboutTagline}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap" />
@@ -564,7 +560,7 @@
                                  Opacity="0.4"
                                  HorizontalOptions="Fill"
                                  Margin="0,0,0,16" />
-                        <Button Text="{x:Static resources:AppResources.Settings_ButtonClose}"
+                        <Button Text="{Binding Loc.Settings_ButtonClose}"
                                 Clicked="OnCloseClicked"
                                 HorizontalOptions="Center"
                                 WidthRequest="160"

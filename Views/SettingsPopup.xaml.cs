@@ -17,6 +17,9 @@ namespace Aeonpulse.Views
 
             _viewModel = viewModel;
 
+            // Expose the VM as BindingContext so {Binding Loc.Xxx} works in XAML
+            BindingContext = viewModel;
+
             // Initialise unit system radio buttons to match the persisted value
             MetricRadio.IsChecked   =  _viewModel.UseMetric;
             ImperialRadio.IsChecked = !_viewModel.UseMetric;
@@ -31,10 +34,10 @@ namespace Aeonpulse.Views
             TextSizeNormalRadio.IsChecked = _viewModel.TextSize == FontSizeService.Normal;
             TextSizeLargeRadio.IsChecked  = _viewModel.TextSize == FontSizeService.Large;
 
-            // Initialise display language radio buttons - default to "Default" for now
-            LangDefaultRadio.IsChecked = true;
-            LangEnglishRadio.IsChecked = false;
-            LangRussianRadio.IsChecked = false;
+            // Initialise display language radio buttons to match the persisted value
+            LangDefaultRadio.IsChecked = _viewModel.DisplayLanguage == MainViewModel.LangDefault;
+            LangEnglishRadio.IsChecked = _viewModel.DisplayLanguage == MainViewModel.LangEnglish;
+            LangRussianRadio.IsChecked = _viewModel.DisplayLanguage == MainViewModel.LangRussian;
 
             _initialising = false;
         }
@@ -46,8 +49,10 @@ namespace Aeonpulse.Views
             if (_initialising || !e.Value)
                 return;
 
+            // Compare against the radio's hard-coded culture-neutral Value ("Metric"),
+            // NOT against the localized AppResources string which changes with language.
             var radio = (RadioButton)sender;
-            _viewModel.UseMetric = radio.Value?.ToString() == AppResources.Settings_UnitsMetric; // "Metric"
+            _viewModel.UseMetric = radio.Value?.ToString() == "Metric";
         }
 
         private void OnColorSchemeChanged(object sender, CheckedChangedEventArgs e)
@@ -76,6 +81,21 @@ namespace Aeonpulse.Views
 
             // Setting TextSize calls FontSizeService.ApplyPreset() and persists the choice
             _viewModel.TextSize = preset;
+        }
+
+        private void OnDisplayLanguageChanged(object sender, CheckedChangedEventArgs e)
+        {
+            // Only react to the radio that just became checked; ignore uncheck events
+            // and events fired during InitializeComponent
+            if (_initialising || !e.Value)
+                return;
+
+            var radio = (RadioButton)sender;
+            var language = radio.Value?.ToString() ?? MainViewModel.LangDefault;
+
+            // Setting DisplayLanguage calls ApplyLanguage(), Loc.Invalidate(),
+            // UpdateAllCalculations() and persists the choice
+            _viewModel.DisplayLanguage = language;
         }
 
         private async void OnCloseClicked(object sender, EventArgs e)
