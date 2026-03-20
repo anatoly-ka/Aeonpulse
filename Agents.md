@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-04-21
+> **Last updated:** 2026-03-21
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -4040,7 +4040,9 @@ they describe what the code already does and must continue to do.
   | Existing file substantially changed | Section 2 description for that file |
 
 - **Update the `> Last updated:` date** at the top of `Agents.md` when making
-  any substantive change to the file.
+  any substantive change to the file. Always call `Get-Date -Format \"yyyy-MM-dd\"` first
+  and copy the output verbatim - do not type the date from memory. Month and
+  day values typed without checking are a recurring source of incorrect dates.
 
 - **Keep section numbering and heading names stable.** Other sections in `Agents.md`
   and the `Agents.N.md` supplementary files cross-reference each other by section
