@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-03-20
+> **Last updated:** 2026-04-20
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -171,7 +171,7 @@ astronomical (alien-planet ages, countdown to next anniversary).
 | MVVM approach | **Manual** `INotifyPropertyChanged` + `System.Windows.Input.ICommand`. No CommunityToolkit.Mvvm. |
 | DI container | Not used for services. `MauiProgram` registers fonts and `ImageTint` handler mappers only. |
 | Services pattern | Direct singleton instantiation: `new CalculationService()`, `ThemeService.Instance`, `FontSizeService.Instance` |
-| NuGet packages | `Microsoft.Maui.Controls 9.0.0`, `Microsoft.Maui.Controls.Compatibility 9.0.0`, `Microsoft.Extensions.Logging.Debug 9.0.0` |
+| NuGet packages | `Microsoft.Maui.Controls 9.0.0`, `Microsoft.Maui.Controls.Compatibility 9.0.0`, `Microsoft.Extensions.Logging.Debug 9.0.0`, `Microsoft.Graphics.Win2D 1.3.2` (Windows only) |
 | Supported languages | English (`en`, default), Russian (`ru`) |
 | Neutral language | `en` |
 | String storage | `Resources/AppResources.resx` (en) + `Resources/AppResources.ru.resx` (ru) |
@@ -267,7 +267,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `Aeonpulse.csproj` | Edit freely | - | SDK-style multi-targeted project file. Declares `<TargetFrameworks>`, min OS versions, NuGet packages, `<MauiXaml>` build actions, and `<EmbeddedResource>` entries for `.resx` files. Add new platform targets, packages, or resource files here. |
+| `Aeonpulse.csproj` | Edit freely | - | SDK-style multi-targeted project file. Declares `<TargetFrameworks>`, min OS versions, NuGet packages, `<MauiXaml>` build actions, and `<EmbeddedResource>` entries for `.resx` files. Also declares `<WindowsPackageType>None</WindowsPackageType>` (Windows-only) so `MauiImage` assets are copied to the output directory next to the exe for unpackaged execution. Explicit `Microsoft.Graphics.Win2D 1.3.2` reference (Windows-only) for Win2D colour-matrix icon tinting. Add new platform targets, packages, or resource files here. |
 | `Aeonpulse.sln` | Do not edit | - | Visual Studio solution file. Managed by IDE. |
 | `App.xaml` | Edit freely | - | Application-level `ResourceDictionary` root. Merges `Colors.xaml` then `Styles.xaml` in load order. Merge order matters: Styles references Colors. |
 | `App.xaml.cs` | Edit freely | `AppBootstrap` | Application entry point. Reads `Preferences` and calls `ThemeService`, `FontSizeService`, and `MainViewModel.ApplyLanguage()` **before** `InitializeComponent()` so the first rendered frame is already correct. Sets `MainPage = new MainPage()`. Contains the `.NET 9` obsolete `MainPage` setter - do not add further usages. |
@@ -430,7 +430,7 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 |------|-------|-----------|-------------|
 | `App.xaml` | Do not edit | - | WinUI 3 application resource root. Mapped to `App.xaml.cs`. Add WinUI-specific resources here if needed. |
 | `App.xaml.cs` | Edit carefully | `PlatformEntryPoint` | WinUI 3 `MauiWinUIApplication` subclass. Calls `InitializeComponent()` then delegates `CreateMauiApp()`. Runs **before** `Aeonpulse.App` in the startup sequence. |
-| `TintHelper.cs` | Edit carefully | `PlatformTintImplementation` | `ApplyImageTint` for `WinUIImage` is a **no-op** - WinUI 3 `Image` has no colour filter API; a `WriteableBitmap` pixel-pass would be required. `ApplyImageButtonTint` sets `Button.Foreground` to a `SolidColorBrush` as an approximation. |
+| `TintHelper.cs` | Edit carefully | `PlatformTintImplementation` | Real per-pixel colour tinting using Win2D (`Microsoft.Graphics.Canvas`). Both `ApplyImageTint` and `ApplyImageButtonTint`: (1) obtain the source filename from `handler.VirtualView.Source` as a `FileImageSource`, appending `.scale-100` for the Windows resizetizer filename; (2) load the file via `System.IO.File.OpenRead()` + `AsRandomAccessStream()` (avoids WinRT `StorageFile` issues in unpackaged apps); (3) apply a `ColorMatrixEffect` that zeroes source RGB and injects the tint as a constant offset while `M44=1` preserves alpha; (4) render to a `CanvasRenderTarget`, copy to a `WriteableBitmap`, and set it as `Image.Source`. Results are cached by `(filename, colour)`. For `ImageButton`, the inner `Image` is found via `VisualTreeHelper`, deferring to `Loaded` if the template is not yet applied. **Hidden dependency:** requires `<WindowsPackageType>None</WindowsPackageType>` so scaled PNGs exist in `AppContext.BaseDirectory` at runtime. |
 | `app.manifest` | Do not edit | - | Win32 application manifest. Sets `PerMonitorV2` DPI awareness. |
 | `Package.appxmanifest` | Edit carefully | - | MSIX package manifest for Windows Store / sideload deployment. Edit for display name, publisher, capabilities, and version. |
 
@@ -734,8 +734,10 @@ Platform TintHelper.cs  (selected at compile time by multi-targeting)
                                   nativeImage.TintColor = UIColor
                      UIButton:    same pattern on CurrentImage
     MacCatalyst  --> identical to iOS + Math.Clamp([0,1]) guards on all components
-    Windows      --> Image: no-op (WinUI Image has no colour filter API)
-                     Button: Foreground = new SolidColorBrush(color)
+    Windows      --> Image:       Win2D ColorMatrixEffect -> WriteableBitmap -> Image.Source
+                     ImageButton: inner Image via VisualTreeHelper, same pipeline
+                     Stream load from AppContext.BaseDirectory (not URI)
+                     Results cached by (filename, tintColour)
 ```
 
 When `DynamicResource` changes the tint value (e.g., theme swap), `BindableProperty
@@ -1628,7 +1630,7 @@ AIContext:   PlatformAbstractionHelper (ImageTint.cs)
 - **Android:** `ImageView.SetColorFilter(PorterDuffColorFilter)`. `ImageButton`'s platform view is `ShapeableImageView`, not `android.widget.ImageButton`.
 - **iOS:** `UIImageRenderingMode.AlwaysTemplate` + `TintColor`. Applied to `UIImageView` (Image) and `UIButton.CurrentImage` (ImageButton).
 - **MacCatalyst:** Same as iOS with `Math.Clamp([0,1])` guards on all color components.
-- **Windows:** `ApplyImageTint` for `Image` is a no-op (WinUI limitation). `ImageButton` uses `Button.Foreground = SolidColorBrush`.
+- **Windows:** Both `ApplyImageTint` and `ApplyImageButtonTint` use Win2D `ColorMatrixEffect`. File loaded via `System.IO.File.OpenRead()` + `AsRandomAccessStream()` from `AppContext.BaseDirectory` (Stream overload required in unpackaged apps). Result is a `WriteableBitmap` replacing `Image.Source`. `ImageButton` uses `VisualTreeHelper` to find the inner `Image` child. Requires `WindowsPackageType=None` in `.csproj` and `Microsoft.Graphics.Win2D 1.3.2`.
 
 **Owns:**
 - The `ColorProperty` attached `BindableProperty` definition
@@ -1724,10 +1726,11 @@ NuGet packages must be restored before the first build or after any `.csproj` ch
 dotnet restore Aeonpulse.csproj
 ```
 
-The project uses three packages (all version `9.0.0`):
-- `Microsoft.Maui.Controls`
-- `Microsoft.Maui.Controls.Compatibility`
-- `Microsoft.Extensions.Logging.Debug`
+The project uses the following packages:
+- `Microsoft.Maui.Controls 9.0.0`
+- `Microsoft.Maui.Controls.Compatibility 9.0.0`
+- `Microsoft.Extensions.Logging.Debug 9.0.0`
+- `Microsoft.Graphics.Win2D 1.3.2` (Windows only - Win2D colour-matrix icon tinting)
 
 ---
 
