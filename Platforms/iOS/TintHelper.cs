@@ -1,10 +1,30 @@
-using UIKit;
+using Aeonpulse.Attributes;
 using Microsoft.Maui.Graphics;
+using UIKit;
 
 namespace Aeonpulse
 {
+    /// <summary>
+    /// iOS implementation of the <see cref="MauiProgram"/> tint partials.
+    /// Uses UIKit's <c>UIImageRenderingMode.AlwaysTemplate</c> rendering mode
+    /// combined with <c>TintColor</c> to recolour image assets at the native layer.
+    ///
+    /// <para>
+    /// <b>Why AlwaysTemplate:</b> this mode ignores the source image's colour data
+    /// and uses <c>TintColor</c> for all opaque pixels, producing an exact single-colour
+    /// icon — identical in appearance to the Android PorterDuff.SrcIn approach.
+    /// </para>
+    /// <para>
+    /// <b>Clearing tint:</b> reverting to <c>AlwaysOriginal</c> restores the asset's
+    /// natural colours and sets <c>TintColor</c> to <c>null</c>.
+    /// </para>
+    /// </summary>
+    [AIContext("PlatformTintImplementation")]
     public static partial class MauiProgram
     {
+        /// <summary>
+        /// Applies or clears the tint on the native <c>UIImageView</c> backing a MAUI <see cref="Image"/>.
+        /// </summary>
         static partial void ApplyImageTint(
             Microsoft.Maui.Handlers.ImageHandler handler, Color? tint)
         {
@@ -28,6 +48,9 @@ namespace Aeonpulse
                 (byte)(tint.Alpha * 255));
         }
 
+        /// <summary>
+        /// Applies or clears the tint on the native <c>UIButton</c> backing a MAUI <see cref="ImageButton"/>.
+        /// </summary>
         static partial void ApplyImageButtonTint(
             Microsoft.Maui.Handlers.ImageButtonHandler handler, Color? tint)
         {

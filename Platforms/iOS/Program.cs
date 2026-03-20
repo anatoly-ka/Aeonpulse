@@ -1,15 +1,22 @@
+using Aeonpulse.Attributes;
 using ObjCRuntime;
 using UIKit;
 
 namespace Aeonpulse
 {
+    /// <summary>
+    /// The static entry point for the iOS application.
+    /// Delegates immediately to <see cref="UIApplication.Main"/> with
+    /// <see cref="AppDelegate"/> as the UIKit application delegate class.
+    /// </summary>
+    [AIContext("PlatformEntryPoint")]
     public class Program
     {
-        // This is the main entry point of the application.
+        /// <summary>
+        /// iOS application entry point. Called by the iOS runtime after the process launches.
+        /// </summary>
         static void Main(string[] args)
         {
-            // if you want to use a different Application Delegate class from "AppDelegate"
-            // you can specify it here.
             UIApplication.Main(args, null, typeof(AppDelegate));
         }
     }

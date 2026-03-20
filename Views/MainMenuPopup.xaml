@@ -1,26 +1,34 @@
+﻿<!-- AI: Contextual main menu - appears anchored below the NavBar, right-aligned.
+     Pushed modally from MainPage.OnMenuClicked(). The Frame's top/right Margin
+     is injected in code-behind to align with the NavBar geometry.
+     Menu items use x:Static AppResources (not Binding Loc.*) because this popup
+     is always freshly constructed, so static strings at construction time are correct. -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:helpers="clr-namespace:Aeonpulse.Helpers"
              xmlns:resources="clr-namespace:Aeonpulse.Resources"
              x:Class="Aeonpulse.Views.MainMenuPopup"
+             x:Name="MainMenuPopupPage"
              BackgroundColor="#80000000"
              Shell.NavBarIsVisible="False">
 
     <ContentPage.Content>
-        <!-- Full-page grid; tap outside the panel dismisses the menu -->
-        <Grid HorizontalOptions="Fill"
+        <!-- AI: Full-screen overlay grid - Layer 0: dismiss backdrop, Layer 1: menu panel -->
+        <Grid x:Name="MainMenuOverlay"
+              HorizontalOptions="Fill"
               VerticalOptions="Fill">
 
-            <!-- Transparent tap-to-dismiss background -->
-            <BoxView Color="Transparent"
+            <!-- Tap-to-dismiss backdrop -->
+            <BoxView x:Name="DismissBackdrop"
+                     Color="Transparent"
                      InputTransparent="False">
                 <BoxView.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnCloseClicked" />
                 </BoxView.GestureRecognizers>
             </BoxView>
 
-            <!-- Menu panel: top margin and right margin are set in code-behind to align
-                 with the bottom of the NavBar and the right edge of the screen. -->
+            <!-- AI: Menu panel - HorizontalOptions=End + right Margin (set in code-behind)
+                 makes it appear right-aligned below the hamburger button. -->
             <Frame x:Name="MenuFrame"
                    BackgroundColor="{DynamicResource CardBackground}"
                    CornerRadius="16"
@@ -30,94 +38,110 @@
                    HorizontalOptions="End"
                    VerticalOptions="Start">
 
-                <VerticalStackLayout Spacing="0"
-                                     MinimumWidthRequest="220">
+                <VerticalStackLayout Spacing="0" MinimumWidthRequest="220">
 
-                    <!-- Title -->
-                    <Label Text="{x:Static resources:AppResources.MainMenu_Title}"
+                    <!-- Menu title -->
+                    <Label x:Name="MenuTitleLabel"
+                           Text="{x:Static resources:AppResources.MainMenu_Title}"
                            FontSize="{DynamicResource FontSizeTitle}"
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
                            TextColor="{DynamicResource CyberCyan}"
                            Padding="24,20,24,16" />
 
-                    <!-- Divider -->
-                    <BoxView HeightRequest="1"
+                    <BoxView x:Name="MenuTitleDivider"
+                             HeightRequest="1"
                              Color="{DynamicResource CyberPurple}"
                              Opacity="0.4"
                              HorizontalOptions="Fill"
                              Margin="0,0,0,8" />
 
-                    <!-- Change Date -->
-                    <Grid ColumnDefinitions="Auto,*"
+                    <!-- AI: Each menu item is a 2-column Grid [icon | label] with a
+                         TapGestureRecognizer on the Grid. This avoids nested Button
+                         hit-testing issues on Android and gives finer layout control. -->
+
+                    <!-- Menu item: Change Date - pops this menu, then pushes ChangeDatePopup
+                         via the openChangeDateCallback injected from MainPage -->
+                    <Grid x:Name="ChangeDateMenuItem"
+                          ColumnDefinitions="Auto,*"
                           Padding="20,12"
                           ColumnSpacing="12">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnChangeDateClicked" />
                         </Grid.GestureRecognizers>
                         <Image Grid.Column="0"
+                               x:Name="ChangeDateIcon"
                                Source="profiles.png"
                                WidthRequest="22"
                                HeightRequest="22"
                                VerticalOptions="Center"
                                helpers:ImageTint.Color="{DynamicResource CyberCyan}" />
                         <Label Grid.Column="1"
+                               x:Name="ChangeDateLabel"
                                Text="{x:Static resources:AppResources.MainMenu_ChangeDate}"
                                FontSize="{DynamicResource FontSizeLarge}"
                                TextColor="{DynamicResource TextGray}"
                                VerticalOptions="Center" />
                     </Grid>
 
-                    <!-- Settings -->
-                    <Grid ColumnDefinitions="Auto,*"
+                    <!-- Menu item: Settings - pops this menu, then pushes SettingsPopup
+                         via the openSettingsCallback injected from MainPage -->
+                    <Grid x:Name="SettingsMenuItem"
+                          ColumnDefinitions="Auto,*"
                           Padding="20,12"
                           ColumnSpacing="12">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnSettingsClicked" />
                         </Grid.GestureRecognizers>
                         <Image Grid.Column="0"
+                               x:Name="SettingsIcon"
                                Source="settings.png"
                                WidthRequest="22"
                                HeightRequest="22"
                                VerticalOptions="Center"
                                helpers:ImageTint.Color="{DynamicResource CyberCyan}" />
                         <Label Grid.Column="1"
+                               x:Name="SettingsLabel"
                                Text="{x:Static resources:AppResources.MainMenu_Settings}"
                                FontSize="{DynamicResource FontSizeLarge}"
                                TextColor="{DynamicResource TextGray}"
                                VerticalOptions="Center" />
                     </Grid>
 
-                    <!-- Exit -->
-                    <Grid ColumnDefinitions="Auto,*"
+                    <!-- Menu item: Exit - calls Application.Current.Quit() -->
+                    <Grid x:Name="ExitMenuItem"
+                          ColumnDefinitions="Auto,*"
                           Padding="20,12"
                           ColumnSpacing="12">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnExitClicked" />
                         </Grid.GestureRecognizers>
                         <Image Grid.Column="0"
+                               x:Name="ExitIcon"
                                Source="exit.png"
                                WidthRequest="22"
                                HeightRequest="22"
                                VerticalOptions="Center"
                                helpers:ImageTint.Color="{DynamicResource CyberCyan}" />
                         <Label Grid.Column="1"
+                               x:Name="ExitLabel"
                                Text="{x:Static resources:AppResources.MainMenu_Exit}"
                                FontSize="{DynamicResource FontSizeLarge}"
                                TextColor="{DynamicResource TextGray}"
                                VerticalOptions="Center" />
                     </Grid>
 
-                    <!-- Divider -->
-                    <BoxView HeightRequest="1"
+                    <BoxView x:Name="MenuFooterDivider"
+                             HeightRequest="1"
                              Color="{DynamicResource CyberPurple}"
                              Opacity="0.4"
                              HorizontalOptions="Fill"
                              Margin="0,8,0,0" />
 
-                    <!-- Footer: Close button -->
-                    <VerticalStackLayout Padding="24,12,24,20">
-                        <Button Text="{x:Static resources:AppResources.MainMenu_ButtonClose}"
+                    <!-- Footer: explicit Close button as an alternative to backdrop tap -->
+                    <VerticalStackLayout x:Name="MenuFooter" Padding="24,12,24,20">
+                        <Button x:Name="CloseButton"
+                                Text="{x:Static resources:AppResources.MainMenu_ButtonClose}"
                                 Clicked="OnCloseClicked"
                                 HorizontalOptions="Center"
                                 WidthRequest="160"

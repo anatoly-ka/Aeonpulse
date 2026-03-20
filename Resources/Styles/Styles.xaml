@@ -1,24 +1,33 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<ResourceDictionary 
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!-- AI: Reusable named Style dictionary.
+     All color references here use DynamicResource so ThemeService swaps propagate instantly.
+     FontSize references use DynamicResource so FontSizeService presets propagate instantly.
+     New styles should follow the BasedOn inheritance chain to reduce duplication:
+       BaseLabel -> TitleLabel / SubtitleLabel -->
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Base Styles -->
+    <!-- Base label: default text colour and body font size for all screen text -->
     <Style x:Key="BaseLabel" TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource TextWhite}" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeLarge}" />
     </Style>
 
+    <!-- TitleLabel: page/section headings - bold, larger font -->
     <Style x:Key="TitleLabel" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
         <Setter Property="FontSize" Value="{DynamicResource FontSizeTitle}" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
+    <!-- SubtitleLabel: card sub-headings - bold, mid-size font -->
     <Style x:Key="SubtitleLabel" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
         <Setter Property="FontSize" Value="{DynamicResource FontSizeXLarge}" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
+    <!-- CyberButton: primary action button - transparent background, cyan border/text.
+         Used for Close and secondary action buttons throughout the popup layer. -->
     <Style x:Key="CyberButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="TextColor" Value="{StaticResource CyberCyan}" />
@@ -28,12 +37,15 @@
         <Setter Property="Padding" Value="12,8" />
     </Style>
 
+    <!-- IconButton: bare 32×32 transparent ImageButton for toolbar/card icons -->
     <Style x:Key="IconButton" TargetType="ImageButton">
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="WidthRequest" Value="32" />
         <Setter Property="HeightRequest" Value="32" />
     </Style>
 
+    <!-- CardFrame: the styled Border container for each ticker card.
+         Uses DynamicResource for background/stroke so theme swaps apply immediately. -->
     <Style x:Key="CardFrame" TargetType="Border">
         <Setter Property="BackgroundColor" Value="{DynamicResource CardBackground}" />
         <Setter Property="Stroke" Value="{DynamicResource CyberCyan}" />
@@ -42,14 +54,17 @@
         <Setter Property="Padding" Value="16" />
     </Style>
 
-    <!-- Size style for icon ImageButtons; apply tint per-element with helpers:ImageTint.Color -->
+    <!-- ThemedIconButton: size-only style for 24×24 icon ImageButtons.
+         Apply per-element tint with helpers:ImageTint.Color="{DynamicResource XxxColor}".
+         Tint is not set here because different icons use different theme colours. -->
     <Style x:Key="ThemedIconButton" TargetType="ImageButton">
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="WidthRequest" Value="24" />
         <Setter Property="HeightRequest" Value="24" />
     </Style>
 
-    <!-- Size style for the logo Image; apply tint per-element with helpers:ImageTint.Color -->
+    <!-- ThemedLogoImage: size-only style for the 24×24 app logo Image in the NavBar.
+         Apply per-element tint with helpers:ImageTint.Color="{DynamicResource CyberCyan}". -->
     <Style x:Key="ThemedLogoImage" TargetType="Image">
         <Setter Property="WidthRequest" Value="24" />
         <Setter Property="HeightRequest" Value="24" />

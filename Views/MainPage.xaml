@@ -1,42 +1,62 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:Aeonpulse.ViewModels"
              xmlns:converters="clr-namespace:Aeonpulse.Converters"
              xmlns:helpers="clr-namespace:Aeonpulse.Helpers"
              x:Class="Aeonpulse.Views.MainPage"
+             x:Name="MainPageRoot"
              BackgroundColor="{DynamicResource SpaceDarker}">
 
     <ContentPage.Resources>
         <ResourceDictionary>
+            <!-- Converts bool IsExpanded -> Visibility for collapsible sections -->
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+            <!-- Inverts bool for collapsed-state indicators (e.g., chevron direction) -->
             <converters:InverseBoolConverter x:Key="InverseBool" />
+            <!-- Converts bool IsExpanded -> image source for expand/collapse icons -->
             <converters:BoolToImageSourceConverter x:Key="BoolToImageSource" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
+    <!-- AI: BindingContext = MainViewModel (constructed inline by XAML).
+         MainPage.xaml.cs also accesses this VM instance via BindingContext cast
+         to wire the RefreshRequested event. -->
     <ContentPage.BindingContext>
         <viewmodels:MainViewModel />
     </ContentPage.BindingContext>
 
-    <Grid RowDefinitions="Auto,Auto,*" MinimumWidthRequest="393" MinimumHeightRequest="852">
+    <!-- AI: Root 3-row grid: [NavBar | TimelineHeading | ScrollContent].
+         MinimumWidthRequest/MinimumHeightRequest enforce the baseline phone viewport. -->
+    <Grid RowDefinitions="Auto,Auto,*"
+          MinimumWidthRequest="393"
+          MinimumHeightRequest="852">
 
-        <!-- Top Navigation Bar -->
+        <!-- AI: Row 0 - Top Navigation Bar.
+             3-column layout: [Logo+AppName | spacer | HamburgerMenu].
+             BackgroundColor uses DynamicResource so ThemeService swaps are instant. -->
         <Border Grid.Row="0"
                 x:Name="NavBar"
                 BackgroundColor="{DynamicResource SpaceDark}"
                 Padding="16,12">
             <Grid ColumnDefinitions="Auto,*,Auto">
-                <!-- Left Section -->
-                <HorizontalStackLayout Grid.Column="0" Spacing="12">
-                    <!-- Logo -->
-                    <Image Source="aeonpulse.png"
-                           Style="{StaticResource ThemedLogoImage}"
-                           helpers:ImageTint.Color="{DynamicResource CyberCyan}">
-                    </Image>
 
-                    <!-- Aeonpulse Text -->
-                    <Label Text="{Binding Loc.AppName}"
+                <!-- Left Section: tinted logo image + app name label -->
+                <HorizontalStackLayout Grid.Column="0"
+                                       x:Name="NavBarLogoSection"
+                                       Spacing="12">
+
+                    <!-- Logo image - pixel-level tint applied via ImageTint attached property
+                         using platform handler mappers (see MauiProgram.cs) -->
+                    <Image x:Name="LogoImage"
+                           Source="aeonpulse.png"
+                           Style="{StaticResource ThemedLogoImage}"
+                           helpers:ImageTint.Color="{DynamicResource CyberCyan}" />
+
+                    <!-- Binding: Loc.AppName -> MainViewModel.Loc (LocalizedResources singleton).
+                         Tap opens the TeasePopup (see OnLogoTapped in code-behind). -->
+                    <Label x:Name="AppNameLabel"
+                           Text="{Binding Loc.AppName}"
                            FontSize="{DynamicResource FontSizeTitle}"
                            FontAttributes="Bold"
                            TextColor="{DynamicResource CyberCyan}"
@@ -47,8 +67,9 @@
                     </Label>
                 </HorizontalStackLayout>
 
-                <!-- Menu Button -->
+                <!-- Hamburger menu button - opens MainMenuPopup modal page -->
                 <Button Grid.Column="2"
+                        x:Name="MenuButton"
                         Text="☰"
                         FontSize="{DynamicResource FontSizeTitle}"
                         TextColor="{DynamicResource CyberCyan}"
@@ -59,7 +80,11 @@
             </Grid>
         </Border>
 
-        <!-- Timeline Heading -->
+        <!-- AI: Row 1 - Timeline Heading.
+             Displays "{BaseDateName} from {BaseDateDisplay}" as a tappable row
+             that opens the ChangeDatePopup for quick base-date editing.
+             Binding sources: MainViewModel.BaseDateName, Loc.Timeline_BaseDatePreposition,
+             MainViewModel.BaseDateDisplay. -->
         <Border Grid.Row="1"
                 x:Name="TimelineHeading"
                 Padding="16,12"
@@ -69,15 +94,25 @@
                     <TapGestureRecognizer Tapped="OnTimelineHeadingTapped" />
                 </HorizontalStackLayout.GestureRecognizers>
 
-                <Label FontSize="{DynamicResource FontSizeTitle}" TextColor="{DynamicResource TextDim}" Opacity="0.9" VerticalOptions="Center">
+                <!-- AI: Inline FormattedString composed of 5 spans:
+                     [BaseDateName (bold+white)] [space] [preposition (localised)] [space] [BaseDateDisplay (bold+white)] [:]
+                     Using FormattedText instead of multiple Labels avoids unwanted spacing/wrapping. -->
+                <Label x:Name="TimelineHeadingLabel"
+                       FontSize="{DynamicResource FontSizeTitle}"
+                       TextColor="{DynamicResource TextDim}"
+                       Opacity="0.9"
+                       VerticalOptions="Center">
                     <Label.FormattedText>
                         <FormattedString>
+                            <!-- Binding: MainViewModel.BaseDateName (user-entered event label) -->
                             <Span Text="{Binding BaseDateName}"
                                   FontAttributes="Bold"
                                   TextColor="{DynamicResource TextWhite}" />
                             <Span Text=" " />
+                            <!-- Binding: MainViewModel.Loc.Timeline_BaseDatePreposition (live-localised) -->
                             <Span Text="{Binding Loc.Timeline_BaseDatePreposition}" />
                             <Span Text=" " />
+                            <!-- Binding: MainViewModel.BaseDateDisplay (culture-aware short date string) -->
                             <Span Text="{Binding BaseDateDisplay}"
                                   FontAttributes="Bold"
                                   TextColor="{DynamicResource TextWhite}" />
@@ -88,40 +123,68 @@
             </HorizontalStackLayout>
         </Border>
 
-        <!-- Main Content - Scrollable Ticker Sections -->
+        <!-- AI: Row 2 - Main Content.
+             VerticalScrollView containing:
+             Timeline "ticker" sections (inspired by Instagram/Facebook story timelines).
+             Each section is a Card (Border) containing:
+             - Header: title + commands (refresh, info, toggle)
+             - Content: brief summary + expanded details (collapsible)
+             Section data is an ObservableCollection<TickerItem> in MainViewModel. -->
         <ScrollView Grid.Row="2" Padding="16">
             <VerticalStackLayout Spacing="16">
 
-                <!-- Lab Section -->
+                <!-- == LAB SECTION ============================================
+                     Tickers: Time Jubilees, Countdown (LIVE), Life Odometer (LIVE)
+                     Binding: MainViewModel.LabExpanded -> ToggleLabCommand
+                ================================================================ -->
                 <Border Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="12">
+
+                        <!-- AI: Section header row - [title label | expand/collapse icon button].
+                             Source binding uses BoolToImageSource with "chevron_up|chevron_down" parameter. -->
                         <Grid ColumnDefinitions="*,Auto">
+                            <!-- Binding: MainViewModel.Loc.Section_LabTitle (live-localised) -->
                             <Label Grid.Column="0"
                                    Text="{Binding Loc.Section_LabTitle}"
                                    Style="{StaticResource SubtitleLabel}"
                                    TextColor="{DynamicResource CyberCyan}"
                                    VerticalOptions="Center" />
+                            <!-- Binding: MainViewModel.LabExpanded -> BoolToImageSource -> chevron icon.
+                                 Command: MainViewModel.ToggleLabCommand toggles LabExpanded. -->
                             <ImageButton Grid.Column="1"
-                                    Style="{StaticResource ThemedIconButton}"
-                                    helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                    Source="{Binding LabExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
-                                    Command="{Binding ToggleLabCommand}" />
+                                         Style="{StaticResource ThemedIconButton}"
+                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                         Source="{Binding LabExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
+                                         Command="{Binding ToggleLabCommand}" />
                         </Grid>
 
-                        <VerticalStackLayout Spacing="12" IsVisible="{Binding LabExpanded}">
-                            <!-- Time Jubilees -->
+                        <!-- AI: Section body - visible only when LabExpanded=true.
+                             Contains 3 ticker cards: Time Jubilees, Countdown, Life Odometer. -->
+                        <VerticalStackLayout Spacing="12"
+                                             IsVisible="{Binding LabExpanded}">
+
+                            <!-- == TICKER: TIME JUBILEES ===========================
+                                 Static ticker (not live) - recalculated on base date change
+                                 or via explicit RefreshTimeJubileesCommand.
+                                 Binding: MainViewModel.TimeJubilees (TickerData)
+                                 Commands: RefreshTimeJubileesCommand, ToggleTimeJubileesCommand
+                            ======================================================== -->
                             <Border BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
                                     Padding="12">
                                 <VerticalStackLayout Spacing="8">
+
+                                    <!-- AI: Ticker card header - 3-column:
+                                         [Col0: emoji icon | Col1: title | Col2: action buttons (info, refresh, expand)] -->
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <Label Grid.Column="0"
                                                Text="📅"
                                                FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
+                                        <!-- Binding: MainViewModel.Loc.Ticker_TimeJubileesTitle (live-localised) -->
                                         <Label Grid.Column="1"
                                                Text="{Binding Loc.Ticker_TimeJubileesTitle}"
                                                Style="{StaticResource BaseLabel}"
@@ -129,26 +192,29 @@
                                                FontAttributes="Bold"
                                                VerticalOptions="Center" />
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="info.png"
-                                                Clicked="OnTimeJubileesInfoClicked" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="refresh.png"
-                                                Command="{Binding RefreshTimeJubileesCommand}" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="{Binding TimeJubileesExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
-                                                Command="{Binding ToggleTimeJubileesCommand}" />
+                                            <!-- Info: opens DeepDivePopup with methodology + sources -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnTimeJubileesInfoClicked" />
+                                            <!-- Refresh: shows RefreshingPopup then recalculates TimeJubilees -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="refresh.png"
+                                                         Command="{Binding RefreshTimeJubileesCommand}" />
+                                            <!-- Expand/collapse: toggles TimeJubileesExpanded -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding TimeJubileesExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleTimeJubileesCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
+
+                                    <!-- Binding: MainViewModel.TimeJubilees.BriefText - always visible -->
                                     <Label Text="{Binding TimeJubilees.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
+                                    <!-- Binding: MainViewModel.TimeJubilees.FullText - visible when expanded -->
                                     <Label Text="{Binding TimeJubilees.FullText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
@@ -157,7 +223,11 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!-- Countdown -->
+                            <!-- == TICKER: COUNTDOWN ==============================
+                                 LIVE ticker - updated every second by MainViewModel timer.
+                                 Binding: MainViewModel.Countdown (TickerData)
+                                 Commands: ToggleCountdownCommand
+                            ======================================================== -->
                             <Border BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
@@ -170,11 +240,17 @@
                                                FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
-                                        <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                        <!-- AI: Title + LIVE badge side-by-side in a HorizontalStackLayout.
+                                             Badge visibility is static (always shown for live tickers). -->
+                                        <HorizontalStackLayout Grid.Column="1"
+                                                               Spacing="8"
+                                                               VerticalOptions="Center">
+                                            <!-- Binding: MainViewModel.Loc.Ticker_CountdownTitle (live-localised) -->
                                             <Label Text="{Binding Loc.Ticker_CountdownTitle}"
                                                    Style="{StaticResource BaseLabel}"
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
+                                            <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
                                             <Label Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
@@ -183,30 +259,36 @@
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="info.png"
-                                                Clicked="OnCountdownInfoClicked" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="{Binding CountdownExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
-                                                Command="{Binding ToggleCountdownCommand}" />
+                                            <!-- Info: opens DeepDivePopup -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnCountdownInfoClicked" />
+                                            <!-- Expand/collapse: toggles CountdownExpanded -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding CountdownExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleCountdownCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
+                                    <!-- Binding: MainViewModel.Countdown.BriefText - always visible, updates every second -->
                                     <Label Text="{Binding Countdown.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
+                                    <!-- Binding: MainViewModel.Countdown.FullText - visible when expanded -->
                                     <Label Text="{Binding Countdown.FullText}"
-                                            TextColor="{DynamicResource TextGray}"
-                                            FontSize="{DynamicResource FontSizeMedium}"
-                                            LineBreakMode="WordWrap"
-                                            IsVisible="{Binding CountdownExpanded}" />
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding CountdownExpanded}" />
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!-- Life Odometer -->
+                            <!-- == TICKER: LIFE ODOMETER ==========================
+                                 LIVE ticker - updated every second. Shows heartbeats + breaths.
+                                 Binding: MainViewModel.LifeOdometer (TickerData)
+                                 Commands: ToggleLifeOdometerCommand
+                            ======================================================== -->
                             <Border BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
@@ -219,11 +301,15 @@
                                                FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
-                                        <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                        <HorizontalStackLayout Grid.Column="1"
+                                                               Spacing="8"
+                                                               VerticalOptions="Center">
+                                            <!-- Binding: MainViewModel.Loc.Ticker_LifeOdometerTitle (live-localised) -->
                                             <Label Text="{Binding Loc.Ticker_LifeOdometerTitle}"
                                                    Style="{StaticResource BaseLabel}"
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
+                                            <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
                                             <Label Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
@@ -232,50 +318,67 @@
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="info.png"
-                                                Clicked="OnLifeOdometerInfoClicked" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="{Binding LifeOdometerExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
-                                                Command="{Binding ToggleLifeOdometerCommand}" />
+                                            <!-- Info: opens DeepDivePopup -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnLifeOdometerInfoClicked" />
+                                            <!-- Expand/collapse: toggles LifeOdometerExpanded -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding LifeOdometerExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleLifeOdometerCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
+                                    <!-- Binding: MainViewModel.LifeOdometer.BriefText - updates every second -->
                                     <Label Text="{Binding LifeOdometer.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
+                                    <!-- Binding: MainViewModel.LifeOdometer.FullText - visible when expanded -->
                                     <Label Text="{Binding LifeOdometer.FullText}"
-                                            TextColor="{DynamicResource TextGray}"
-                                            FontSize="{DynamicResource FontSizeMedium}"
-                                            LineBreakMode="WordWrap"
-                                            IsVisible="{Binding LifeOdometerExpanded}" />
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding LifeOdometerExpanded}" />
                                 </VerticalStackLayout>
                             </Border>
+
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
+                <!-- End Lab Section -->
 
-                <!-- Cosmos Section -->
+                <!-- == COSMOS SECTION =========================================
+                     Tickers: Alien Anniversaries, Galactic Commute (LIVE), Photon Path (LIVE)
+                     Binding: MainViewModel.CosmosExpanded -> ToggleCosmosCommand
+                ================================================================ -->
                 <Border Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="12">
+
                         <Grid ColumnDefinitions="*,Auto">
+                            <!-- Binding: MainViewModel.Loc.Section_CosmosTitle (live-localised) -->
                             <Label Grid.Column="0"
                                    Text="{Binding Loc.Section_CosmosTitle}"
                                    Style="{StaticResource SubtitleLabel}"
                                    TextColor="{DynamicResource CyberCyan}"
                                    VerticalOptions="Center" />
+                            <!-- Binding: MainViewModel.CosmosExpanded -> chevron icon.
+                                 Command: ToggleCosmosCommand -->
                             <ImageButton Grid.Column="1"
-                                    Style="{StaticResource ThemedIconButton}"
-                                    helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                    Source="{Binding CosmosExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
-                                    Command="{Binding ToggleCosmosCommand}" />
+                                         Style="{StaticResource ThemedIconButton}"
+                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                         Source="{Binding CosmosExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
+                                         Command="{Binding ToggleCosmosCommand}" />
                         </Grid>
 
-                        <VerticalStackLayout Spacing="12" IsVisible="{Binding CosmosExpanded}">
-                            <!-- Alien Anniversaries -->
+                        <VerticalStackLayout Spacing="12"
+                                             IsVisible="{Binding CosmosExpanded}">
+
+                            <!-- == TICKER: ALIEN ANNIVERSARIES ====================
+                                 Static ticker - recalculated on base date change or explicit refresh.
+                                 Binding: MainViewModel.AlienAnniversaries (TickerData)
+                                 Commands: RefreshAlienAnniversariesCommand, ToggleAlienAnniversariesCommand
+                            ======================================================== -->
                             <Border BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
@@ -288,6 +391,7 @@
                                                FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
+                                        <!-- Binding: MainViewModel.Loc.Ticker_AlienAnniversariesTitle (live-localised) -->
                                         <Label Grid.Column="1"
                                                Text="{Binding Loc.Ticker_AlienAnniversariesTitle}"
                                                Style="{StaticResource BaseLabel}"
@@ -295,26 +399,26 @@
                                                FontAttributes="Bold"
                                                VerticalOptions="Center" />
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="info.png"
-                                                Clicked="OnAlienAnniversariesInfoClicked" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="refresh.png"
-                                                Command="{Binding RefreshAlienAnniversariesCommand}" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="{Binding AlienAnniversariesExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
-                                                Command="{Binding ToggleAlienAnniversariesCommand}" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnAlienAnniversariesInfoClicked" />
+                                            <!-- Refresh: shows RefreshingPopup then recalculates AlienAnniversaries -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="refresh.png"
+                                                         Command="{Binding RefreshAlienAnniversariesCommand}" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding AlienAnniversariesExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleAlienAnniversariesCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
+                                    <!-- Binding: MainViewModel.AlienAnniversaries.BriefText -->
                                     <Label Text="{Binding AlienAnniversaries.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
+                                    <!-- Binding: MainViewModel.AlienAnniversaries.FullText -->
                                     <Label Text="{Binding AlienAnniversaries.FullText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
@@ -323,7 +427,11 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!-- Galactic Commute -->
+                            <!-- == TICKER: GALACTIC COMMUTE =======================
+                                 LIVE ticker - updated every second. Distance varies with UseMetric.
+                                 Binding: MainViewModel.GalacticCommute (TickerData)
+                                 Commands: ToggleGalacticCommuteCommand
+                            ======================================================== -->
                             <Border BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
@@ -336,11 +444,15 @@
                                                FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
-                                        <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                        <HorizontalStackLayout Grid.Column="1"
+                                                               Spacing="8"
+                                                               VerticalOptions="Center">
+                                            <!-- Binding: MainViewModel.Loc.Ticker_GalacticCommuteTitle (live-localised) -->
                                             <Label Text="{Binding Loc.Ticker_GalacticCommuteTitle}"
                                                    Style="{StaticResource BaseLabel}"
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
+                                            <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
                                             <Label Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
@@ -349,21 +461,21 @@
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="info.png"
-                                                Clicked="OnGalacticCommuteInfoClicked" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="{Binding GalacticCommuteExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
-                                                Command="{Binding ToggleGalacticCommuteCommand}" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnGalacticCommuteInfoClicked" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding GalacticCommuteExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleGalacticCommuteCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
+                                    <!-- Binding: MainViewModel.GalacticCommute.BriefText - updates every second -->
                                     <Label Text="{Binding GalacticCommute.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
+                                    <!-- Binding: MainViewModel.GalacticCommute.FullText -->
                                     <Label Text="{Binding GalacticCommute.FullText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
@@ -372,7 +484,11 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!-- Photon Path -->
+                            <!-- == TICKER: PHOTON PATH ============================
+                                 LIVE ticker - updated every second. Narrative changes by light-year threshold.
+                                 Binding: MainViewModel.PhotonPath (TickerData)
+                                 Commands: TogglePhotonPathCommand
+                            ======================================================== -->
                             <Border BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
@@ -385,11 +501,15 @@
                                                FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
-                                        <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                        <HorizontalStackLayout Grid.Column="1"
+                                                               Spacing="8"
+                                                               VerticalOptions="Center">
+                                            <!-- Binding: MainViewModel.Loc.Ticker_PhotonPathTitle (live-localised) -->
                                             <Label Text="{Binding Loc.Ticker_PhotonPathTitle}"
                                                    Style="{StaticResource BaseLabel}"
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
+                                            <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
                                             <Label Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
@@ -398,23 +518,21 @@
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="info.png"
-                                                Clicked="OnPhotonPathInfoClicked" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="{Binding PhotonPathExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
-                                                Command="{Binding TogglePhotonPathCommand}" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnPhotonPathInfoClicked" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding PhotonPathExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding TogglePhotonPathCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-
+                                    <!-- Binding: MainViewModel.PhotonPath.BriefText - updates every second -->
                                     <Label Text="{Binding PhotonPath.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
-
+                                    <!-- Binding: MainViewModel.PhotonPath.FullText -->
                                     <Label Text="{Binding PhotonPath.FullText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
@@ -422,30 +540,41 @@
                                            IsVisible="{Binding PhotonPathExpanded}" />
                                 </VerticalStackLayout>
                             </Border>
+
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
+                <!-- End Cosmos Section -->
 
-                <!-- Mirror Section -->
+                <!-- == MIRROR SECTION =========================================
+                     Tickers: Human Birth Rank, Birth Rune, Personal Year
+                     All static - recalculated only on base date change.
+                     Binding: MainViewModel.MirrorExpanded -> ToggleMirrorCommand
+                ================================================================ -->
                 <Border Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="12">
-                        <!-- Section Header -->
+
                         <Grid ColumnDefinitions="*,Auto">
+                            <!-- Binding: MainViewModel.Loc.Section_MirrorTitle (live-localised) -->
                             <Label Grid.Column="0"
                                    Text="{Binding Loc.Section_MirrorTitle}"
                                    Style="{StaticResource SubtitleLabel}"
                                    TextColor="{DynamicResource CyberCyan}"
                                    VerticalOptions="Center" />
                             <ImageButton Grid.Column="1"
-                                    Style="{StaticResource ThemedIconButton}"
-                                    helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                    Source="{Binding MirrorExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
-                                    Command="{Binding ToggleMirrorCommand}" />
+                                         Style="{StaticResource ThemedIconButton}"
+                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                         Source="{Binding MirrorExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
+                                         Command="{Binding ToggleMirrorCommand}" />
                         </Grid>
 
-                        <!-- Ticker Cards -->
-                        <VerticalStackLayout Spacing="12" IsVisible="{Binding MirrorExpanded}">
-                            <!-- Human Birth Rank -->
+                        <VerticalStackLayout Spacing="12"
+                                             IsVisible="{Binding MirrorExpanded}">
+
+                            <!-- == TICKER: HUMAN BIRTH RANK =======================
+                                 Binding: MainViewModel.HumanBirthRank (TickerData)
+                                 Commands: ToggleHumanBirthRankCommand
+                            ======================================================== -->
                             <Border BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
@@ -458,6 +587,7 @@
                                                FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
+                                        <!-- Binding: MainViewModel.Loc.Ticker_HumanBirthRankTitle (live-localised) -->
                                         <Label Grid.Column="1"
                                                Text="{Binding Loc.Ticker_HumanBirthRankTitle}"
                                                Style="{StaticResource BaseLabel}"
@@ -465,23 +595,21 @@
                                                FontAttributes="Bold"
                                                VerticalOptions="Center" />
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="info.png"
-                                                Clicked="OnHumanBirthRankInfoClicked" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="{Binding HumanBirthRankExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
-                                                Command="{Binding ToggleHumanBirthRankCommand}" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnHumanBirthRankInfoClicked" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding HumanBirthRankExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleHumanBirthRankCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-
+                                    <!-- Binding: MainViewModel.HumanBirthRank.BriefText -->
                                     <Label Text="{Binding HumanBirthRank.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
-
+                                    <!-- Binding: MainViewModel.HumanBirthRank.FullText -->
                                     <Label Text="{Binding HumanBirthRank.FullText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
@@ -490,7 +618,10 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!-- Birth Rune -->
+                            <!-- == TICKER: BIRTH RUNE =============================
+                                 Binding: MainViewModel.BirthRune (TickerData)
+                                 Commands: ToggleBirthRuneCommand
+                            ======================================================== -->
                             <Border BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
@@ -503,6 +634,7 @@
                                                FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
+                                        <!-- Binding: MainViewModel.Loc.Ticker_BirthRuneTitle (live-localised) -->
                                         <Label Grid.Column="1"
                                                Text="{Binding Loc.Ticker_BirthRuneTitle}"
                                                Style="{StaticResource BaseLabel}"
@@ -510,23 +642,21 @@
                                                FontAttributes="Bold"
                                                VerticalOptions="Center" />
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="info.png"
-                                                Clicked="OnBirthRuneInfoClicked" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="{Binding BirthRuneExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
-                                                Command="{Binding ToggleBirthRuneCommand}" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnBirthRuneInfoClicked" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding BirthRuneExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleBirthRuneCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-
+                                    <!-- Binding: MainViewModel.BirthRune.BriefText -->
                                     <Label Text="{Binding BirthRune.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
-
+                                    <!-- Binding: MainViewModel.BirthRune.FullText -->
                                     <Label Text="{Binding BirthRune.FullText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
@@ -535,7 +665,10 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!-- Personal Year -->
+                            <!-- == TICKER: PERSONAL YEAR ==========================
+                                 Binding: MainViewModel.PersonalYear (TickerData)
+                                 Commands: TogglePersonalYearCommand
+                            ======================================================== -->
                             <Border BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
@@ -548,6 +681,7 @@
                                                FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
+                                        <!-- Binding: MainViewModel.Loc.Ticker_PersonalYearTitle (live-localised) -->
                                         <Label Grid.Column="1"
                                                Text="{Binding Loc.Ticker_PersonalYearTitle}"
                                                Style="{StaticResource BaseLabel}"
@@ -555,23 +689,21 @@
                                                FontAttributes="Bold"
                                                VerticalOptions="Center" />
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="info.png"
-                                                Clicked="OnPersonalYearInfoClicked" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="{Binding PersonalYearExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
-                                                Command="{Binding TogglePersonalYearCommand}" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnPersonalYearInfoClicked" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding PersonalYearExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding TogglePersonalYearCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-
+                                    <!-- Binding: MainViewModel.PersonalYear.BriefText -->
                                     <Label Text="{Binding PersonalYear.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
-
+                                    <!-- Binding: MainViewModel.PersonalYear.FullText -->
                                     <Label Text="{Binding PersonalYear.FullText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
@@ -579,30 +711,42 @@
                                            IsVisible="{Binding PersonalYearExpanded}" />
                                 </VerticalStackLayout>
                             </Border>
+
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
+                <!-- End Mirror Section -->
 
-                <!-- Eco-Echoes Section -->
+                <!-- == ECO ECHOES SECTION =====================================
+                     Tickers: Global Exhale (static with explicit refresh)
+                     Binding: MainViewModel.EcoExpanded -> ToggleEcoCommand
+                ================================================================ -->
                 <Border Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="12">
-                        <!-- Section Header -->
+
                         <Grid ColumnDefinitions="*,Auto">
+                            <!-- Binding: MainViewModel.Loc.Section_EcoEchoesTitle (live-localised) -->
                             <Label Grid.Column="0"
                                    Text="{Binding Loc.Section_EcoEchoesTitle}"
                                    Style="{StaticResource SubtitleLabel}"
                                    TextColor="{DynamicResource CyberCyan}"
                                    VerticalOptions="Center" />
                             <ImageButton Grid.Column="1"
-                                    Style="{StaticResource ThemedIconButton}"
-                                    helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                    Source="{Binding EcoExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
-                                    Command="{Binding ToggleEcoCommand}" />
+                                         Style="{StaticResource ThemedIconButton}"
+                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                         Source="{Binding EcoExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
+                                         Command="{Binding ToggleEcoCommand}" />
                         </Grid>
 
-                        <!-- Ticker Cards -->
-                        <VerticalStackLayout Spacing="12" IsVisible="{Binding EcoExpanded}">
-                            <!-- Global Exhale -->
+                        <VerticalStackLayout Spacing="12"
+                                             IsVisible="{Binding EcoExpanded}">
+
+                            <!-- == TICKER: GLOBAL EXHALE ==========================
+                                 Static ticker with explicit refresh support.
+                                 Binding: MainViewModel.GlobalExhale (TickerData)
+                                 Commands: RefreshGlobalExhaleCommand, ToggleGlobalExhaleCommand
+                                 Note: UseMetric affects output units (BTonnes vs BTons).
+                            ======================================================== -->
                             <Border BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
@@ -615,6 +759,7 @@
                                                FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
+                                        <!-- Binding: MainViewModel.Loc.Ticker_GlobalExhaleTitle (live-localised) -->
                                         <Label Grid.Column="1"
                                                Text="{Binding Loc.Ticker_GlobalExhaleTitle}"
                                                Style="{StaticResource BaseLabel}"
@@ -622,28 +767,26 @@
                                                FontAttributes="Bold"
                                                VerticalOptions="Center" />
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="info.png"
-                                                Clicked="OnGlobalExhaleInfoClicked" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="refresh.png"
-                                                Command="{Binding RefreshGlobalExhaleCommand}" />
-                                            <ImageButton
-                                                Style="{StaticResource ThemedIconButton}"
-                                                helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                Source="{Binding GlobalExhaleExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
-                                                Command="{Binding ToggleGlobalExhaleCommand}" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnGlobalExhaleInfoClicked" />
+                                            <!-- Refresh: shows RefreshingPopup then recalculates GlobalExhale -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="refresh.png"
+                                                         Command="{Binding RefreshGlobalExhaleCommand}" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding GlobalExhaleExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleGlobalExhaleCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-
+                                    <!-- Binding: MainViewModel.GlobalExhale.BriefText -->
                                     <Label Text="{Binding GlobalExhale.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
-
+                                    <!-- Binding: MainViewModel.GlobalExhale.FullText -->
                                     <Label Text="{Binding GlobalExhale.FullText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
@@ -651,10 +794,14 @@
                                            IsVisible="{Binding GlobalExhaleExpanded}" />
                                 </VerticalStackLayout>
                             </Border>
+
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
+                <!-- End Eco Echoes Section -->
+
             </VerticalStackLayout>
         </ScrollView>
+
     </Grid>
 </ContentPage>

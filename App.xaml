@@ -1,11 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!-- AI: Cross-platform application resource root.
+     MergedDictionaries load order is significant:
+       1. Colors.xaml  - defines all named Color tokens and font/spacing constants.
+                         ThemeService.ApplyScheme() mutates these keys at runtime for live theme switching.
+       2. Styles.xaml  - defines reusable Style objects that reference the Color tokens via
+                         DynamicResource, so they automatically reflect theme changes.
+     Both dictionaries are merged here so they are available to every page and control
+     in the application without per-page resource imports. -->
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Aeonpulse.App">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!-- Color tokens - Default Dark palette (overridden at runtime by ThemeService) -->
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <!-- Reusable control styles referencing the color tokens above -->
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

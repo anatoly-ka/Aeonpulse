@@ -1,8 +1,10 @@
-﻿<maui:MauiWinUIApplication
+﻿<!-- AI: WinUI 3 application resource root for the Windows platform target.
+     This file is the WinUI equivalent of App.xaml in the MAUI shared project.
+     WinUI-specific resources (brushes, styles) can be added here as MergedDictionaries.
+     The x:Class here maps to Platforms\Windows\App.xaml.cs (MauiWinUIApplication). -->
+<maui:MauiWinUIApplication
     x:Class="Aeonpulse.WinUI.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:maui="using:Microsoft.Maui"
-    xmlns:local="using:Aeonpulse.WinUI">
-
+    xmlns:maui="using:Microsoft.Maui">
 </maui:MauiWinUIApplication>

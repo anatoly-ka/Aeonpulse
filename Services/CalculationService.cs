@@ -1,3 +1,4 @@
+using Aeonpulse.Attributes;
 using Aeonpulse.Models;
 using System;
 using System.Linq;
@@ -5,10 +6,57 @@ using Aeonpulse.Resources;
 
 namespace Aeonpulse.Services
 {
+    /// <summary>
+    /// Core domain-logic engine that converts a user-supplied base date into
+    /// a collection of richly-formatted <see cref="TickerData"/> objects,
+    /// each representing a distinct temporal or cosmological perspective.
+    ///
+    /// <para>
+    /// <b>Hidden dependencies / side effects:</b>
+    /// <list type="bullet">
+    ///   <item><description>
+    ///     All text output is pulled from <see cref="AppResources"/> at call time,
+    ///     so the strings automatically reflect whichever culture
+    ///     <see cref="ViewModels.MainViewModel.ApplyLanguage"/> has applied to
+    ///     <c>AppResources.Culture</c>.
+    ///   </description></item>
+    ///   <item><description>
+    ///     Every method reads <see cref="DateTime.Now"/> internally; they are
+    ///     therefore not pure functions and will produce different results on
+    ///     every invocation - intentional for live-update scenarios.
+    ///   </description></item>
+    ///   <item><description>
+    ///     No global state is written; this service is stateless and safe to
+    ///     call from any thread (the 1-second timer in
+    ///     <see cref="ViewModels.MainViewModel"/> marshals calls back to the
+    ///     main thread via <c>MainThread.BeginInvokeOnMainThread</c>).
+    ///   </description></item>
+    /// </list>
+    /// </para>
+    /// </summary>
+    [AIContext("CoreCalculationEngine")]
     public class CalculationService
     {
         #region Helper Methods
 
+        /// <summary>
+        /// Finds the nearest "jubilee" (a round, memorable milestone) that is
+        /// strictly greater than <paramref name="diff"/>.
+        ///
+        /// <para>
+        /// The algorithm searches four jubilee families in order, then returns
+        /// the smallest candidate that beats <paramref name="diff"/>:
+        /// <list type="number">
+        ///   <item><description>Major power-of-10 (10, 100, 1000 …)</description></item>
+        ///   <item><description>Minor leading-digit multiple (5, 20, 300 …)</description></item>
+        ///   <item><description>Quarter fractions (25, 250, 750 …)</description></item>
+        ///   <item><description>Repeating-digit "nice" numbers (111, 2222 …)</description></item>
+        /// </list>
+        /// </para>
+        /// </summary>
+        /// <param name="diff">The elapsed count (days, weeks, months, etc.) since the base date.</param>
+        /// <returns>The smallest jubilee value greater than <paramref name="diff"/>.</returns>
+        [AIContext("JubileeSelectionAlgorithm")]
         private static long FindNearestJubilee(long diff)
         {
             int numOfDigits = diff.ToString().Length;
@@ -58,6 +106,12 @@ namespace Aeonpulse.Services
             return nearestJubilee;
         }
 
+        /// <summary>
+        /// Repeatedly sums the decimal digits of <paramref name="num"/> until the result
+        /// is a single digit (1–9). This is the standard numerology "digital root" operation.
+        /// </summary>
+        /// <param name="num">A non-negative integer.</param>
+        /// <returns>A single digit in the range 1–9.</returns>
         private static int ReduceToSingleDigit(int num)
         {
             while (num > 9)
@@ -71,6 +125,21 @@ namespace Aeonpulse.Services
 
         #region Time Jubilees
 
+        /// <summary>
+        /// Calculates the next upcoming time jubilee milestone across seven time units
+        /// (years, months, weeks, days, hours, minutes, seconds) relative to
+        /// <paramref name="baseDate"/>, then returns the one that arrives soonest.
+        ///
+        /// <para>
+        /// <b>Side effect:</b> reads <see cref="AppResources"/> for every unit label,
+        /// so output language follows <c>AppResources.Culture</c>.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The user-selected origin date (e.g., birthday).</param>
+        /// <param name="baseDateName">Human-readable label for <paramref name="baseDate"/> (e.g., "My Birthday").</param>
+        /// <param name="baseDateValue">ISO-8601 string representation of <paramref name="baseDate"/>, used in formatted output.</param>
+        /// <returns>A <see cref="TickerData"/> with brief and full descriptions of the nearest jubilee.</returns>
+        [AIContext("CoreCalculation")]
         public TickerData CalculateTimeJubilees(DateTime baseDate, string baseDateName, string baseDateValue)
         {
             DateTime now = DateTime.Now;
@@ -154,7 +223,7 @@ namespace Aeonpulse.Services
                 nearestJubileeUnit = AppResources.Unit_Hours;
             }
 
-            // Minutes
+            // Minutes - guarded: large base dates can overflow DateTime.MaxValue
             long nearestJubileeMinutes = FindNearestJubilee(passedMinutes);
             DateTime nearestJubileeMinutesDate;
             long daysToMinutesJubilee = long.MaxValue;
@@ -174,7 +243,7 @@ namespace Aeonpulse.Services
                 nearestJubileeUnit = AppResources.Unit_Minutes;
             }
 
-            // Seconds
+            // Seconds - guarded: large base dates can overflow DateTime.MaxValue
             long nearestJubileeSeconds = FindNearestJubilee(passedSeconds);
             DateTime nearestJubileeSecondsDate;
             long daysToSecondsJubilee = long.MaxValue;
@@ -213,6 +282,24 @@ namespace Aeonpulse.Services
 
         #region Countdown
 
+        /// <summary>
+        /// Computes a countdown to the next calendar anniversary of <paramref name="baseDate"/>
+        /// in the current year (or the following year if the anniversary has already passed).
+        ///
+        /// <para>
+        /// The display format adapts to the remaining time:
+        /// <list type="bullet">
+        ///   <item><description>Less than 1 day -> HH:MM:SS only</description></item>
+        ///   <item><description>1 day – 1 month -> days + HH:MM</description></item>
+        ///   <item><description>More than 1 month -> days only</description></item>
+        /// </list>
+        /// This is a <b>live ticker</b> - called every second by the
+        /// <see cref="ViewModels.MainViewModel"/> timer.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The origin date whose annual anniversary is being counted down to.</param>
+        /// <returns>A <see cref="TickerData"/> with the appropriately scaled countdown strings.</returns>
+        [AIContext("LiveTicker")]
         public TickerData CalculateCountdown(DateTime baseDate)
         {
             DateTime now = DateTime.Now;
@@ -280,6 +367,24 @@ namespace Aeonpulse.Services
 
         #region Life Odometer
 
+        /// <summary>
+        /// Estimates the total number of heartbeats and breaths accumulated since
+        /// <paramref name="baseDate"/>, using population-average physiological rates:
+        /// 70 bpm and 16 breaths/min.
+        ///
+        /// <para>
+        /// This is a <b>live ticker</b> - called every second by the VM timer.
+        /// Results are intentionally approximate; the goal is experiential impact,
+        /// not medical precision.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The start of the lifespan being measured.</param>
+        /// <param name="baseDateName">Human-readable label for display in the full text.</param>
+        /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
+        /// <returns>
+        /// A <see cref="TickerData"/> containing formatted heartbeat and breath totals.
+        /// </returns>
+        [AIContext("LiveTicker")]
         public TickerData CalculateLifeOdometer(DateTime baseDate, string baseDateName, string baseDateValue)
         {
             DateTime now = DateTime.Now;
@@ -305,6 +410,21 @@ namespace Aeonpulse.Services
 
         #region Alien Anniversaries
 
+        /// <summary>
+        /// Converts the elapsed Earth days since <paramref name="baseDate"/> into
+        /// equivalent years on Mars (686.98 Earth days/year) and Venus (224.7 Earth days/year),
+        /// giving users a playful cross-planetary perspective on their age.
+        ///
+        /// <para>
+        /// Planetary year lengths are fixed constants based on orbital periods;
+        /// they do not account for leap-year variations.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The origin date (typically a birthday).</param>
+        /// <param name="baseDateName">Human-readable label for display in the full text.</param>
+        /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
+        /// <returns>A <see cref="TickerData"/> with Mars and Venus age figures.</returns>
+        [AIContext("CoreCalculation")]
         public TickerData CalculateAlienAnniversaries(DateTime baseDate, string baseDateName, string baseDateValue)
         {
             DateTime now = DateTime.Now;
@@ -333,6 +453,29 @@ namespace Aeonpulse.Services
 
         #region Galactic Commute
 
+        /// <summary>
+        /// Calculates the distance the Solar System has travelled through the Milky Way
+        /// since <paramref name="baseDate"/>, based on the Sun's galactic orbital velocity
+        /// of approximately 225 km/s.
+        ///
+        /// <para>
+        /// <b>Unit toggling:</b> when <paramref name="useMetric"/> is <c>false</c>, all
+        /// output distances are converted to miles. The <c>fullDistance</c> parenthetical
+        /// is suppressed when the primary unit already gives the raw figure (i.e., when
+        /// no scaling prefix like "million" is needed).
+        /// </para>
+        /// <para>
+        /// This is a <b>live ticker</b> - called every second by the VM timer.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The origin date from which galactic travel is measured.</param>
+        /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
+        /// <param name="useMetric">
+        /// <c>true</c> to display kilometres; <c>false</c> to display miles.
+        /// Sourced from <see cref="ViewModels.MainViewModel.UseMetric"/>.
+        /// </param>
+        /// <returns>A <see cref="TickerData"/> describing the galactic distance travelled.</returns>
+        [AIContext("LiveTicker")]
         public TickerData CalculateGalacticCommute(DateTime baseDate, string baseDateValue, bool useMetric)
         {
             DateTime now = DateTime.Now;
@@ -385,6 +528,41 @@ namespace Aeonpulse.Services
 
         #region Photon Path
 
+        /// <summary>
+        /// Determines how far a photon emitted on <paramref name="baseDate"/> would have
+        /// travelled by now (light travels at 299,792.458 km/s), then contextualises that
+        /// distance against a curated catalogue of named stars ordered by light-year distance.
+        ///
+        /// <para>
+        /// <b>Output narrative phases</b> (driven by <c>lightYears</c> thresholds):
+        /// <list type="number">
+        ///   <item><description>Still within the Solar System / approaching the Heliopause</description></item>
+        ///   <item><description>Within the Oort Cloud (&lt; 1.5 ly)</description></item>
+        ///   <item><description>Interstellar space (&lt; 4.246 ly - Proxima Centauri)</description></item>
+        ///   <item><description>Past a named star in the catalogue (up to ~139 ly / Achernar)</description></item>
+        /// </list>
+        /// </para>
+        /// <para>
+        /// The 57-star catalogue is defined inline (anonymous-type array) to keep it
+        /// co-located with the logic that consumes it. Star data (name, distance in light-years,
+        /// descriptive info) is sourced entirely from <see cref="AppResources"/>.
+        /// </para>
+        /// <para>
+        /// This is a <b>live ticker</b> - called every second by the VM timer.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The origin date from which photon travel is measured.</param>
+        /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
+        /// <param name="useMetric">
+        /// <c>true</c> for km-based secondary distance; <c>false</c> for miles.
+        /// Sourced from <see cref="ViewModels.MainViewModel.UseMetric"/>.
+        /// </param>
+        /// <returns>
+        /// A <see cref="TickerData"/> whose narrative describes which cosmic region the
+        /// photon has reached, or which star it has most recently passed.
+        /// </returns>
+        [AIContext("LiveTicker")]
+        [AIContext("StarCatalogueLookup")]
         public TickerData CalculatePhotonPath(DateTime baseDate, string baseDateValue, bool useMetric)
         {
             var stars = new[]
@@ -523,6 +701,31 @@ namespace Aeonpulse.Services
 
         #region Human Birth Rank
 
+        /// <summary>
+        /// Estimates the approximate ordinal birth rank of a person born on
+        /// <paramref name="baseDate"/> - i.e., roughly the N-th human to have
+        /// ever been born on Earth.
+        ///
+        /// <para>
+        /// <b>Data source:</b> "How Many People Have Ever Lived on Earth?" by
+        /// Toshiko Kaneda &amp; Carl Haub (Population Reference Bureau), cross-referenced
+        /// with UN World Population Prospects 2024 and the Human Mortality Database 2025.
+        /// </para>
+        /// <para>
+        /// <b>Algorithm:</b> Three piecewise-linear interpolations are used for
+        /// pre-1950, 1950–2000, and post-2000 ranges, reflecting the dramatically
+        /// different birth-rate growth trajectories in each era.
+        /// Returns a "pre-20th century" fallback for dates before 1900-01-01.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The birth date to rank.</param>
+        /// <param name="baseDateName">Human-readable label for display in the full text.</param>
+        /// <returns>
+        /// A <see cref="TickerData"/> with the estimated birth rank, or a generic
+        /// pre-20th-century message for very old dates.
+        /// </returns>
+        [AIContext("CoreCalculation")]
+        [AIContext("ExternalDataModel")]
         public TickerData CalculateHumanBirthRank(DateTime baseDate, string baseDateName)
         {
             /* Data from "How Many People Have Ever Lived on Earth?" by Toshiko Kaneda & Carl Haub
@@ -591,6 +794,27 @@ namespace Aeonpulse.Services
 
         #region Birth Rune
 
+        /// <summary>
+        /// Maps <paramref name="baseDate"/> to one of the 24 Elder Futhark runes using the
+        /// traditional Norse runic calendar (Runic Era / Futhark wheel), where each rune
+        /// governs roughly a 15-day period of the year.
+        ///
+        /// <para>
+        /// <b>Month encoding:</b> the inline <c>From</c>/<c>To</c> strings use
+        /// zero-based month indices (0 = January … 11 = December) to compactly
+        /// express cross-year boundaries (e.g., December wraps to "0-" = January).
+        /// A <c>+1</c> offset is applied when constructing <see cref="DateTime"/> objects
+        /// to convert back to 1-based <see cref="DateTime.Month"/> values.
+        /// </para>
+        /// <para>
+        /// Rune names, symbols, and interpretations are sourced from
+        /// <see cref="AppResources"/>, making them fully localisable.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The birth date whose rune is being determined.</param>
+        /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
+        /// <returns>A <see cref="TickerData"/> with the rune name, symbol, and interpretation.</returns>
+        [AIContext("CoreCalculation")]
         public TickerData CalculateBirthRune(DateTime baseDate, string baseDateValue)
         {
             var runes = new[]
@@ -655,6 +879,27 @@ namespace Aeonpulse.Services
 
         #region Personal Year
 
+        /// <summary>
+        /// Derives the user's numerological Personal Year number for the current calendar year
+        /// by reducing the sum of the current year's digital root, the birth month's digital
+        /// root, and the birth day's digital root to a single digit (1–9).
+        ///
+        /// <para>
+        /// <b>Algorithm source:</b> https://numerology.astro-seek.com/personal-year
+        /// </para>
+        /// <para>
+        /// The nine interpretations are stored in <see cref="AppResources"/> (e.g.,
+        /// <c>PersonalYear1_Brief</c> … <c>PersonalYear9_Full</c>), making them
+        /// fully localisable without code changes.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The birth date used for month and day components.</param>
+        /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
+        /// <returns>
+        /// A <see cref="TickerData"/> identifying the personal year number (1–9)
+        /// and its thematic interpretation.
+        /// </returns>
+        [AIContext("CoreCalculation")]
         public TickerData CalculatePersonalYear(DateTime baseDate, string baseDateValue)
         {
             // Simple numerology calculation, taken from https://numerology.astro-seek.com/personal-year
@@ -702,6 +947,38 @@ namespace Aeonpulse.Services
 
         #region Global Exhale
 
+        /// <summary>
+        /// Calculates the cumulative global CO₂ emissions (in billion metric tonnes) that
+        /// occurred between <paramref name="baseDate"/> and today, using a polynomial
+        /// regression model fitted to the Global Carbon Budget 2025 dataset.
+        ///
+        /// <para>
+        /// <b>Data source:</b> https://globalcarbonbudget.org/datahub/the-latest-gcb-data-2025/
+        /// </para>
+        /// <para>
+        /// <b>Model:</b> CO₂ in year Y (relative to 1900) ≈
+        /// <c>0.0008·Y² − 0.0122·Y + 0.6859</c> (polynomial R² &gt; exponential).
+        /// The integral of this gives the total cumulative emissions between two years.
+        /// </para>
+        /// <para>
+        /// For dates before 1900, a fixed pre-industrial total of 11.77 billion tonnes
+        /// (cumulative to 1900) is returned as a constant.
+        /// </para>
+        /// <para>
+        /// <b>Unit toggling:</b> when <paramref name="useMetric"/> is <c>false</c>,
+        /// result is converted from metric tonnes to short tons (×0.984252).
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The start date for measuring emissions.</param>
+        /// <param name="baseDateName">Human-readable label for display in the full text.</param>
+        /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
+        /// <param name="useMetric">
+        /// <c>true</c> for metric tonnes; <c>false</c> for short tons.
+        /// Sourced from <see cref="ViewModels.MainViewModel.UseMetric"/>.
+        /// </param>
+        /// <returns>A <see cref="TickerData"/> with the estimated CO₂ emitted since <paramref name="baseDate"/>.</returns>
+        [AIContext("CoreCalculation")]
+        [AIContext("ExternalDataModel")]
         public TickerData CalculateGlobalExhale(DateTime baseDate, string baseDateName, string baseDateValue, bool useMetric)
         {
             /* The data is taken from https://globalcarbonbudget.org/datahub/the-latest-gcb-data-2025/
@@ -763,6 +1040,28 @@ namespace Aeonpulse.Services
 
         #region Tease Text
 
+        /// <summary>
+        /// Produces the teaser text displayed when the user taps the app logo.
+        /// The intent is to surface a single attention-grabbing stat from one of the
+        /// live tickers to encourage further exploration.
+        ///
+        /// <para>
+        /// <b>Note:</b> The multi-tease random selection is currently commented out;
+        /// only the countdown tease is active. The <paramref name="heartbeats"/> and
+        /// <paramref name="breaths"/> parameters are reserved for future re-activation
+        /// of the full random pool.
+        /// </para>
+        /// </summary>
+        /// <param name="countdown">Pre-computed countdown <see cref="TickerData"/> from <see cref="CalculateCountdown"/>.</param>
+        /// <param name="lifeOdometer">Pre-computed life odometer data (reserved for future use).</param>
+        /// <param name="galacticCommute">Pre-computed galactic commute data (reserved for future use).</param>
+        /// <param name="globalExhale">Pre-computed global exhale data (reserved for future use).</param>
+        /// <param name="baseDateName">Human-readable label for the origin date (reserved for future use).</param>
+        /// <param name="baseDateValue">ISO-8601 origin date string (reserved for future use).</param>
+        /// <param name="heartbeats">Raw heartbeat count passed directly from the caller to avoid re-computation.</param>
+        /// <param name="breaths">Raw breath count passed directly from the caller to avoid re-computation.</param>
+        /// <returns>A single formatted teaser string sourced from <see cref="AppResources"/>.</returns>
+        [AIContext("UIPresentation")]
         public string GetRandomTeaseText(
             TickerData countdown, TickerData lifeOdometer,
             TickerData galacticCommute, TickerData globalExhale,

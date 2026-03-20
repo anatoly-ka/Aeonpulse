@@ -1,10 +1,23 @@
-using UIKit;
+using Aeonpulse.Attributes;
 using Microsoft.Maui.Graphics;
+using UIKit;
 
 namespace Aeonpulse
 {
+    /// <summary>
+    /// Mac Catalyst implementation of the <see cref="MauiProgram"/> tint partials.
+    /// Functionally equivalent to the iOS implementation, but adds a
+    /// <c>ToUIColor</c> helper with <see cref="Math.Clamp"/> guards to handle
+    /// any out-of-range float components that can arise from programmatic colour
+    /// construction on the Mac Catalyst layer.
+    /// </summary>
+    [AIContext("PlatformTintImplementation")]
     public static partial class MauiProgram
     {
+        /// <summary>
+        /// Converts a MAUI <see cref="Color"/> to a <c>UIColor</c>, clamping each
+        /// component to [0, 1] before conversion to avoid native API argument exceptions.
+        /// </summary>
         private static UIColor ToUIColor(Color color)
         {
             var r = (byte)(Math.Clamp(color.Red,   0, 1) * 255);
@@ -14,6 +27,9 @@ namespace Aeonpulse
             return UIColor.FromRGBA(r, g, b, a);
         }
 
+        /// <summary>
+        /// Applies or clears the tint on the native <c>UIImageView</c> backing a MAUI <see cref="Image"/>.
+        /// </summary>
         static partial void ApplyImageTint(
             Microsoft.Maui.Handlers.ImageHandler handler, Color? tint)
         {
@@ -33,6 +49,9 @@ namespace Aeonpulse
             nativeImage.TintColor = ToUIColor(tint);
         }
 
+        /// <summary>
+        /// Applies or clears the tint on the native <c>UIButton</c> backing a MAUI <see cref="ImageButton"/>.
+        /// </summary>
         static partial void ApplyImageButtonTint(
             Microsoft.Maui.Handlers.ImageButtonHandler handler, Color? tint)
         {

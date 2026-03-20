@@ -1,23 +1,31 @@
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Aeonpulse.Views.SettingsPopup"
+             x:Name="SettingsPopupPage"
              BackgroundColor="#80000000"
              Shell.NavBarIsVisible="False">
 
     <ContentPage.Content>
-        <Grid HorizontalOptions="Fill"
+        <!-- AI: Full-screen overlay grid.
+             Layer 0 (z=0): transparent BoxView captures taps outside the panel to dismiss.
+             Layer 1 (z=1): centered Frame is the actual settings panel. -->
+        <Grid x:Name="OverlayGrid"
+              HorizontalOptions="Fill"
               VerticalOptions="Fill">
 
-            <!-- Transparent tap-to-dismiss background -->
-            <BoxView Color="Transparent"
+            <!-- Tap-to-dismiss backdrop - covers full screen, triggers close on tap -->
+            <BoxView x:Name="DismissBackdrop"
+                     Color="Transparent"
                      InputTransparent="False">
                 <BoxView.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnCloseClicked" />
                 </BoxView.GestureRecognizers>
             </BoxView>
 
-            <!-- Centered popup panel -->
-            <Frame BackgroundColor="{DynamicResource CardBackground}"
+            <!-- AI: Centered modal panel - floats over the backdrop.
+                 BorderColor and BackgroundColor use DynamicResource for live theme support. -->
+            <Frame x:Name="SettingsPanel"
+                   BackgroundColor="{DynamicResource CardBackground}"
                    CornerRadius="16"
                    Padding="0"
                    HasShadow="True"
@@ -27,47 +35,80 @@
                    Margin="24,0"
                    MinimumWidthRequest="300">
 
+                <!-- AI: 3-row panel layout: [Row0: Title+Divider | Row1: Scrollable Settings | Row2: Close Button footer] -->
                 <Grid RowDefinitions="Auto,*,Auto">
 
-                    <!-- Title -->
-                    <VerticalStackLayout Grid.Row="0" Spacing="0" Padding="24,20,24,0">
-                        <Label Text="{Binding Loc.Settings_Title}"
+                    <!-- Row 0: Title bar -->
+                    <VerticalStackLayout Grid.Row="0"
+                                         x:Name="SettingsTitleBar"
+                                         Spacing="0"
+                                         Padding="24,20,24,0">
+                        <!-- Binding: MainViewModel.Loc.Settings_Title (live-localised via LocalizedResources) -->
+                        <Label x:Name="SettingsTitleLabel"
+                               Text="{Binding Loc.Settings_Title}"
                                FontSize="{StaticResource FontSizeTitle}"
                                FontAttributes="Bold"
                                HorizontalOptions="Center"
                                TextColor="{DynamicResource CyberCyan}" />
 
-                        <BoxView HeightRequest="1"
+                        <BoxView x:Name="TitleDivider"
+                                 HeightRequest="1"
                                  Color="{DynamicResource CyberPurple}"
                                  Opacity="0.4"
                                  HorizontalOptions="Fill"
                                  Margin="0,16,0,0" />
                     </VerticalStackLayout>
 
-                    <!-- Content -->
-                    <VerticalStackLayout Grid.Row="1" Spacing="16" Padding="24,16">
+                    <!-- Row 1: Scrollable settings content area -->
+                    <VerticalStackLayout Grid.Row="1"
+                                         x:Name="SettingsContentArea"
+                                         Spacing="16"
+                                         Padding="24,16">
 
-                        <!-- Settings Section -->
-                        <Label Text="{Binding Loc.Settings_SettingsTitle}"
+                        <!-- "Settings" sub-section header -->
+                        <!-- Binding: MainViewModel.Loc.Settings_SettingsTitle (live-localised) -->
+                        <Label x:Name="SettingsSectionHeader"
+                               Text="{Binding Loc.Settings_SettingsTitle}"
                                FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
 
-                        <Grid ColumnDefinitions="Auto,*"
+                        <!-- AI: 2-column, 14-row settings control grid.
+                             Col 0 (Auto): group label - each spans multiple rows for vertical centering.
+                             Col 1 (*):    radio button rows, one option per row.
+                             Row groups:
+                               Rows 0-1:   Unit System  (Metric / Imperial)
+                               Row  2:     spacer
+                               Rows 3-5:   Color Scheme (DefaultDark / HighContrastDark / HighContrastLight)
+                               Row  6:     spacer
+                               Rows 7-9:   Text Size    (Small / Normal / Large)
+                               Row  10:    spacer
+                               Rows 11-13: Language     (Default / English / Russian)
+                             Each RadioButton uses a custom ControlTemplate (2-column Grid:
+                             outer ring Ellipse | inner dot Ellipse) to match the cyberpunk theme. -->
+                        <Grid x:Name="SettingsControlGrid"
+                              ColumnDefinitions="Auto,*"
                               RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                               ColumnSpacing="16"
                               RowSpacing="8">
 
-                            <!-- Row 0: Unit System label -->
+                            <!-- == UNIT SYSTEM ======================================= -->
+
+                            <!-- Col 0, Rows 0-1: "Unit system" label - spans 2 rows -->
+                            <!-- Binding: MainViewModel.Loc.Settings_UnitsLabel (live-localised) -->
                             <Label Grid.Row="0" Grid.Column="0"
                                    Grid.RowSpan="2"
+                                   x:Name="UnitsLabel"
                                    Text="{Binding Loc.Settings_UnitsLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
 
-                            <!-- Row 0: Metric radio -->
+                            <!-- Row 0, Col 1: Metric radio.
+                                 Value="Metric" - culture-neutral key read in OnUnitSystemChanged.
+                                 IsChecked seeded from MainViewModel.UseMetric in code-behind. -->
                             <HorizontalStackLayout Grid.Row="0" Grid.Column="1"
+                                                   x:Name="MetricRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
@@ -77,35 +118,36 @@
                                              CheckedChanged="OnUnitSystemChanged">
                                     <RadioButton.ControlTemplate>
                                         <ControlTemplate>
+                                            <!-- AI: Custom radio template - outer ring + inner dot + label presenter -->
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
                                                 <Ellipse Grid.Column="0"
-                                                         WidthRequest="16"
-                                                         HeightRequest="16"
+                                                         WidthRequest="16" HeightRequest="16"
                                                          Stroke="{DynamicResource CyberCyan}"
                                                          StrokeThickness="2"
                                                          Fill="Transparent" />
                                                 <Ellipse x:Name="InnerDot"
                                                          Grid.Column="0"
-                                                         WidthRequest="8"
-                                                         HeightRequest="8"
+                                                         WidthRequest="8" HeightRequest="8"
                                                          HorizontalOptions="Center"
                                                          VerticalOptions="Center"
                                                          Fill="{DynamicResource CyberCyan}"
                                                          IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1"
-                                                                  VerticalOptions="Center" />
+                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
                                             </Grid>
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
+                                <!-- Binding: MainViewModel.Loc.Settings_UnitsMetric (live-localised) -->
                                 <Label Text="{Binding Loc.Settings_UnitsMetric}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 1: Imperial radio -->
+                            <!-- Row 1, Col 1: Imperial radio.
+                                 Value="Imperial" - culture-neutral key read in OnUnitSystemChanged. -->
                             <HorizontalStackLayout Grid.Row="1" Grid.Column="1"
+                                                   x:Name="ImperialRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
@@ -117,46 +159,50 @@
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
                                                 <Ellipse Grid.Column="0"
-                                                         WidthRequest="16"
-                                                         HeightRequest="16"
+                                                         WidthRequest="16" HeightRequest="16"
                                                          Stroke="{DynamicResource CyberCyan}"
                                                          StrokeThickness="2"
                                                          Fill="Transparent" />
                                                 <Ellipse x:Name="InnerDot"
                                                          Grid.Column="0"
-                                                         WidthRequest="8"
-                                                         HeightRequest="8"
+                                                         WidthRequest="8" HeightRequest="8"
                                                          HorizontalOptions="Center"
                                                          VerticalOptions="Center"
                                                          Fill="{DynamicResource CyberCyan}"
                                                          IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1"
-                                                                  VerticalOptions="Center" />
+                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
                                             </Grid>
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
+                                <!-- Binding: MainViewModel.Loc.Settings_UnitsImperial (live-localised) -->
                                 <Label Text="{Binding Loc.Settings_UnitsImperial}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 2: spacer -->
+                            <!-- Row 2: visual spacer between groups -->
                             <BoxView Grid.Row="2" Grid.ColumnSpan="2"
-                                     HeightRequest="4"
-                                     Color="Transparent" />
+                                     HeightRequest="4" Color="Transparent" />
 
-                            <!-- Row 3: Color Scheme label -->
+                            <!-- == COLOR SCHEME ====================================== -->
+
+                            <!-- Col 0, Rows 3-5: "Color scheme" label - spans 3 rows.
+                                 Binding: MainViewModel.Loc.Settings_PaletteLabel (live-localised)
+                                 Side effect: OnColorSchemeChanged -> ThemeService.ApplyScheme()
+                                 -> mutates Application.Current.Resources -> repaints all DynamicResource bindings. -->
                             <Label Grid.Row="3" Grid.Column="0"
                                    Grid.RowSpan="3"
+                                   x:Name="PaletteLabel"
                                    Text="{Binding Loc.Settings_PaletteLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
 
-                            <!-- Row 3: Default Dark radio -->
+                            <!-- Row 3, Col 1: Default Dark radio. Value maps to ThemeService.DefaultDark. -->
                             <HorizontalStackLayout Grid.Row="3" Grid.Column="1"
+                                                   x:Name="DefaultDarkRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
@@ -168,33 +214,32 @@
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
                                                 <Ellipse Grid.Column="0"
-                                                         WidthRequest="16"
-                                                         HeightRequest="16"
+                                                         WidthRequest="16" HeightRequest="16"
                                                          Stroke="{DynamicResource CyberCyan}"
                                                          StrokeThickness="2"
                                                          Fill="Transparent" />
                                                 <Ellipse x:Name="InnerDot"
                                                          Grid.Column="0"
-                                                         WidthRequest="8"
-                                                         HeightRequest="8"
+                                                         WidthRequest="8" HeightRequest="8"
                                                          HorizontalOptions="Center"
                                                          VerticalOptions="Center"
                                                          Fill="{DynamicResource CyberCyan}"
                                                          IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1"
-                                                                  VerticalOptions="Center" />
+                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
                                             </Grid>
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
+                                <!-- Binding: MainViewModel.Loc.Settings_PaletteDefault (live-localised) -->
                                 <Label Text="{Binding Loc.Settings_PaletteDefault}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 4: High Contrast Dark radio -->
+                            <!-- Row 4, Col 1: High Contrast Dark radio. Value maps to ThemeService.HighContrastDark. -->
                             <HorizontalStackLayout Grid.Row="4" Grid.Column="1"
+                                                   x:Name="HighContrastDarkRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
@@ -206,33 +251,32 @@
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
                                                 <Ellipse Grid.Column="0"
-                                                         WidthRequest="16"
-                                                         HeightRequest="16"
+                                                         WidthRequest="16" HeightRequest="16"
                                                          Stroke="{DynamicResource CyberCyan}"
                                                          StrokeThickness="2"
                                                          Fill="Transparent" />
                                                 <Ellipse x:Name="InnerDot"
                                                          Grid.Column="0"
-                                                         WidthRequest="8"
-                                                         HeightRequest="8"
+                                                         WidthRequest="8" HeightRequest="8"
                                                          HorizontalOptions="Center"
                                                          VerticalOptions="Center"
                                                          Fill="{DynamicResource CyberCyan}"
                                                          IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1"
-                                                                  VerticalOptions="Center" />
+                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
                                             </Grid>
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
+                                <!-- Binding: MainViewModel.Loc.Settings_PaletteHighContrastDark (live-localised) -->
                                 <Label Text="{Binding Loc.Settings_PaletteHighContrastDark}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 5: High Contrast Light radio -->
+                            <!-- Row 5, Col 1: High Contrast Light radio. Value maps to ThemeService.HighContrastLight. -->
                             <HorizontalStackLayout Grid.Row="5" Grid.Column="1"
+                                                   x:Name="HighContrastLightRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
@@ -244,46 +288,50 @@
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
                                                 <Ellipse Grid.Column="0"
-                                                         WidthRequest="16"
-                                                         HeightRequest="16"
+                                                         WidthRequest="16" HeightRequest="16"
                                                          Stroke="{DynamicResource CyberCyan}"
                                                          StrokeThickness="2"
                                                          Fill="Transparent" />
                                                 <Ellipse x:Name="InnerDot"
                                                          Grid.Column="0"
-                                                         WidthRequest="8"
-                                                         HeightRequest="8"
+                                                         WidthRequest="8" HeightRequest="8"
                                                          HorizontalOptions="Center"
                                                          VerticalOptions="Center"
                                                          Fill="{DynamicResource CyberCyan}"
                                                          IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1"
-                                                                  VerticalOptions="Center" />
+                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
                                             </Grid>
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
+                                <!-- Binding: MainViewModel.Loc.Settings_PaletteHighContrastLight (live-localised) -->
                                 <Label Text="{Binding Loc.Settings_PaletteHighContrastLight}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 6: spacer -->
+                            <!-- Row 6: visual spacer between groups -->
                             <BoxView Grid.Row="6" Grid.ColumnSpan="2"
-                                     HeightRequest="4"
-                                     Color="Transparent" />
+                                     HeightRequest="4" Color="Transparent" />
 
-                            <!-- Row 7: Text Size label -->
+                            <!-- == TEXT SIZE ========================================= -->
+
+                            <!-- Col 0, Rows 7-9: "Text size" label - spans 3 rows.
+                                 Binding: MainViewModel.Loc.Settings_TextSizeLabel (live-localised)
+                                 Side effect: OnTextSizeChanged -> FontSizeService.ApplyPreset()
+                                 -> mutates font-size resource keys -> reflows all DynamicResource FontSize bindings. -->
                             <Label Grid.Row="7" Grid.Column="0"
                                    Grid.RowSpan="3"
+                                   x:Name="TextSizeLabel"
                                    Text="{Binding Loc.Settings_TextSizeLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
 
-                            <!-- Row 7: Small radio -->
+                            <!-- Row 7, Col 1: Small radio. Value="Small" maps to FontSizeService.Small. -->
                             <HorizontalStackLayout Grid.Row="7" Grid.Column="1"
+                                                   x:Name="TextSizeSmallRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
@@ -295,33 +343,32 @@
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
                                                 <Ellipse Grid.Column="0"
-                                                         WidthRequest="16"
-                                                         HeightRequest="16"
+                                                         WidthRequest="16" HeightRequest="16"
                                                          Stroke="{DynamicResource CyberCyan}"
                                                          StrokeThickness="2"
                                                          Fill="Transparent" />
                                                 <Ellipse x:Name="InnerDot"
                                                          Grid.Column="0"
-                                                         WidthRequest="8"
-                                                         HeightRequest="8"
+                                                         WidthRequest="8" HeightRequest="8"
                                                          HorizontalOptions="Center"
                                                          VerticalOptions="Center"
                                                          Fill="{DynamicResource CyberCyan}"
                                                          IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1"
-                                                                  VerticalOptions="Center" />
+                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
                                             </Grid>
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
+                                <!-- Binding: MainViewModel.Loc.Settings_TextSizeSmall (live-localised) -->
                                 <Label Text="{Binding Loc.Settings_TextSizeSmall}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 8: Normal radio -->
+                            <!-- Row 8, Col 1: Normal radio. Value="Normal" maps to FontSizeService.Normal. -->
                             <HorizontalStackLayout Grid.Row="8" Grid.Column="1"
+                                                   x:Name="TextSizeNormalRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
@@ -333,33 +380,32 @@
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
                                                 <Ellipse Grid.Column="0"
-                                                         WidthRequest="16"
-                                                         HeightRequest="16"
+                                                         WidthRequest="16" HeightRequest="16"
                                                          Stroke="{DynamicResource CyberCyan}"
                                                          StrokeThickness="2"
                                                          Fill="Transparent" />
                                                 <Ellipse x:Name="InnerDot"
                                                          Grid.Column="0"
-                                                         WidthRequest="8"
-                                                         HeightRequest="8"
+                                                         WidthRequest="8" HeightRequest="8"
                                                          HorizontalOptions="Center"
                                                          VerticalOptions="Center"
                                                          Fill="{DynamicResource CyberCyan}"
                                                          IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1"
-                                                                  VerticalOptions="Center" />
+                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
                                             </Grid>
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
+                                <!-- Binding: MainViewModel.Loc.Settings_TextSizeNormal (live-localised) -->
                                 <Label Text="{Binding Loc.Settings_TextSizeNormal}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 9: Large radio -->
+                            <!-- Row 9, Col 1: Large radio. Value="Large" maps to FontSizeService.Large. -->
                             <HorizontalStackLayout Grid.Row="9" Grid.Column="1"
+                                                   x:Name="TextSizeLargeRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
@@ -371,46 +417,53 @@
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
                                                 <Ellipse Grid.Column="0"
-                                                         WidthRequest="16"
-                                                         HeightRequest="16"
+                                                         WidthRequest="16" HeightRequest="16"
                                                          Stroke="{DynamicResource CyberCyan}"
                                                          StrokeThickness="2"
                                                          Fill="Transparent" />
                                                 <Ellipse x:Name="InnerDot"
                                                          Grid.Column="0"
-                                                         WidthRequest="8"
-                                                         HeightRequest="8"
+                                                         WidthRequest="8" HeightRequest="8"
                                                          HorizontalOptions="Center"
                                                          VerticalOptions="Center"
                                                          Fill="{DynamicResource CyberCyan}"
                                                          IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1"
-                                                                  VerticalOptions="Center" />
+                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
                                             </Grid>
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
+                                <!-- Binding: MainViewModel.Loc.Settings_TextSizeLarge (live-localised) -->
                                 <Label Text="{Binding Loc.Settings_TextSizeLarge}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 10: spacer -->
+                            <!-- Row 10: visual spacer between groups -->
                             <BoxView Grid.Row="10" Grid.ColumnSpan="2"
-                                     HeightRequest="4"
-                                     Color="Transparent" />
+                                     HeightRequest="4" Color="Transparent" />
 
-                            <!-- Row 11: Display Language label -->
+                            <!-- == DISPLAY LANGUAGE ================================== -->
+
+                            <!-- Col 0, Rows 11-13: "Language" label - spans 3 rows.
+                                 Binding: MainViewModel.Loc.Settings_LanguageLabel (live-localised)
+                                 Side effect: OnDisplayLanguageChanged -> ApplyLanguage()
+                                 -> sets CultureInfo.DefaultThreadCurrentUICulture globally
+                                 -> Loc.Invalidate() fires PropertyChanged("") on LocalizedResources
+                                 -> UpdateAllCalculations() regenerates all ticker strings. -->
                             <Label Grid.Row="11" Grid.Column="0"
                                    Grid.RowSpan="3"
+                                   x:Name="LanguageLabel"
                                    Text="{Binding Loc.Settings_LanguageLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    VerticalOptions="Center" />
 
-                            <!-- Row 11: Default radio -->
+                            <!-- Row 11, Col 1: Default language radio.
+                                 Value="Default" -> restores OS locale via MainViewModel.LangDefault. -->
                             <HorizontalStackLayout Grid.Row="11" Grid.Column="1"
+                                                   x:Name="LangDefaultRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
@@ -422,33 +475,33 @@
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
                                                 <Ellipse Grid.Column="0"
-                                                         WidthRequest="16"
-                                                         HeightRequest="16"
+                                                         WidthRequest="16" HeightRequest="16"
                                                          Stroke="{DynamicResource CyberCyan}"
                                                          StrokeThickness="2"
                                                          Fill="Transparent" />
                                                 <Ellipse x:Name="InnerDot"
                                                          Grid.Column="0"
-                                                         WidthRequest="8"
-                                                         HeightRequest="8"
+                                                         WidthRequest="8" HeightRequest="8"
                                                          HorizontalOptions="Center"
                                                          VerticalOptions="Center"
                                                          Fill="{DynamicResource CyberCyan}"
                                                          IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1"
-                                                                  VerticalOptions="Center" />
+                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
                                             </Grid>
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
+                                <!-- Binding: MainViewModel.Loc.Settings_LanguageDefault (live-localised) -->
                                 <Label Text="{Binding Loc.Settings_LanguageDefault}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 12: English radio -->
+                            <!-- Row 12, Col 1: English radio.
+                                 Value="English" -> CultureInfo("en") via MainViewModel.LangEnglish. -->
                             <HorizontalStackLayout Grid.Row="12" Grid.Column="1"
+                                                   x:Name="LangEnglishRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
@@ -460,33 +513,33 @@
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
                                                 <Ellipse Grid.Column="0"
-                                                         WidthRequest="16"
-                                                         HeightRequest="16"
+                                                         WidthRequest="16" HeightRequest="16"
                                                          Stroke="{DynamicResource CyberCyan}"
                                                          StrokeThickness="2"
                                                          Fill="Transparent" />
                                                 <Ellipse x:Name="InnerDot"
                                                          Grid.Column="0"
-                                                         WidthRequest="8"
-                                                         HeightRequest="8"
+                                                         WidthRequest="8" HeightRequest="8"
                                                          HorizontalOptions="Center"
                                                          VerticalOptions="Center"
                                                          Fill="{DynamicResource CyberCyan}"
                                                          IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1"
-                                                                  VerticalOptions="Center" />
+                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
                                             </Grid>
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
+                                <!-- Binding: MainViewModel.Loc.Settings_LanguageEnglish (live-localised) -->
                                 <Label Text="{Binding Loc.Settings_LanguageEnglish}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 13: Russian radio -->
+                            <!-- Row 13, Col 1: Russian radio.
+                                 Value="Russian" -> CultureInfo("ru") via MainViewModel.LangRussian. -->
                             <HorizontalStackLayout Grid.Row="13" Grid.Column="1"
+                                                   x:Name="LangRussianRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
@@ -498,25 +551,23 @@
                                         <ControlTemplate>
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
                                                 <Ellipse Grid.Column="0"
-                                                         WidthRequest="16"
-                                                         HeightRequest="16"
+                                                         WidthRequest="16" HeightRequest="16"
                                                          Stroke="{DynamicResource CyberCyan}"
                                                          StrokeThickness="2"
                                                          Fill="Transparent" />
                                                 <Ellipse x:Name="InnerDot"
                                                          Grid.Column="0"
-                                                         WidthRequest="8"
-                                                         HeightRequest="8"
+                                                         WidthRequest="8" HeightRequest="8"
                                                          HorizontalOptions="Center"
                                                          VerticalOptions="Center"
                                                          Fill="{DynamicResource CyberCyan}"
                                                          IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1"
-                                                                  VerticalOptions="Center" />
+                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
                                             </Grid>
                                         </ControlTemplate>
                                     </RadioButton.ControlTemplate>
                                 </RadioButton>
+                                <!-- Binding: MainViewModel.Loc.Settings_LanguageRussian (live-localised) -->
                                 <Label Text="{Binding Loc.Settings_LanguageRussian}"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
@@ -524,43 +575,63 @@
                             </HorizontalStackLayout>
 
                         </Grid>
+                        <!-- End SettingsControlGrid -->
 
-                        <!-- Divider -->
-                        <BoxView HeightRequest="1"
+                        <!-- Divider between Settings and About sections -->
+                        <BoxView x:Name="SettingsAboutDivider"
+                                 HeightRequest="1"
                                  Color="{DynamicResource CyberPurple}"
                                  Opacity="0.4"
                                  HorizontalOptions="Fill" />
 
-                        <!-- About Section -->
-                        <Label Text="{Binding Loc.Settings_AboutTitle}"
+                        <!-- == ABOUT SECTION ========================================= -->
+                        <!-- AI: Read-only informational section - version, description, tagline.
+                             All strings are live-localised via Loc bindings. -->
+
+                        <!-- Binding: MainViewModel.Loc.Settings_AboutTitle (live-localised) -->
+                        <Label x:Name="AboutSectionHeader"
+                               Text="{Binding Loc.Settings_AboutTitle}"
                                FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
 
-                        <VerticalStackLayout Spacing="6">
-                            <Label Text="{Binding Loc.Settings_AboutVersion}"
+                        <VerticalStackLayout x:Name="AboutContentStack" Spacing="6">
+                            <!-- Binding: MainViewModel.Loc.Settings_AboutVersion (live-localised) -->
+                            <Label x:Name="AboutVersionLabel"
+                                   Text="{Binding Loc.Settings_AboutVersion}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}" />
-                            <Label Text="{Binding Loc.Settings_AboutDescription}"
+                            <!-- Binding: MainViewModel.Loc.Settings_AboutDescription (live-localised) -->
+                            <Label x:Name="AboutDescriptionLabel"
+                                   Text="{Binding Loc.Settings_AboutDescription}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap" />
-                            <Label Text="{Binding Loc.Settings_AboutTagline}"
+                            <!-- Binding: MainViewModel.Loc.Settings_AboutTagline (live-localised) -->
+                            <Label x:Name="AboutTaglineLabel"
+                                   Text="{Binding Loc.Settings_AboutTagline}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
 
                     </VerticalStackLayout>
+                    <!-- End SettingsContentArea -->
 
-                    <!-- Footer -->
-                    <VerticalStackLayout Grid.Row="2" Padding="24,0,24,20" Spacing="0">
-                        <BoxView HeightRequest="1"
+                    <!-- Row 2: Footer - fixed Close button below scrollable content -->
+                    <VerticalStackLayout Grid.Row="2"
+                                         x:Name="SettingsFooter"
+                                         Padding="24,0,24,20"
+                                         Spacing="0">
+                        <BoxView x:Name="FooterDivider"
+                                 HeightRequest="1"
                                  Color="{DynamicResource CyberPurple}"
                                  Opacity="0.4"
                                  HorizontalOptions="Fill"
                                  Margin="0,0,0,16" />
-                        <Button Text="{Binding Loc.Settings_ButtonClose}"
+                        <!-- Binding: MainViewModel.Loc.Settings_ButtonClose (live-localised) -->
+                        <Button x:Name="CloseButton"
+                                Text="{Binding Loc.Settings_ButtonClose}"
                                 Clicked="OnCloseClicked"
                                 HorizontalOptions="Center"
                                 WidthRequest="160"
