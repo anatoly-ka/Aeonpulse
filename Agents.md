@@ -1,4 +1,4 @@
-# Agents.md - AI Agent Navigation Guide for Aeonpulse
+﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
 > **Last updated:** 2026-03-21
 > **Maintained by:** AI Agents and human developers collaboratively.
@@ -97,9 +97,10 @@
 | **9.7** | Comment Style and Non-ASCII | `///` on all public symbols, ASCII-only in comments, no `///` in XAML. |
 | **9.8** | New NuGet Packages | 3 existing packages, no-internet-copy rule, no Compatibility types. |
 | **9.9** | Platform-Specific Code | `partial` methods only, all 4 platforms, no `#if` in shared files, tombstone rule. |
-| **9.10** | Persistence | `Preferences` only, 3 persisted keys, read-before-`InitializeComponent` rule. |
+| **9.10** | Persistence | `Preferences` only, 4 persisted keys, read-before-`InitializeComponent` rule. |
 | **9.11** | `Agents.md` Maintenance | When and what to update, change-type table, date update rule. |
-| **9.12** | Quick Violation Checklist | 15-item YES/NO checklist. Run before every commit. |
+| **9.12** | Quick Violation Checklist | 16-item YES/NO checklist. Run before every commit. |
+| **9.13** | Commit Signature | AI agent signature trailer format, ``+ manual changes`` rule. |
 
 ---
 
@@ -146,6 +147,7 @@
 | What is `TintBehavior.cs` and why is it empty? | **§2/Helpers**, **§9.9** |
 | What must I update in `Agents.md` after my change? | **§9.11** |
 | Pre-commit checklist | **§9.12** |
+| Commit signature format for AI agents | **§9.13** |
 
 ---
 
@@ -4006,7 +4008,7 @@ they describe what the code already does and must continue to do.
 
 - **Use `Microsoft.Maui.Storage.Preferences` exclusively** for persisting user
   settings. The currently-persisted keys are: `"ColorScheme"`, `"TextSize"`,
-  `"DisplayLanguage"`.
+  `"DisplayLanguage"`, `"UseMetric"`.
 
 - **Read `Preferences` in `App.xaml.cs` constructor before `InitializeComponent()`**
   for any setting that must be applied before the first rendered frame.
@@ -4019,6 +4021,7 @@ they describe what the code already does and must continue to do.
   Preferences.Default.Get("ColorScheme", ThemeService.DefaultDark)
   Preferences.Default.Get("TextSize",    FontSizeService.Normal)
   Preferences.Default.Get("DisplayLanguage", MainViewModel.LangDefault)
+  Preferences.Default.Get("UseMetric",   true)
   ```
 
 #### DO NOT
@@ -4108,3 +4111,43 @@ the change violates a guardrail and must be corrected first.
 | 14 | `Agents.md` updated for every structural change? | YES |
 | 15 | Build produces only known warning codes (CS0618, CS8767, CS0414, XC0022)? | YES |
 | 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (66+ tests, 0 failures)? | YES |
+
+
+---
+
+### 9.13 Commit Signature
+
+#### DO
+
+- **Add your AI model identifier as a trailer in every commit message** for
+  commits where all changes were made entirely by the AI agent. Append the
+  signature as the last line of the commit body, separated from the rest of
+  the message by a blank line:
+
+  ```
+  feat: short description
+
+  - detail line 1
+  - detail line 2
+
+  AI: GitHub Copilot (gpt-4o)
+  ```
+
+- **Append `+ manual changes` to the signature** when the commit contains a
+  mix of AI-generated and human-authored edits:
+
+  ```
+  AI: GitHub Copilot (gpt-4o) + manual changes
+  ```
+
+- **Use `AI: GitHub Copilot (<model>)` as the exact format.** Replace
+  `<model>` with the specific model identifier reported by the agent at the
+  time of the commit (e.g. `gpt-4o`, `claude-sonnet-4-5`).
+
+#### DO NOT
+
+- **Do not omit the signature** on any commit that is driven by an AI agent,
+  even for trivial one-line fixes.
+
+- **Do not add the signature to commits made entirely by a human** without
+  AI assistance.
