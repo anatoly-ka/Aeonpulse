@@ -1,6 +1,6 @@
 # Aeonpulse
 
-A cross-platform mobile and desktop app that transforms a personal date — typically a birthday — into ten richly-contextualised **ticker cards**: live and on-demand views of that moment in time through scientific, astronomical, personal, and ecological lenses.
+A cross-platform mobile and desktop app that transforms a personal date - typically a birthday - into ten richly-contextualised **ticker cards**: live and on-demand views of that moment in time through scientific, astronomical, personal, and ecological lenses.
 
 Built with **.NET 9 MAUI**. Runs on Android, iOS, Mac Catalyst, and Windows from a single shared codebase.
 
@@ -68,7 +68,7 @@ MainPage
 
 ### Architecture
 
-The project follows **manual MVVM** — no MVVM toolkit or code generators:
+The project follows **manual MVVM** - no MVVM toolkit or code generators:
 
 | Layer | Key Files | Role |
 |-------|-----------|------|
@@ -86,7 +86,7 @@ The project follows **manual MVVM** — no MVVM toolkit or code generators:
 
 - **All colours** in XAML use `DynamicResource` so theme changes take effect without restart.
 - **All font sizes** in XAML use `DynamicResource` for the same reason.
-- **All user-visible strings** come from `AppResources` — no hardcoded text anywhere.
+- **All user-visible strings** come from `AppResources` - no hardcoded text anywhere.
 - **Platform-specific code** lives exclusively in `Platforms/{Platform}/TintHelper.cs` as `partial` method implementations. No `#if ANDROID` or similar in shared files.
 - **No business logic** in code-behind (`.xaml.cs`) files.
 - **XAML files** must be saved as UTF-8 with BOM or the build will fail with `MSB4018`.

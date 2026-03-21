@@ -1,4 +1,4 @@
-# Aeonpulse — Developer Guide
+# Aeonpulse - Developer Guide
 
 This guide is for humans continuing development of Aeonpulse. It covers how to work with AI effectively, how to debug, how to make manual-only changes, and how to sign and deploy the app on each platform.
 
@@ -23,7 +23,7 @@ This guide is for humans continuing development of Aeonpulse. It covers how to w
 
 ### The mandatory first prompt
 
-Every session — no exceptions — begin with:
+Every session - no exceptions - begin with:
 
 ```
 Please read Agents.md fully before making any changes.
@@ -48,15 +48,15 @@ An AI that has not read `Agents.md` will produce structurally incorrect changes.
 If the AI needs context beyond just `Agents.md`, add one of these:
 
 ```
-Please also read Services/CalculationService.cs — I want to add a new ticker.
+Please also read Services/CalculationService.cs - I want to add a new ticker.
 ```
 
 ```
-Please also read ViewModels/MainViewModel.cs — I want to understand the settings flow.
+Please also read ViewModels/MainViewModel.cs - I want to understand the settings flow.
 ```
 
 ```
-Please also read Resources/AppResources.resx — I want to understand how strings are structured.
+Please also read Resources/AppResources.resx - I want to understand how strings are structured.
 ```
 
 ---
@@ -79,7 +79,7 @@ Relevant file(s): [e.g., Services/CalculationService.cs, ViewModels/MainViewMode
 Please diagnose and fix the issue. Run the build and tests before finishing.
 ```
 
-**Example — ticker shows stale data after date change:**
+**Example - ticker shows stale data after date change:**
 ```
 Please read Agents.md first.
 
@@ -146,7 +146,7 @@ Please:
 3. Add the radio button in SettingsPopup.xaml and its handler in SettingsPopup.xaml.cs
 4. Update LocalizedResources.cs
 5. Update Agents.md (Sections 1.1, 5/Node 7, 7.4)
-Leave the translated string values as placeholders — I will fill them in manually.
+Leave the translated string values as placeholders - I will fill them in manually.
 Run the build before finishing.
 ```
 
@@ -237,7 +237,7 @@ Most work in this project should be done by AI. Here is a clear split:
 
 ### How the logging system works
 
-The app uses a structured logging gateway called `AeonLog` in `Services/AeonLog.cs`. It is active only in **Debug builds** — in Release, all log calls are compiled out entirely via `[Conditional("DEBUG")]`.
+The app uses a structured logging gateway called `AeonLog` in `Services/AeonLog.cs`. It is active only in **Debug builds** - in Release, all log calls are compiled out entirely via `[Conditional("DEBUG")]`.
 
 Every log line follows this format:
 ```
@@ -255,13 +255,13 @@ Current category tokens:
 | Token | Where it appears |
 |-------|-----------------|
 | `BOOT` | App startup, preferences restore (`App.xaml.cs`) |
-| `VM` | `MainViewModel` — settings changes, date saves, timer health |
-| `CALC` | `CalculationService` — all 10 ticker method entries and phase transitions |
+| `VM` | `MainViewModel` - settings changes, date saves, timer health |
+| `CALC` | `CalculationService` - all 10 ticker method entries and phase transitions |
 
 ### Diagnosing a bug with AI
 
 1. **Run the app in Debug** on the target platform.
-2. **Reproduce the issue** — trigger the specific user action.
+2. **Reproduce the issue** - trigger the specific user action.
 3. **Capture the log output** (see Section 5 below for per-platform instructions).
 4. **Paste the relevant log lines** into the AI chat with this prompt:
 
@@ -284,7 +284,7 @@ Please analyse the log and identify the root cause.
 | `grep "[VM] [SaveDate]"` | Whether the new date reached the ViewModel and all three fields were set |
 | `grep "[VM] [Timer]"` | Whether the 1-second timer is firing and reaching the main thread |
 | `grep "[VM] [Language]"` | What culture was set when the language was changed |
-| `grep "[CALC] [CalculatePhotonPath]"` | Full phase walk — input, distance, which phase was selected, which star matched |
+| `grep "[CALC] [CalculatePhotonPath]"` | Full phase walk - input, distance, which phase was selected, which star matched |
 | `grep "[CALC] [CalculateTimeJubilees] [UNIT_SCAN]"` | All 7 unit candidates and their days-until values |
 | `grep "[CALC] [CalculateTimeJubilees] [WINNER]"` | Which unit won the jubilee tournament |
 
@@ -292,28 +292,28 @@ Please analyse the log and identify the root cause.
 
 | Symptom | What to look for in the log |
 |---------|-----------------------------|
-| Ticker shows stale data after date change | `[VM] [SaveDate]` — check that `out:` line shows the new date |
-| Live tickers stop updating | `[VM] [Timer]` — if missing, the timer has stopped; if `isMainThread=False`, marshalling has broken |
-| Language change does not update some strings | `[VM] [Language]` — check the `culture=` field; then look for `[CALC]` entries to confirm recalculation ran |
-| Wrong jubilee unit shown | `[CALC] [CalculateTimeJubilees] [UNIT_SCAN]` — look at all 7 candidates and the `[WINNER]` line |
-| Photon Path shows wrong phase | `[CALC] [CalculatePhotonPath] [PHASE_LOOKUP]` — check which threshold was hit |
+| Ticker shows stale data after date change | `[VM] [SaveDate]` - check that `out:` line shows the new date |
+| Live tickers stop updating | `[VM] [Timer]` - if missing, the timer has stopped; if `isMainThread=False`, marshalling has broken |
+| Language change does not update some strings | `[VM] [Language]` - check the `culture=` field; then look for `[CALC]` entries to confirm recalculation ran |
+| Wrong jubilee unit shown | `[CALC] [CalculateTimeJubilees] [UNIT_SCAN]` - look at all 7 candidates and the `[WINNER]` line |
+| Photon Path shows wrong phase | `[CALC] [CalculatePhotonPath] [PHASE_LOOKUP]` - check which threshold was hit |
 
 ---
 
 ## 5. Viewing Logs Per Platform
 
-### Windows — Visual Studio Output window
+### Windows - Visual Studio Output window
 
 1. Run with **F5** (Debug configuration).
 2. Open **View → Output** → select **Debug** from the dropdown.
 3. Filter by `[BOOT]`, `[VM]`, or `[CALC]` in the search bar to isolate app output from MAUI framework noise.
 
-**Without Visual Studio** — use Sysinternals DebugView:
+**Without Visual Studio** - use Sysinternals DebugView:
 1. Download from `https://learn.microsoft.com/sysinternals/downloads/debugview`
 2. Run as Administrator, enable **Capture Win32** and **Capture Global Win32**.
 3. Run the app. All log output appears in real time.
 
-### Android — adb logcat
+### Android - adb logcat
 
 Make sure `adb` is on your PATH:
 ```powershell
@@ -340,7 +340,7 @@ Confirm the device or emulator is visible:
 2. **View → Other Windows → Android Device Log**.
 3. Filter by package name `com.aeonpulse.app`.
 
-### iOS and Mac Catalyst — Xcode Console (macOS only)
+### iOS and Mac Catalyst - Xcode Console (macOS only)
 
 1. Open Xcode → **Window → Devices and Simulators**.
 2. Select the device or simulator.
@@ -349,7 +349,7 @@ Confirm the device or emulator is visible:
 
 `AeonLog` output and `AddDebug()` entries appear as `NSLog`-routed lines under the process name.
 
-**Alternative — Console.app on macOS:**
+**Alternative - Console.app on macOS:**
 1. Open `/Applications/Utilities/Console.app`.
 2. Select the device or `My Mac` (for Mac Catalyst).
 3. Search for `Aeonpulse`.
@@ -367,7 +367,7 @@ dotnet build Aeonpulse.csproj -f net9.0-android -c Debug
 adb install bin\Debug\net9.0-android\com.aeonpulse.app-Signed.apk
 ```
 
-#### Release — Google Play (AAB)
+#### Release - Google Play (AAB)
 
 ```
 dotnet publish Aeonpulse.csproj -f net9.0-android -c Release ^
@@ -382,7 +382,7 @@ Output: `bin\Release\net9.0-android\com.aeonpulse.app-Signed.aab`
 
 Upload the `.aab` to the Google Play Console.
 
-#### Release — Sideload APK
+#### Release - Sideload APK
 
 ```
 dotnet publish Aeonpulse.csproj -f net9.0-android -c Release -p:AndroidPackageFormats=apk ^
@@ -413,7 +413,7 @@ dotnet build Aeonpulse.csproj -f net9.0-ios -t:Run \
   -p:RuntimeIdentifier=iossimulator-arm64
 ```
 
-#### Release — App Store IPA
+#### Release - App Store IPA
 
 ```
 dotnet publish Aeonpulse.csproj -f net9.0-ios -c Release \
@@ -437,7 +437,7 @@ Upload via Xcode Organizer or `xcrun altool`.
 dotnet build Aeonpulse.csproj -f net9.0-maccatalyst -t:Run
 ```
 
-#### Release — Mac App Store PKG
+#### Release - Mac App Store PKG
 
 ```
 dotnet publish Aeonpulse.csproj -f net9.0-maccatalyst -c Release \
@@ -459,7 +459,7 @@ dotnet build Aeonpulse.csproj -f net9.0-windows10.0.19041.0 -c Debug -t:Run
 
 Or press **F5** in Visual Studio with the Windows target selected.
 
-#### Release — MSIX for sideload or Store
+#### Release - MSIX for sideload or Store
 
 ```
 dotnet publish Aeonpulse.csproj -f net9.0-windows10.0.19041.0 -c Release ^
@@ -478,7 +478,7 @@ signtool sign /fd SHA256 /a /f your_cert.pfx /p your_password ^
 
 ## 7. Running Tests
 
-The test suite covers all 10 ticker calculation methods. Tests are in `Aeonpulse.Tests/` and target plain `net9.0` — no MAUI dependency, runs on any CI machine.
+The test suite covers all 10 ticker calculation methods. Tests are in `Aeonpulse.Tests/` and target plain `net9.0` - no MAUI dependency, runs on any CI machine.
 
 ```
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
@@ -512,7 +512,7 @@ Run dotnet test after adding the tests.
 
 1. Review the diff with `git diff HEAD` before committing.
 2. Check that `Agents.md` was updated if any structural change was made (AI should do this automatically, but verify).
-3. Run `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` — 66 tests, 0 failures.
+3. Run `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` - 66 tests, 0 failures.
 4. Run `dotnet build Aeonpulse.csproj -f net9.0-windows10.0.19041.0 --no-incremental` and confirm only the four known warning codes appear (`CS0618`, `CS8767`, `CS0414`, `XC0022`).
 5. Commit with a descriptive message. AI-only commits include the signature trailer: `AI: GitHub Copilot (gpt-4o)`.
 
@@ -554,7 +554,7 @@ Get-ChildItem -Path "C:\Dev\Aeonpulse" -Filter "*.xaml" -Recurse |
 
 ### Keeping Agents.md current
 
-`Agents.md` is only useful if it accurately reflects the codebase. Any structural change — new file, renamed method, new setting, new string key group — requires an update. AI agents handle this automatically when instructed. For manual changes you make, use:
+`Agents.md` is only useful if it accurately reflects the codebase. Any structural change - new file, renamed method, new setting, new string key group - requires an update. AI agents handle this automatically when instructed. For manual changes you make, use:
 
 ```
 Please read Agents.md first.
