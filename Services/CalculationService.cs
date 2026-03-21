@@ -2,7 +2,10 @@ using Aeonpulse.Attributes;
 using Aeonpulse.Models;
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Aeonpulse.Resources;
+
+[assembly: InternalsVisibleTo("Aeonpulse.Tests")]
 
 namespace Aeonpulse.Services
 {
@@ -57,7 +60,7 @@ namespace Aeonpulse.Services
         /// <param name="diff">The elapsed count (days, weeks, months, etc.) since the base date.</param>
         /// <returns>The smallest jubilee value greater than <paramref name="diff"/>.</returns>
         [AIContext("JubileeSelectionAlgorithm")]
-        private static long FindNearestJubilee(long diff)
+        internal static long FindNearestJubilee(long diff)
         {
             int numOfDigits = diff.ToString().Length;
             long nearestJubilee = long.MaxValue;
@@ -112,7 +115,7 @@ namespace Aeonpulse.Services
         /// </summary>
         /// <param name="num">A non-negative integer.</param>
         /// <returns>A single digit in the range 1–9.</returns>
-        private static int ReduceToSingleDigit(int num)
+        internal static int ReduceToSingleDigit(int num)
         {
             while (num > 9)
             {
@@ -138,19 +141,20 @@ namespace Aeonpulse.Services
         /// <param name="baseDate">The user-selected origin date (e.g., birthday).</param>
         /// <param name="baseDateName">Human-readable label for <paramref name="baseDate"/> (e.g., "My Birthday").</param>
         /// <param name="baseDateValue">ISO-8601 string representation of <paramref name="baseDate"/>, used in formatted output.</param>
+        /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
         /// <returns>A <see cref="TickerData"/> with brief and full descriptions of the nearest jubilee.</returns>
         [AIContext("CoreCalculation")]
-        public TickerData CalculateTimeJubilees(DateTime baseDate, string baseDateName, string baseDateValue)
+        public TickerData CalculateTimeJubilees(DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
         {
-            DateTime now = DateTime.Now;
+            DateTime now_ = now ?? DateTime.Now;
             int bYear = baseDate.Year;
             int bMonth = baseDate.Month;
             int bDay = baseDate.Day;
-            int nYear = now.Year;
+            int nYear = now_.Year;
 
-            long passedDays = (long)(now - baseDate).TotalDays;
+            long passedDays = (long)(now_ - baseDate).TotalDays;
             long passedYears = (long)(passedDays / 365.24219);
-            long passedMonths = passedYears * 12 + (now.Month - baseDate.Month);
+            long passedMonths = passedYears * 12 + (now_.Month - baseDate.Month);
             long passedWeeks = passedDays / 7;
             long passedHours = passedDays * 24;
             long passedMinutes = passedHours * 60;
@@ -159,14 +163,14 @@ namespace Aeonpulse.Services
             // Find next jubilee
 
             long daysTillNearestJubilee = long.MaxValue;
-            DateTime nearestJubileeDate = now;
+            DateTime nearestJubileeDate = now_;
             long nearestJubileeValue = long.MaxValue;
             string nearestJubileeUnit = "";
 
             // Years
             long nearestJubileeYears = FindNearestJubilee(passedYears);
             DateTime nearestJubileeYearsDate = new DateTime(bYear + (int)nearestJubileeYears, bMonth, bDay);
-            long daysToYearsJubilee = (long)(nearestJubileeYearsDate - now).TotalDays;
+            long daysToYearsJubilee = (long)(nearestJubileeYearsDate - now_).TotalDays;
             if (daysToYearsJubilee > 0 && daysToYearsJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeYearsDate;
@@ -178,7 +182,7 @@ namespace Aeonpulse.Services
             // Months
             long nearestJubileeMonths = FindNearestJubilee(passedMonths);
             DateTime nearestJubileeMonthsDate = baseDate.AddMonths((int)nearestJubileeMonths);
-            long daysToMonthsJubilee = (long)(nearestJubileeMonthsDate - now).TotalDays;
+            long daysToMonthsJubilee = (long)(nearestJubileeMonthsDate - now_).TotalDays;
             if (daysToMonthsJubilee > 0 && daysToMonthsJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeMonthsDate;
@@ -190,7 +194,7 @@ namespace Aeonpulse.Services
             // Weeks
             long nearestJubileeWeeks = FindNearestJubilee(passedWeeks);
             DateTime nearestJubileeWeeksDate = baseDate.AddDays(nearestJubileeWeeks * 7);
-            long daysToWeeksJubilee = (long)(nearestJubileeWeeksDate - now).TotalDays;
+            long daysToWeeksJubilee = (long)(nearestJubileeWeeksDate - now_).TotalDays;
             if (daysToWeeksJubilee > 0 && daysToWeeksJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeWeeksDate;
@@ -202,7 +206,7 @@ namespace Aeonpulse.Services
             // Days
             long nearestJubileeDays = FindNearestJubilee(passedDays);
             DateTime nearestJubileeDaysDate = baseDate.AddDays(nearestJubileeDays);
-            long daysToDaysJubilee = (long)(nearestJubileeDaysDate - now).TotalDays;
+            long daysToDaysJubilee = (long)(nearestJubileeDaysDate - now_).TotalDays;
             if (daysToDaysJubilee > 0 && daysToDaysJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeDaysDate;
@@ -214,7 +218,7 @@ namespace Aeonpulse.Services
             // Hours
             long nearestJubileeHours = FindNearestJubilee(passedHours);
             DateTime nearestJubileeHoursDate = baseDate.AddHours(nearestJubileeHours);
-            long daysToHoursJubilee = (long)(nearestJubileeHoursDate - now).TotalDays;
+            long daysToHoursJubilee = (long)(nearestJubileeHoursDate - now_).TotalDays;
             if (daysToHoursJubilee > 0 && daysToHoursJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeHoursDate;
@@ -230,7 +234,7 @@ namespace Aeonpulse.Services
             try
             {
                 nearestJubileeMinutesDate = baseDate.AddMinutes(nearestJubileeMinutes);
-                daysToMinutesJubilee = (long)(nearestJubileeMinutesDate - now).TotalDays;
+                daysToMinutesJubilee = (long)(nearestJubileeMinutesDate - now_).TotalDays;
             }
             catch (ArgumentOutOfRangeException)
                 { nearestJubileeMinutesDate = DateTime.MaxValue; }
@@ -250,7 +254,7 @@ namespace Aeonpulse.Services
             try
             {
                 nearestJubileeSecondsDate = baseDate.AddSeconds(nearestJubileeSeconds);
-                daysToSecondsJubilee = (long)(nearestJubileeSecondsDate - now).TotalDays;
+                daysToSecondsJubilee = (long)(nearestJubileeSecondsDate - now_).TotalDays;
             }
             catch (ArgumentOutOfRangeException)
                 { nearestJubileeSecondsDate = DateTime.MaxValue; }
@@ -298,22 +302,23 @@ namespace Aeonpulse.Services
         /// </para>
         /// </summary>
         /// <param name="baseDate">The origin date whose annual anniversary is being counted down to.</param>
+        /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
         /// <returns>A <see cref="TickerData"/> with the appropriately scaled countdown strings.</returns>
         [AIContext("LiveTicker")]
-        public TickerData CalculateCountdown(DateTime baseDate)
+        public TickerData CalculateCountdown(DateTime baseDate, DateTime? now = null)
         {
-            DateTime now = DateTime.Now;
+            DateTime now_ = now ?? DateTime.Now;
             int bYear = baseDate.Year;
             int bMonth = baseDate.Month;
             int bDay = baseDate.Day;
-            int nYear = now.Year;
+            int nYear = now_.Year;
 
             // Find next year jubilee for countdown
             DateTime nearest = new DateTime(nYear, bMonth, bDay);
-            if (nearest < now)
+            if (nearest < now_)
                 nearest = nearest.AddYears(1);
 
-            long seconds = (long)(nearest - now).TotalSeconds;
+            long seconds = (long)(nearest - now_).TotalSeconds;
             long days = seconds / 86400;
             long hrs = (seconds - days * 86400) / 3600;
             long mins = (seconds - days * 86400 - hrs * 3600) / 60;
@@ -381,14 +386,15 @@ namespace Aeonpulse.Services
         /// <param name="baseDate">The start of the lifespan being measured.</param>
         /// <param name="baseDateName">Human-readable label for display in the full text.</param>
         /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
+        /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
         /// <returns>
         /// A <see cref="TickerData"/> containing formatted heartbeat and breath totals.
         /// </returns>
         [AIContext("LiveTicker")]
-        public TickerData CalculateLifeOdometer(DateTime baseDate, string baseDateName, string baseDateValue)
+        public TickerData CalculateLifeOdometer(DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
         {
-            DateTime now = DateTime.Now;
-            long seconds = (long)(now - baseDate).TotalSeconds;
+            DateTime now_ = now ?? DateTime.Now;
+            long seconds = (long)(now_ - baseDate).TotalSeconds;
 
             long heartbeats = seconds * 70 / 60;
             long breaths = seconds * 16 / 60;
@@ -423,12 +429,13 @@ namespace Aeonpulse.Services
         /// <param name="baseDate">The origin date (typically a birthday).</param>
         /// <param name="baseDateName">Human-readable label for display in the full text.</param>
         /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
+        /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
         /// <returns>A <see cref="TickerData"/> with Mars and Venus age figures.</returns>
         [AIContext("CoreCalculation")]
-        public TickerData CalculateAlienAnniversaries(DateTime baseDate, string baseDateName, string baseDateValue)
+        public TickerData CalculateAlienAnniversaries(DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
         {
-            DateTime now = DateTime.Now;
-            long earthDays = (long)(now - baseDate).TotalDays;
+            DateTime now_ = now ?? DateTime.Now;
+            long earthDays = (long)(now_ - baseDate).TotalDays;
 
             // Mars: 686.98 Earth days = 1 Mars year
             double marsYears = earthDays / 686.98;
@@ -465,7 +472,7 @@ namespace Aeonpulse.Services
         /// no scaling prefix like "million" is needed).
         /// </para>
         /// <para>
-        /// This is a <b>live ticker</b> - called every second by the VM timer.
+        /// This is a <b>live ticker</b> - called every second to update the VM timer.
         /// </para>
         /// </summary>
         /// <param name="baseDate">The origin date from which galactic travel is measured.</param>
@@ -474,12 +481,13 @@ namespace Aeonpulse.Services
         /// <c>true</c> to display kilometres; <c>false</c> to display miles.
         /// Sourced from <see cref="ViewModels.MainViewModel.UseMetric"/>.
         /// </param>
+        /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
         /// <returns>A <see cref="TickerData"/> describing the galactic distance travelled.</returns>
         [AIContext("LiveTicker")]
-        public TickerData CalculateGalacticCommute(DateTime baseDate, string baseDateValue, bool useMetric)
+        public TickerData CalculateGalacticCommute(DateTime baseDate, string baseDateValue, bool useMetric, DateTime? now = null)
         {
-            DateTime now = DateTime.Now;
-            long seconds = (long)(now - baseDate).TotalSeconds;
+            DateTime now_ = now ?? DateTime.Now;
+            long seconds = (long)(now_ - baseDate).TotalSeconds;
 
             // Solar system moves at ~220-230 km/s through the galaxy
             double kmTraveled = seconds * 225;
@@ -557,13 +565,14 @@ namespace Aeonpulse.Services
         /// <c>true</c> for km-based secondary distance; <c>false</c> for miles.
         /// Sourced from <see cref="ViewModels.MainViewModel.UseMetric"/>.
         /// </param>
+        /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
         /// <returns>
         /// A <see cref="TickerData"/> whose narrative describes which cosmic region the
         /// photon has reached, or which star it has most recently passed.
         /// </returns>
         [AIContext("LiveTicker")]
         [AIContext("StarCatalogueLookup")]
-        public TickerData CalculatePhotonPath(DateTime baseDate, string baseDateValue, bool useMetric)
+        public TickerData CalculatePhotonPath(DateTime baseDate, string baseDateValue, bool useMetric, DateTime? now = null)
         {
             var stars = new[]
             {
@@ -627,8 +636,8 @@ namespace Aeonpulse.Services
                 new { Name = AppResources.Star_Achernar_Name,         Ly =  139d,    Info = AppResources.Star_Achernar_Info }
             };
 
-            DateTime now = DateTime.Now;
-            long seconds = (long)(now - baseDate).TotalSeconds;
+            DateTime now_ = now ?? DateTime.Now;
+            long seconds = (long)(now_ - baseDate).TotalSeconds;
 
             // Light travels at 299,792 km/s
             double kmTraveled = seconds * 299792.458;
@@ -895,16 +904,17 @@ namespace Aeonpulse.Services
         /// </summary>
         /// <param name="baseDate">The birth date used for month and day components.</param>
         /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
+        /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
         /// <returns>
         /// A <see cref="TickerData"/> identifying the personal year number (1–9)
         /// and its thematic interpretation.
         /// </returns>
         [AIContext("CoreCalculation")]
-        public TickerData CalculatePersonalYear(DateTime baseDate, string baseDateValue)
+        public TickerData CalculatePersonalYear(DateTime baseDate, string baseDateValue, DateTime? now = null)
         {
             // Simple numerology calculation, taken from https://numerology.astro-seek.com/personal-year
 
-            int curYear = DateTime.Now.Year;
+            int curYear = (now ?? DateTime.Now).Year;
 
             int year = ReduceToSingleDigit(curYear);
             int month = ReduceToSingleDigit(baseDate.Month);
@@ -976,10 +986,11 @@ namespace Aeonpulse.Services
         /// <c>true</c> for metric tonnes; <c>false</c> for short tons.
         /// Sourced from <see cref="ViewModels.MainViewModel.UseMetric"/>.
         /// </param>
+        /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
         /// <returns>A <see cref="TickerData"/> with the estimated CO₂ emitted since <paramref name="baseDate"/>.</returns>
         [AIContext("CoreCalculation")]
         [AIContext("ExternalDataModel")]
-        public TickerData CalculateGlobalExhale(DateTime baseDate, string baseDateName, string baseDateValue, bool useMetric)
+        public TickerData CalculateGlobalExhale(DateTime baseDate, string baseDateName, string baseDateValue, bool useMetric, DateTime? now = null)
         {
             /* The data is taken from https://globalcarbonbudget.org/datahub/the-latest-gcb-data-2025/
             Year |    CO2/year
@@ -1013,10 +1024,10 @@ namespace Aeonpulse.Services
             // Approximation for year >= 1900 (polynomial gives a better R^2 than exponential):
             //    CO2_in_year = 0.0008 * (year - 1900)^2 - 0.0122 * (year - 1900) + 0.6859
             //    Total_CO2_emitted_till_a_date_since_1900_year = 0.0008/3 * (year - 1900)^3 - 0.0122/2 * (year - 1900)^2 + 0.6859 * (year - 1900)
-            DateTime now = DateTime.Now;
-            int nowYears = (int)((now - year1900).TotalDays / 365.25);
+            DateTime now_ = now ?? DateTime.Now;
+            int nowYears = (int)((now_ - year1900).TotalDays / 365.25);
             double baseDaysInYear = (baseDate - new DateTime(baseDate.Year, 1, 1)).TotalDays;
-            double nowDaysInYear = (now - new DateTime(now.Year, 1, 1)).TotalDays;
+            double nowDaysInYear = (now_ - new DateTime(now_.Year, 1, 1)).TotalDays;
             double x1 = baseYears + baseDaysInYear / 365.0;
             double x2 = nowYears + nowDaysInYear / 365.0;
 

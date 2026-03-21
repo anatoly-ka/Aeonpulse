@@ -62,6 +62,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- Exclude the test project directory from the MAUI project's build glob.
+		     Aeonpulse.Tests targets plain net9.0 and is built via 'dotnet test' only. -->
+		<Compile Remove="Aeonpulse.Tests\**" />
+		<None Remove="Aeonpulse.Tests\**" />
+		<Content Remove="Aeonpulse.Tests\**" />
+		<EmbeddedResource Remove="Aeonpulse.Tests\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />

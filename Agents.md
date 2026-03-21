@@ -73,7 +73,7 @@
 | **6.12** | Enabling the Tizen Target | Workload install, `.csproj` uncomment, manifest update, build command. |
 | **7** | How to Extend | Step-by-step recipes for all extension types. |
 | **7.1** | Adding a New Section | 5-step recipe: `.resx` x2, `LocalizedResources`, `MainViewModel`, `MainPage.xaml`. |
-| **7.2** | Adding a New Ticker Card | 7-step recipe: `.resx` x2, `LocalizedResources`, `CalculationService`, `MainViewModel`, `MainPage.xaml`, `MainPage.xaml.cs`. |
+| **7.2** | Adding a New Ticker Card | 8-step recipe: `.resx` x2, `LocalizedResources`, `CalculationService`, `MainViewModel`, `MainPage.xaml`, `MainPage.xaml.cs`, `Aeonpulse.Tests`. |
 | **7.3** | Adding a New Colour Scheme | 7-step recipe: `ThemeService`, `.resx` x2, `LocalizedResources`, `SettingsPopup.xaml`, `SettingsPopup.xaml.cs`. |
 | **7.4** | Adding a New Language | 9-step recipe: `.resx` x3, `.csproj`, `MainViewModel`, `LocalizedResources`, `SettingsPopup.xaml`, `SettingsPopup.xaml.cs`. |
 | **7.5** | Adding a New Font Size Preset | 2-step recipe + reference to 7.3 pattern for settings UI wiring. |
@@ -176,6 +176,7 @@ astronomical (alien-planet ages, countdown to next anniversary).
 | Neutral language | `en` |
 | String storage | `Resources/AppResources.resx` (en) + `Resources/AppResources.ru.resx` (ru) |
 | XAML file encoding | **UTF-8 with BOM required** (MSB4018 / XamlCTask crashes without it) |
+| Test project | `Aeonpulse.Tests` (`net9.0` xUnit, plain .NET - no MAUI) |
 
 ### Application Structure
 
@@ -289,7 +290,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `CalculationService.cs` | Edit freely | `CoreCalculationEngine` | The single domain-logic class. Stateless - reads `DateTime.Now` internally so every call produces a fresh result. All 10 ticker methods, `FindNearestJubilee`, `ReduceToSingleDigit`, and `GetRandomTeaseText` live here. All output strings are pulled from `AppResources` at call time, so output automatically reflects the active locale. Thread-safe; called from both the UI thread and the 1-second timer (via `MainThread.BeginInvokeOnMainThread`). |
+| `CalculationService.cs` | Edit freely | `CoreCalculationEngine` | The single domain-logic class. Stateless - reads `DateTime.Now` internally so every call produces a fresh result. All 10 ticker methods, `FindNearestJubilee`, `ReduceToSingleDigit`, and `GetRandomTeaseText` live here. All output strings are pulled from `AppResources` at call time, so output automatically reflects the active locale. Thread-safe; called from both the UI thread and the 1-second timer (via `MainThread.BeginInvokeOnMainThread`). All 10 public `Calculate*` methods accept an optional `DateTime? now = null` parameter for deterministic testing - production callers omit it and get `DateTime.Now`. `FindNearestJubilee` and `ReduceToSingleDigit` are `internal static` and accessible to `Aeonpulse.Tests` via `InternalsVisibleTo`. |
 | `ThemeService.cs` | Edit freely | - | Singleton (`Instance`). Stores three `Dictionary<string, Color>` palettes: `_defaultColors` (DefaultDark), `_highContrastDarkColors`, `_highContrastLightColors`. `ApplyScheme(string)` iterates the chosen palette and writes each key directly into `Application.Current.Resources`, causing all `DynamicResource` bindings to repaint immediately. To add a new colour scheme: add a new palette dict and a new `const string` identifier, then add a case to the switch in `ApplyScheme`. |
 | `FontSizeService.cs` | Edit freely | - | Singleton (`Instance`). Same pattern as `ThemeService` but for five font-size keys (`FontSizeSmall` through `FontSizeTitle`). `ApplyPreset(string)` mutates the resource dict. Three presets: `Small`, `Normal`, `Large`. |
 
@@ -448,6 +449,24 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 | File | Edit? | Description |
 |------|-------|-------------|
 | `Agents.md` | **Always update on change** | This file. AI Agent navigation guide. Must be kept in sync with all structural changes to the codebase. |
+
+---
+
+### Test Project - `Aeonpulse.Tests/`
+
+| File | Edit? | Description |
+|------|-------|-------------|
+| `Aeonpulse.Tests.csproj` | Edit freely | xUnit test project targeting `net9.0`. Links `CalculationService.cs`, `TickerData.cs`, `AIContextAttribute.cs`, and `AppResources.Designer.cs` directly from the main project via `<Compile Link=...>` items. Embeds `.resx` files so `ResourceManager` resolves strings at test runtime. No MAUI reference required. |
+| `Helpers/TestFixture.cs` | Edit freely | Shared setup helper. `InitEnglish()` pins `AppResources.Culture` to `en` before each test class so string assertions are locale-stable on any CI machine. |
+| `FindNearestJubileeTests.cs` | Edit freely | Tests for the `internal static FindNearestJubilee()` algorithm covering all four jubilee families and boundary values. |
+| `ReduceToSingleDigitTests.cs` | Edit freely | Tests for the `internal static ReduceToSingleDigit()` digital-root algorithm. |
+| `CalculateLifeOdometerTests.cs` | Edit freely | Tests for `CalculateLifeOdometer` with injected `now`. |
+| `CalculateCountdownTests.cs` | Edit freely | Tests for all three countdown format branches (HH:MM:SS, days+hours, days-only). |
+| `CalculateAlienAnniversariesTests.cs` | Edit freely | Tests for Mars/Venus year calculations with fixed planetary constants. |
+| `CalculateHumanBirthRankTests.cs` | Edit freely | Tests for the piecewise birth-rank model across pre-1900, 1900-1950, 1950-2000, and post-2000 ranges. |
+| `CalculatePersonalYearTests.cs` | Edit freely | Tests for numerology personal year with known input/output pairs. |
+| `CalculateGlobalExhaleTests.cs` | Edit freely | Tests for the CO2 polynomial model including metric/imperial toggle and range comparison. |
+| `CalculateTimeJubileesTests.cs` | Edit freely | Tests for jubilee selection across all seven time units including the overflow guard for very old dates. |
 | `README.md` | Edit freely | High-level project README. Human-facing. Contains a project structure overview and migration notes from the original React implementation. |
 | `IMPLEMENTATION_GUIDE.md` | Edit freely | Original React-to-MAUI migration guide. Contains early extension recipes and build commands. Some content is superseded by `Agents.md`. |
 
@@ -1800,35 +1819,20 @@ Any warning code not in this table is a new issue and must be investigated.
 
 ### 6.5 Testing
 
-**No test project currently exists.** `CalculationService` is the primary candidate
-for unit tests because it is stateless, has no MAUI dependencies, and all output
-is deterministic given a fixed `DateTime`.
-
-To create a test project when needed:
-
-```
-dotnet new xunit -n Aeonpulse.Tests -o Aeonpulse.Tests
-cd Aeonpulse.Tests
-dotnet add reference ..\Aeonpulse.csproj
-```
-
-Then add the test project to the solution:
-
-```
-dotnet sln ..\Aeonpulse.sln add Aeonpulse.Tests\Aeonpulse.Tests.csproj
-```
-
-Running tests (once project exists):
+The test project `Aeonpulse.Tests` exists at `Aeonpulse.Tests\Aeonpulse.Tests.csproj`.
+It targets `net9.0` (plain .NET, no MAUI) and links source files from the main project
+directly so no TFM-incompatibility issues arise. Run all tests with:
 
 ```
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
 ```
 
-**What can be tested without a device:**
-- All 10 `CalculationService.Calculate*()` methods (stateless, no MAUI types)
-- `FindNearestJubilee()` (pure algorithm)
-- `ReduceToSingleDigit()` (pure algorithm)
-- `LocalizedResources.Invalidate()` (no UI required)
+**What can be tested without a device (66 tests in 8 test classes):**
+- `FindNearestJubilee()` / `ReduceToSingleDigit()` (pure algorithms, `internal` + `InternalsVisibleTo`)
+- `CalculateTimeJubilees`, `CalculateCountdown`, `CalculateLifeOdometer`
+- `CalculateAlienAnniversaries`, `CalculateHumanBirthRank`
+- `CalculatePersonalYear`, `CalculateGlobalExhale`
+- All `Calculate*` methods accept `DateTime? now = null` - pass a fixed value to make tests deterministic
 
 **What requires a device or simulator:**
 - Any MAUI UI (navigation, modal push/pop, `DynamicResource` binding)
@@ -2563,6 +2567,23 @@ private async void OnLunarCycleInfoClicked(object sender, EventArgs e) =>
         AppResources.Info_MethodTitle, AppResources.Info_LunarCycleMethod,
         AppResources.Info_SourceTitle, AppResources.Info_LunarCycleSource);
 ```
+
+---
+
+#### Step 8 - `Aeonpulse.Tests/CalculationServiceTests.cs`
+
+Add tests for the new `Calculate*` method in `Aeonpulse.Tests\`. A minimum of
+three cases is required:
+
+1. **Happy path** - inject a known `now`, assert `BriefText` contains the expected computed value.
+2. **Zero elapsed time** - `baseDate == now`; assert the result is non-null and non-empty.
+3. **Large elapsed time** - a `baseDate` 150+ years in the past; assert no exception is thrown.
+
+```
+dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
+```
+
+All tests must pass before committing.
 
 ---
 
@@ -4089,3 +4110,4 @@ the change violates a guardrail and must be corrected first.
 | 13 | All new structural XAML elements have `<!-- AI: ... -->` comments? | YES |
 | 14 | `Agents.md` updated for every structural change? | YES |
 | 15 | Build produces only known warning codes (CS0618, CS8767, CS0414, XC0022)? | YES |
+| 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (66+ tests, 0 failures)? | YES |

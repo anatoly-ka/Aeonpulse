@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Aeonpulse.Tests</RootNamespace>
+    <!-- Exclude from the MAUI solution's platform builds (Android/iOS/Windows).
+         The test project targets plain net9.0 only and is built exclusively via
+         'dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj'. -->
+    <ExcludeFromSolutionBuild Condition="'$(TargetFramework)' != 'net9.0'">true</ExcludeFromSolutionBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector"          Version="6.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk"      Version="17.12.0" />
+    <PackageReference Include="xunit"                       Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio"   Version="2.8.2" />
+  </ItemGroup>
+
+  <!-- Source files linked directly from the main project.
+       Only pure .NET files are included: no MAUI types, no platform code.
+       This keeps the test project as plain net9.0 so it runs in any CI environment. -->
+  <ItemGroup>
+    <Compile Include="..\Services\CalculationService.cs"     Link="Source\CalculationService.cs" />
+    <Compile Include="..\Models\TickerData.cs"               Link="Source\TickerData.cs" />
+    <Compile Include="..\Attributes\AIContextAttribute.cs"   Link="Source\AIContextAttribute.cs" />
+    <Compile Include="..\Resources\AppResources.Designer.cs" Link="Source\AppResources.Designer.cs" />
+  </ItemGroup>
+
+  <!-- Embed .resx files so the ResourceManager resolves strings at test runtime.
+       LogicalName must match the assembly-qualified name in AppResources.Designer.cs. -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\Resources\AppResources.resx"
+                      Link="Resources\AppResources.resx"
+                      LogicalName="Aeonpulse.Resources.AppResources.resources" />
+    <EmbeddedResource Include="..\Resources\AppResources.ru.resx"
+                      Link="Resources\AppResources.ru.resx"
+                      LogicalName="Aeonpulse.Resources.AppResources.ru.resources" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>
