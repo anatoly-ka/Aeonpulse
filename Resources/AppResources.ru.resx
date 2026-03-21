@@ -658,7 +658,7 @@
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_PhotonPathMethod" xml:space="preserve">
-    <value>Астрономические данные, показывающие, какие области космоса (гелиопауза, облако Оорта и т.д.) и звезды на данный момент прошел свет, излученный с Земли в указаную дату. Скоростью света в вакууме 299,792,458 м/с. База данных HYG Star Database (v3.0) - это всеобъемлющий каталог звезд, включающий их положения, расстояния и другие данные, который позволяет нам определить, каких звезд достиг свет с Земли за прошедшее время.</value>
+    <value>Астрономические данные, показывающие, какие области космоса (гелиопауза, облако Оорта и т.д.) и звезды на данный момент прошел свет, излученный с Земли в указаную дату. Скорость света в вакууме 299,792,458 м/с. База данных HYG Star Database (v3.0) - это всеобъемлющий каталог звезд, включающий их положения, расстояния и другие данные, который позволяет определить, каких звезд достиг свет с Земли за прошедшее время.</value>
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_PhotonPathSource" xml:space="preserve">
@@ -1066,7 +1066,7 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Tease_GlobalExhale" xml:space="preserve">
-    <value>С {baseDateName} человечество отравило нашу планету {globalExhale.Amount} CO2. Узнайте другие данные на AeonPulse.</value>
+    <value>Начиная с даты "{baseDateName}" человечество отравило нашу планету {globalExhale.Amount} CO2. Узнайте другие данные на AeonPulse.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_ButtonClose" xml:space="preserve">

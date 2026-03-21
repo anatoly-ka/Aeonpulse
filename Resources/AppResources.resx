@@ -1066,7 +1066,7 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Tease_GlobalExhale" xml:space="preserve">
-    <value>Since {baseDateName}, we poisoned our planet with {globalExhale.Amount} of CO2. Find other data on AeonPulse.</value>
+    <value>Since {baseDateName}, humanity poisoned our planet with {globalExhale.Amount} of CO2! Find other data on AeonPulse.</value>
     <comment>CalculationService.cs</comment>
   </data>
 	<data name="Info_ButtonClose" xml:space="preserve">
