@@ -26,6 +26,7 @@
   <ItemGroup>
     <Compile Include="..\Services\CalculationService.cs"     Link="Source\CalculationService.cs" />
     <Compile Include="..\Models\TickerData.cs"               Link="Source\TickerData.cs" />
+    <Compile Include="..\Models\TickerResults.cs"            Link="Source\TickerResults.cs" />
     <Compile Include="..\Attributes\AIContextAttribute.cs"   Link="Source\AIContextAttribute.cs" />
     <Compile Include="..\Resources\AppResources.Designer.cs" Link="Source\AppResources.Designer.cs" />
   </ItemGroup>

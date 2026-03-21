@@ -282,7 +282,8 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `TickerData.cs` | Edit freely | `DataTransferObject` | Two-property DTO (`BriefText`, `FullText`) implementing `INotifyPropertyChanged`. Every `CalculationService` method returns one instance. Live tickers mutate `BriefText`/`FullText` in-place every second via property setters so bindings update without replacing the object reference. |
+| `TickerData.cs` | Edit freely | `DataTransferObject` | Two-property DTO (`BriefText`, `FullText`) implementing `INotifyPropertyChanged`. All 10 typed result subclasses (see `TickerResults.cs`) inherit from this class. Live tickers mutate `BriefText`/`FullText` in-place every second via property setters so bindings update without replacing the object reference. |
+| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 10 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. |
 | `TickerCardModel.cs` | Edit freely | `DataTransferObject` | Structural metadata for a ticker card: `Title`, `IconGlyph`, `IsLive`, `IsExpanded`, `HasRefresh`. Not yet wired to a `CollectionView` - reserved for a future refactor that replaces individually-templated XAML blocks. |
 | `SubsectionState.cs` | Edit freely | - | Snapshot of a collapsible section: `Title` (used as key) and `IsExpanded`. Defined but not yet actively used for persistence - available for future state-save/restore logic. |
 
@@ -292,7 +293,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `CalculationService.cs` | Edit freely | `CoreCalculationEngine` | The single domain-logic class. Stateless - reads `DateTime.Now` internally so every call produces a fresh result. All 10 ticker methods, `FindNearestJubilee`, `ReduceToSingleDigit`, and `GetRandomTeaseText` live here. All output strings are pulled from `AppResources` at call time, so output automatically reflects the active locale. Thread-safe; called from both the UI thread and the 1-second timer (via `MainThread.BeginInvokeOnMainThread`). All 10 public `Calculate*` methods accept an optional `DateTime? now = null` parameter for deterministic testing - production callers omit it and get `DateTime.Now`. `FindNearestJubilee` and `ReduceToSingleDigit` are `internal static` and accessible to `Aeonpulse.Tests` via `InternalsVisibleTo`. |
+| `CalculationService.cs` | Edit freely | `CoreCalculationEngine` | The single domain-logic class. Stateless - reads `DateTime.Now` internally so every call produces a fresh result. All 10 ticker methods return typed subclasses of `TickerData` (see `TickerResults.cs`). `FindNearestJubilee`, `ReduceToSingleDigit`, and `GetRandomTeaseText` live here. All output strings are pulled from `AppResources` at call time, so output automatically reflects the active locale. Thread-safe; called from both the UI thread and the 1-second timer (via `MainThread.BeginInvokeOnMainThread`). All 10 public `Calculate*` methods accept an optional `DateTime? now = null` parameter for deterministic testing - production callers omit it and get `DateTime.Now`. `FindNearestJubilee` and `ReduceToSingleDigit` are `internal static` and accessible to `Aeonpulse.Tests` via `InternalsVisibleTo`. |
 | `ThemeService.cs` | Edit freely | - | Singleton (`Instance`). Stores three `Dictionary<string, Color>` palettes: `_defaultColors` (DefaultDark), `_highContrastDarkColors`, `_highContrastLightColors`. `ApplyScheme(string)` iterates the chosen palette and writes each key directly into `Application.Current.Resources`, causing all `DynamicResource` bindings to repaint immediately. To add a new colour scheme: add a new palette dict and a new `const string` identifier, then add a case to the switch in `ApplyScheme`. |
 | `FontSizeService.cs` | Edit freely | - | Singleton (`Instance`). Same pattern as `ThemeService` but for five font-size keys (`FontSizeSmall` through `FontSizeTitle`). `ApplyPreset(string)` mutates the resource dict. Three presets: `Small`, `Normal`, `Large`. |
 
@@ -458,7 +459,7 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 
 | File | Edit? | Description |
 |------|-------|-------------|
-| `Aeonpulse.Tests.csproj` | Edit freely | xUnit test project targeting `net9.0`. Links `CalculationService.cs`, `TickerData.cs`, `AIContextAttribute.cs`, and `AppResources.Designer.cs` directly from the main project via `<Compile Link=...>` items. Embeds `.resx` files so `ResourceManager` resolves strings at test runtime. No MAUI reference required. |
+| `Aeonpulse.Tests.csproj` | Edit freely | xUnit test project targeting `net9.0`. Links `CalculationService.cs`, `TickerData.cs`, `TickerResults.cs`, `AIContextAttribute.cs`, and `AppResources.Designer.cs` directly from the main project via `<Compile Link=...>` items. Embeds `.resx` files so `ResourceManager` resolves strings at test runtime. No MAUI reference required. |
 | `Helpers/TestFixture.cs` | Edit freely | Shared setup helper. `InitEnglish()` pins `AppResources.Culture` to `en` before each test class so string assertions are locale-stable on any CI machine. |
 | `FindNearestJubileeTests.cs` | Edit freely | Tests for the `internal static FindNearestJubilee()` algorithm covering all four jubilee families and boundary values. |
 | `ReduceToSingleDigitTests.cs` | Edit freely | Tests for the `internal static ReduceToSingleDigit()` digital-root algorithm. |
@@ -486,7 +487,7 @@ Every pattern is implemented by hand.
 | **View** | `*.xaml` + `*.xaml.cs` | Declare UI structure; bind to ViewModel properties and commands; handle navigation gestures only |
 | **ViewModel** | `MainViewModel` | Own all application state; expose `ICommand` instances; fire `PropertyChanged`; coordinate the timer |
 | **Service** | `CalculationService`, `ThemeService`, `FontSizeService` | Stateless domain logic; no UI references; no `INotifyPropertyChanged` |
-| **Model** | `TickerData`, `TickerCardModel`, `SubsectionState` | Plain data containers; `TickerData` implements `INotifyPropertyChanged` for in-place live updates |
+| **Model** | `TickerData` (base), `TickerResults` (10 typed subclasses), `TickerCardModel`, `SubsectionState` | `TickerData` is the INPC base; typed subclasses add raw computed fields per ticker |
 
 #### INotifyPropertyChanged pattern used throughout
 
@@ -916,7 +917,7 @@ genuinely novel and not covered by any existing role.
 | `UIPresentation` | User-facing text assembly with no domain logic. | `GetRandomTeaseText` |
 | `NavigationCoordinator` | Code-behind whose sole role is modal push/pop and event-to-command wiring. | `MainPage` (class), `OpenDeepDiveAsync` (method) |
 | `ModalViewController` | Code-behind for a popup/modal page. | `SettingsPopup`, `ChangeDatePopup`, `MainMenuPopup`, `DeepDivePopup`, `RefreshingPopup` (all classes) |
-| `DataTransferObject` | A data-carrying model with no domain behaviour. | `TickerData`, `TickerCardModel` (classes) |
+| `DataTransferObject` | A data-carrying model with no domain behaviour. | `TickerData`, all 10 `*Result` subclasses, `TickerCardModel` (classes) |
 | `UIConverter` | An `IValueConverter` implementation used in XAML bindings. | `BoolToVisibilityConverter`, `InverseBoolConverter`, `BoolToImageSourceConverter` (classes) |
 | `PlatformAbstractionHelper` | A cross-platform helper that bridges a missing MAUI API to native layers. | `ImageTint` (class) |
 | `PlatformTintImplementation` | Platform-specific `partial` method implementation for `ImageTint`. | All four `TintHelper.cs` classes |
@@ -1396,7 +1397,7 @@ AIContext:   (none - state orchestrator)
 
 **Responsibilities:**
 - The **central application state hub**. Every bound value in the UI originates here.
-- Owns all 10 `TickerData` properties (the computed display strings for every ticker card).
+- Owns all 10 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, etc.), each a subclass of `TickerData` carrying both the display strings and raw computed values.
 - Owns 4 section expansion bools (`LabExpanded` etc.) and 10 card expansion bools (`TimeJubileesExpanded` etc.).
 - Owns user settings properties: `UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`.
 - Each settings setter immediately applies the change (`ThemeService`, `FontSizeService`, `ApplyLanguage`) **and** persists it via `Preferences`.
@@ -1408,7 +1409,7 @@ AIContext:   (none - state orchestrator)
 - `Loc { get; } = LocalizedResources.Instance` - exposes the localisation singleton so XAML binds as `{Binding Loc.Xxx}`.
 
 **Owns:**
-- All ticker `TickerData` instances (10 total)
+- All 10 typed ticker result instances (`TimeJubileesResult`, `CountdownResult`, etc. - all subclasses of `TickerData`)
 - All section/card `bool` expanded states (14 total)
 - All user settings state
 - The 1-second live-update timer
@@ -1469,7 +1470,7 @@ AIContext:   CoreCalculationEngine
 | `CalculateBirthRune` | `CoreCalculation` | Static | `baseDateValue` |
 | `CalculatePersonalYear` | `CoreCalculation` | Static | `baseDateValue` |
 | `CalculateGlobalExhale` | `CoreCalculation`, `ExternalDataModel` | Static | `baseDateName`, `baseDateValue`, `useMetric` |
-| `GetRandomTeaseText` | `UIPresentation` | LIVE (1s) | pre-computed `TickerData` params |
+| `GetRandomTeaseText` | `UIPresentation` | LIVE (1s) | `CountdownResult`, `LifeOdometerResult`, `GalacticCommuteResult`, `GlobalExhaleResult` + raw `heartbeats`/`breaths` longs |
 
 **Owns:**
 - All domain computation logic

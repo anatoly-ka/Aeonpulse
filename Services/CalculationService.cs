@@ -144,7 +144,7 @@ namespace Aeonpulse.Services
         /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
         /// <returns>A <see cref="TickerData"/> with brief and full descriptions of the nearest jubilee.</returns>
         [AIContext("CoreCalculation")]
-        public TickerData CalculateTimeJubilees(DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
+        public TimeJubileesResult CalculateTimeJubilees(DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
         {
             DateTime now_ = now ?? DateTime.Now;
             int bYear = baseDate.Year;
@@ -269,8 +269,12 @@ namespace Aeonpulse.Services
 
             string nextJubilee = $"{nearestJubileeValue:N0} {nearestJubileeUnit}";
 
-            return new TickerData
+            return new TimeJubileesResult
             {
+                JubileeValue = nearestJubileeValue,
+                JubileeUnit  = nearestJubileeUnit,
+                JubileeDate  = nearestJubileeDate,
+                DaysUntil    = daysTillNearestJubilee,
                 BriefText = AppResources.Ticker_TimeJubileesBrief
                     .Replace("{nextJubilee}", nextJubilee)
                     .Replace("{nearestJubileeDate:d}", nearestJubileeDate.ToString("d")),
@@ -305,7 +309,7 @@ namespace Aeonpulse.Services
         /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
         /// <returns>A <see cref="TickerData"/> with the appropriately scaled countdown strings.</returns>
         [AIContext("LiveTicker")]
-        public TickerData CalculateCountdown(DateTime baseDate, DateTime? now = null)
+        public CountdownResult CalculateCountdown(DateTime baseDate, DateTime? now = null)
         {
             DateTime now_ = now ?? DateTime.Now;
             int bYear = baseDate.Year;
@@ -361,10 +365,16 @@ namespace Aeonpulse.Services
                 }
             }
 
-            return new TickerData
+            return new CountdownResult
             {
-                BriefText = countdown,
-                FullText = countdownFull
+                TotalSeconds    = seconds,
+                Days            = days,
+                Hours           = hrs,
+                Minutes         = mins,
+                Secs            = secs,
+                AnniversaryDate = nearest,
+                BriefText       = countdown,
+                FullText        = countdownFull
             };
         }
 
@@ -391,7 +401,7 @@ namespace Aeonpulse.Services
         /// A <see cref="TickerData"/> containing formatted heartbeat and breath totals.
         /// </returns>
         [AIContext("LiveTicker")]
-        public TickerData CalculateLifeOdometer(DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
+        public LifeOdometerResult CalculateLifeOdometer(DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
         {
             DateTime now_ = now ?? DateTime.Now;
             long seconds = (long)(now_ - baseDate).TotalSeconds;
@@ -399,8 +409,10 @@ namespace Aeonpulse.Services
             long heartbeats = seconds * 70 / 60;
             long breaths = seconds * 16 / 60;
 
-            return new TickerData
+            return new LifeOdometerResult
             {
+                Heartbeats = heartbeats,
+                Breaths    = breaths,
                 BriefText = AppResources.Ticker_LifeOdometerBrief
                     .Replace("{heartbeats:N0}", heartbeats.ToString("N0"))
                     .Replace("{breaths:N0}", breaths.ToString("N0")),
@@ -432,19 +444,18 @@ namespace Aeonpulse.Services
         /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
         /// <returns>A <see cref="TickerData"/> with Mars and Venus age figures.</returns>
         [AIContext("CoreCalculation")]
-        public TickerData CalculateAlienAnniversaries(DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
+        public AlienAnniversariesResult CalculateAlienAnniversaries(DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
         {
             DateTime now_ = now ?? DateTime.Now;
             long earthDays = (long)(now_ - baseDate).TotalDays;
 
-            // Mars: 686.98 Earth days = 1 Mars year
-            double marsYears = earthDays / 686.98;
-
-            // Venus: 224.7 Earth days = 1 Venus year
+            double marsYears  = earthDays / 686.98;
             double venusYears = earthDays / 224.7;
 
-            return new TickerData
+            return new AlienAnniversariesResult
             {
+                MarsYears  = marsYears,
+                VenusYears = venusYears,
                 BriefText = AppResources.Ticker_AlienAnniversariesBrief
                     .Replace("{marsYears:F2}", marsYears.ToString("F2"))
                     .Replace("{venusYears:F2}", venusYears.ToString("F2")),
@@ -484,7 +495,7 @@ namespace Aeonpulse.Services
         /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
         /// <returns>A <see cref="TickerData"/> describing the galactic distance travelled.</returns>
         [AIContext("LiveTicker")]
-        public TickerData CalculateGalacticCommute(DateTime baseDate, string baseDateValue, bool useMetric, DateTime? now = null)
+        public GalacticCommuteResult CalculateGalacticCommute(DateTime baseDate, string baseDateValue, bool useMetric, DateTime? now = null)
         {
             DateTime now_ = now ?? DateTime.Now;
             long seconds = (long)(now_ - baseDate).TotalSeconds;
@@ -521,8 +532,11 @@ namespace Aeonpulse.Services
                 }
             }
 
-            return new TickerData
+            return new GalacticCommuteResult
             {
+                KmTraveled = kmTraveled,
+                Distance   = distance,
+                UseMetric  = useMetric,
                 BriefText = AppResources.Ticker_GalacticCommuteBrief
                     .Replace("{distance}", distance),
                 FullText = AppResources.Ticker_GalacticCommuteFull
@@ -572,7 +586,7 @@ namespace Aeonpulse.Services
         /// </returns>
         [AIContext("LiveTicker")]
         [AIContext("StarCatalogueLookup")]
-        public TickerData CalculatePhotonPath(DateTime baseDate, string baseDateValue, bool useMetric, DateTime? now = null)
+        public PhotonPathResult CalculatePhotonPath(DateTime baseDate, string baseDateValue, bool useMetric, DateTime? now = null)
         {
             var stars = new[]
             {
@@ -648,11 +662,15 @@ namespace Aeonpulse.Services
 
             string bText = "";
             string fText = "";
+            var phase    = PhotonPhase.SolarSystem;
+            string? starName = null;
+            double  starLy   = 0d;
 
             if (lightYears < 0.00237188)
             {
                 if (kmTraveled > 11000000000)
                 {
+                    phase = PhotonPhase.Heliopause;
                     bText = AppResources.Ticker_PhotonPathHeliopause_Brief;
                     fText = AppResources.Ticker_PhotonPathHeliopause_Full
                         .Replace("{baseDate:d}", baseDate.ToString("d"))
@@ -660,6 +678,7 @@ namespace Aeonpulse.Services
                 }
                 else
                 {
+                    phase = PhotonPhase.SolarSystem;
                     bText = AppResources.Ticker_PhotonPathSolarSystem_Brief;
                     fText = AppResources.Ticker_PhotonPathSolarSystem_Full
                         .Replace("{baseDate:d}", baseDate.ToString("d"))
@@ -668,6 +687,7 @@ namespace Aeonpulse.Services
             }
             else if (lightYears < 1.5)
             {
+                phase = PhotonPhase.OortCloud;
                 bText = AppResources.Ticker_PhotonPathOortCloud_Brief;
                 fText = AppResources.Ticker_PhotonPathOortCloud_Full
                     .Replace("{baseDate:d}", baseDate.ToString("d"))
@@ -675,6 +695,7 @@ namespace Aeonpulse.Services
             }
             else if (lightYears < 4.246)
             {
+                phase = PhotonPhase.Interstellar;
                 bText = AppResources.Ticker_PhotonPathInterstellar_Brief;
                 fText = AppResources.Ticker_PhotonPathInterstellar_Full
                     .Replace("{baseDate:d}", baseDate.ToString("d"))
@@ -683,10 +704,13 @@ namespace Aeonpulse.Services
             }
             else
             {
+                phase = PhotonPhase.PastStar;
                 foreach (var star in stars)
                 {
                     if (lightYears < star.Ly)
                         break;
+                    starName = star.Name;
+                    starLy   = star.Ly;
                     bText = AppResources.Ticker_PhotonPathStar_BriefTemplate
                         .Replace("{star.Name}", star.Name);
                     fText = AppResources.Ticker_PhotonPathStar_FullTemplate
@@ -699,10 +723,16 @@ namespace Aeonpulse.Services
                 }
             }
 
-            return new TickerData
+            return new PhotonPathResult
             {
-                BriefText = bText,
-                FullText = fText
+                KmTraveled = kmTraveled,
+                LightYears = lightYears,
+                Phase      = phase,
+                StarName   = starName,
+                StarLy     = starLy,
+                UseMetric  = useMetric,
+                BriefText  = bText,
+                FullText   = fText
             };
         }
 
@@ -735,7 +765,7 @@ namespace Aeonpulse.Services
         /// </returns>
         [AIContext("CoreCalculation")]
         [AIContext("ExternalDataModel")]
-        public TickerData CalculateHumanBirthRank(DateTime baseDate, string baseDateName)
+        public HumanBirthRankResult CalculateHumanBirthRank(DateTime baseDate, string baseDateName)
         {
             /* Data from "How Many People Have Ever Lived on Earth?" by Toshiko Kaneda & Carl Haub
                from Population Reference Bureau (PRB) (https://www.prb.org/articles/how-many-people-have-ever-lived-on-earth/)
@@ -769,8 +799,10 @@ namespace Aeonpulse.Services
             // The estimates won't be perfect, but they should give a reasonable approximation of the birth rank for these dates.
             if (days < 0)
             {
-                return new TickerData
+                return new HumanBirthRankResult
                 {
+                    IsPreTwentiethCentury = true,
+                    EstimatedRank = 0,
                     BriefText = AppResources.Ticker_HumanBirthRankPreXX_Brief,
                     FullText = AppResources.Ticker_HumanBirthRankPreXX_Full
                         .Replace("{baseDateName}", baseDateName)
@@ -789,8 +821,10 @@ namespace Aeonpulse.Services
                 estimatedRank = (days - 36525) * (117020448575.0 - 113966170055.0) / 8036.0 + 113966170055.0;
             }
 
-            return new TickerData
+            return new HumanBirthRankResult
             {
+                IsPreTwentiethCentury = false,
+                EstimatedRank = estimatedRank,
                 BriefText = AppResources.Ticker_HumanBirthRankPostXX_Brief
                     .Replace("{estimatedRank:N0}", estimatedRank.ToString("N0")),
                 FullText = AppResources.Ticker_HumanBirthRankPostXX_Full
@@ -824,7 +858,7 @@ namespace Aeonpulse.Services
         /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
         /// <returns>A <see cref="TickerData"/> with the rune name, symbol, and interpretation.</returns>
         [AIContext("CoreCalculation")]
-        public TickerData CalculateBirthRune(DateTime baseDate, string baseDateValue)
+        public BirthRuneResult CalculateBirthRune(DateTime baseDate, string baseDateValue)
         {
             var runes = new[]
             {
@@ -872,8 +906,12 @@ namespace Aeonpulse.Services
                 }
             }
 
-            return new TickerData
+            return new BirthRuneResult
             {
+                RuneName   = birthRune.Name,
+                RuneSymbol = birthRune.Symbol,
+                RuneBrief  = birthRune.Brief,
+                RuneFull   = birthRune.Full,
                 BriefText = AppResources.Ticker_BirthRuneBrief_Template
                     .Replace("{birthRune.Name}", $"{birthRune.Name} ({birthRune.Symbol})")
                     .Replace("{birthRune.Brief}", birthRune.Brief),
@@ -910,19 +948,16 @@ namespace Aeonpulse.Services
         /// and its thematic interpretation.
         /// </returns>
         [AIContext("CoreCalculation")]
-        public TickerData CalculatePersonalYear(DateTime baseDate, string baseDateValue, DateTime? now = null)
+        public PersonalYearResult CalculatePersonalYear(DateTime baseDate, string baseDateValue, DateTime? now = null)
         {
-            // Simple numerology calculation, taken from https://numerology.astro-seek.com/personal-year
-
             int curYear = (now ?? DateTime.Now).Year;
 
-            int year = ReduceToSingleDigit(curYear);
+            int year  = ReduceToSingleDigit(curYear);
             int month = ReduceToSingleDigit(baseDate.Month);
-            int day = ReduceToSingleDigit(baseDate.Day);
+            int day   = ReduceToSingleDigit(baseDate.Day);
 
             int personalYear = ReduceToSingleDigit(year + month + day);
 
-            // Ensure personalYear is between 1 and 9
             if (personalYear == 0)
                 personalYear = 9;
 
@@ -939,8 +974,10 @@ namespace Aeonpulse.Services
                 new { Brief = AppResources.PersonalYear9_Brief, Full = AppResources.PersonalYear9_Full }
             };
 
-            return new TickerData
+            return new PersonalYearResult
             {
+                PersonalYearNumber = personalYear,
+                CurrentYear        = curYear,
                 BriefText = AppResources.Ticker_PersonalYearBrief_Template
                     .Replace("{curYear}", curYear.ToString())
                     .Replace("{personalYear}", personalYear.ToString())
@@ -990,7 +1027,7 @@ namespace Aeonpulse.Services
         /// <returns>A <see cref="TickerData"/> with the estimated CO₂ emitted since <paramref name="baseDate"/>.</returns>
         [AIContext("CoreCalculation")]
         [AIContext("ExternalDataModel")]
-        public TickerData CalculateGlobalExhale(DateTime baseDate, string baseDateName, string baseDateValue, bool useMetric, DateTime? now = null)
+        public GlobalExhaleResult CalculateGlobalExhale(DateTime baseDate, string baseDateName, string baseDateValue, bool useMetric, DateTime? now = null)
         {
             /* The data is taken from https://globalcarbonbudget.org/datahub/the-latest-gcb-data-2025/
             Year |    CO2/year
@@ -1011,8 +1048,11 @@ namespace Aeonpulse.Services
 
             if (baseYears < 0)
             {
-                return new TickerData
+                return new GlobalExhaleResult
                 {
+                    IsPreTwentiethCentury   = true,
+                    TotalCO2BillionTonnes   = totalCO2,
+                    UseMetric               = useMetric,
                     BriefText = AppResources.Ticker_GlobalExhalePreXX_Brief
                         .Replace("{amount}", amount),
                     FullText = AppResources.Ticker_GlobalExhalePreXX_Full
@@ -1036,8 +1076,11 @@ namespace Aeonpulse.Services
             totalCO2 = totalCO2Now - totalCO2Base;
             amount = useMetric ? $"{totalCO2:F2} {AppResources.Ticker_GlobalExhaleMetric_BTonnes}" : $"{(totalCO2 * 0.984252):F2} {AppResources.Ticker_GlobalExhaleImperial_BTons}";
 
-            return new TickerData
+            return new GlobalExhaleResult
             {
+                IsPreTwentiethCentury   = false,
+                TotalCO2BillionTonnes   = totalCO2,
+                UseMetric               = useMetric,
                 BriefText = AppResources.Ticker_GlobalExhalePostXX_Brief
                     .Replace("{amount}", amount),
                 FullText = AppResources.Ticker_GlobalExhalePostXX_Full
@@ -1074,8 +1117,8 @@ namespace Aeonpulse.Services
         /// <returns>A single formatted teaser string sourced from <see cref="AppResources"/>.</returns>
         [AIContext("UIPresentation")]
         public string GetRandomTeaseText(
-            TickerData countdown, TickerData lifeOdometer,
-            TickerData galacticCommute, TickerData globalExhale,
+            CountdownResult countdown, LifeOdometerResult lifeOdometer,
+            GalacticCommuteResult galacticCommute, GlobalExhaleResult globalExhale,
             string baseDateName, string baseDateValue,
             long heartbeats, long breaths)   // <-- pass raw values
         {

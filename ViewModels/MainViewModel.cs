@@ -1,4 +1,4 @@
-using Aeonpulse.Models;
+﻿using Aeonpulse.Models;
 using Aeonpulse.Resources;
 using Aeonpulse.Services;
 using System.ComponentModel;
@@ -249,71 +249,71 @@ namespace Aeonpulse.ViewModels
         }
 
         // Ticker Data
-        private TickerData _timeJubilees = new TickerData();
-        public TickerData TimeJubilees
+        private TimeJubileesResult _timeJubilees = new TimeJubileesResult();
+        public TimeJubileesResult TimeJubilees
         {
             get => _timeJubilees;
             set { _timeJubilees = value; OnPropertyChanged(); }
         }
 
-        private TickerData _countdown = new TickerData();
-        public TickerData Countdown
+        private CountdownResult _countdown = new CountdownResult();
+        public CountdownResult Countdown
         {
             get => _countdown;
             set { _countdown = value; OnPropertyChanged(); }
         }
 
-        private TickerData _lifeOdometer = new TickerData();
-        public TickerData LifeOdometer
+        private LifeOdometerResult _lifeOdometer = new LifeOdometerResult();
+        public LifeOdometerResult LifeOdometer
         {
             get => _lifeOdometer;
             set { _lifeOdometer = value; OnPropertyChanged(); }
         }
 
-        private TickerData _alienAnniversaries = new TickerData();
-        public TickerData AlienAnniversaries
+        private AlienAnniversariesResult _alienAnniversaries = new AlienAnniversariesResult();
+        public AlienAnniversariesResult AlienAnniversaries
         {
             get => _alienAnniversaries;
             set { _alienAnniversaries = value; OnPropertyChanged(); }
         }
 
-        private TickerData _galacticCommute = new TickerData();
-        public TickerData GalacticCommute
+        private GalacticCommuteResult _galacticCommute = new GalacticCommuteResult();
+        public GalacticCommuteResult GalacticCommute
         {
             get => _galacticCommute;
             set { _galacticCommute = value; OnPropertyChanged(); }
         }
 
-        private TickerData _photonPath = new TickerData();
-        public TickerData PhotonPath
+        private PhotonPathResult _photonPath = new PhotonPathResult();
+        public PhotonPathResult PhotonPath
         {
             get => _photonPath;
             set { _photonPath = value; OnPropertyChanged(); }
         }
 
-        private TickerData _humanBirthRank = new TickerData();
-        public TickerData HumanBirthRank
+        private HumanBirthRankResult _humanBirthRank = new HumanBirthRankResult();
+        public HumanBirthRankResult HumanBirthRank
         {
             get => _humanBirthRank;
             set { _humanBirthRank = value; OnPropertyChanged(); }
         }
 
-        private TickerData _birthRune = new TickerData();
-        public TickerData BirthRune
+        private BirthRuneResult _birthRune = new BirthRuneResult();
+        public BirthRuneResult BirthRune
         {
             get => _birthRune;
             set { _birthRune = value; OnPropertyChanged(); }
         }
 
-        private TickerData _personalYear = new TickerData();
-        public TickerData PersonalYear
+        private PersonalYearResult _personalYear = new PersonalYearResult();
+        public PersonalYearResult PersonalYear
         {
             get => _personalYear;
             set { _personalYear = value; OnPropertyChanged(); }
         }
 
-        private TickerData _globalExhale = new TickerData();
-        public TickerData GlobalExhale
+        private GlobalExhaleResult _globalExhale = new GlobalExhaleResult();
+        public GlobalExhaleResult GlobalExhale
         {
             get => _globalExhale;
             set { _globalExhale = value; OnPropertyChanged(); }
@@ -458,12 +458,11 @@ namespace Aeonpulse.ViewModels
 
         public void UpdateLiveCalculations()
         {
-            Countdown = _calculationService.CalculateCountdown(BaseDate);
+            Countdown    = _calculationService.CalculateCountdown(BaseDate);
             LifeOdometer = _calculationService.CalculateLifeOdometer(BaseDate, BaseDateName, BaseDateValue);
             GalacticCommute = _calculationService.CalculateGalacticCommute(BaseDate, BaseDateValue, UseMetric);
-            PhotonPath = _calculationService.CalculatePhotonPath(BaseDate, BaseDateValue, UseMetric);
+            PhotonPath   = _calculationService.CalculatePhotonPath(BaseDate, BaseDateValue, UseMetric);
 
-            // Provide default values for heartbeats and breaths (set to 0 if not available)
             TeaseText = _calculationService.GetRandomTeaseText(
                 Countdown,
                 LifeOdometer,
@@ -471,8 +470,8 @@ namespace Aeonpulse.ViewModels
                 GlobalExhale,
                 BaseDateName,
                 BaseDateValue,
-                0, // heartbeats
-                0  // breaths
+                LifeOdometer.Heartbeats,
+                LifeOdometer.Breaths
             );
         }
 
