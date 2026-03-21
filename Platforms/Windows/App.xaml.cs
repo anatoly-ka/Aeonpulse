@@ -1,5 +1,8 @@
 ﻿using Aeonpulse.Attributes;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Windows.Graphics;
 
 namespace Aeonpulse.WinUI;
 
@@ -14,10 +17,29 @@ namespace Aeonpulse.WinUI;
 /// Theme and font-size preferences are therefore applied inside <see cref="Aeonpulse.App"/>
 /// rather than here.
 /// </para>
+/// <para>
+/// <b>Window geometry:</b> <see cref="OnLaunched"/> sets the initial window size to
+/// 430 px wide and 2/3 of the display height, then restores any previously persisted
+/// size/position from <c>Preferences</c>. Geometry is always placed on the primary
+/// display regardless of which screen it was saved on. Geometry is saved both on the
+/// WinUI <c>AppWindow.Closing</c> event (title-bar X / Alt+F4) and on the MAUI
+/// <c>Window.Destroying</c> event (programmatic <c>Application.Quit()</c>), so all
+/// exit paths are covered.
+/// </para>
 /// </summary>
 [AIContext("PlatformEntryPoint")]
 public partial class App : MauiWinUIApplication
 {
+    // Preference keys for window geometry persistence.
+    private const string PrefWinX      = "WinX";
+    private const string PrefWinY      = "WinY";
+    private const string PrefWinWidth  = "WinWidth";
+    private const string PrefWinHeight = "WinHeight";
+
+    private const int DefaultWidth = 430;
+
+    private AppWindow? _appWindow;
+
     /// <summary>
     /// Initialises the WinUI application object - the Windows equivalent of
     /// <c>main()</c> / <c>WinMain()</c>.
@@ -29,5 +51,198 @@ public partial class App : MauiWinUIApplication
 
     /// <inheritdoc />
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+
+    /// <inheritdoc />
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
+    {
+        base.OnLaunched(args);
+
+        var mauiWindow = Application.Windows[0];
+        var nativeWindow = mauiWindow.Handler?.PlatformView as Microsoft.UI.Xaml.Window;
+        if (nativeWindow is null)
+            return;
+
+        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(nativeWindow);
+        var windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
+        _appWindow = AppWindow.GetFromWindowId(windowId);
+
+        ApplyWindowGeometry(_appWindow);
+
+        // Save geometry when the user closes via the title-bar X button or Alt+F4.
+        _appWindow.Closing += OnWindowClosed;
+
+        // Save geometry when the app exits programmatically via
+        // Application.Current.Quit() (e.g. the Exit item in MainMenuPopup).
+        // The WinUI Window.Closed event fires for all close paths including
+        // programmatic Application.Exit(), so together with AppWindow.Closing
+        // every exit path is covered without duplicating the save call.
+        nativeWindow.Closed += OnNativeWindowClosed;
+    }
+
+    /// <summary>
+    /// Applies window geometry on launch.
+    /// <para>
+    /// Size rules: if a valid size was persisted and it passes the minimum-size
+    /// sanity check (width >= 430 px and height >= 1/3 of screen), the saved size
+    /// is used (clamped to the work area). Otherwise the default size is used
+    /// (430 px wide, 2/3 of screen height).
+    /// </para>
+    /// <para>
+    /// Position rules: if a position was persisted (i.e. the window was last closed
+    /// on the primary display) it is restored provided the resulting rect still fits
+    /// entirely within the primary work area. Otherwise the window is centred.
+    /// </para>
+    /// </summary>
+    private static void ApplyWindowGeometry(AppWindow appWindow)
+    {
+        var primary      = DisplayArea.Primary;
+        var workArea     = primary.WorkArea;
+        int screenWidth  = workArea.Width;
+        int screenHeight = workArea.Height;
+
+        int minHeight = screenHeight / 3;
+
+        int savedWidth  = Preferences.Default.Get(PrefWinWidth,  0);
+        int savedHeight = Preferences.Default.Get(PrefWinHeight, 0);
+        int savedX      = Preferences.Default.Get(PrefWinX,      int.MinValue);
+        int savedY      = Preferences.Default.Get(PrefWinY,      int.MinValue);
+
+        // --- Determine size --------------------------------------------------
+        int winWidth;
+        int winHeight;
+
+        bool sizeValid = savedWidth  >= DefaultWidth
+                      && savedHeight >= minHeight;
+
+        if (sizeValid)
+        {
+            // Clamp to work area so the window is never larger than the screen.
+            winWidth  = Math.Min(savedWidth,  screenWidth);
+            winHeight = Math.Min(savedHeight, screenHeight);
+        }
+        else
+        {
+            // First launch or saved size below minimum — use defaults.
+            winWidth  = DefaultWidth;
+            winHeight = (int)(screenHeight * 2.0 / 3.0);
+        }
+
+        // --- Determine position ----------------------------------------------
+        int winX;
+        int winY;
+
+        bool positionSaved = savedX != int.MinValue && savedY != int.MinValue;
+
+        if (positionSaved)
+        {
+            // Verify the saved position still places the window fully inside the
+            // primary work area (it could overflow after a size reset or if the
+            // screen resolution changed since last run).
+            bool fitsX = savedX >= workArea.X
+                      && savedX + winWidth  <= workArea.X + screenWidth;
+            bool fitsY = savedY >= workArea.Y
+                      && savedY + winHeight <= workArea.Y + screenHeight;
+
+            if (fitsX && fitsY)
+            {
+                winX = savedX;
+                winY = savedY;
+            }
+            else
+            {
+                // Saved position no longer fits — centre instead.
+                winX = workArea.X + (screenWidth  - winWidth)  / 2;
+                winY = workArea.Y + (screenHeight - winHeight) / 2;
+            }
+        }
+        else
+        {
+            // No saved position (window was last closed on a secondary display,
+            // or this is the first launch) — centre on primary.
+            winX = workArea.X + (screenWidth  - winWidth)  / 2;
+            winY = workArea.Y + (screenHeight - winHeight) / 2;
+        }
+
+        appWindow.MoveAndResize(new RectInt32(winX, winY, winWidth, winHeight));
+    }
+
+    /// <summary>
+    /// Saves geometry when the user closes via the title-bar X button or Alt+F4.
+    /// </summary>
+    private void OnWindowClosed(AppWindow sender, AppWindowClosingEventArgs args)
+    {
+        SaveGeometry(sender);
+    }
+
+    /// <summary>
+    /// Saves geometry when the app exits programmatically via
+    /// <c>Application.Current.Quit()</c> (e.g. the Exit item in the main menu).
+    /// The WinUI <c>Window.Closed</c> event fires for all close paths.
+    /// </summary>
+    private void OnNativeWindowClosed(object sender, Microsoft.UI.Xaml.WindowEventArgs args)
+    {
+        if (_appWindow is not null)
+            SaveGeometry(_appWindow);
+    }
+
+    /// <summary>
+    /// Persists the current window size to <c>Preferences</c>.
+    /// The position is persisted only if the window is currently on the primary
+    /// display; if it is on a secondary screen the position keys are removed so
+    /// the next launch centres the window on the primary display.
+    /// </summary>
+    private static void SaveGeometry(AppWindow appWindow)
+    {
+        var pos  = appWindow.Position;
+        var size = appWindow.Size;
+
+        Preferences.Default.Set(PrefWinWidth,  size.Width);
+        Preferences.Default.Set(PrefWinHeight, size.Height);
+
+        // Only persist position when the window is on the primary display.
+        // Determine this by checking whether the window centre lies inside the
+        // primary work area.
+        var workArea  = DisplayArea.Primary.WorkArea;
+        int centreX   = pos.X + size.Width  / 2;
+        int centreY   = pos.Y + size.Height / 2;
+        bool onPrimary = centreX >= workArea.X
+                      && centreX <  workArea.X + workArea.Width
+                      && centreY >= workArea.Y
+                      && centreY <  workArea.Y + workArea.Height;
+
+        if (onPrimary)
+        {
+            Preferences.Default.Set(PrefWinX, pos.X);
+            Preferences.Default.Set(PrefWinY, pos.Y);
+        }
+        else
+        {
+            // Remove saved position so next launch centres on primary.
+            Preferences.Default.Remove(PrefWinX);
+            Preferences.Default.Remove(PrefWinY);
+        }
+    }
+
+    /// <summary>
+    /// Immediately resizes and recentres the window to the default geometry
+    /// (430 px wide, 2/3 of the primary display height, centred on the primary
+    /// display). Called when the user taps "Reset Settings".
+    /// </summary>
+    public static void ResetWindowGeometry()
+    {
+        if (Current is not App app || app._appWindow is null)
+            return;
+
+        var workArea     = DisplayArea.Primary.WorkArea;
+        int screenWidth  = workArea.Width;
+        int screenHeight = workArea.Height;
+
+        int winWidth  = DefaultWidth;
+        int winHeight = (int)(screenHeight * 2.0 / 3.0);
+        int winX      = workArea.X + (screenWidth  - winWidth)  / 2;
+        int winY      = workArea.Y + (screenHeight - winHeight) / 2;
+
+        app._appWindow.MoveAndResize(new RectInt32(winX, winY, winWidth, winHeight));
+    }
 }
 

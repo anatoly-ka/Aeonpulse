@@ -77,6 +77,7 @@ Expected: [describe what should happen instead]
 Relevant file(s): [e.g., Services/CalculationService.cs, ViewModels/MainViewModel.cs]
 
 Please diagnose and fix the issue. Run the build and tests before finishing.
+Please do not commit the changes until the fix is confirmed by me.
 ```
 
 **Example - ticker shows stale data after date change:**
@@ -88,6 +89,7 @@ shows the old date's jubilee until the app is restarted.
 Expected: all tickers should update immediately after SaveDate is called.
 
 Please diagnose and fix. Run dotnet test after the fix.
+Please do not commit the changes until the fix is confirmed by me.
 ```
 
 ---

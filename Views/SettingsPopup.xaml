@@ -45,7 +45,7 @@
                                          Padding="24,20,24,0">
                         <!-- Binding: MainViewModel.Loc.Settings_Title (live-localised via LocalizedResources) -->
                         <Label x:Name="SettingsTitleLabel"
-                               Text="{Binding Loc.Settings_Title}"
+                               Text=""
                                FontSize="{StaticResource FontSizeTitle}"
                                FontAttributes="Bold"
                                HorizontalOptions="Center"
@@ -60,22 +60,22 @@
                     </VerticalStackLayout>
 
                     <!-- Row 1: Scrollable settings content area -->
-                    <VerticalStackLayout Grid.Row="1"
-                                         x:Name="SettingsContentArea"
-                                         Spacing="16"
-                                         Padding="24,16">
+                    <ScrollView Grid.Row="1">
+                        <VerticalStackLayout x:Name="SettingsContentArea"
+                                             Spacing="16"
+                                             Padding="24,16">
 
                         <!-- "Settings" sub-section header -->
                         <!-- Binding: MainViewModel.Loc.Settings_SettingsTitle (live-localised) -->
                         <Label x:Name="SettingsSectionHeader"
-                               Text="{Binding Loc.Settings_SettingsTitle}"
+                               Text=""
                                FontSize="{DynamicResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
 
                         <!-- AI: 2-column, 14-row settings control grid.
                              Col 0 (Auto): group label - each spans multiple rows for vertical centering.
-                             Col 1 (*):    radio button rows, one option per row.
+                             Col 1 (*):    option rows, one option per row.
                              Row groups:
                                Rows 0-1:   Unit System  (Metric / Imperial)
                                Row  2:     spacer
@@ -84,8 +84,9 @@
                                Rows 7-9:   Text Size    (Small / Normal / Large)
                                Row  10:    spacer
                                Rows 11-13: Language     (Default / English / Russian)
-                             Each RadioButton uses a custom ControlTemplate (2-column Grid:
-                             outer ring Ellipse | inner dot Ellipse) to match the cyberpunk theme. -->
+                             Each option row is a HorizontalStackLayout with two Ellipses (outer ring +
+                             inner dot) and a Label, wired via TapGestureRecognizer. No RadioButton is
+                             used — avoids WinUI RadioButton handler layout interference on Windows. -->
                         <Grid x:Name="SettingsControlGrid"
                               ColumnDefinitions="100,*"
                               RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
@@ -94,485 +95,356 @@
 
                             <!-- == UNIT SYSTEM ======================================= -->
 
-                            <!-- Col 0, Rows 0-1: "Unit system" label - spans 2 rows -->
                             <!-- Binding: MainViewModel.Loc.Settings_UnitsLabel (live-localised) -->
                             <Label Grid.Row="0" Grid.Column="0"
                                    Grid.RowSpan="2"
                                    x:Name="UnitsLabel"
-                                   Text="{Binding Loc.Settings_UnitsLabel}"
+                                   Text=""
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap"
                                    VerticalOptions="Center" />
 
-                            <!-- Row 0, Col 1: Metric radio.
-                                 Value="Metric" - culture-neutral key read in OnUnitSystemChanged.
-                                 IsChecked seeded from MainViewModel.UseMetric in code-behind. -->
+                            <!-- Row 0, Col 1: Metric -->
                             <HorizontalStackLayout Grid.Row="0" Grid.Column="1"
-                                                   x:Name="MetricRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
-                                <RadioButton x:Name="MetricRadio"
-                                             Value="Metric"
-                                             GroupName="UnitSystem"
-                                             CheckedChanged="OnUnitSystemChanged">
-                                    <RadioButton.ControlTemplate>
-                                        <ControlTemplate>
-                                            <!-- AI: Custom radio template - outer ring + inner dot + label presenter -->
-                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
-                                                <Ellipse Grid.Column="0"
-                                                         WidthRequest="16" HeightRequest="16"
-                                                         Stroke="{DynamicResource CyberCyan}"
-                                                         StrokeThickness="2"
-                                                         Fill="Transparent" />
-                                                <Ellipse x:Name="InnerDot"
-                                                         Grid.Column="0"
-                                                         WidthRequest="8" HeightRequest="8"
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center"
-                                                         Fill="{DynamicResource CyberCyan}"
-                                                         IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </RadioButton.ControlTemplate>
-                                </RadioButton>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnUnitSystemTapped" CommandParameter="Metric" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
+                                    <Ellipse WidthRequest="16" HeightRequest="16"
+                                             Stroke="{DynamicResource CyberCyan}"
+                                             StrokeThickness="2"
+                                             Fill="Transparent" />
+                                    <Ellipse x:Name="MetricDot"
+                                             WidthRequest="8" HeightRequest="8"
+                                             HorizontalOptions="Center" VerticalOptions="Center"
+                                             Fill="{DynamicResource CyberCyan}"
+                                             IsVisible="False" />
+                                </Grid>
                                 <!-- Binding: MainViewModel.Loc.Settings_UnitsMetric (live-localised) -->
-                                <Label Text="{Binding Loc.Settings_UnitsMetric}"
+                                <Label x:Name="MetricLabel"
+                                       Text=""
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 1, Col 1: Imperial radio.
-                                 Value="Imperial" - culture-neutral key read in OnUnitSystemChanged. -->
+                            <!-- Row 1, Col 1: Imperial -->
                             <HorizontalStackLayout Grid.Row="1" Grid.Column="1"
-                                                   x:Name="ImperialRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
-                                <RadioButton x:Name="ImperialRadio"
-                                             Value="Imperial"
-                                             GroupName="UnitSystem"
-                                             CheckedChanged="OnUnitSystemChanged">
-                                    <RadioButton.ControlTemplate>
-                                        <ControlTemplate>
-                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
-                                                <Ellipse Grid.Column="0"
-                                                         WidthRequest="16" HeightRequest="16"
-                                                         Stroke="{DynamicResource CyberCyan}"
-                                                         StrokeThickness="2"
-                                                         Fill="Transparent" />
-                                                <Ellipse x:Name="InnerDot"
-                                                         Grid.Column="0"
-                                                         WidthRequest="8" HeightRequest="8"
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center"
-                                                         Fill="{DynamicResource CyberCyan}"
-                                                         IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </RadioButton.ControlTemplate>
-                                </RadioButton>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnUnitSystemTapped" CommandParameter="Imperial" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
+                                    <Ellipse WidthRequest="16" HeightRequest="16"
+                                             Stroke="{DynamicResource CyberCyan}"
+                                             StrokeThickness="2"
+                                             Fill="Transparent" />
+                                    <Ellipse x:Name="ImperialDot"
+                                             WidthRequest="8" HeightRequest="8"
+                                             HorizontalOptions="Center" VerticalOptions="Center"
+                                             Fill="{DynamicResource CyberCyan}"
+                                             IsVisible="False" />
+                                </Grid>
                                 <!-- Binding: MainViewModel.Loc.Settings_UnitsImperial (live-localised) -->
-                                <Label Text="{Binding Loc.Settings_UnitsImperial}"
+                                <Label x:Name="ImperialLabel"
+                                       Text=""
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 2: visual spacer between groups -->
+                            <!-- Row 2: visual spacer -->
                             <BoxView Grid.Row="2" Grid.ColumnSpan="2"
                                      HeightRequest="4" Color="Transparent" />
 
                             <!-- == COLOR SCHEME ====================================== -->
 
-                            <!-- Col 0, Rows 3-5: "Color scheme" label - spans 3 rows.
-                                 Binding: MainViewModel.Loc.Settings_PaletteLabel (live-localised)
-                                 Side effect: OnColorSchemeChanged -> ThemeService.ApplyScheme()
-                                 -> mutates Application.Current.Resources -> repaints all DynamicResource bindings. -->
+                            <!-- Binding: MainViewModel.Loc.Settings_PaletteLabel (live-localised) -->
                             <Label Grid.Row="3" Grid.Column="0"
                                    Grid.RowSpan="3"
                                    x:Name="PaletteLabel"
-                                   Text="{Binding Loc.Settings_PaletteLabel}"
+                                   Text=""
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap"
                                    VerticalOptions="Center" />
 
-                            <!-- Row 3, Col 1: Default Dark radio. Value maps to ThemeService.DefaultDark. -->
+                            <!-- Row 3, Col 1: Default Dark -->
                             <HorizontalStackLayout Grid.Row="3" Grid.Column="1"
-                                                   x:Name="DefaultDarkRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
-                                <RadioButton x:Name="DefaultDarkRadio"
-                                             Value="DefaultDark"
-                                             GroupName="ColorScheme"
-                                             CheckedChanged="OnColorSchemeChanged">
-                                    <RadioButton.ControlTemplate>
-                                        <ControlTemplate>
-                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
-                                                <Ellipse Grid.Column="0"
-                                                         WidthRequest="16" HeightRequest="16"
-                                                         Stroke="{DynamicResource CyberCyan}"
-                                                         StrokeThickness="2"
-                                                         Fill="Transparent" />
-                                                <Ellipse x:Name="InnerDot"
-                                                         Grid.Column="0"
-                                                         WidthRequest="8" HeightRequest="8"
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center"
-                                                         Fill="{DynamicResource CyberCyan}"
-                                                         IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </RadioButton.ControlTemplate>
-                                </RadioButton>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnColorSchemeTapped" CommandParameter="DefaultDark" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
+                                    <Ellipse WidthRequest="16" HeightRequest="16"
+                                             Stroke="{DynamicResource CyberCyan}"
+                                             StrokeThickness="2"
+                                             Fill="Transparent" />
+                                    <Ellipse x:Name="DefaultDarkDot"
+                                             WidthRequest="8" HeightRequest="8"
+                                             HorizontalOptions="Center" VerticalOptions="Center"
+                                             Fill="{DynamicResource CyberCyan}"
+                                             IsVisible="False" />
+                                </Grid>
                                 <!-- Binding: MainViewModel.Loc.Settings_PaletteDefault (live-localised) -->
-                                <Label Text="{Binding Loc.Settings_PaletteDefault}"
+                                <Label x:Name="DefaultDarkLabel"
+                                       Text=""
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 4, Col 1: High Contrast Dark radio. Value maps to ThemeService.HighContrastDark. -->
+                            <!-- Row 4, Col 1: High Contrast Dark -->
                             <HorizontalStackLayout Grid.Row="4" Grid.Column="1"
-                                                   x:Name="HighContrastDarkRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
-                                <RadioButton x:Name="HighContrastDarkRadio"
-                                             Value="HighContrastDark"
-                                             GroupName="ColorScheme"
-                                             CheckedChanged="OnColorSchemeChanged">
-                                    <RadioButton.ControlTemplate>
-                                        <ControlTemplate>
-                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
-                                                <Ellipse Grid.Column="0"
-                                                         WidthRequest="16" HeightRequest="16"
-                                                         Stroke="{DynamicResource CyberCyan}"
-                                                         StrokeThickness="2"
-                                                         Fill="Transparent" />
-                                                <Ellipse x:Name="InnerDot"
-                                                         Grid.Column="0"
-                                                         WidthRequest="8" HeightRequest="8"
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center"
-                                                         Fill="{DynamicResource CyberCyan}"
-                                                         IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </RadioButton.ControlTemplate>
-                                </RadioButton>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnColorSchemeTapped" CommandParameter="HighContrastDark" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
+                                    <Ellipse WidthRequest="16" HeightRequest="16"
+                                             Stroke="{DynamicResource CyberCyan}"
+                                             StrokeThickness="2"
+                                             Fill="Transparent" />
+                                    <Ellipse x:Name="HighContrastDarkDot"
+                                             WidthRequest="8" HeightRequest="8"
+                                             HorizontalOptions="Center" VerticalOptions="Center"
+                                             Fill="{DynamicResource CyberCyan}"
+                                             IsVisible="False" />
+                                </Grid>
                                 <!-- Binding: MainViewModel.Loc.Settings_PaletteHighContrastDark (live-localised) -->
-                                <Label Text="{Binding Loc.Settings_PaletteHighContrastDark}"
+                                <Label x:Name="HighContrastDarkLabel"
+                                       Text=""
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 5, Col 1: High Contrast Light radio. Value maps to ThemeService.HighContrastLight. -->
+                            <!-- Row 5, Col 1: High Contrast Light -->
                             <HorizontalStackLayout Grid.Row="5" Grid.Column="1"
-                                                   x:Name="HighContrastLightRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
-                                <RadioButton x:Name="HighContrastLightRadio"
-                                             Value="HighContrastLight"
-                                             GroupName="ColorScheme"
-                                             CheckedChanged="OnColorSchemeChanged">
-                                    <RadioButton.ControlTemplate>
-                                        <ControlTemplate>
-                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
-                                                <Ellipse Grid.Column="0"
-                                                         WidthRequest="16" HeightRequest="16"
-                                                         Stroke="{DynamicResource CyberCyan}"
-                                                         StrokeThickness="2"
-                                                         Fill="Transparent" />
-                                                <Ellipse x:Name="InnerDot"
-                                                         Grid.Column="0"
-                                                         WidthRequest="8" HeightRequest="8"
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center"
-                                                         Fill="{DynamicResource CyberCyan}"
-                                                         IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </RadioButton.ControlTemplate>
-                                </RadioButton>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnColorSchemeTapped" CommandParameter="HighContrastLight" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
+                                    <Ellipse WidthRequest="16" HeightRequest="16"
+                                             Stroke="{DynamicResource CyberCyan}"
+                                             StrokeThickness="2"
+                                             Fill="Transparent" />
+                                    <Ellipse x:Name="HighContrastLightDot"
+                                             WidthRequest="8" HeightRequest="8"
+                                             HorizontalOptions="Center" VerticalOptions="Center"
+                                             Fill="{DynamicResource CyberCyan}"
+                                             IsVisible="False" />
+                                </Grid>
                                 <!-- Binding: MainViewModel.Loc.Settings_PaletteHighContrastLight (live-localised) -->
-                                <Label Text="{Binding Loc.Settings_PaletteHighContrastLight}"
+                                <Label x:Name="HighContrastLightLabel"
+                                       Text=""
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 6: visual spacer between groups -->
+                            <!-- Row 6: visual spacer -->
                             <BoxView Grid.Row="6" Grid.ColumnSpan="2"
                                      HeightRequest="4" Color="Transparent" />
 
                             <!-- == TEXT SIZE ========================================= -->
 
-                            <!-- Col 0, Rows 7-9: "Text size" label - spans 3 rows.
-                                 Binding: MainViewModel.Loc.Settings_TextSizeLabel (live-localised)
-                                 Side effect: OnTextSizeChanged -> FontSizeService.ApplyPreset()
-                                 -> mutates font-size resource keys -> reflows all DynamicResource FontSize bindings. -->
+                            <!-- Binding: MainViewModel.Loc.Settings_TextSizeLabel (live-localised) -->
                             <Label Grid.Row="7" Grid.Column="0"
                                    Grid.RowSpan="3"
                                    x:Name="TextSizeLabel"
-                                   Text="{Binding Loc.Settings_TextSizeLabel}"
+                                   Text=""
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap"
                                    VerticalOptions="Center" />
 
-                            <!-- Row 7, Col 1: Small radio. Value="Small" maps to FontSizeService.Small. -->
+                            <!-- Row 7, Col 1: Small -->
                             <HorizontalStackLayout Grid.Row="7" Grid.Column="1"
-                                                   x:Name="TextSizeSmallRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
-                                <RadioButton x:Name="TextSizeSmallRadio"
-                                             Value="Small"
-                                             GroupName="TextSize"
-                                             CheckedChanged="OnTextSizeChanged">
-                                    <RadioButton.ControlTemplate>
-                                        <ControlTemplate>
-                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
-                                                <Ellipse Grid.Column="0"
-                                                         WidthRequest="16" HeightRequest="16"
-                                                         Stroke="{DynamicResource CyberCyan}"
-                                                         StrokeThickness="2"
-                                                         Fill="Transparent" />
-                                                <Ellipse x:Name="InnerDot"
-                                                         Grid.Column="0"
-                                                         WidthRequest="8" HeightRequest="8"
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center"
-                                                         Fill="{DynamicResource CyberCyan}"
-                                                         IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </RadioButton.ControlTemplate>
-                                </RadioButton>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnTextSizeTapped" CommandParameter="Small" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
+                                    <Ellipse WidthRequest="16" HeightRequest="16"
+                                             Stroke="{DynamicResource CyberCyan}"
+                                             StrokeThickness="2"
+                                             Fill="Transparent" />
+                                    <Ellipse x:Name="TextSizeSmallDot"
+                                             WidthRequest="8" HeightRequest="8"
+                                             HorizontalOptions="Center" VerticalOptions="Center"
+                                             Fill="{DynamicResource CyberCyan}"
+                                             IsVisible="False" />
+                                </Grid>
                                 <!-- Binding: MainViewModel.Loc.Settings_TextSizeSmall (live-localised) -->
-                                <Label Text="{Binding Loc.Settings_TextSizeSmall}"
+                                <Label x:Name="TextSizeSmallLabel"
+                                       Text=""
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 8, Col 1: Normal radio. Value="Normal" maps to FontSizeService.Normal. -->
+                            <!-- Row 8, Col 1: Normal -->
                             <HorizontalStackLayout Grid.Row="8" Grid.Column="1"
-                                                   x:Name="TextSizeNormalRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
-                                <RadioButton x:Name="TextSizeNormalRadio"
-                                             Value="Normal"
-                                             GroupName="TextSize"
-                                             CheckedChanged="OnTextSizeChanged">
-                                    <RadioButton.ControlTemplate>
-                                        <ControlTemplate>
-                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
-                                                <Ellipse Grid.Column="0"
-                                                         WidthRequest="16" HeightRequest="16"
-                                                         Stroke="{DynamicResource CyberCyan}"
-                                                         StrokeThickness="2"
-                                                         Fill="Transparent" />
-                                                <Ellipse x:Name="InnerDot"
-                                                         Grid.Column="0"
-                                                         WidthRequest="8" HeightRequest="8"
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center"
-                                                         Fill="{DynamicResource CyberCyan}"
-                                                         IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </RadioButton.ControlTemplate>
-                                </RadioButton>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnTextSizeTapped" CommandParameter="Normal" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
+                                    <Ellipse WidthRequest="16" HeightRequest="16"
+                                             Stroke="{DynamicResource CyberCyan}"
+                                             StrokeThickness="2"
+                                             Fill="Transparent" />
+                                    <Ellipse x:Name="TextSizeNormalDot"
+                                             WidthRequest="8" HeightRequest="8"
+                                             HorizontalOptions="Center" VerticalOptions="Center"
+                                             Fill="{DynamicResource CyberCyan}"
+                                             IsVisible="False" />
+                                </Grid>
                                 <!-- Binding: MainViewModel.Loc.Settings_TextSizeNormal (live-localised) -->
-                                <Label Text="{Binding Loc.Settings_TextSizeNormal}"
+                                <Label x:Name="TextSizeNormalLabel"
+                                       Text=""
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 9, Col 1: Large radio. Value="Large" maps to FontSizeService.Large. -->
+                            <!-- Row 9, Col 1: Large -->
                             <HorizontalStackLayout Grid.Row="9" Grid.Column="1"
-                                                   x:Name="TextSizeLargeRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
-                                <RadioButton x:Name="TextSizeLargeRadio"
-                                             Value="Large"
-                                             GroupName="TextSize"
-                                             CheckedChanged="OnTextSizeChanged">
-                                    <RadioButton.ControlTemplate>
-                                        <ControlTemplate>
-                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
-                                                <Ellipse Grid.Column="0"
-                                                         WidthRequest="16" HeightRequest="16"
-                                                         Stroke="{DynamicResource CyberCyan}"
-                                                         StrokeThickness="2"
-                                                         Fill="Transparent" />
-                                                <Ellipse x:Name="InnerDot"
-                                                         Grid.Column="0"
-                                                         WidthRequest="8" HeightRequest="8"
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center"
-                                                         Fill="{DynamicResource CyberCyan}"
-                                                         IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </RadioButton.ControlTemplate>
-                                </RadioButton>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnTextSizeTapped" CommandParameter="Large" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
+                                    <Ellipse WidthRequest="16" HeightRequest="16"
+                                             Stroke="{DynamicResource CyberCyan}"
+                                             StrokeThickness="2"
+                                             Fill="Transparent" />
+                                    <Ellipse x:Name="TextSizeLargeDot"
+                                             WidthRequest="8" HeightRequest="8"
+                                             HorizontalOptions="Center" VerticalOptions="Center"
+                                             Fill="{DynamicResource CyberCyan}"
+                                             IsVisible="False" />
+                                </Grid>
                                 <!-- Binding: MainViewModel.Loc.Settings_TextSizeLarge (live-localised) -->
-                                <Label Text="{Binding Loc.Settings_TextSizeLarge}"
+                                <Label x:Name="TextSizeLargeLabel"
+                                       Text=""
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 10: visual spacer between groups -->
+                            <!-- Row 10: visual spacer -->
                             <BoxView Grid.Row="10" Grid.ColumnSpan="2"
                                      HeightRequest="4" Color="Transparent" />
 
                             <!-- == DISPLAY LANGUAGE ================================== -->
 
-                            <!-- Col 0, Rows 11-13: "Language" label - spans 3 rows.
-                                 Binding: MainViewModel.Loc.Settings_LanguageLabel (live-localised)
-                                 Side effect: OnDisplayLanguageChanged -> ApplyLanguage()
-                                 -> sets CultureInfo.DefaultThreadCurrentUICulture globally
-                                 -> Loc.Invalidate() fires PropertyChanged("") on LocalizedResources
-                                 -> UpdateAllCalculations() regenerates all ticker strings. -->
+                            <!-- Binding: MainViewModel.Loc.Settings_LanguageLabel (live-localised) -->
                             <Label Grid.Row="11" Grid.Column="0"
                                    Grid.RowSpan="3"
                                    x:Name="LanguageLabel"
-                                   Text="{Binding Loc.Settings_LanguageLabel}"
+                                   Text=""
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap"
                                    VerticalOptions="Center" />
 
-                            <!-- Row 11, Col 1: Default language radio.
-                                 Value="Default" -> restores OS locale via MainViewModel.LangDefault. -->
+                            <!-- Row 11, Col 1: Default -->
                             <HorizontalStackLayout Grid.Row="11" Grid.Column="1"
-                                                   x:Name="LangDefaultRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
-                                <RadioButton x:Name="LangDefaultRadio"
-                                             Value="Default"
-                                             GroupName="DisplayLanguage"
-                                             CheckedChanged="OnDisplayLanguageChanged">
-                                    <RadioButton.ControlTemplate>
-                                        <ControlTemplate>
-                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
-                                                <Ellipse Grid.Column="0"
-                                                         WidthRequest="16" HeightRequest="16"
-                                                         Stroke="{DynamicResource CyberCyan}"
-                                                         StrokeThickness="2"
-                                                         Fill="Transparent" />
-                                                <Ellipse x:Name="InnerDot"
-                                                         Grid.Column="0"
-                                                         WidthRequest="8" HeightRequest="8"
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center"
-                                                         Fill="{DynamicResource CyberCyan}"
-                                                         IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </RadioButton.ControlTemplate>
-                                </RadioButton>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnLanguageTapped" CommandParameter="Default" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
+                                    <Ellipse WidthRequest="16" HeightRequest="16"
+                                             Stroke="{DynamicResource CyberCyan}"
+                                             StrokeThickness="2"
+                                             Fill="Transparent" />
+                                    <Ellipse x:Name="LangDefaultDot"
+                                             WidthRequest="8" HeightRequest="8"
+                                             HorizontalOptions="Center" VerticalOptions="Center"
+                                             Fill="{DynamicResource CyberCyan}"
+                                             IsVisible="False" />
+                                </Grid>
                                 <!-- Binding: MainViewModel.Loc.Settings_LanguageDefault (live-localised) -->
-                                <Label Text="{Binding Loc.Settings_LanguageDefault}"
+                                <Label x:Name="LangDefaultLabel"
+                                       Text=""
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 12, Col 1: English radio.
-                                 Value="English" -> CultureInfo("en") via MainViewModel.LangEnglish. -->
+                            <!-- Row 12, Col 1: English -->
                             <HorizontalStackLayout Grid.Row="12" Grid.Column="1"
-                                                   x:Name="LangEnglishRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
-                                <RadioButton x:Name="LangEnglishRadio"
-                                             Value="English"
-                                             GroupName="DisplayLanguage"
-                                             CheckedChanged="OnDisplayLanguageChanged">
-                                    <RadioButton.ControlTemplate>
-                                        <ControlTemplate>
-                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
-                                                <Ellipse Grid.Column="0"
-                                                         WidthRequest="16" HeightRequest="16"
-                                                         Stroke="{DynamicResource CyberCyan}"
-                                                         StrokeThickness="2"
-                                                         Fill="Transparent" />
-                                                <Ellipse x:Name="InnerDot"
-                                                         Grid.Column="0"
-                                                         WidthRequest="8" HeightRequest="8"
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center"
-                                                         Fill="{DynamicResource CyberCyan}"
-                                                         IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </RadioButton.ControlTemplate>
-                                </RadioButton>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnLanguageTapped" CommandParameter="English" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
+                                    <Ellipse WidthRequest="16" HeightRequest="16"
+                                             Stroke="{DynamicResource CyberCyan}"
+                                             StrokeThickness="2"
+                                             Fill="Transparent" />
+                                    <Ellipse x:Name="LangEnglishDot"
+                                             WidthRequest="8" HeightRequest="8"
+                                             HorizontalOptions="Center" VerticalOptions="Center"
+                                             Fill="{DynamicResource CyberCyan}"
+                                             IsVisible="False" />
+                                </Grid>
                                 <!-- Binding: MainViewModel.Loc.Settings_LanguageEnglish (live-localised) -->
-                                <Label Text="{Binding Loc.Settings_LanguageEnglish}"
+                                <Label x:Name="LangEnglishLabel"
+                                       Text=""
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
 
-                            <!-- Row 13, Col 1: Russian radio.
-                                 Value="Russian" -> CultureInfo("ru") via MainViewModel.LangRussian. -->
+                            <!-- Row 13, Col 1: Russian -->
                             <HorizontalStackLayout Grid.Row="13" Grid.Column="1"
-                                                   x:Name="LangRussianRadioRow"
                                                    Spacing="6"
                                                    HorizontalOptions="Start"
                                                    VerticalOptions="Center">
-                                <RadioButton x:Name="LangRussianRadio"
-                                             Value="Russian"
-                                             GroupName="DisplayLanguage"
-                                             CheckedChanged="OnDisplayLanguageChanged">
-                                    <RadioButton.ControlTemplate>
-                                        <ControlTemplate>
-                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="6">
-                                                <Ellipse Grid.Column="0"
-                                                         WidthRequest="16" HeightRequest="16"
-                                                         Stroke="{DynamicResource CyberCyan}"
-                                                         StrokeThickness="2"
-                                                         Fill="Transparent" />
-                                                <Ellipse x:Name="InnerDot"
-                                                         Grid.Column="0"
-                                                         WidthRequest="8" HeightRequest="8"
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center"
-                                                         Fill="{DynamicResource CyberCyan}"
-                                                         IsVisible="{TemplateBinding IsChecked}" />
-                                                <ContentPresenter Grid.Column="1" VerticalOptions="Center" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </RadioButton.ControlTemplate>
-                                </RadioButton>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnLanguageTapped" CommandParameter="Russian" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Grid WidthRequest="16" HeightRequest="16" VerticalOptions="Center">
+                                    <Ellipse WidthRequest="16" HeightRequest="16"
+                                             Stroke="{DynamicResource CyberCyan}"
+                                             StrokeThickness="2"
+                                             Fill="Transparent" />
+                                    <Ellipse x:Name="LangRussianDot"
+                                             WidthRequest="8" HeightRequest="8"
+                                             HorizontalOptions="Center" VerticalOptions="Center"
+                                             Fill="{DynamicResource CyberCyan}"
+                                             IsVisible="False" />
+                                </Grid>
                                 <!-- Binding: MainViewModel.Loc.Settings_LanguageRussian (live-localised) -->
-                                <Label Text="{Binding Loc.Settings_LanguageRussian}"
+                                <Label x:Name="LangRussianLabel"
+                                       Text=""
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource CyberCyan}"
                                        VerticalOptions="Center" />
@@ -580,6 +452,20 @@
 
                         </Grid>
                         <!-- End SettingsControlGrid -->
+
+                        <!-- Reset Settings button - restores all settings to factory defaults -->
+                        <Button x:Name="ResetSettingsButton"
+                                Text=""
+                                Clicked="OnResetSettingsTapped"
+                                HorizontalOptions="Center"
+                                WidthRequest="160"
+                                BackgroundColor="{DynamicResource SpaceDark}"
+                                TextColor="{DynamicResource TextGray}"
+                                CornerRadius="8"
+                                FontSize="{DynamicResource FontSizeMedium}"
+                                HeightRequest="36"
+                                BorderColor="{DynamicResource TextGray}"
+                                BorderWidth="1" />
 
                         <!-- Divider between Settings and About sections -->
                         <BoxView x:Name="SettingsAboutDivider"
@@ -594,26 +480,26 @@
 
                         <!-- Binding: MainViewModel.Loc.Settings_AboutTitle (live-localised) -->
                         <Label x:Name="AboutSectionHeader"
-                               Text="{Binding Loc.Settings_AboutTitle}"
-                               FontSize="{DynamicResource FontSizeMedium}"
+                               Text=""
+                               FontSize="{StaticResource FontSizeMedium}"
                                FontAttributes="Bold"
                                TextColor="{DynamicResource CyberPurple}" />
 
                         <VerticalStackLayout x:Name="AboutContentStack" Spacing="6">
                             <!-- Binding: MainViewModel.Loc.Settings_AboutVersion (live-localised) -->
                             <Label x:Name="AboutVersionLabel"
-                                   Text="{Binding Loc.Settings_AboutVersion}"
+                                   Text=""
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}" />
                             <!-- Binding: MainViewModel.Loc.Settings_AboutDescription (live-localised) -->
                             <Label x:Name="AboutDescriptionLabel"
-                                   Text="{Binding Loc.Settings_AboutDescription}"
+                                   Text=""
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap" />
                             <!-- Binding: MainViewModel.Loc.Settings_AboutTagline (live-localised) -->
                             <Label x:Name="AboutTaglineLabel"
-                                   Text="{Binding Loc.Settings_AboutTagline}"
+                                   Text=""
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap" />
@@ -621,6 +507,7 @@
 
                     </VerticalStackLayout>
                     <!-- End SettingsContentArea -->
+                    </ScrollView>
 
                     <!-- Row 2: Footer - fixed Close button below scrollable content -->
                     <VerticalStackLayout Grid.Row="2"
@@ -635,7 +522,7 @@
                                  Margin="0,0,0,16" />
                         <!-- Binding: MainViewModel.Loc.Settings_ButtonClose (live-localised) -->
                         <Button x:Name="CloseButton"
-                                Text="{Binding Loc.Settings_ButtonClose}"
+                                Text=""
                                 Clicked="OnCloseClicked"
                                 HorizontalOptions="Center"
                                 WidthRequest="160"

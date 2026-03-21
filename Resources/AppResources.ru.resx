@@ -1209,6 +1209,10 @@
     <value>Закрыть</value>
     <comment>SettingsPopup.xaml</comment>
   </data>
+  <data name="Settings_ButtonResetSettings" xml:space="preserve">
+    <value>Сброс настроек</value>
+    <comment>SettingsPopup.xaml</comment>
+  </data>
   <data name="Refreshing_Message" xml:space="preserve">
     <value>Обновление...</value>
     <comment>RefreshingPopup.xaml</comment>

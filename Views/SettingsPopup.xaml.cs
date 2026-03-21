@@ -7,39 +7,23 @@ namespace Aeonpulse.Views
 {
     /// <summary>
     /// Code-behind for the Settings modal popup.
-    /// Synchronises radio button groups to the ViewModel's persisted preferences
-    /// on construction, then propagates user changes back to the ViewModel
-    /// (which in turn applies them immediately and persists them via <c>Preferences</c>).
+    /// Renders each setting option as a plain <see cref="HorizontalStackLayout"/>
+    /// with two <see cref="Microsoft.Maui.Controls.Shapes.Ellipse"/> shapes (outer ring +
+    /// inner dot) and a <see cref="Label"/>, wired by <see cref="TapGestureRecognizer"/>
+    /// No <see cref="RadioButton"/> is used, avoiding WinUI RadioButton handler
+    /// layout interference that caused dot-disappearing and spurious re-syncs on Windows.
     ///
     /// <para>
-    /// <b>Initialisation guard:</b> <c>_initialising</c> suppresses
-    /// <c>CheckedChanged</c> events that fire during <c>InitializeComponent()</c>
-    /// and the subsequent radio-button seeding — preventing spurious ViewModel writes
-    /// on popup open.
+    /// Selection state is tracked by per-group string fields. The matching inner-dot
+    /// <see cref="Microsoft.Maui.Controls.Shapes.Ellipse"/> is made visible by the
+    /// <c>Set*Group</c> helpers, which are also called on construction to seed the
+    /// initial state from the ViewModel.
     /// </para>
     /// <para>
-    /// <b>Hidden dependencies / side effects triggered through the ViewModel setters:</b>
-    /// <list type="bullet">
-    ///   <item><description>
-    ///     Setting <c>ColorScheme</c> -> <see cref="Services.ThemeService.ApplyScheme"/>
-    ///     mutates <c>Application.Current.Resources</c> immediately, repainting all
-    ///     <c>DynamicResource</c> bindings across the entire live UI.
-    ///   </description></item>
-    ///   <item><description>
-    ///     Setting <c>TextSize</c> -> <see cref="Services.FontSizeService.ApplyPreset"/>
-    ///     mutates font-size resource keys, reflowing all bound text instantly.
-    ///   </description></item>
-    ///   <item><description>
-    ///     Setting <c>DisplayLanguage</c> -> <c>ApplyLanguage()</c> changes
-    ///     <c>CultureInfo.DefaultThreadCurrentUICulture</c> globally,
-    ///     then calls <c>Loc.Invalidate()</c> (fires <c>PropertyChanged("")</c> on
-    ///     <see cref="ViewModels.LocalizedResources"/>) and <c>UpdateAllCalculations()</c>.
-    ///   </description></item>
-    ///   <item><description>
-    ///     All three settings are persisted via <c>Preferences.Default.Set</c> inside
-    ///     the ViewModel setters, surviving app restarts.
-    ///   </description></item>
-    /// </list>
+    /// <b>Language labels</b> are updated manually in <see cref="OnLanguageTapped"/>
+    /// after the culture switch, rather than relying on the binding engine's
+    /// <c>PropertyChanged</c> propagation, which is unreliable for two-segment
+    /// path bindings on Windows after a layout pass.
     /// </para>
     /// </summary>
     [AIContext("ModalViewController")]
@@ -47,126 +31,206 @@ namespace Aeonpulse.Views
     {
         private readonly MainViewModel _viewModel;
 
-        /// <summary>
-        /// Suppresses <c>CheckedChanged</c> callbacks during initialisation to prevent
-        /// spurious ViewModel writes before the UI reflects the current persisted state.
-        /// </summary>
-        private bool _initialising = true;
+        // Per-group selection tracking.
+        private string _unitSelection     = string.Empty;
+        private string _colorSelection    = string.Empty;
+        private string _textSizeSelection = string.Empty;
+        private string _langSelection     = string.Empty;
 
         /// <summary>
         /// Constructs the popup, sets BindingContext to <paramref name="viewModel"/>,
-        /// and seeds all radio button groups to match the current persisted settings.
+
+        /// and seeds all option groups to match the current persisted settings.
         /// </summary>
-        /// <param name="viewModel">
-        /// The shared <see cref="MainViewModel"/>; set as BindingContext so
-        /// <c>{Binding Loc.Xxx}</c> expressions in XAML resolve correctly.
-        /// </param>
         public SettingsPopup(MainViewModel viewModel)
         {
             InitializeComponent();
-
             _viewModel = viewModel;
-
-            // Expose the VM as BindingContext so {Binding Loc.Xxx} works in XAML
             BindingContext = viewModel;
 
-            // Seed radio buttons to reflect persisted user preferences.
-            // _initialising = true prevents CheckedChanged from writing back to the VM.
-            MetricRadio.IsChecked   =  _viewModel.UseMetric;
-            ImperialRadio.IsChecked = !_viewModel.UseMetric;
+            _unitSelection = _viewModel.UseMetric ? "Metric" : "Imperial";
+            SetUnitGroup(_unitSelection);
 
-            DefaultDarkRadio.IsChecked       = _viewModel.ColorScheme == ThemeService.DefaultDark;
-            HighContrastDarkRadio.IsChecked  = _viewModel.ColorScheme == ThemeService.HighContrastDark;
-            HighContrastLightRadio.IsChecked = _viewModel.ColorScheme == ThemeService.HighContrastLight;
+            _colorSelection = _viewModel.ColorScheme;
+            SetColorGroup(_colorSelection);
 
-            TextSizeSmallRadio.IsChecked  = _viewModel.TextSize == FontSizeService.Small;
-            TextSizeNormalRadio.IsChecked = _viewModel.TextSize == FontSizeService.Normal;
-            TextSizeLargeRadio.IsChecked  = _viewModel.TextSize == FontSizeService.Large;
+            _textSizeSelection = _viewModel.TextSize;
+            SetTextSizeGroup(_textSizeSelection);
 
-            LangDefaultRadio.IsChecked = _viewModel.DisplayLanguage == MainViewModel.LangDefault;
-            LangEnglishRadio.IsChecked = _viewModel.DisplayLanguage == MainViewModel.LangEnglish;
-            LangRussianRadio.IsChecked = _viewModel.DisplayLanguage == MainViewModel.LangRussian;
+            _langSelection = _viewModel.DisplayLanguage;
+            SetLangGroup(_langSelection);
 
-            _initialising = false;
+            // Populate all localised label texts directly from AppResources.
+            // No {Binding Loc.*} is used in the XAML; this is the sole source of
+            // localised strings for this popup, and is also called after a language change.
+            RefreshLocalisedLabels();
         }
 
+        // --- Dot-visibility group helpers ------------------------------------
+
+        private void SetUnitGroup(string value)
+        {
+            MetricDot.IsVisible   = value == "Metric";
+            ImperialDot.IsVisible = value == "Imperial";
+        }
+
+        private void SetColorGroup(string value)
+        {
+            DefaultDarkDot.IsVisible      = value == ThemeService.DefaultDark;
+            HighContrastDarkDot.IsVisible  = value == ThemeService.HighContrastDark;
+            HighContrastLightDot.IsVisible = value == ThemeService.HighContrastLight;
+        }
+
+        private void SetTextSizeGroup(string value)
+        {
+            TextSizeSmallDot.IsVisible  = value == FontSizeService.Small;
+            TextSizeNormalDot.IsVisible = value == FontSizeService.Normal;
+            TextSizeLargeDot.IsVisible  = value == FontSizeService.Large;
+        }
+
+        private void SetLangGroup(string value)
+        {
+            LangDefaultDot.IsVisible = value == MainViewModel.LangDefault;
+            LangEnglishDot.IsVisible = value == MainViewModel.LangEnglish;
+            LangRussianDot.IsVisible = value == MainViewModel.LangRussian;
+        }
+
+        // --- Tapped handlers -------------------------------------------------
+
         /// <summary>
-        /// Handles unit-system radio changes.
-        /// Compares against the culture-neutral <c>Value</c> ("Metric"), not the
-        /// localised display string, to remain correct after a language change.
-        ///
+        /// Handles unit-system option taps.
         /// <para>
         /// <b>Side effect:</b> setting <c>_viewModel.UseMetric</c> triggers
-        /// <c>UpdateAllCalculations()</c>, which immediately refreshes all distance-unit
-        /// dependent tickers (GalacticCommute, PhotonPath, GlobalExhale).
+        /// <c>UpdateAllCalculations()</c>.
         /// </para>
         /// </summary>
-        private void OnUnitSystemChanged(object sender, CheckedChangedEventArgs e)
+        private void OnUnitSystemTapped(object sender, TappedEventArgs e)
         {
-            if (_initialising || !e.Value) return;
-            var radio = (RadioButton)sender;
-            _viewModel.UseMetric = radio.Value?.ToString() == "Metric";
+            var value = e.Parameter?.ToString() ?? string.Empty;
+            if (value == _unitSelection) return;
+            _unitSelection = value;
+            SetUnitGroup(value);
+            _viewModel.UseMetric = value == "Metric";
         }
 
         /// <summary>
-        /// Handles colour scheme radio changes.
-        ///
+        /// Handles colour scheme option taps.
         /// <para>
         /// <b>Side effect:</b> setting <c>_viewModel.ColorScheme</c> calls
-        /// <see cref="Services.ThemeService.ApplyScheme"/>, instantly repainting
-        /// all <c>DynamicResource</c> colour bindings across the entire UI.
+        /// <see cref="Services.ThemeService.ApplyScheme"/>.
         /// </para>
         /// </summary>
-        private void OnColorSchemeChanged(object sender, CheckedChangedEventArgs e)
+        private void OnColorSchemeTapped(object sender, TappedEventArgs e)
         {
-            if (_initialising || !e.Value) return;
-            var radio = (RadioButton)sender;
-            _viewModel.ColorScheme = radio.Value?.ToString() ?? ThemeService.DefaultDark;
+            var value = e.Parameter?.ToString() ?? ThemeService.DefaultDark;
+            if (value == _colorSelection) return;
+            _colorSelection = value;
+            SetColorGroup(value);
+            _viewModel.ColorScheme = value;
         }
 
         /// <summary>
-        /// Handles text size radio changes.
-        ///
+        /// Handles text size option taps.
         /// <para>
         /// <b>Side effect:</b> setting <c>_viewModel.TextSize</c> calls
-        /// <see cref="Services.FontSizeService.ApplyPreset"/>, instantly reflowing
-        /// all <c>DynamicResource</c> font-size bindings across the entire UI.
+        /// <see cref="Services.FontSizeService.ApplyPreset"/>.
         /// </para>
         /// </summary>
-        private void OnTextSizeChanged(object sender, CheckedChangedEventArgs e)
+        private void OnTextSizeTapped(object sender, TappedEventArgs e)
         {
-            if (_initialising || !e.Value) return;
-            var radio = (RadioButton)sender;
-            _viewModel.TextSize = radio.Value?.ToString() ?? FontSizeService.Normal;
+            var value = e.Parameter?.ToString() ?? FontSizeService.Normal;
+            if (value == _textSizeSelection) return;
+            _textSizeSelection = value;
+            SetTextSizeGroup(value);
+            _viewModel.TextSize = value;
         }
 
         /// <summary>
-        /// Handles display language radio changes.
-        ///
+        /// Handles display language option taps.
+        /// After the ViewModel applies the culture switch, manually refreshes every
+        /// label in this popup that carries a localised string, because the MAUI
+        /// Windows binding engine does not reliably re-evaluate two-segment path
+        /// bindings (<c>{Binding Loc.Xxx}</c>) after a <c>PropertyChanged</c>
+        /// notification on the intermediate object following a layout pass.
         /// <para>
         /// <b>Side effects (chained through <c>_viewModel.DisplayLanguage</c> setter):</b>
-        /// <list type="number">
-        ///   <item><description>
-        ///     <c>ApplyLanguage()</c> sets <c>CultureInfo.DefaultThreadCurrentUICulture</c> globally.
-        ///   </description></item>
-        ///   <item><description>
-        ///     <c>Loc.Invalidate()</c> fires <c>PropertyChanged("")</c> on
-        ///     <see cref="ViewModels.LocalizedResources"/>, refreshing all bound labels.
-        ///   </description></item>
-        ///   <item><description>
-        ///     <c>UpdateAllCalculations()</c> regenerates all ticker strings in the new language.
-        ///   </description></item>
-        ///   <item><description>
-        ///     The choice is persisted via <c>Preferences.Default.Set</c>.
-        ///   </description></item>
-        /// </list>
+        /// <c>ApplyLanguage()</c>, <c>Loc.Invalidate()</c>,
+        /// <c>UpdateAllCalculations()</c>, <c>Preferences.Set</c>.
         /// </para>
         /// </summary>
-        private void OnDisplayLanguageChanged(object sender, CheckedChangedEventArgs e)
+        private void OnLanguageTapped(object sender, TappedEventArgs e)
         {
-            if (_initialising || !e.Value) return;
-            var radio = (RadioButton)sender;
-            _viewModel.DisplayLanguage = radio.Value?.ToString() ?? MainViewModel.LangDefault;
+            var value = e.Parameter?.ToString() ?? MainViewModel.LangDefault;
+            if (value == _langSelection) return;
+            _langSelection = value;
+            SetLangGroup(value);
+            _viewModel.DisplayLanguage = value;
+            RefreshLocalisedLabels();
+        }
+
+        /// <summary>
+        /// Resets all settings to factory defaults, re-seeds the UI groups to
+        /// reflect the new values, and refreshes all localised labels (in case
+        /// the language was reset to Default from a non-default language).
+        /// </summary>
+        private void OnResetSettingsTapped(object sender, EventArgs e)
+        {
+            _viewModel.ResetSettings();
+
+#if WINDOWS
+            // Apply the default window geometry immediately on Windows.
+            // ResetSettings() has already cleared the persisted geometry keys,
+            // so the next launch will also start with the default size/position.
+            Aeonpulse.WinUI.App.ResetWindowGeometry();
+#endif
+
+            // Re-seed every group to reflect the new default values.
+            _unitSelection = "Metric";
+            SetUnitGroup(_unitSelection);
+
+            _colorSelection = ThemeService.DefaultDark;
+            SetColorGroup(_colorSelection);
+
+            _textSizeSelection = FontSizeService.Normal;
+            SetTextSizeGroup(_textSizeSelection);
+
+            _langSelection = MainViewModel.LangDefault;
+            SetLangGroup(_langSelection);
+
+            // Refresh labels in case the language changed back to Default.
+            RefreshLocalisedLabels();
+        }
+
+        /// <summary>
+        /// Re-reads every localised string directly from <see cref="AppResources"/>
+        /// (which already uses the new culture set by <see cref="MainViewModel.ApplyLanguage"/>)
+        /// and assigns it to the matching label in this popup.
+        /// </summary>
+        private void RefreshLocalisedLabels()
+        {
+            SettingsTitleLabel.Text       = AppResources.Settings_Title;
+            SettingsSectionHeader.Text    = AppResources.Settings_SettingsTitle;
+            UnitsLabel.Text               = AppResources.Settings_UnitsLabel;
+            MetricLabel.Text              = AppResources.Settings_UnitsMetric;
+            ImperialLabel.Text            = AppResources.Settings_UnitsImperial;
+            PaletteLabel.Text             = AppResources.Settings_PaletteLabel;
+            DefaultDarkLabel.Text         = AppResources.Settings_PaletteDefault;
+            HighContrastDarkLabel.Text    = AppResources.Settings_PaletteHighContrastDark;
+            HighContrastLightLabel.Text   = AppResources.Settings_PaletteHighContrastLight;
+            TextSizeLabel.Text            = AppResources.Settings_TextSizeLabel;
+            TextSizeSmallLabel.Text       = AppResources.Settings_TextSizeSmall;
+            TextSizeNormalLabel.Text      = AppResources.Settings_TextSizeNormal;
+            TextSizeLargeLabel.Text       = AppResources.Settings_TextSizeLarge;
+            LanguageLabel.Text            = AppResources.Settings_LanguageLabel;
+            LangDefaultLabel.Text         = AppResources.Settings_LanguageDefault;
+            LangEnglishLabel.Text         = AppResources.Settings_LanguageEnglish;
+            LangRussianLabel.Text         = AppResources.Settings_LanguageRussian;
+            AboutSectionHeader.Text       = AppResources.Settings_AboutTitle;
+            AboutVersionLabel.Text        = AppResources.Settings_AboutVersion;
+            AboutDescriptionLabel.Text    = AppResources.Settings_AboutDescription;
+            AboutTaglineLabel.Text        = AppResources.Settings_AboutTagline;
+            CloseButton.Text              = AppResources.Settings_ButtonClose;
+            ResetSettingsButton.Text      = AppResources.Settings_ButtonResetSettings;
         }
 
         /// <summary>Dismisses the settings popup.</summary>

@@ -61,6 +61,7 @@ namespace Aeonpulse.ViewModels
         public string Settings_AboutDescription        => AppResources.Settings_AboutDescription;
         public string Settings_AboutTagline            => AppResources.Settings_AboutTagline;
         public string Settings_ButtonClose             => AppResources.Settings_ButtonClose;
+        public string Settings_ButtonResetSettings     => AppResources.Settings_ButtonResetSettings;
 
         // -- Change Date popup ------------------------------------------------
         public string ChangeDate_Title                    => AppResources.ChangeDate_Title;

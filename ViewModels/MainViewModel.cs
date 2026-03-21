@@ -10,7 +10,7 @@ namespace Aeonpulse.ViewModels
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly CalculationService _calculationService;
-        private System.Timers.Timer _updateTimer;
+        private IDispatcherTimer _updateTimer;
         private const string LogCat = "VM";
 
         #region Language constants
@@ -438,9 +438,9 @@ namespace Aeonpulse.ViewModels
             UpdateAllCalculations();
 
             // Setup timer for live updates (every second)
-            _updateTimer = new System.Timers.Timer(1000);
-            _updateTimer.Elapsed += (s, e) =>
-                MainThread.BeginInvokeOnMainThread(UpdateLiveCalculations);
+            _updateTimer = Application.Current!.Dispatcher.CreateTimer();
+            _updateTimer.Interval = TimeSpan.FromSeconds(1);
+            _updateTimer.Tick += (s, e) => UpdateLiveCalculations();
             _updateTimer.Start();
         }
 
@@ -501,6 +501,32 @@ namespace Aeonpulse.ViewModels
 
             // Recalculate all tickers once, with all three values now consistent
             UpdateAllCalculations();
+        }
+
+        /// <summary>
+        /// Resets all user-configurable settings to their factory defaults and
+        /// persists the new values. Clears persisted window geometry so the next
+        /// launch uses the default size and position.
+        /// <para>
+        /// Default values: <c>UseMetric=true</c>, <c>ColorScheme=DefaultDark</c>,
+        /// <c>TextSize=Normal</c>, <c>DisplayLanguage=Default</c>.
+        /// </para>
+        /// </summary>
+        public void ResetSettings()
+        {
+            UseMetric       = true;
+            ColorScheme     = ThemeService.DefaultDark;
+            TextSize        = FontSizeService.Normal;
+            DisplayLanguage = LangDefault;
+
+            // Clear persisted window geometry so the next launch recalculates
+            // the default size (430 px wide, 2/3 of screen height, centred).
+            Preferences.Default.Remove("WinX");
+            Preferences.Default.Remove("WinY");
+            Preferences.Default.Remove("WinWidth");
+            Preferences.Default.Remove("WinHeight");
+
+            AeonLog.Info(LogCat, "ResetSettings", "all settings restored to defaults");
         }
 
         #region INotifyPropertyChanged
