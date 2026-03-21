@@ -1115,27 +1115,28 @@ namespace Aeonpulse.Services
         /// <param name="galacticCommute">Typed galactic-commute result from <see cref="CalculateGalacticCommute"/>.</param>
         /// <param name="globalExhale">Typed global-exhale result from <see cref="CalculateGlobalExhale"/>.</param>
         /// <param name="baseDateName">Human-readable label for the origin date.</param>
-        /// <param name="baseDateValue">ISO-8601 origin date string.</param>
+        /// <param name="baseDate">The origin date; formatted with the current UI culture short-date format.</param>
         /// <returns>A single randomly-chosen formatted teaser string.</returns>
         [AIContext("UIPresentation")]
         public string GetRandomTeaseText(
             CountdownResult countdown, LifeOdometerResult lifeOdometer,
             GalacticCommuteResult galacticCommute, GlobalExhaleResult globalExhale,
-            string baseDateName, string baseDateValue)
+            string baseDateName, DateTime baseDate)
         {
+            string baseDateFormatted = baseDate.ToString("d");
             var teases = new[]
             {
                 AppResources.Tease_Countdown
                     .Replace("{countdown.BriefText}", countdown.BriefText),
                 AppResources.Tease_Heartbeats
                     .Replace("{lifeOdometer.Heartbeats}", lifeOdometer.Heartbeats.ToString("N0"))
-                    .Replace("{baseDateValue}", baseDateValue),
+                    .Replace("{baseDateValue}", baseDateFormatted),
                 AppResources.Tease_Breaths
                     .Replace("{lifeOdometer.Breaths}", lifeOdometer.Breaths.ToString("N0"))
-                    .Replace("{baseDateValue}", baseDateValue),
+                    .Replace("{baseDateValue}", baseDateFormatted),
                 AppResources.Tease_GalacticCommute
                     .Replace("{galacticCommute.Distance}", galacticCommute.Distance)
-                    .Replace("{baseDateValue}", baseDateValue),
+                    .Replace("{baseDateValue}", baseDateFormatted),
                 AppResources.Tease_GlobalExhale
                     .Replace("{baseDateName}", baseDateName)
                     .Replace("{globalExhale.Amount}", globalExhale.FormattedAmount)
