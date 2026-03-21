@@ -215,6 +215,14 @@ namespace Aeonpulse.Models
         /// </summary>
         public double TotalCO2BillionTonnes { get; init; }
 
+        /// <summary>
+        /// Formatted CO2 amount string including unit label, identical to the
+        /// token substituted into <see cref="TickerData.BriefText"/>
+        /// (e.g. "3.45 billion tonnes" or "3.40 billion tons").
+        /// Available directly so tease-text generation avoids re-computing it.
+        /// </summary>
+        public string FormattedAmount { get; init; } = string.Empty;
+
         /// <summary><c>true</c> when the result was computed in metric units.</summary>
         public bool UseMetric { get; init; }
 

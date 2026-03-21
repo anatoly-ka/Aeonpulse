@@ -469,9 +469,7 @@ namespace Aeonpulse.ViewModels
                 GalacticCommute,
                 GlobalExhale,
                 BaseDateName,
-                BaseDateValue,
-                LifeOdometer.Heartbeats,
-                LifeOdometer.Breaths
+                BaseDateValue
             );
         }
 

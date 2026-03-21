@@ -1052,6 +1052,7 @@ namespace Aeonpulse.Services
                 {
                     IsPreTwentiethCentury   = true,
                     TotalCO2BillionTonnes   = totalCO2,
+                    FormattedAmount         = amount,
                     UseMetric               = useMetric,
                     BriefText = AppResources.Ticker_GlobalExhalePreXX_Brief
                         .Replace("{amount}", amount),
@@ -1080,6 +1081,7 @@ namespace Aeonpulse.Services
             {
                 IsPreTwentiethCentury   = false,
                 TotalCO2BillionTonnes   = totalCO2,
+                FormattedAmount         = amount,
                 UseMetric               = useMetric,
                 BriefText = AppResources.Ticker_GlobalExhalePostXX_Brief
                     .Replace("{amount}", amount),
@@ -1096,42 +1098,49 @@ namespace Aeonpulse.Services
 
         /// <summary>
         /// Produces the teaser text displayed when the user taps the app logo.
-        /// The intent is to surface a single attention-grabbing stat from one of the
-        /// live tickers to encourage further exploration.
+        /// Randomly selects one of five stat lines, each sourced from a typed
+        /// ticker result so no string-parsing is required.
         ///
-        /// <para>
-        /// <b>Note:</b> The multi-tease random selection is currently commented out;
-        /// only the countdown tease is active. The <paramref name="heartbeats"/> and
-        /// <paramref name="breaths"/> parameters are reserved for future re-activation
-        /// of the full random pool.
-        /// </para>
+        /// <para><b>Pool (one chosen at random each call):</b></para>
+        /// <list type="number">
+        ///   <item><description>Countdown - reuses <see cref="CountdownResult.BriefText"/>.</description></item>
+        ///   <item><description>Heartbeats - uses <see cref="LifeOdometerResult.Heartbeats"/>.</description></item>
+        ///   <item><description>Breaths - uses <see cref="LifeOdometerResult.Breaths"/>.</description></item>
+        ///   <item><description>Galactic commute - uses <see cref="GalacticCommuteResult.Distance"/>.</description></item>
+        ///   <item><description>Global exhale - uses <see cref="GlobalExhaleResult.FormattedAmount"/>.</description></item>
+        /// </list>
         /// </summary>
-        /// <param name="countdown">Pre-computed countdown <see cref="TickerData"/> from <see cref="CalculateCountdown"/>.</param>
-        /// <param name="lifeOdometer">Pre-computed life odometer data (reserved for future use).</param>
-        /// <param name="galacticCommute">Pre-computed galactic commute data (reserved for future use).</param>
-        /// <param name="globalExhale">Pre-computed global exhale data (reserved for future use).</param>
-        /// <param name="baseDateName">Human-readable label for the origin date (reserved for future use).</param>
-        /// <param name="baseDateValue">ISO-8601 origin date string (reserved for future use).</param>
-        /// <param name="heartbeats">Raw heartbeat count passed directly from the caller to avoid re-computation.</param>
-        /// <param name="breaths">Raw breath count passed directly from the caller to avoid re-computation.</param>
-        /// <returns>A single formatted teaser string sourced from <see cref="AppResources"/>.</returns>
+        /// <param name="countdown">Typed countdown result from <see cref="CalculateCountdown"/>.</param>
+        /// <param name="lifeOdometer">Typed life-odometer result from <see cref="CalculateLifeOdometer"/>.</param>
+        /// <param name="galacticCommute">Typed galactic-commute result from <see cref="CalculateGalacticCommute"/>.</param>
+        /// <param name="globalExhale">Typed global-exhale result from <see cref="CalculateGlobalExhale"/>.</param>
+        /// <param name="baseDateName">Human-readable label for the origin date.</param>
+        /// <param name="baseDateValue">ISO-8601 origin date string.</param>
+        /// <returns>A single randomly-chosen formatted teaser string.</returns>
         [AIContext("UIPresentation")]
         public string GetRandomTeaseText(
             CountdownResult countdown, LifeOdometerResult lifeOdometer,
             GalacticCommuteResult galacticCommute, GlobalExhaleResult globalExhale,
-            string baseDateName, string baseDateValue,
-            long heartbeats, long breaths)   // <-- pass raw values
+            string baseDateName, string baseDateValue)
         {
-            /*var teases = new[]
+            var teases = new[]
             {
-                string.Format(AppResources.Tease_Countdown,        countdown.BriefText),
-                string.Format(AppResources.Tease_Heartbeats,       heartbeats.ToString("N0"), baseDateValue),
-                string.Format(AppResources.Tease_Breaths,          breaths.ToString("N0"),    baseDateValue),
-                string.Format(AppResources.Tease_GalacticCommute,  baseDateValue, galacticCommute.BriefText),
+                AppResources.Tease_Countdown
+                    .Replace("{countdown.BriefText}", countdown.BriefText),
+                AppResources.Tease_Heartbeats
+                    .Replace("{lifeOdometer.Heartbeats}", lifeOdometer.Heartbeats.ToString("N0"))
+                    .Replace("{baseDateValue}", baseDateValue),
+                AppResources.Tease_Breaths
+                    .Replace("{lifeOdometer.Breaths}", lifeOdometer.Breaths.ToString("N0"))
+                    .Replace("{baseDateValue}", baseDateValue),
+                AppResources.Tease_GalacticCommute
+                    .Replace("{galacticCommute.Distance}", galacticCommute.Distance)
+                    .Replace("{baseDateValue}", baseDateValue),
+                AppResources.Tease_GlobalExhale
+                    .Replace("{baseDateName}", baseDateName)
+                    .Replace("{globalExhale.Amount}", globalExhale.FormattedAmount)
             };
-            return teases[new Random().Next(teases.Length)];*/
-            return AppResources.Tease_Countdown
-                .Replace("{countdown.BriefText}", countdown.BriefText);
+            return teases[new Random().Next(teases.Length)];
         }
 
         #endregion

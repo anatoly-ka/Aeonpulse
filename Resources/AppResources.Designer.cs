@@ -2545,7 +2545,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Since {baseDateValue}, I&apos;ve hitched a ride on Earth for a {galacticCommute.BriefText}. I&apos;m literally a space traveler! How far have you traveled?.
+        ///   Looks up a localized string similar to Since {baseDateName}, I&apos;ve hitched a ride on Earth for a {galacticCommute.BriefText}. I&apos;m literally a space traveler! How far have you traveled?.
         /// </summary>
         public static string Tease_GalacticCommute {
             get {
@@ -2554,7 +2554,16 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to My heart has drummed {lifeOdometer.BriefText.Split(&quot; and &quot;)[0]} since {baseDateValue}. My internal engine never stops! Check your vitals on AeonPulse..
+        ///   Looks up a localized string similar to Since {baseDateName}, we poisoned our planet with {globalExhale.Amount} of CO2. Find other data on AeonPulse.
+        /// </summary>
+        public static string Tease_GlobalExhale {
+            get {
+                return ResourceManager.GetString("Tease_GlobalExhale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My heart has drummed {lifeOdometer.Heartbeats} times since {baseDateValue}.
         /// </summary>
         public static string Tease_Heartbeats {
             get {

@@ -470,7 +470,7 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Star_Lalande21185_Info" xml:space="preserve">
-    <value>звезда в созвездии Большая Медведица. Один из самых ярких красных карликов вблизи Земли, но все же слишком тусклый - его звездная величина составляет 7,52</value>
+    <value>звезда в созвездии Большая Медведица. Один из самых ярких красных карликов вблизи Земли, но все еще слишком тусклый - его звездная величина составляет 7,52</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Star_Sirius_Info" xml:space="preserve">
@@ -1054,15 +1054,19 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Tease_Heartbeats" xml:space="preserve">
-    <value>Моё сердце бьёт {lifeOdometer.BriefText.Split(" and ")[0]} с {baseDateValue}. Мой внутренний двигатель никогда не останавливается! Проверьте свои показатели на AeonPulse.</value>
+    <value>Моё сердце сделало {lifeOdometer.Heartbeats} ударов с {baseDateValue}. Мой внутренний двигатель никогда не останавливается! Проверьте свои показатели на AeonPulse.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Tease_Breaths" xml:space="preserve">
-    <value>Мои легкие сработали {lifeOdometer.BriefText.Split(" и ")[1]} раз с {baseDateValue}. А ваши? Проверьте свои показатели на AeonPulse.</value>
+    <value>Мои лёгкие сделали {lifeOdometer.Breaths} вдохов с {baseDateValue}. А ваши? Проверьте свои показатели на AeonPulse.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Tease_GalacticCommute" xml:space="preserve">
-    <value>Начиная с даты, когда {baseDateValue}, я пропутешествовал вместе с нашей Землей {galacticCommute.BriefText}. Я буквально космический странник! А как далеко вы вояжировали?</value>
+    <value>С {baseDateValue} я прокатился на Земле уже {galacticCommute.Distance}. Я буквально космический странник! А как далеко вы вояжировали?</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Tease_GlobalExhale" xml:space="preserve">
+    <value>С {baseDateName} человечество отравило нашу планету {globalExhale.Amount} CO2. Узнайте другие данные на AeonPulse.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_ButtonClose" xml:space="preserve">

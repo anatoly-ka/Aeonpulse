@@ -1470,7 +1470,7 @@ AIContext:   CoreCalculationEngine
 | `CalculateBirthRune` | `CoreCalculation` | Static | `baseDateValue` |
 | `CalculatePersonalYear` | `CoreCalculation` | Static | `baseDateValue` |
 | `CalculateGlobalExhale` | `CoreCalculation`, `ExternalDataModel` | Static | `baseDateName`, `baseDateValue`, `useMetric` |
-| `GetRandomTeaseText` | `UIPresentation` | LIVE (1s) | `CountdownResult`, `LifeOdometerResult`, `GalacticCommuteResult`, `GlobalExhaleResult` + raw `heartbeats`/`breaths` longs |
+| `GetRandomTeaseText` | `UIPresentation` | LIVE (1s) | `CountdownResult`, `LifeOdometerResult`, `GalacticCommuteResult`, `GlobalExhaleResult`, `baseDateName`, `baseDateValue` - returns 1 of 5 random tease strings |
 
 **Owns:**
 - All domain computation logic

@@ -1054,15 +1054,19 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Tease_Heartbeats" xml:space="preserve">
-    <value>My heart has drummed {lifeOdometer.BriefText.Split(" and ")[0]} since {baseDateValue}. My internal engine never stops! Check your vitals on AeonPulse.</value>
+    <value>My heart has drummed {lifeOdometer.Heartbeats} times since {baseDateValue}. My internal engine never stops! Check your vitals on AeonPulse.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Tease_Breaths" xml:space="preserve">
-    <value>My lungs have processed {lifeOdometer.BriefText.Split(" and ")[1]} since {baseDateValue}. And yours? Check your vitals on AeonPulse.</value>
+    <value>My lungs have taken {lifeOdometer.Breaths} breaths since {baseDateValue}. And yours? Check your vitals on AeonPulse.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Tease_GalacticCommute" xml:space="preserve">
-    <value>Since {baseDateValue}, I've hitched a ride on Earth for a {galacticCommute.BriefText}. I'm literally a space traveler! How far have you traveled?</value>
+    <value>Since {baseDateValue}, I've hitched a ride on Earth for {galacticCommute.Distance}. I'm literally a space traveler! How far have you traveled?</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Tease_GlobalExhale" xml:space="preserve">
+    <value>Since {baseDateName}, we poisoned our planet with {globalExhale.Amount} of CO2. Find other data on AeonPulse.</value>
     <comment>CalculationService.cs</comment>
   </data>
 	<data name="Info_ButtonClose" xml:space="preserve">
