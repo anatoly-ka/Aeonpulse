@@ -1,4 +1,4 @@
-﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
+# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
 > **Last updated:** 2026-03-21
 > **Maintained by:** AI Agents and human developers collaboratively.
@@ -41,7 +41,7 @@
 | **3.5** | Theme and Font Size Flow | Full ASCII diagram: settings change -> `ThemeService`/`FontSizeService` -> `DynamicResource` repaint. Startup bootstrap order. |
 | **3.6** | Cross-Platform Image Tinting | Full ASCII diagram: `ImageTint.Color` -> mapper -> `TintHelper` -> native API. Per-platform notes. |
 | **3.7** | Modal Navigation Pattern | Push/pop pattern, guard flag pattern, iOS pop-then-push ordering, `topOffset` positioning. |
-| **3.8** | Settings Persistence | `Preferences` key table: read location, write location, default value. `UseMetric` not-yet-persisted note. |
+| **3.8** | Settings Persistence | `Preferences` key table: read location, write location, default value. All 4 settings persisted. |
 | **4** | AI Markup Schema | All three markup systems: `[AIContext]`, `<!-- AI: -->`, `///`. Syntax contracts. |
 | **4.1** | `[AIContext]` Attribute | Complete role vocabulary table (16 roles). Placement rules. What to apply when adding new code. |
 | **4.2** | XAML `<!-- AI: -->` Comments | Syntax contract, two styles, inventory of all current comments by file/line. When to add new ones. |
@@ -844,10 +844,7 @@ All user preferences use `Microsoft.Maui.Storage.Preferences` (maps to
 | `"ColorScheme"` | `string` | `"DefaultDark"` | `App.xaml.cs` ctor | `MainViewModel.ColorScheme` setter |
 | `"TextSize"` | `string` | `"Normal"` | `App.xaml.cs` ctor | `MainViewModel.TextSize` setter |
 | `"DisplayLanguage"` | `string` | `"Default"` | `App.xaml.cs` ctor | `MainViewModel.DisplayLanguage` setter |
-
-Note: `UseMetric` is not currently persisted. To add persistence, read it in
-`App.xaml.cs` and write it in the `MainViewModel.UseMetric` setter following the
-same pattern as the other three keys.
+| `"UseMetric"` | `bool` | `true` | `MainViewModel` ctor | `MainViewModel.UseMetric` setter |
 
 ---
 
@@ -1422,7 +1419,7 @@ AIContext:   (none - state orchestrator)
 - `FontSizeService.Instance.ApplyPreset(string)` - from `TextSize` setter
 - `MainViewModel.ApplyLanguage(string)` - from `DisplayLanguage` setter
 - `Loc.Invalidate()` - from `DisplayLanguage` setter, forces UI rebind
-- `Preferences.Default.Set(...)` - persists `ColorScheme`, `TextSize`, `DisplayLanguage`
+- `Preferences.Default.Set(...)` - persists `ColorScheme`, `TextSize`, `DisplayLanguage`, `UseMetric`
 - `MainThread.BeginInvokeOnMainThread(UpdateLiveCalculations)` - from timer callback
 
 **Called by:**

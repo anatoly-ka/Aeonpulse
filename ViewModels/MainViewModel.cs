@@ -80,7 +80,15 @@ namespace Aeonpulse.ViewModels
         public bool UseMetric
         {
             get => _useMetric;
-            set { _useMetric = value; OnPropertyChanged(); UpdateAllCalculations(); }
+            set
+            {
+                if (_useMetric == value)
+                    return;
+                _useMetric = value;
+                OnPropertyChanged();
+                Preferences.Default.Set("UseMetric", _useMetric);
+                UpdateAllCalculations();
+            }
         }
 
         private string _colorScheme = ThemeService.DefaultDark;
@@ -372,6 +380,9 @@ namespace Aeonpulse.ViewModels
             var savedLanguage = Preferences.Default.Get("DisplayLanguage", LangDefault);
             _displayLanguage = savedLanguage;
             // ApplyLanguage was already called in App.xaml.cs, no need to call again
+
+            // Restore persisted unit system (defaults to true/Metric on first run)
+            _useMetric = Preferences.Default.Get("UseMetric", true);
 
             // Initialize section commands
             ToggleLabCommand = new Command(() => LabExpanded = !LabExpanded);
