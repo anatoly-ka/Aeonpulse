@@ -28,7 +28,7 @@ namespace Aeonpulse
     ///   <item><description>
     ///     <see cref="MainViewModel"/> is also constructed by XAML inside
     ///     <c>MainPage.xaml</c>'s <c>BindingContext</c>; that second construction re-reads
-    ///     persisted preferences — the language, however, is <b>not</b> re-applied there
+    ///     persisted preferences ï¿½ the language, however, is <b>not</b> re-applied there
     ///     because it was already set here.
     ///   </description></item>
     /// </list>
@@ -49,12 +49,15 @@ namespace Aeonpulse
             var savedTextSize = Preferences.Default.Get("TextSize",    FontSizeService.Normal);
 
             ThemeService.Instance.ApplyScheme(savedScheme);
+            AeonLog.Info("BOOT", "ColorScheme", $"restored={savedScheme}");
             FontSizeService.Instance.ApplyPreset(savedTextSize);
+            AeonLog.Info("BOOT", "TextSize",    $"restored={savedTextSize}");
 
             // Restore persisted display language before InitializeComponent()
             // so all {x:Static resources:AppResources.*} bindings use the right culture.
             var savedLanguage = Preferences.Default.Get("DisplayLanguage", MainViewModel.LangDefault);
             MainViewModel.ApplyLanguage(savedLanguage);
+            AeonLog.Info("BOOT", "Language",    $"restored={savedLanguage}");
 
             InitializeComponent();
             MainPage = new Views.MainPage();

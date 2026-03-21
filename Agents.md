@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-03-21
+> **Last updated:** 2026-03-22
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -43,7 +43,7 @@
 | **3.7** | Modal Navigation Pattern | Push/pop pattern, guard flag pattern, iOS pop-then-push ordering, `topOffset` positioning. |
 | **3.8** | Settings Persistence | `Preferences` key table: read location, write location, default value. All 4 settings persisted. |
 | **4** | AI Markup Schema | All three markup systems: `[AIContext]`, `<!-- AI: -->`, `///`. Syntax contracts. |
-| **4.1** | `[AIContext]` Attribute | Complete role vocabulary table (16 roles). Placement rules. What to apply when adding new code. |
+| **4.1** | `[AIContext]` Attribute | Complete role vocabulary table (17 roles). Placement rules. What to apply when adding new code. |
 | **4.2** | XAML `<!-- AI: -->` Comments | Syntax contract, two styles, inventory of all current comments by file/line. When to add new ones. |
 | **4.3** | XML Doc Comments (`///`) | Tags in use, standard summary structure, real examples. Placement rules. |
 | **4.4** | Markup Consistency Rules | The Four-Sync Rule, ASCII-only constraint, cross-file consistency rules. |
@@ -79,7 +79,7 @@
 | **7.5** | Adding a New Font Size Preset | 2-step recipe + reference to 7.3 pattern for settings UI wiring. |
 | **7.6** | Files-Changed Checklist | Matrix of extension type vs file - which files to touch for each recipe. |
 | **8** | Debugging | Logging infrastructure, instrumentation points, per-platform log viewing. |
-| **8.1** | Current Logging Infrastructure | `AddDebug()` in `#if DEBUG` only. No application-level logging today. |
+| **8.1** | Logging Infrastructure and `AeonLog` Gateway | `AeonLog` static gateway, message-format convention, `[BLOCK]` tag rules. `AddDebug()` wiring in `MauiProgram`. |
 | **8.2** | Enabling Debug Logging | Option A (resolve from `IPlatformApplication`), Option B (DI injection). Log level table. |
 | **8.3** | Recommended Instrumentation Points | 5 specific locations: startup, `SaveDate`, timer, localisation, tint pipeline. |
 | **8.4** | Viewing Logs by Platform | Windows Output pane, Android `adb logcat`, iOS Xcode Console, binding error logging. |
@@ -274,7 +274,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | `Aeonpulse.sln` | Do not edit | - | Visual Studio solution file. Managed by IDE. |
 | `App.xaml` | Edit freely | - | Application-level `ResourceDictionary` root. Merges `Colors.xaml` then `Styles.xaml` in load order. Merge order matters: Styles references Colors. |
 | `App.xaml.cs` | Edit freely | `AppBootstrap` | Application entry point. Reads `Preferences` and calls `ThemeService`, `FontSizeService`, and `MainViewModel.ApplyLanguage()` **before** `InitializeComponent()` so the first rendered frame is already correct. Sets `MainPage = new MainPage()`. Contains the `.NET 9` obsolete `MainPage` setter - do not add further usages. |
-| `MauiProgram.cs` | Edit freely | `AppBootstrap` | MAUI host builder. Registers OpenSans fonts. Appends `ImageTint.ColorProperty` callbacks to `ImageHandler.Mapper` and `ImageButtonHandler.Mapper` globally. Declares `partial` stubs `ApplyImageTint` and `ApplyImageButtonTint` - implemented per-platform in `TintHelper.cs`. Add new handler mappers or DI registrations here. |
+| `MauiProgram.cs` | Edit freely | `AppBootstrap` | MAUI host builder. Registers OpenSans fonts. Appends `ImageTint.ColorProperty` callbacks to `ImageHandler.Mapper` and `ImageButtonHandler.Mapper` globally. Declares `partial` stubs `ApplyImageTint` and `ApplyImageButtonTint` - implemented per-platform in `TintHelper.cs`. Add new handler mappers or DI registrations here. After `builder.Build()`, calls `AeonLog.Initialise(ILoggerFactory)` to wire the application logging gateway. |
 
 ---
 
@@ -293,6 +293,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
+| ``AeonLog.cs`` | Edit freely | ``DiagnosticsGateway`` | Static logging gateway. Zero MAUI dependencies; also linked into ``Aeonpulse.Tests``. Wired by ``AeonLog.Initialise(ILoggerFactory)`` called from ``MauiProgram`` after ``builder.Build()``. Three ``[Conditional("DEBUG")]`` methods: ``Debug(cat, sub, msg, block?)``, ``Info(cat, sub, msg)``, ``Warn(cat, sub, msg)``. Falls back to ``NullLogger.Instance`` before initialisation. See Section 8.1 for message-format convention and ``[BLOCK]`` tag rules. |
 | `CalculationService.cs` | Edit freely | `CoreCalculationEngine` | The single domain-logic class. Stateless - reads `DateTime.Now` internally so every call produces a fresh result. All 10 ticker methods return typed subclasses of `TickerData` (see `TickerResults.cs`). `FindNearestJubilee`, `ReduceToSingleDigit`, and `GetRandomTeaseText` live here. All output strings are pulled from `AppResources` at call time, so output automatically reflects the active locale. Thread-safe; called from both the UI thread and the 1-second timer (via `MainThread.BeginInvokeOnMainThread`). All 10 public `Calculate*` methods accept an optional `DateTime? now = null` parameter for deterministic testing - production callers omit it and get `DateTime.Now`. `FindNearestJubilee` and `ReduceToSingleDigit` are `internal static` and accessible to `Aeonpulse.Tests` via `InternalsVisibleTo`. |
 | `ThemeService.cs` | Edit freely | - | Singleton (`Instance`). Stores three `Dictionary<string, Color>` palettes: `_defaultColors` (DefaultDark), `_highContrastDarkColors`, `_highContrastLightColors`. `ApplyScheme(string)` iterates the chosen palette and writes each key directly into `Application.Current.Resources`, causing all `DynamicResource` bindings to repaint immediately. To add a new colour scheme: add a new palette dict and a new `const string` identifier, then add a case to the switch in `ApplyScheme`. |
 | `FontSizeService.cs` | Edit freely | - | Singleton (`Instance`). Same pattern as `ThemeService` but for five font-size keys (`FontSizeSmall` through `FontSizeTitle`). `ApplyPreset(string)` mutates the resource dict. Three presets: `Small`, `Normal`, `Large`. |
@@ -459,7 +460,7 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 
 | File | Edit? | Description |
 |------|-------|-------------|
-| `Aeonpulse.Tests.csproj` | Edit freely | xUnit test project targeting `net9.0`. Links `CalculationService.cs`, `TickerData.cs`, `TickerResults.cs`, `AIContextAttribute.cs`, and `AppResources.Designer.cs` directly from the main project via `<Compile Link=...>` items. Embeds `.resx` files so `ResourceManager` resolves strings at test runtime. No MAUI reference required. |
+| `Aeonpulse.Tests.csproj` | Edit freely | xUnit test project targeting `net9.0`. Links `CalculationService.cs`, `AeonLog.cs`, `TickerData.cs`, `TickerResults.cs`, `AIContextAttribute.cs`, and `AppResources.Designer.cs` directly from the main project via `<Compile Link=...>` items. Embeds `.resx` files so `ResourceManager` resolves strings at test runtime. No MAUI reference required. |
 | `Helpers/TestFixture.cs` | Edit freely | Shared setup helper. `InitEnglish()` pins `AppResources.Culture` to `en` before each test class so string assertions are locale-stable on any CI machine. |
 | `FindNearestJubileeTests.cs` | Edit freely | Tests for the `internal static FindNearestJubilee()` algorithm covering all four jubilee families and boundary values. |
 | `ReduceToSingleDigitTests.cs` | Edit freely | Tests for the `internal static ReduceToSingleDigit()` digital-root algorithm. |
@@ -918,6 +919,7 @@ genuinely novel and not covered by any existing role.
 | `NavigationCoordinator` | Code-behind whose sole role is modal push/pop and event-to-command wiring. | `MainPage` (class), `OpenDeepDiveAsync` (method) |
 | `ModalViewController` | Code-behind for a popup/modal page. | `SettingsPopup`, `ChangeDatePopup`, `MainMenuPopup`, `DeepDivePopup`, `RefreshingPopup` (all classes) |
 | `DataTransferObject` | A data-carrying model with no domain behaviour. | `TickerData`, all 10 `*Result` subclasses, `TickerCardModel` (classes) |
+| `DiagnosticsGateway` | Static logging gateway with zero domain logic; active in DEBUG builds only via `[Conditional("DEBUG")]`. | `AeonLog` (class) |
 | `UIConverter` | An `IValueConverter` implementation used in XAML bindings. | `BoolToVisibilityConverter`, `InverseBoolConverter`, `BoolToImageSourceConverter` (classes) |
 | `PlatformAbstractionHelper` | A cross-platform helper that bridges a missing MAUI API to native layers. | `ImageTint` (class) |
 | `PlatformTintImplementation` | Platform-specific `partial` method implementation for `ImageTint`. | All four `TintHelper.cs` classes |
@@ -1483,6 +1485,7 @@ AIContext:   CoreCalculationEngine
 **Calls:**
 - `AppResources.*` - all output string keys, read at call time
 - `DateTime.Now` - internal, every method
+- `AeonLog.Debug` - entry log on all `Calculate*` methods; `[BLOCK]`-tagged phase logs in `CalculatePhotonPath` and `CalculateTimeJubilees`
 
 **Called by:**
 - `MainViewModel.UpdateStaticCalculations()` - 6 methods
@@ -1490,7 +1493,7 @@ AIContext:   CoreCalculationEngine
 - `MainViewModel` refresh command lambdas - 3 specific methods (TimeJubilees, AlienAnniversaries, GlobalExhale)
 
 **Extend here when:**
-- Adding a new ticker: add a new `public XxxResult CalculateXxx(...)` method returning a typed subclass of `TickerData` defined in `TickerResults.cs`. Decorate with `[AIContext]`, add `///` docs, source all strings from `AppResources` only. No UI references.
+- Adding a new ticker: add a new `public XxxResult CalculateXxx(...)` method returning a typed subclass of `TickerData` defined in `TickerResults.cs`. Decorate with `[AIContext]`, add `///` docs, source all strings from `AppResources` only. No UI references. Add an `AeonLog.Debug` entry call; add `[BLOCK]`-tagged calls only if the method has named internal phases.
 - Adding a new star to the catalogue: add entry to the inline `stars` array in `CalculatePhotonPath`
 - Updating scientific dataset constants: update the relevant method's inline data and its `///` `ExternalDataModel` comment with the new source citation
 
@@ -3115,105 +3118,133 @@ add radio row to `SettingsPopup.xaml` in the Text Size group (expand
 
 ---
 
-### 8.1 Current Logging Infrastructure
+### 8.1 Logging Infrastructure and `AeonLog` Gateway
 
-The project uses `Microsoft.Extensions.Logging` with a single provider registered
-at startup. There is **no logging in application code** as of the current codebase -
-no `ILogger` injected into services, no `Debug.WriteLine` calls, no `Console.Write`
-calls anywhere outside the framework layer.
+#### Active logging registrations
 
-The one active logging registration is in `MauiProgram.cs`:
+`MauiProgram.cs` registers the debug provider and wires the application gateway:
 
 ```csharp
-// MauiProgram.cs
 #if DEBUG
     builder.Logging.AddDebug();
 #endif
+var app = builder.Build();
+AeonLog.Initialise(app.Services.GetRequiredService<ILoggerFactory>());
+return app;
 ```
 
-This means:
-- In `DEBUG` builds: MAUI framework log events (binding errors, handler warnings, layout passes) are forwarded to the platform debug output channel.
-- In `RELEASE` builds: the `AddDebug()` call is compiled out entirely. No log output is produced.
-- Application code (services, ViewModels, code-behind): currently produces no log output in either configuration.
+- **DEBUG builds:** MAUI framework events (binding errors, handler warnings) reach
+  the platform debug channel. `AeonLog` calls reach the same channel.
+- **RELEASE builds:** `AddDebug()` is compiled out. All `AeonLog` call sites are
+  also erased by `[Conditional("DEBUG")]` - zero runtime overhead.
 
-The `Microsoft.Extensions.Logging.Debug` NuGet package (`9.0.0`) is already
-declared in `Aeonpulse.csproj` and provides the `AddDebug()` extension method.
+#### `AeonLog` gateway (`Services/AeonLog.cs`)
+
+A static class with three methods, each carrying `[Conditional("DEBUG")]`:
+
+| Method | `ILogger` level | Intended use |
+|--------|-----------------|--------------|
+| `Debug(cat, sub, msg, block?)` | `LogDebug` | Calculation inputs/outputs, method entry/exit, internal phase transitions |
+| `Info(cat, sub, msg)` | `LogInformation` | User-driven actions: date change, settings change, language switch |
+| `Warn(cat, sub, msg)` | `LogWarning` | Unexpected but recoverable states |
+
+`AeonLog.Initialise(ILoggerFactory)` is called once from `MauiProgram` after
+`builder.Build()`. Before initialisation (e.g. in unit tests) all calls resolve
+to `NullLogger.Instance` and produce no output.
+
+#### Message format convention
+
+Every log message follows one of two patterns:
+
+```
+[CATEGORY] [SUBCATEGORY] message  key=value              (short methods)
+[CATEGORY] [SUBCATEGORY] [BLOCK] message  key=value      (long multi-phase methods)
+```
+
+**Category tokens in use:**
+
+| Token | Layer / concern |
+|-------|----------------|
+| `BOOT` | App startup, preferences restoration (`App.xaml.cs`) |
+| `VM` | `MainViewModel` - user actions, timer, date save |
+| `CALC` | `CalculationService` - all ticker calculations |
+| `NAV` | Modal navigation (reserved for future use) |
+| `THEME` | Theme and font-size changes (reserved) |
+| `LOCALE` | Language switching (reserved) |
+| `TINT` | Image tinting pipeline (reserved) |
+
+#### `[BLOCK]` tag rule
+
+Add a `[BLOCK]` fourth argument **only** when a method contains named internal
+phases or a repeated scan loop where the same field names appear with different
+semantic meanings across iterations. Use it for:
+
+- `CalculateTimeJubilees` - 7-unit candidate scan: `UNIT_SCAN`, `WINNER`
+- `CalculatePhotonPath` - phase dispatch and star catalogue walk:
+  `INPUT`, `DISTANCE`, `PHASE_LOOKUP`, `STAR_MATCH`, `RESULT`
+
+All other methods use only `[CATEGORY]` and `[SUBCATEGORY]`.
+
+#### Instrumentation points in the codebase
+
+| Location | Category | Level | What it logs |
+|----------|----------|-------|--------------|
+| `App()` ctor - after each `Preferences.Get` | `BOOT` | Info | `restored=value` for ColorScheme, TextSize, Language |
+| `MainViewModel.SaveDate` - entry | `VM` | Info | `in: name=... date=...` |
+| `MainViewModel.SaveDate` - after field assignment | `VM` | Debug | `out: BaseDateName=... BaseDateValue=... BaseDate=...` |
+| `MainViewModel.UseMetric` setter | `VM` | Info | `value=...` |
+| `MainViewModel.ColorScheme` setter | `VM` | Info | `value=...` |
+| `MainViewModel.DisplayLanguage` setter | `VM` | Info | `value=... culture=...` |
+| `MainViewModel.UpdateLiveCalculations` | `VM` | Debug | `thread=... isMainThread=...` |
+| Entry of every `Calculate*` method | `CALC` | Debug | `baseDate=...` plus key input values |
+| `CalculateTimeJubilees` - per unit | `CALC` | Debug | `[UNIT_SCAN]` `unit=... jubilee=... daysUntil=...` |
+| `CalculateTimeJubilees` - winner | `CALC` | Debug | `[WINNER]` `unit=... jubilee=... daysUntil=...` |
+| `CalculatePhotonPath` - after inputs | `CALC` | Debug | `[INPUT]` `baseDate=... seconds=...` |
+| `CalculatePhotonPath` - after distance | `CALC` | Debug | `[DISTANCE]` `ly=... km=...` |
+| `CalculatePhotonPath` - phase decision | `CALC` | Debug | `[PHASE_LOOKUP]` `phase=...` |
+| `CalculatePhotonPath` - star catalogue walk | `CALC` | Debug | `[STAR_MATCH]` `star=... starLy=...` |
+| `CalculatePhotonPath` - before return | `CALC` | Debug | `[RESULT]` `phase=... starName=... ly=...` |
 
 ---
 
-### 8.2 Enabling Debug Logging in Application Code
+### 8.2 Adding Log Calls to Application Code
 
-To add structured logging to any class, inject `ILogger<T>` via the constructor.
-Because the project does **not** use a DI container for application classes
-(services are instantiated directly - see Section 5, Root Node 1), there are two
-practical approaches.
+Use `AeonLog` (see Section 8.1) for all application-level diagnostic output.
+Never inject `ILogger<T>` directly into services or ViewModels - the gateway
+already handles resolution and the `[Conditional("DEBUG")]` erasure.
 
-#### Option A - Use `Application.Current.Handler.MauiContext` (zero-DI, recommended for services)
-
-Resolve the logger from the MAUI service provider at call site. This avoids
-refactoring constructors:
+#### Pattern for all application code
 
 ```csharp
-using Microsoft.Extensions.Logging;
+private const string LogCat = "CALC";  // or VM, BOOT, etc.
 
-// Inside any class that needs temporary diagnostic logging:
-var logger = IPlatformApplication.Current?.Services
-    .GetService<ILogger<CalculationService>>();
-logger?.LogDebug("CalculateTimeJubilees called: baseDate={BaseDate}", baseDate);
+// Simple entry log (short methods):
+AeonLog.Debug(LogCat, nameof(CalculateCountdown), $"baseDate={baseDate:d}");
+
+// With a [BLOCK] tag (long multi-phase methods only):
+AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"ly={lightYears:F4}", "DISTANCE");
+
+// User action (Info level):
+AeonLog.Info(LogCat, "SaveDate", $"in: name={name} date={date}");
 ```
 
-This works wherever `IPlatformApplication.Current` is non-null (i.e., after
-`MauiProgram.CreateMauiApp()` has returned).
-
-#### Option B - Register the class in DI and inject `ILogger<T>` (recommended for new classes)
-
-In `MauiProgram.cs`, register the class as a service:
-
-```csharp
-// MauiProgram.cs - inside CreateMauiApp(), before builder.Build()
-builder.Services.AddSingleton<CalculationService>();
-```
-
-Then accept `ILogger<CalculationService>` in the constructor:
-
-```csharp
-// CalculationService.cs
-private readonly ILogger<CalculationService>? _logger;
-
-public CalculationService(ILogger<CalculationService>? logger = null)
-{
-    _logger = logger;
-}
-```
-
-Update `MainViewModel` to resolve `CalculationService` from DI instead of
-constructing it directly:
-
-```csharp
-// MainViewModel.cs constructor
-_calculationService = IPlatformApplication.Current!.Services
-    .GetRequiredService<CalculationService>();
-```
-
-#### Choosing log levels
+#### Log level guidance
 
 | Level | Use for |
 |-------|---------|
-| `LogTrace` | Verbose per-tick output (live ticker values, timer firings) - disable in normal debug sessions |
-| `LogDebug` | Calculation inputs/outputs, method entry/exit in services |
-| `LogInformation` | User actions (date change, settings change, language switch) |
-| `LogWarning` | Unexpected but recoverable states (null resource, missing key) |
-| `LogError` | Exceptions caught in `catch` blocks |
+| `AeonLog.Debug` | Calculation inputs/outputs, method entry/exit, phase transitions |
+| `AeonLog.Info` | User-driven actions: date change, settings change, language switch |
+| `AeonLog.Warn` | Unexpected but recoverable states (missing resource key, null result) |
 
-#### Adding a minimum log level filter
+#### Suppressing noisy framework output
 
-To suppress `LogTrace` noise while keeping `LogDebug` and above, add to
-`MauiProgram.cs` inside the `#if DEBUG` block:
+To silence MAUI's verbose `Information`-level lifecycle logs while keeping
+`Warning` and `Error` binding failures visible, add to `MauiProgram.cs`:
 
 ```csharp
 #if DEBUG
     builder.Logging.AddDebug();
-    builder.Logging.SetMinimumLevel(LogLevel.Debug);   // suppress Trace
+    builder.Logging.AddFilter("Microsoft.Maui", LogLevel.Warning);
 #endif
 ```
 
@@ -3221,92 +3252,88 @@ To suppress `LogTrace` noise while keeping `LogDebug` and above, add to
 
 ### 8.3 Recommended Debug Instrumentation Points
 
-The following are the highest-value locations to add temporary `LogDebug` calls
-when diagnosing specific problem classes. Add them, investigate, then remove
-before committing.
+All instrumentation below is already wired in the codebase. The table in
+Section 8.1 lists every active call site. The examples below show the exact
+`AeonLog` call at each location for reference.
 
-#### Startup / preferences restoration
-
-```csharp
-// App.xaml.cs constructor - after each Preferences.Default.Get()
-logger?.LogDebug("Restored ColorScheme={Scheme}, TextSize={Size}, Language={Lang}",
-    savedScheme, savedTextSize, savedLanguage);
-```
-
-Useful when: the app starts with the wrong theme, font size, or language, and you
-need to confirm what was read from `Preferences`.
-
-#### Base date atomicity
+#### Startup / preferences restoration (`App.xaml.cs`)
 
 ```csharp
-// MainViewModel.SaveDate()
-logger?.LogDebug("SaveDate called: name={Name}, date={Date}", name, date);
-logger?.LogDebug("SaveDate complete: BaseDateName={N} BaseDateValue={V} BaseDate={D}",
-    _baseDateName, _baseDateValue, _baseDate);
+AeonLog.Info("BOOT", "ColorScheme", $"restored={savedScheme}");
+AeonLog.Info("BOOT", "TextSize",    $"restored={savedTextSize}");
+AeonLog.Info("BOOT", "Language",    $"restored={savedLanguage}");
 ```
 
-Useful when: ticker cards show stale data after a date change. Confirms whether
-`SaveDate` is receiving the new values and whether `UpdateAllCalculations` is
-being called with all three fields consistent.
+Useful when: the app starts with the wrong theme, font size, or language.
+Confirms what was read from `Preferences` before `InitializeComponent()`.
 
-#### Timer thread marshalling
+#### Base date atomicity (`MainViewModel.SaveDate`)
 
 ```csharp
-// MainViewModel._updateTimer.Elapsed handler
-_updateTimer.Elapsed += (s, e) =>
-{
-    // Confirm timer fires and reaches the main thread:
-    System.Diagnostics.Debug.WriteLine(
-        $"[Timer] Elapsed on thread {Environment.CurrentManagedThreadId}");
-    MainThread.BeginInvokeOnMainThread(() =>
-    {
-        System.Diagnostics.Debug.WriteLine(
-            $"[Timer] On main thread: {MainThread.IsMainThread}");
-        UpdateLiveCalculations();
-    });
-};
+AeonLog.Info("VM",  "SaveDate", $"in: name={name} date={date}");
+// ... after _baseDateName/_baseDateValue/_baseDate are set:
+AeonLog.Debug("VM", "SaveDate", $"out: BaseDateName={_baseDateName} BaseDateValue={_baseDateValue} BaseDate={_baseDate:d}");
 ```
 
-Useful when: live ticker cards stop updating. Confirms the timer is firing and the
-marshalling to the main thread is succeeding.
+Useful when: ticker cards show stale data after a date change. Confirms that
+`SaveDate` receives the new values and sets all three backing fields before
+`UpdateAllCalculations` fires.
 
-#### Localisation switching
+#### Timer thread marshalling (`MainViewModel.UpdateLiveCalculations`)
 
 ```csharp
-// MainViewModel.DisplayLanguage setter - after ApplyLanguage()
-logger?.LogDebug("Language switched to {Lang}. Culture={Culture}",
-    _displayLanguage,
-    System.Globalization.CultureInfo.CurrentUICulture.Name);
+AeonLog.Debug("VM", "Timer", $"thread={Environment.CurrentManagedThreadId} isMainThread={MainThread.IsMainThread}");
 ```
+
+Useful when: live ticker cards stop updating. Confirms the timer is firing
+and that `BeginInvokeOnMainThread` is delivering work to the UI thread.
+
+#### Settings changes (`MainViewModel` setters)
 
 ```csharp
-// LocalizedResources.Invalidate()
-System.Diagnostics.Debug.WriteLine(
-    $"[Loc] Invalidate() called. AppResources.Culture={AppResources.Culture?.Name}");
+AeonLog.Info("VM", "UseMetric",   $"value={value}");
+AeonLog.Info("VM", "ColorScheme", $"value={value}");
+AeonLog.Info("VM", "Language",    $"value={_displayLanguage} culture={CultureInfo.CurrentUICulture.Name}");
 ```
 
-Useful when: language switching appears to change some strings but not others.
-Confirms `ApplyLanguage` set the culture correctly before `Invalidate()` fired.
+Useful when: a settings change appears to apply partially or not at all.
+The `Info` level means these lines are visible without enabling `Debug` verbosity.
 
-#### Tint pipeline
+#### Calculation entry (all `Calculate*` methods)
 
 ```csharp
-// MauiProgram.cs handler mapper callback - ApplyImageTint lambda
-Microsoft.Maui.Handlers.ImageHandler.Mapper.AppendToMapping(
-    nameof(ImageTint.ColorProperty),
-    (handler, view) =>
-    {
-        if (view is not BindableObject bindable) return;
-        var tint = ImageTint.GetColor(bindable);
-        System.Diagnostics.Debug.WriteLine(
-            $"[Tint] Image mapper fired. Tint={tint}");
-        if (handler is Microsoft.Maui.Handlers.ImageHandler imageHandler)
-            ApplyImageTint(imageHandler, tint);
-    });
+AeonLog.Debug("CALC", nameof(CalculateCountdown),     $"baseDate={baseDate:d}");
+AeonLog.Debug("CALC", nameof(CalculateGalacticCommute), $"baseDate={baseDate:d} seconds={seconds} useMetric={useMetric}");
 ```
 
-Useful when: icon tinting is not applying or not updating after a theme switch.
-Confirms the mapper is being invoked.
+Useful when: a specific ticker shows unexpected output. Compare the logged
+`baseDate` with the expected value to confirm the correct input is reaching
+the calculation.
+
+#### `CalculatePhotonPath` phase walk (block-tagged)
+
+```csharp
+AeonLog.Debug("CALC", nameof(CalculatePhotonPath), $"baseDate={baseDate:d} seconds={seconds}", "INPUT");
+AeonLog.Debug("CALC", nameof(CalculatePhotonPath), $"ly={lightYears:F4} km={kmTraveled:N0}",   "DISTANCE");
+AeonLog.Debug("CALC", nameof(CalculatePhotonPath), $"phase=Interstellar ly={lightYears:F4}",   "PHASE_LOOKUP");
+AeonLog.Debug("CALC", nameof(CalculatePhotonPath), $"star=Fomalhaut starLy=25.13",             "STAR_MATCH");
+AeonLog.Debug("CALC", nameof(CalculatePhotonPath), $"phase=PastStar starName=Fomalhaut ly=25.13", "RESULT");
+```
+
+Useful when: the photon path ticker shows the wrong phase or wrong star.
+The `[BLOCK]` tags let an AI agent filter each stage independently.
+
+#### `CalculateTimeJubilees` unit scan (block-tagged)
+
+```csharp
+AeonLog.Debug("CALC", nameof(CalculateTimeJubilees), $"baseDate={baseDate:d} passedDays={passedDays}");
+AeonLog.Debug("CALC", nameof(CalculateTimeJubilees), $"unit=Years jubilee=60 daysUntil=107",   "UNIT_SCAN");
+AeonLog.Debug("CALC", nameof(CalculateTimeJubilees), $"unit=Days jubilee=25000 daysUntil=2934","UNIT_SCAN");
+AeonLog.Debug("CALC", nameof(CalculateTimeJubilees), $"unit=Years jubilee=60 daysUntil=107",   "WINNER");
+```
+
+Useful when: the jubilee ticker shows an unexpected unit or date. The
+`[UNIT_SCAN]` lines show every candidate; `[WINNER]` shows which one was chosen.
 
 ---
 
@@ -4079,6 +4106,7 @@ they describe what the code already does and must continue to do.
   | New persisted preference | Section 3.8 persistence table, Section 5 Root Node 4 |
   | New NuGet package | Section 1 quick-reference table |
   | Existing file substantially changed | Section 2 description for that file |
+| New `AeonLog` instrumentation point added | Section 8.1 instrumentation table, Section 8.3 example |
 
 - **Update the `> Last updated:` date** at the top of `Agents.md` when making
   any substantive change to the file. Always call `Get-Date -Format \"yyyy-MM-dd\"` first
@@ -4132,6 +4160,7 @@ the change violates a guardrail and must be corrected first.
 | 14 | `Agents.md` updated for every structural change? | YES |
 | 15 | Build produces only known warning codes (CS0618, CS8767, CS0414, XC0022)? | YES |
 | 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (66+ tests, 0 failures)? | YES |
+| 17 | All new `AeonLog` calls use `[Conditional("DEBUG")]` via the gateway (not raw `ILogger` or `Debug.WriteLine`)? `[BLOCK]` tag added only for methods with named internal phases? | YES |
 
 
 ---

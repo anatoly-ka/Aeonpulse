@@ -11,6 +11,7 @@ namespace Aeonpulse.ViewModels
     {
         private readonly CalculationService _calculationService;
         private System.Timers.Timer _updateTimer;
+        private const string LogCat = "VM";
 
         #region Language constants
 
@@ -87,6 +88,7 @@ namespace Aeonpulse.ViewModels
                 _useMetric = value;
                 OnPropertyChanged();
                 Preferences.Default.Set("UseMetric", _useMetric);
+                AeonLog.Info(LogCat, "UseMetric", $"value={value}");
                 UpdateAllCalculations();
             }
         }
@@ -105,6 +107,7 @@ namespace Aeonpulse.ViewModels
                 ThemeService.Instance.ApplyScheme(_colorScheme);
                 // Persist the user's choice across app restarts
                 Preferences.Default.Set("ColorScheme", _colorScheme);
+                AeonLog.Info(LogCat, "ColorScheme", $"value={value}");
             }
         }
 
@@ -139,6 +142,7 @@ namespace Aeonpulse.ViewModels
                 ApplyLanguage(_displayLanguage);
                 // Persist the user's choice across app restarts
                 Preferences.Default.Set("DisplayLanguage", _displayLanguage);
+                AeonLog.Info(LogCat, "Language", $"value={_displayLanguage} culture={System.Globalization.CultureInfo.CurrentUICulture.Name}");
                 // Push all new AppResources strings to every bound Label
                 Loc.Invalidate();
                 // Also re-run all ticker calculations, as many strings are resource-driven
@@ -458,6 +462,7 @@ namespace Aeonpulse.ViewModels
 
         public void UpdateLiveCalculations()
         {
+            AeonLog.Debug(LogCat, "Timer", $"thread={Environment.CurrentManagedThreadId} isMainThread={MainThread.IsMainThread}");
             Countdown    = _calculationService.CalculateCountdown(BaseDate);
             LifeOdometer = _calculationService.CalculateLifeOdometer(BaseDate, BaseDateName, BaseDateValue);
             GalacticCommute = _calculationService.CalculateGalacticCommute(BaseDate, BaseDateValue, UseMetric);
@@ -480,11 +485,13 @@ namespace Aeonpulse.ViewModels
         /// </summary>
         public void SaveDate(string name, string date)
         {
+            AeonLog.Info(LogCat, "SaveDate", $"in: name={name} date={date}");
             // Update the backing fields directly to avoid triggering
             // UpdateAllCalculations() prematurely via the BaseDate setter
             _baseDateName = name;
             _baseDateValue = date;
             _baseDate = DateTime.Parse(date);
+            AeonLog.Debug(LogCat, "SaveDate", $"out: BaseDateName={_baseDateName} BaseDateValue={_baseDateValue} BaseDate={_baseDate:d}");
 
             // Notify UI of all changes
             OnPropertyChanged(nameof(BaseDateName));

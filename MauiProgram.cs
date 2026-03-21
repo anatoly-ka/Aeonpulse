@@ -74,7 +74,9 @@ namespace Aeonpulse
             builder.Logging.AddDebug();
 #endif
 
-            return builder.Build();
+            var app = builder.Build();
+            AeonLog.Initialise(app.Services.GetRequiredService<ILoggerFactory>());
+            return app;
         }
 
         /// <summary>

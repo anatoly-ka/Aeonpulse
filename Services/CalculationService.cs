@@ -40,6 +40,8 @@ namespace Aeonpulse.Services
     [AIContext("CoreCalculationEngine")]
     public class CalculationService
     {
+        private const string LogCat = "CALC";
+
         #region Helper Methods
 
         /// <summary>
@@ -159,6 +161,7 @@ namespace Aeonpulse.Services
             long passedHours = passedDays * 24;
             long passedMinutes = passedHours * 60;
             long passedSeconds = passedMinutes * 60;
+            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"baseDate={baseDate:d} passedDays={passedDays}");
 
             // Find next jubilee
 
@@ -171,6 +174,7 @@ namespace Aeonpulse.Services
             long nearestJubileeYears = FindNearestJubilee(passedYears);
             DateTime nearestJubileeYearsDate = new DateTime(bYear + (int)nearestJubileeYears, bMonth, bDay);
             long daysToYearsJubilee = (long)(nearestJubileeYearsDate - now_).TotalDays;
+            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Years jubilee={nearestJubileeYears} daysUntil={daysToYearsJubilee}", "UNIT_SCAN");
             if (daysToYearsJubilee > 0 && daysToYearsJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeYearsDate;
@@ -183,6 +187,7 @@ namespace Aeonpulse.Services
             long nearestJubileeMonths = FindNearestJubilee(passedMonths);
             DateTime nearestJubileeMonthsDate = baseDate.AddMonths((int)nearestJubileeMonths);
             long daysToMonthsJubilee = (long)(nearestJubileeMonthsDate - now_).TotalDays;
+            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Months jubilee={nearestJubileeMonths} daysUntil={daysToMonthsJubilee}", "UNIT_SCAN");
             if (daysToMonthsJubilee > 0 && daysToMonthsJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeMonthsDate;
@@ -195,6 +200,7 @@ namespace Aeonpulse.Services
             long nearestJubileeWeeks = FindNearestJubilee(passedWeeks);
             DateTime nearestJubileeWeeksDate = baseDate.AddDays(nearestJubileeWeeks * 7);
             long daysToWeeksJubilee = (long)(nearestJubileeWeeksDate - now_).TotalDays;
+            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Weeks jubilee={nearestJubileeWeeks} daysUntil={daysToWeeksJubilee}", "UNIT_SCAN");
             if (daysToWeeksJubilee > 0 && daysToWeeksJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeWeeksDate;
@@ -207,6 +213,7 @@ namespace Aeonpulse.Services
             long nearestJubileeDays = FindNearestJubilee(passedDays);
             DateTime nearestJubileeDaysDate = baseDate.AddDays(nearestJubileeDays);
             long daysToDaysJubilee = (long)(nearestJubileeDaysDate - now_).TotalDays;
+            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Days jubilee={nearestJubileeDays} daysUntil={daysToDaysJubilee}", "UNIT_SCAN");
             if (daysToDaysJubilee > 0 && daysToDaysJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeDaysDate;
@@ -219,6 +226,7 @@ namespace Aeonpulse.Services
             long nearestJubileeHours = FindNearestJubilee(passedHours);
             DateTime nearestJubileeHoursDate = baseDate.AddHours(nearestJubileeHours);
             long daysToHoursJubilee = (long)(nearestJubileeHoursDate - now_).TotalDays;
+            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Hours jubilee={nearestJubileeHours} daysUntil={daysToHoursJubilee}", "UNIT_SCAN");
             if (daysToHoursJubilee > 0 && daysToHoursJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeHoursDate;
@@ -239,6 +247,7 @@ namespace Aeonpulse.Services
             catch (ArgumentOutOfRangeException)
                 { nearestJubileeMinutesDate = DateTime.MaxValue; }
 
+            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Minutes jubilee={nearestJubileeMinutes} daysUntil={daysToMinutesJubilee}", "UNIT_SCAN");
             if (daysToMinutesJubilee > 0 && daysToMinutesJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeMinutesDate;
@@ -259,6 +268,7 @@ namespace Aeonpulse.Services
             catch (ArgumentOutOfRangeException)
                 { nearestJubileeSecondsDate = DateTime.MaxValue; }
 
+            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Seconds jubilee={nearestJubileeSeconds} daysUntil={daysToSecondsJubilee}", "UNIT_SCAN");
             if (daysToSecondsJubilee > 0 && daysToSecondsJubilee < daysTillNearestJubilee)
             {
                 nearestJubileeDate = nearestJubileeSecondsDate;
@@ -268,6 +278,7 @@ namespace Aeonpulse.Services
             }
 
             string nextJubilee = $"{nearestJubileeValue:N0} {nearestJubileeUnit}";
+            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit={nearestJubileeUnit} jubilee={nearestJubileeValue} daysUntil={daysTillNearestJubilee}", "WINNER");
 
             return new TimeJubileesResult
             {
@@ -312,6 +323,7 @@ namespace Aeonpulse.Services
         public CountdownResult CalculateCountdown(DateTime baseDate, DateTime? now = null)
         {
             DateTime now_ = now ?? DateTime.Now;
+            AeonLog.Debug(LogCat, nameof(CalculateCountdown), $"baseDate={baseDate:d}");
             int bYear = baseDate.Year;
             int bMonth = baseDate.Month;
             int bDay = baseDate.Day;
@@ -405,6 +417,7 @@ namespace Aeonpulse.Services
         {
             DateTime now_ = now ?? DateTime.Now;
             long seconds = (long)(now_ - baseDate).TotalSeconds;
+            AeonLog.Debug(LogCat, nameof(CalculateLifeOdometer), $"baseDate={baseDate:d} seconds={seconds}");
 
             long heartbeats = seconds * 70 / 60;
             long breaths = seconds * 16 / 60;
@@ -448,6 +461,7 @@ namespace Aeonpulse.Services
         {
             DateTime now_ = now ?? DateTime.Now;
             long earthDays = (long)(now_ - baseDate).TotalDays;
+            AeonLog.Debug(LogCat, nameof(CalculateAlienAnniversaries), $"baseDate={baseDate:d} earthDays={earthDays}");
 
             double marsYears  = earthDays / 686.98;
             double venusYears = earthDays / 224.7;
@@ -499,6 +513,7 @@ namespace Aeonpulse.Services
         {
             DateTime now_ = now ?? DateTime.Now;
             long seconds = (long)(now_ - baseDate).TotalSeconds;
+            AeonLog.Debug(LogCat, nameof(CalculateGalacticCommute), $"baseDate={baseDate:d} seconds={seconds} useMetric={useMetric}");
 
             // Solar system moves at ~220-230 km/s through the galaxy
             double kmTraveled = seconds * 225;
@@ -652,10 +667,12 @@ namespace Aeonpulse.Services
 
             DateTime now_ = now ?? DateTime.Now;
             long seconds = (long)(now_ - baseDate).TotalSeconds;
+            AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"baseDate={baseDate:d} seconds={seconds}", "INPUT");
 
             // Light travels at 299,792 km/s
             double kmTraveled = seconds * 299792.458;
             double lightYears = kmTraveled / 9460730472580.8;
+            AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"ly={lightYears:F4} km={kmTraveled:N0}", "DISTANCE");
 
             string distance = $"{lightYears:F2} {AppResources.Unit_LightYears}";
             string fullDistance = useMetric ? $"{(kmTraveled / 1000000):F2} {AppResources.UnitMetric_MKm}" : $"{(kmTraveled * 0.621371 / 1000000):F2} {AppResources.UnitImperial_MMiles}";
@@ -671,6 +688,7 @@ namespace Aeonpulse.Services
                 if (kmTraveled > 11000000000)
                 {
                     phase = PhotonPhase.Heliopause;
+                    AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"phase=Heliopause km={kmTraveled:N0}", "PHASE_LOOKUP");
                     bText = AppResources.Ticker_PhotonPathHeliopause_Brief;
                     fText = AppResources.Ticker_PhotonPathHeliopause_Full
                         .Replace("{baseDate:d}", baseDate.ToString("d"))
@@ -679,6 +697,7 @@ namespace Aeonpulse.Services
                 else
                 {
                     phase = PhotonPhase.SolarSystem;
+                    AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"phase=SolarSystem km={kmTraveled:N0}", "PHASE_LOOKUP");
                     bText = AppResources.Ticker_PhotonPathSolarSystem_Brief;
                     fText = AppResources.Ticker_PhotonPathSolarSystem_Full
                         .Replace("{baseDate:d}", baseDate.ToString("d"))
@@ -688,6 +707,7 @@ namespace Aeonpulse.Services
             else if (lightYears < 1.5)
             {
                 phase = PhotonPhase.OortCloud;
+                AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"phase=OortCloud ly={lightYears:F4}", "PHASE_LOOKUP");
                 bText = AppResources.Ticker_PhotonPathOortCloud_Brief;
                 fText = AppResources.Ticker_PhotonPathOortCloud_Full
                     .Replace("{baseDate:d}", baseDate.ToString("d"))
@@ -696,6 +716,7 @@ namespace Aeonpulse.Services
             else if (lightYears < 4.246)
             {
                 phase = PhotonPhase.Interstellar;
+                AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"phase=Interstellar ly={lightYears:F4}", "PHASE_LOOKUP");
                 bText = AppResources.Ticker_PhotonPathInterstellar_Brief;
                 fText = AppResources.Ticker_PhotonPathInterstellar_Full
                     .Replace("{baseDate:d}", baseDate.ToString("d"))
@@ -705,12 +726,14 @@ namespace Aeonpulse.Services
             else
             {
                 phase = PhotonPhase.PastStar;
+                AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"phase=PastStar ly={lightYears:F4} scanning {stars.Length} stars", "PHASE_LOOKUP");
                 foreach (var star in stars)
                 {
                     if (lightYears < star.Ly)
                         break;
                     starName = star.Name;
                     starLy   = star.Ly;
+                    AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"star={star.Name} starLy={star.Ly}", "STAR_MATCH");
                     bText = AppResources.Ticker_PhotonPathStar_BriefTemplate
                         .Replace("{star.Name}", star.Name);
                     fText = AppResources.Ticker_PhotonPathStar_FullTemplate
@@ -723,6 +746,7 @@ namespace Aeonpulse.Services
                 }
             }
 
+            AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"phase={phase} starName={starName ?? "null"} ly={lightYears:F4}", "RESULT");
             return new PhotonPathResult
             {
                 KmTraveled = kmTraveled,
@@ -767,6 +791,7 @@ namespace Aeonpulse.Services
         [AIContext("ExternalDataModel")]
         public HumanBirthRankResult CalculateHumanBirthRank(DateTime baseDate, string baseDateName)
         {
+            AeonLog.Debug(LogCat, nameof(CalculateHumanBirthRank), $"baseDate={baseDate:d}");
             /* Data from "How Many People Have Ever Lived on Earth?" by Toshiko Kaneda & Carl Haub
                from Population Reference Bureau (PRB) (https://www.prb.org/articles/how-many-people-have-ever-lived-on-earth/)
                derived from "World Fertility Data" of the United Nations (https://www.un.org/development/desa/pd/world-fertility-data),
@@ -860,6 +885,7 @@ namespace Aeonpulse.Services
         [AIContext("CoreCalculation")]
         public BirthRuneResult CalculateBirthRune(DateTime baseDate, string baseDateValue)
         {
+            AeonLog.Debug(LogCat, nameof(CalculateBirthRune), $"baseDate={baseDate:d}");
             var runes = new[]
             {
                 new { Name = AppResources.Rune_Fehu_Name,     Symbol = "ᚠ", From = "5-29",  To = "6-14",  Brief = AppResources.Rune_Fehu_Brief,     Full = AppResources.Rune_Fehu_Full },
@@ -951,6 +977,7 @@ namespace Aeonpulse.Services
         public PersonalYearResult CalculatePersonalYear(DateTime baseDate, string baseDateValue, DateTime? now = null)
         {
             int curYear = (now ?? DateTime.Now).Year;
+            AeonLog.Debug(LogCat, nameof(CalculatePersonalYear), $"baseDate={baseDate:d} curYear={curYear}");
 
             int year  = ReduceToSingleDigit(curYear);
             int month = ReduceToSingleDigit(baseDate.Month);
@@ -1029,6 +1056,7 @@ namespace Aeonpulse.Services
         [AIContext("ExternalDataModel")]
         public GlobalExhaleResult CalculateGlobalExhale(DateTime baseDate, string baseDateName, string baseDateValue, bool useMetric, DateTime? now = null)
         {
+            AeonLog.Debug(LogCat, nameof(CalculateGlobalExhale), $"baseDate={baseDate:d} useMetric={useMetric}");
             /* The data is taken from https://globalcarbonbudget.org/datahub/the-latest-gcb-data-2025/
             Year |    CO2/year
             1900 |  0.53572155
@@ -1109,7 +1137,7 @@ namespace Aeonpulse.Services
         ///   <item><description>Galactic commute - uses <see cref="GalacticCommuteResult.Distance"/>.</description></item>
         ///   <item><description>Global exhale - uses <see cref="GlobalExhaleResult.FormattedAmount"/>.</description></item>
         /// </list>
-        /// </summary>
+        /// /// </summary>
         /// <param name="countdown">Typed countdown result from <see cref="CalculateCountdown"/>.</param>
         /// <param name="lifeOdometer">Typed life-odometer result from <see cref="CalculateLifeOdometer"/>.</param>
         /// <param name="galacticCommute">Typed galactic-commute result from <see cref="CalculateGalacticCommute"/>.</param>
