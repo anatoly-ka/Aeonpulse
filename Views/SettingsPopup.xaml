@@ -87,7 +87,7 @@
                              Each RadioButton uses a custom ControlTemplate (2-column Grid:
                              outer ring Ellipse | inner dot Ellipse) to match the cyberpunk theme. -->
                         <Grid x:Name="SettingsControlGrid"
-                              ColumnDefinitions="Auto,*"
+                              ColumnDefinitions="100,*"
                               RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                               ColumnSpacing="16"
                               RowSpacing="8">
@@ -102,6 +102,7 @@
                                    Text="{Binding Loc.Settings_UnitsLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
+                                   LineBreakMode="WordWrap"
                                    VerticalOptions="Center" />
 
                             <!-- Row 0, Col 1: Metric radio.
@@ -198,6 +199,7 @@
                                    Text="{Binding Loc.Settings_PaletteLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
+                                   LineBreakMode="WordWrap"
                                    VerticalOptions="Center" />
 
                             <!-- Row 3, Col 1: Default Dark radio. Value maps to ThemeService.DefaultDark. -->
@@ -327,6 +329,7 @@
                                    Text="{Binding Loc.Settings_TextSizeLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
+                                   LineBreakMode="WordWrap"
                                    VerticalOptions="Center" />
 
                             <!-- Row 7, Col 1: Small radio. Value="Small" maps to FontSizeService.Small. -->
@@ -458,6 +461,7 @@
                                    Text="{Binding Loc.Settings_LanguageLabel}"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
+                                   LineBreakMode="WordWrap"
                                    VerticalOptions="Center" />
 
                             <!-- Row 11, Col 1: Default language radio.
