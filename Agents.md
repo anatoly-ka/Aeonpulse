@@ -303,7 +303,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 10 `TickerData` properties; 4 section `bool XxxExpanded` properties; 10 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `UpdateStaticCalculations()` recalculates 6 tickers; `UpdateLiveCalculations()` recalculates 4 tickers + `TeaseText`. |
+| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 10 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, etc. - see `TickerResults.cs`); 4 section `bool XxxExpanded` properties; 10 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `UpdateStaticCalculations()` recalculates 6 tickers; `UpdateLiveCalculations()` recalculates 4 tickers + `TeaseText`. |
 | `LocalizedResources.cs` | Edit freely | - | Singleton (`Instance`). A thin passthrough wrapper: every property is `=> AppResources.SomeKey`. Bound in XAML as `{Binding Loc.PropertyName}`. `Invalidate()` fires `PropertyChanged(string.Empty)` which causes every bound property to re-read from `AppResources` with the newly-set culture. When adding a new localised string: add the `AppResources` key, then add the passthrough property here. |
 
 ---
@@ -325,7 +325,7 @@ All XAML files must be saved as **UTF-8 with BOM**. All colour/font-size referen
 | `DeepDivePopup.xaml` | Edit freely | *(XAML AI comments)* | Generic info popup reused by all 10 ticker info buttons. Full-screen overlay. `Frame` (legacy) panel with top `Margin` overridden by code-behind. 3-row layout: non-scrollable title, `ScrollView` with two labelled content sections (methodology + sources), footer with close button. All text labels are set by code-behind via `x:Name`. |
 | `DeepDivePopup.xaml.cs` | Edit freely | `ModalViewController` | Constructor accepts `title`, `section1Title`, `section1Text`, `section2Title`, `section2Text`, `topOffset`. Sets label text and overrides `PopupFrame.Margin` top component. To add more content sections, add new `Label` elements in the XAML and wire them here. |
 | `RefreshingPopup.xaml` | Edit freely | *(XAML AI comments)* | Centred (no full-screen overlay) auto-dismissing overlay. `Frame` (legacy) containing `ActivityIndicator` + message `Label`. No user-dismiss gesture - dismisses automatically after 3 seconds. |
-| `RefreshingPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `Action onDismissed` callback. `OnAppearing()` awaits `Task.Delay(3000)`, awaits `PopModalAsync()`, then invokes `onDismissed`. The callback updates a specific `TickerData` property. The 3-second delay must remain to give the spinner time to animate. |
+| `RefreshingPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `Action onDismissed` callback. `OnAppearing()` awaits `Task.Delay(3000)`, awaits `PopModalAsync()`, then invokes `onDismissed`. The callback updates a specific typed ticker result property on the ViewModel. The 3-second delay must remain to give the spinner time to animate. |
 
 ---
 
@@ -354,7 +354,7 @@ All XAML files must be saved as **UTF-8 with BOM**. All colour/font-size referen
 |------|-------|-------------|
 | `Resources/AppResources.resx` | Edit freely | Master English string resource file. Contains all user-visible strings: UI labels, ticker text templates (with `{placeholder}` tokens), star catalogue entries (57 stars), Elder Futhark rune data (24 runes), personal year interpretations (1-9), and tease text. **Every new user-visible string must be added here first.** |
 | `Resources/AppResources.ru.resx` | Edit freely | Russian translations. Must contain a matching entry for every key in `AppResources.resx`. Missing keys fall back to English at runtime. |
-| `Resources/AppResources.Designer.cs` | **Do not edit** | Auto-generated strongly-typed accessor class (`namespace Aeonpulse.Resources`). Regenerated from `.resx` by `PublicResXFileCodeGenerator` on build. |
+| `Resources/AppResources.Designer.cs` | **Edit only to add new keys when Designer regeneration is unavailable** | Auto-generated strongly-typed accessor class (`namespace Aeonpulse.Resources`). Normally regenerated from `.resx` by `PublicResXFileCodeGenerator` on build. When a new `.resx` key cannot trigger an immediate Designer regeneration, manually add the corresponding `public static string` property following the existing pattern, then regenerate on the next full build. |
 
 #### Style Resources
 
@@ -601,7 +601,7 @@ USER ACTION
     |                               --> Navigation.PushModalAsync(new RefreshingPopup(callback))
     |                                       [3-second auto-dismiss in RefreshingPopup.OnAppearing]
     |                                       --> callback()
-    |                                               --> TickerData property set on ViewModel
+    |                                               --> Typed result property set on ViewModel
     |
     +-- Taps section chevron
     |       --> ToggleXxxCommand.Execute()
@@ -887,12 +887,12 @@ Key properties:
 ```csharp
 // Single role - most common
 [AIContext("CoreCalculation")]
-public TickerData CalculateBirthRune(DateTime baseDate, string baseDateValue) { ... }
+public BirthRuneResult CalculateBirthRune(DateTime baseDate, string baseDateValue) { ... }
 
 // Multiple roles on one symbol - used when a method crosses concern boundaries
 [AIContext("LiveTicker")]
 [AIContext("StarCatalogueLookup")]
-public TickerData CalculatePhotonPath(DateTime baseDate, string baseDateValue, bool useMetric) { ... }
+public PhotonPathResult CalculatePhotonPath(DateTime baseDate, string baseDateValue, bool useMetric) { ... }
 
 // On a class
 [AIContext("AppBootstrap")]
@@ -1046,7 +1046,7 @@ Add an `<!-- AI: ... -->` comment in the following situations:
 | New page or popup (file level) | How it is pushed, what `BindingContext` it uses, any geometry injection |
 | New multi-row/column `Grid` | Row and column slot assignments for every slot |
 | New collapsible section | The `IsVisible` binding source and what it contains |
-| New ticker card | The 3-column header layout, which `TickerData` property it binds to, whether it is live or static |
+| New ticker card | The 3-column header layout, which typed result property it binds to (`XxxResult.BriefText`/`FullText`), whether it is live or static |
 | Any non-obvious binding | The full ViewModel path and whether it is live-localised or static |
 | Any layout trick or workaround | Why the approach was chosen and what alternative was rejected |
 
@@ -1434,7 +1434,7 @@ AIContext:   (none - state orchestrator)
 - `App.xaml.cs` - calls `ApplyLanguage()` (static) before ViewModel construction
 
 **Extend here when:**
-- Adding a new ticker: add `TickerData` property, `bool XxxExpanded` property, toggle `ICommand`, refresh `ICommand` (if static), wire in `UpdateStaticCalculations()` or `UpdateLiveCalculations()`
+- Adding a new ticker: add a typed `XxxResult` property (subclass of `TickerData`), `bool XxxExpanded` property, toggle `ICommand`, refresh `ICommand` (if static), wire in `UpdateStaticCalculations()` or `UpdateLiveCalculations()`
 - Adding a new section: add `bool XxxExpanded` property and `ToggleXxxCommand`
 - Adding a new setting: add property with apply+persist setter pattern; read default in constructor
 
@@ -1470,7 +1470,7 @@ AIContext:   CoreCalculationEngine
 | `CalculateBirthRune` | `CoreCalculation` | Static | `baseDateValue` |
 | `CalculatePersonalYear` | `CoreCalculation` | Static | `baseDateValue` |
 | `CalculateGlobalExhale` | `CoreCalculation`, `ExternalDataModel` | Static | `baseDateName`, `baseDateValue`, `useMetric` |
-| `GetRandomTeaseText` | `UIPresentation` | LIVE (1s) | `CountdownResult`, `LifeOdometerResult`, `GalacticCommuteResult`, `GlobalExhaleResult`, `baseDateName`, `baseDateValue` - returns 1 of 5 random tease strings |
+| `GetRandomTeaseText` | `UIPresentation` | LIVE (1s) | `CountdownResult`, `LifeOdometerResult`, `GalacticCommuteResult`, `GlobalExhaleResult`, `baseDateName`, `baseDate` (`DateTime`, formatted with `"d"` inside) - returns 1 of 5 random tease strings |
 
 **Owns:**
 - All domain computation logic
@@ -1490,7 +1490,7 @@ AIContext:   CoreCalculationEngine
 - `MainViewModel` refresh command lambdas - 3 specific methods (TimeJubilees, AlienAnniversaries, GlobalExhale)
 
 **Extend here when:**
-- Adding a new ticker: add a new `public TickerData CalculateXxx(...)` method with `[AIContext]`, `///` docs, and `AppResources`-sourced strings only. No UI references.
+- Adding a new ticker: add a new `public XxxResult CalculateXxx(...)` method returning a typed subclass of `TickerData` defined in `TickerResults.cs`. Decorate with `[AIContext]`, add `///` docs, source all strings from `AppResources` only. No UI references.
 - Adding a new star to the catalogue: add entry to the inline `stars` array in `CalculatePhotonPath`
 - Updating scientific dataset constants: update the relevant method's inline data and its `///` `ExternalDataModel` comment with the new source citation
 
@@ -1556,7 +1556,7 @@ AIContext:   (none - string repository)
 | `Unit_` / `UnitMetric_` / `UnitImperial_` | 16 | Distance, time, and mass unit strings |
 | `PersonalYear1_` ... `PersonalYear9_` | 18 | Brief + Full interpretations for numerology years 1-9 |
 | `ChangeDate_` | 7 | Change date popup labels |
-| `Tease_` | 6 | Tease popup title, button, and countdown text templates |
+| `Tease_` | 7 | Tease popup title, button, and 5 randomly-selected tease templates (`Tease_Countdown`, `Tease_Heartbeats`, `Tease_Breaths`, `Tease_GalacticCommute`, `Tease_GlobalExhale`) |
 | `MainMenu_` | 5 | Main menu popup labels |
 | `Section_` | 4 | Section header titles (Lab, Cosmos, Mirror, Eco Echoes) |
 | Others | ~22 | `AppName`, `Badge_LIVE`, `Timeline_BaseDatePreposition`, `Default_BaseDateName`, `Refreshing_Message` |
@@ -2260,11 +2260,30 @@ At runtime: the new section header appears, taps correctly toggle expansion.
 ### 7.2 Adding a New Ticker Card
 
 A ticker card is a `Border` element inside a section body. It shows `BriefText`
-always and `FullText` when expanded. It is backed by a `TickerData` property on
+always and `FullText` when expanded. It is backed by a typed result property (a subclass of `TickerData`, defined in `TickerResults.cs`) on
 `MainViewModel` and a calculation method on `CalculationService`.
 
 **Example:** adding a `LunarCycle` static ticker inside the `Quantum` section.
 Replace `LunarCycle` / `lunarCycle` with your ticker name throughout.
+
+---
+
+#### Step 0 - `Models/TickerResults.cs`
+
+Define the typed result class for the new ticker by adding a subclass of `TickerData`:
+
+```csharp
+[AIContext(`"DataTransferObject"")]
+public class LunarCycleResult : TickerData
+{
+    public string Phase { get; init; } = string.Empty;
+    public int DayInCycle { get; init; }
+    public long CompleteCycles { get; init; }
+}
+```
+
+Add only the raw computed fields that other code (tease text, cross-ticker logic) might need directly.
+Do **not** duplicate `BriefText`/`FullText` - those are inherited from `TickerData`.'r
 
 ---
 
@@ -2375,7 +2394,7 @@ over large collections):
 /// A <see cref="TickerData"/> with brief and full lunar cycle descriptions.
 /// </returns>
 [AIContext("CoreCalculation")]
-public TickerData CalculateLunarCycle(DateTime baseDate, string baseDateName, string baseDateValue)
+public LunarCycleResult CalculateLunarCycle(DateTime baseDate, string baseDateName, string baseDateValue)
 {
     const double synodicPeriod = 29.53059;
     DateTime now = DateTime.Now;
@@ -2413,7 +2432,7 @@ public TickerData CalculateLunarCycle(DateTime baseDate, string baseDateName, st
         .Replace("{dayInCycle}", dayInCycle.ToString())
         .Replace("{cycleLength}", cycleLength.ToString());
 
-    return new TickerData { BriefText = briefText, FullText = fullText };
+    return new LunarCycleResult { BriefText = briefText, FullText = fullText };
 }
 ```
 
@@ -2424,14 +2443,14 @@ Token replacement uses `string.Replace()` on `{tokenName}` placeholders - not
 
 #### Step 5 - `ViewModels/MainViewModel.cs`
 
-Add four items: the `TickerData` property, the `bool` expanded property, the
+Add four items: the typed result property (`LunarCycleResult` - a new subclass of `TickerData` you define in `TickerResults.cs`), the `bool` expanded property, the
 toggle command declaration, and the refresh command declaration (for static tickers
 only). Wire into `UpdateStaticCalculations()` or `UpdateLiveCalculations()`.
 
 ```csharp
-// --- TickerData property (in the "Ticker Data" region) ---
-private TickerData _lunarCycle = new TickerData();
-public TickerData LunarCycle
+// --- Typed result property (in the "Ticker Data" region) ---
+private LunarCycleResult _lunarCycle = new LunarCycleResult();
+public LunarCycleResult LunarCycle
 {
     get => _lunarCycle;
     set { _lunarCycle = value; OnPropertyChanged(); }
@@ -3436,7 +3455,7 @@ all `Warning` and `Error` binding failures visible.
      `UpdateLiveCalculations()` to confirm thread context.
 
 3. `PropertyChanged` not firing after setting `TickerData.BriefText`.
-   - `TickerData` implements `INotifyPropertyChanged` directly. Confirm the property
+   - `TickerData` (base class) implements `INotifyPropertyChanged` directly. Confirm the typed result property
      setter calls `OnPropertyChanged()`. In-place mutation (setting `.BriefText`
      directly) is correct - replacing the whole `TickerData` object with `=` is
      also valid and triggers `PropertyChanged` on the ViewModel property.
@@ -3588,7 +3607,7 @@ they describe what the code already does and must continue to do.
   and numerological computation lives there. Code-behind files and `MainViewModel`
   must not contain domain calculations.
 
-- **Keep all application state in `MainViewModel`.** Every `TickerData` property,
+- **Keep all application state in `MainViewModel`.** Every typed ticker result property,
   every section/card expansion bool, every user setting, and every `ICommand`
   instance is owned there. No state lives in code-behind or in service classes.
 
@@ -4083,9 +4102,10 @@ they describe what the code already does and must continue to do.
   failure mid-sequence leaves the file in a consistent partial state rather than
   destroying it entirely.
 
-- **Do not edit `AppResources.Designer.cs` manually.** It is auto-generated by
-  `PublicResXFileCodeGenerator` from `AppResources.resx`. All edits are overwritten
-  on the next build. Edit `AppResources.resx` and `AppResources.ru.resx` instead.
+- **Prefer regenerating `AppResources.Designer.cs` over editing it manually.** It is auto-generated by
+  `PublicResXFileCodeGenerator` from `AppResources.resx`. If a full regeneration is not immediately
+  available, add the new `public static string` property following the existing pattern and regenerate
+  on the next build. Always edit `AppResources.resx` and `AppResources.ru.resx` first.
 
 ---
 
