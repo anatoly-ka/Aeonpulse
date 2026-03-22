@@ -3879,6 +3879,14 @@ they describe what the code already does and must continue to do.
   that are not re-read after a language change. `CalculationService` reads
   `AppResources` at call time on every invocation specifically to avoid this.
 
+- **Do not edit `AppResources.resx` or `AppResources.ru.resx` in one pass using
+  the `edit_file` tool.** These files are too large for the tool (each exceeds
+  60 KB) and a single-pass edit will silently truncate content or corrupt XML
+  structure. Use targeted terminal writes instead: one
+  `[System.IO.File]::ReadAllText` / `Replace` / `WriteAllText` call per logical
+  change, saving after each replacement so that a mid-sequence failure leaves the
+  file in a consistent partial state rather than destroying it.
+
 ---
 
 ### 9.6 XAML Structure and Encoding

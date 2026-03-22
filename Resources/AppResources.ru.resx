@@ -282,11 +282,11 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_TimeJubileesBrief" xml:space="preserve">
-    <value>Следующая дата: {nextJubilee} будет {nearestJubileeDate:d}</value>
+    <value>Следующая дата: &lt;b&gt;{nextJubilee}&lt;/b&gt; будет &lt;b&gt;{nearestJubileeDate:d}&lt;/b&gt;</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_TimeJubileesFull" xml:space="preserve">
-    <value>С момента {baseDateName} {baseDate:d} произшло невероятное количество важных событий. Следующая важная веха - {nextJubilee} будет {nearestJubileeDate:d}!</value>
+    <value>С момента {baseDateName} {baseDate:d} произшло невероятное количество важных событий. Следующая важная веха - &lt;b&gt;{nextJubilee}&lt;/b&gt; будет &lt;b&gt;{nearestJubileeDate:d}&lt;/b&gt;!</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_TimeJubileesTitle" xml:space="preserve">
@@ -294,7 +294,7 @@
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_TimeJubileesMethod" xml:space="preserve">
-    <value>Само слово "юбилей" происходит от «yobel» (иврит) - бараньего рога, в который трубили в День искупления (10-й день 7-го месяца), чтобы объявить о наступлении нового года. Юбилеи отмечаются круглыми числами, потому что такие числа символизируют полную «перезагрузку» жизни, или земли, или веры, или ... - исходя из различных традиций. Например, отмечание 10-го года (Деценналия) уходит корнями в древнеримскую традицию (например, к императору Константину) и обозначает десятилетие правления. Числа, которые считаются «круглыми» (оканчивающиеся на 0, 5, 10, 100 и т.д.) или содержат одинаковые цифры (111, 33 и т.д.), кажутся нам «приятными» или привлекательными в первую очередь из-за легкости обработки информации - нашему мозгу гораздо легче их запоминать и понимать по сравнению с конкретными, точными числами. Это предпочтение коренится как в когнитивной психологии, так и в эволюционной истории.</value>
+    <value>Само слово "юбилей" происходит от «yobel» (иврит) - бараньего рога, в который трубили в День искупления (10-й день 7-го месяца), чтобы объявить о наступлении нового года. Юбилеи отмечаются круглыми числами, потому что такие числа символизируют полную «перезагрузку» жизни, или земли, или веры, или ... - исходя из различных традиций. Например, отмечание 10-го года (Деценналия) уходит корнями в древнеримскую традицию (например, к императору Константину) и обозначает десятилетие правления. Числа, которые считаются «круглыми» (окончивающиеся на 0, 5, 10, 100 и т.д.) или содержат одинаковые цифры (111, 33 и т.д.), кажутся нам «приятными» или привлекательными в первую очередь из-за легкости обработки информации - нашему мозгу гораздо легче их запоминать и понимать по сравнению с конкретными, точными числами. Это предпочтение коренится как в когнитивной психологии, так и в эволюционной истории.</value>
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_TimeJubileesSource" xml:space="preserve">
@@ -306,23 +306,23 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_CountdownBrief_HoursOnly" xml:space="preserve">
-    <value>{hrs}ч : {mins}м : {secs}с до следующей годовщины</value>
+    <value>&lt;b&gt;{hrs}ч : {mins}м : {secs}с&lt;/b&gt; до следующей годовщины</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_CountdownBrief_DaysHours" xml:space="preserve">
-    <value>{days} дней {hrs}ч : {mins}м до следующей годовщины</value>
+    <value>&lt;b&gt;{days} дней {hrs}ч : {mins}м&lt;/b&gt; до следующей годовщины</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_CountdownBrief_DaysOnly" xml:space="preserve">
-    <value>{days} дней до следующей годовщины</value>
+    <value>&lt;b&gt;{days} дней&lt;/b&gt; до следующей годовщины</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_CountdownFull_HoursOnly" xml:space="preserve">
-    <value>Мы считаем секунды! Осталось всего {hrs} часов, {mins} минут и {secs} секунд до следующей годовщины {nearest:d}.</value>
+    <value>Мы считаем секунды! Осталось всего &lt;b&gt;{hrs} часов, {mins} минут и {secs}&lt;/b&gt; секунд до следующей годовщины &lt;b&gt;{nearest:d}&lt;/b&gt;.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_CountdownFull_WithDays" xml:space="preserve">
-    <value>Мы считаем секунды! Осталось всего {days} дней, {hrs} часов, {mins} минут и {secs} секунд до следующей годовщины {nearest:d}.</value>
+    <value>Мы считаем секунды! Осталось всего &lt;b&gt;{days} дней, {hrs} часов, {mins} минут и {secs}&lt;/b&gt; секунд до следующей годовщины &lt;b&gt;{nearest:d}&lt;/b&gt;.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_CountdownTitle" xml:space="preserve">
@@ -342,11 +342,11 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_LifeOdometerBrief" xml:space="preserve">
-    <value>{heartbeats:N0} сердцебиений и {breaths:N0} вдохов</value>
+    <value>&lt;b&gt;{heartbeats:N0}&lt;/b&gt; сердцебиений и &lt;b&gt;{breaths:N0}&lt;/b&gt; вдохов</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_LifeOdometerFull" xml:space="preserve">
-    <value>Примерно {heartbeats:N0} сердцебиений отбило ритм, и {breaths:N0} вдохов было сделано, начиная с {baseDateName} {baseDate:d}.</value>
+    <value>Примерно &lt;b&gt;{heartbeats:N0} сердцебиений&lt;/b&gt; отбило ритм, и &lt;b&gt;{breaths:N0} вдохов&lt;/b&gt; было сделано, начиная с {baseDateName} {baseDate:d}.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_LifeOdometerTitle" xml:space="preserve">
@@ -366,11 +366,11 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_AlienAnniversariesBrief" xml:space="preserve">
-    <value>{marsYears:F2} лет на Марсе, {venusYears:F2} на Венере</value>
+    <value>&lt;b&gt;{marsYears:F2}&lt;/b&gt; лет на Марсе, &lt;b&gt;{venusYears:F2}&lt;/b&gt; на Венере</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_AlienAnniversariesFull" xml:space="preserve">
-    <value>Планеты совершают свои обороты вокруг Солнца с различной скоростью. Начиная с {baseDate:d} ({baseDateName}), на Марсе прошло {marsYears:F2} марсианских лет, а на Венере - {venusYears:F2} венерианских лет.</value>
+    <value>Планеты совершают свои обороты вокруг Солнца с различной скоростью. Начиная с {baseDate:d} ({baseDateName}), на Марсе прошло &lt;b&gt;{marsYears:F2} марсианских лет&lt;/b&gt;, а на Венере - &lt;b&gt;{venusYears:F2} венерианских лет&lt;/b&gt;.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_AlienAnniversariesTitle" xml:space="preserve">
@@ -390,14 +390,18 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_GalacticCommuteBrief" xml:space="preserve">
-    <value>{distance} сквозь Галактику</value>
+    <value>&lt;b&gt;{distance}&lt;/b&gt; сквозь Галактику</value>
     <comment>CalculationService.cs</comment>
   </data>
-  <data name="Ticker_GalacticCommuteFull" xml:space="preserve">
-    <value>Начиная с {baseDate:d}, Земля совершила путешествие вокруг центра Млечного пути длиной {distance} {fullDistance}.</value>
+	<data name="Ticker_GalacticCommuteFull" xml:space="preserve">
+    <value>Начиная с {baseDate:d}, Земля совершила путешествие вокруг центра Млечного пути длиной &lt;b&gt;{distance}&lt;/b&gt;.</value>
     <comment>CalculationService.cs</comment>
   </data>
-  <data name="Info_GalacticCommuteTitle" xml:space="preserve">
+	<data name="Ticker_GalacticCommuteFullWithRounded" xml:space="preserve">
+    <value>Начиная с {baseDate:d}, Земля совершила путешествие вокруг центра Млечного пути длиной &lt;b&gt;{distance}&lt;/b&gt; (&lt;b&gt;{fullDistance}&lt;/b&gt;).</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+	<data name="Info_GalacticCommuteTitle" xml:space="preserve">
     <value>Сквозь Галактику</value>
     <comment>MainPage.xaml.cs</comment>
   </data>
@@ -414,43 +418,43 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_PhotonPathHeliopause_Brief" xml:space="preserve">
-    <value>Свет достиг гелиопаузы</value>
+    <value>Свет достиг &lt;b&gt;гелиопаузы&lt;/b&gt;</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathHeliopause_Full" xml:space="preserve">
-    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел {fullDistance} и уже достиг гелиопаузы - границы, расположенной примерно в 18-20 миллиардах км (11-12 миллиардах миль) от Земли, где солнечный ветер сталкивается с межзвездной средой.</value>
+    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел &lt;b&gt;{fullDistance}&lt;/b&gt; и уже достиг гелиопаузы - границы, расположенной примерно в 18-20 миллиардах км (11-12 миллиардах миль) от Земли, где солнечный ветер сталкивается с межзвездной средой.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathSolarSystem_Brief" xml:space="preserve">
-    <value>Свет по-прежнему находится в пределах Солнечной системы.</value>
+    <value>Свет по-прежнему находится &lt;b&gt;в пределах Солнечной системы&lt;/b&gt;.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathSolarSystem_Full" xml:space="preserve">
-    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он преодолел бы {fullDistance}, но до сих пор находился бы в пределах нашей Солнечной системы.</value>
+    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он преодолел бы &lt;b&gt;{fullDistance}&lt;/b&gt;, но до сих пор находился бы в пределах нашей Солнечной системы.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathOortCloud_Brief" xml:space="preserve">
-    <value>Свет достиг облака Оорта.</value>
+    <value>Свет достиг &lt;b&gt;облака Оорта&lt;/b&gt;.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathOortCloud_Full" xml:space="preserve">
-    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел {fullDistance} и уже достиг облака Оорта нашей Солнечной системы - теоретической внешней границы гравитационного влияния Солнца.</value>
+    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел &lt;b&gt;{fullDistance}&lt;/b&gt; и уже достиг облака Оорта нашей Солнечной системы - теоретической внешней границы гравитационного влияния Солнца.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathInterstellar_Brief" xml:space="preserve">
-    <value>Свет достиг межзвездного пространства.</value>
+    <value>Свет достиг &lt;b&gt;межзвездного пространства&lt;/b&gt;.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathInterstellar_Full" xml:space="preserve">
-    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел {distance} ({fullDistance}) и уже достиг бы межзвездного пространства - обширной, в основном пустой области между звездами. Следующая остановка - Проксима Центавра, расположенная в 4,246 световых годах от нас.</value>
+    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел &lt;b&gt;{distance}&lt;/b&gt; (&lt;b&gt;{fullDistance}&lt;/b&gt;) и уже достиг бы межзвездного пространства - обширной, в основном пустой области между звездами. Следующая остановка - Проксима Центавра, расположенная в 4,246 световых годах от нас.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathStar_BriefTemplate" xml:space="preserve">
-    <value>Свет достиг {star.Name}</value>
+    <value>Свет достиг &lt;b&gt;{star.Name}&lt;/b&gt;</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathStar_FullTemplate" xml:space="preserve">
-    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел {distance} ({fullDistance}) и уже достиг бы {star.Name}, расположенной в {star.Ly} световых лет от нас - {star.Info}.</value>
+    <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел &lt;b&gt;{distance}&lt;/b&gt; (&lt;b&gt;{fullDistance}&lt;/b&gt;) и уже достиг бы &lt;b&gt;{star.Name}&lt;/b&gt;, расположенной в &lt;b&gt;{star.Ly}&lt;/b&gt; световых лет от нас - {star.Info}.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Star_ProximaCentauri_Info" xml:space="preserve">
@@ -462,7 +466,7 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Star_BarnardsStarInfo" xml:space="preserve">
-    <value>красный карлик в созвездии Змееносца с наибольшим "собственным движением" среди всех известных звёзд (самым быстрым изменением координат звёзд на небесной сфере)</value>
+    <value>красный карлик в созвездии Змееносца с наибольшим "собственным движением" среди всех известных звёзд (самым быстрым изменением координат звёзд на небесной Sphere)</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Star_Luhman16_Info" xml:space="preserve">
@@ -670,19 +674,19 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_HumanBirthRankPreXX_Brief" xml:space="preserve">
-    <value>Один из первых 104,510,976,956 человек</value>
+    <value>Один из первых &lt;b&gt;104,510,976,956&lt;/b&gt; человек</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_HumanBirthRankPreXX_Full" xml:space="preserve">
-    <value>Дата "{baseDateName}" относится к периоду до XX века. По некоторым оценкам, число людей, когда-либо родившихся и живших на Земле до 1900 года, составляло 104 510 976 956 человек.</value>
+    <value>Дата "{baseDateName}" относится к периоду до XX века. По некоторым оценкам, число людей, когда-либо родившихся и живших на Земле до 1900 года, составляло &lt;b&gt;104 510 976 956&lt;/b&gt; человек.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_HumanBirthRankPostXX_Brief" xml:space="preserve">
-    <value>Человек #{estimatedRank:N0} в этот день</value>
+    <value>Человек №&lt;b&gt;{estimatedRank:N0}&lt;/b&gt; в этот день</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_HumanBirthRankPostXX_Full" xml:space="preserve">
-    <value>В день даты "{baseDateName}" на свет появился человек #{estimatedRank:N0} в истории Земли - среди всех людей, кто когда-либо родился и жил.</value>
+    <value>В день даты "{baseDateName}" на свет появился человек №&lt;b&gt;{estimatedRank:N0}&lt;/b&gt; в истории Земли - среди всех людей, кто когда-либо родился и жил.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_HumanBirthRankTitle" xml:space="preserve">
@@ -702,11 +706,15 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_BirthRuneBrief_Template" xml:space="preserve">
-    <value>Руна рождения {birthRune.Name}: {birthRune.Brief}</value>
+    <value>Руна рождения &lt;b&gt;{birthRune.Name}&lt;/b&gt;: {birthRune.Brief}</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_BirthRuneFull_Template" xml:space="preserve">
-    <value>Согласно преданиям викингов, люди, рожденные {baseDate:d} подвержены влиянию руны {birthRune.Name}: {birthRune.Full}.</value>
+    <value>Согласно преданиям викингов, люди, рожденные {baseDate:d} подвержены влиянию руны &lt;b&gt;{birthRune.Name}&lt;/b&gt;:  &lt;br&gt;{birthRune.Full}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Fehu_Name" xml:space="preserve">
+    <value>Феху</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Fehu_Brief" xml:space="preserve">
@@ -717,12 +725,20 @@
     <value>Феху - это о получении заслуженных наград: денег, успеха и удачи, достигнутых благодаря упорному труду. Это напоминание, что нужно быть благодарным за то, что у вас есть, и делиться своей удачей с другими, что поможет вам поддерживать позитивный настрой.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Uruz_Name" xml:space="preserve">
+    <value>Уруз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Uruz_Brief" xml:space="preserve">
     <value>крепкое здоровье и внутренняя сила</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Uruz_Full" xml:space="preserve">
     <value>Уруз - это как заряд чистой энергии и силы. Она побуждает вас раскрыть свою внутреннюю силу, оставаться стойким и продолжать двигаться вперед, преодолевая трудности. Она придает чувство силы, здоровье и готовность к любым жизненным испытаниям.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Thurisaz_Name" xml:space="preserve">
+    <value>Турисаз</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Thurisaz_Brief" xml:space="preserve">
@@ -733,12 +749,20 @@
     <value>Турисаз - ваш защитный щит, вдохновлённый Тором. Эта руна призывает вас, прежде чем действовать, остановиться и всё обдумать. Используйте здравый смысл, будьте осторожны и не спешите - иногда ожидание подходящего момента является самым разумным решением.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Ansuz_Name" xml:space="preserve">
+    <value>Ансуз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Ansuz_Brief" xml:space="preserve">
     <value>Общение и советы от мудрых людей</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Ansuz_Full" xml:space="preserve">
     <value>В основе руны Ансуз лежит плотное общение с теми, кто уже многого добился, чтобы учиться у них. Прислушивайтесь к мудрым друзьям или наставникам, впитывайте их советы, и пусть они помогут вам стать умнее и мудрее.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Raidho_Name" xml:space="preserve">
+    <value>Райдо</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Raidho_Brief" xml:space="preserve">
@@ -749,12 +773,20 @@
     <value>Райдо - руна жизненного пути, будь то путешествие, переезд или просто погоня за мечтами. Она призывает принимать перемены, доверять процессу и двигаться к своим целям - шаг за шагом.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Kenaz_Name" xml:space="preserve">
+    <value>Кеназ</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Kenaz_Brief" xml:space="preserve">
     <value>Интуиция, ясность, надежда</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Kenaz_Full" xml:space="preserve">
     <value>Руна Кеназ освещает путь в темные или запутанные времена. Она помогает обрести ясность, порождает новые идеи и дарит надежду, даже когда кажется, что все плохо. Доверьтесь своей интуиции - иногда она приводит вас прямо к нужным ответам.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Gebo_Name" xml:space="preserve">
+    <value>Гебо</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Gebo_Brief" xml:space="preserve">
@@ -765,12 +797,20 @@
     <value>Гебо - это прежде всего взаимообмен в отношениях. Когда вы щедры и открыты, вы создаёте гармонию и привлекаете доброту в ответ. Это напоминание о том, что хорошие вещи происходят, когда вы делитесь и устанавливаете связь с другими.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Wunjo_Name" xml:space="preserve">
+    <value>Вунджо</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Wunjo_Brief" xml:space="preserve">
     <value>Счастье и благополучие</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Wunjo_Full" xml:space="preserve">
     <value>Вунджо приносит счастье и умиротворение. Это наслаждение простыми радостями жизни, чувство удовлетворения и распространение радости среди окружающих. Найдите время, чтобы расслабиться и оценить собственное благополучие.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Hagalaz_Name" xml:space="preserve">
+    <value>Хагалаз</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Hagalaz_Brief" xml:space="preserve">
@@ -781,12 +821,20 @@
     <value>Руна Хагалаз вносит разнообразие, но в хорошем смысле - она помогает избавиться от старых вредных привычек и освободить место для позитивных перемен. Даже если всё кажется хаотичным, она расчищает путь для новых начинаний и лучших дней.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Nauthiz_Name" xml:space="preserve">
+    <value>Наутиз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Nauthiz_Brief" xml:space="preserve">
     <value>Сохраняйте бдительность и терпение в трудные времена</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Nauthiz_Full" xml:space="preserve">
     <value>Наудиз - это напоминание о том, что нужно оставаться сильным и терпеливым, даже когда жизнь становится трудной. Это о том, как смело встречать препятствия, сохранять бдительность и учиться на каждом испытании. Не бойтесь - у вас есть все необходимое, чтобы преодолеть трудности.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Isa_Name" xml:space="preserve">
+    <value>Иса</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Isa_Brief" xml:space="preserve">
@@ -797,12 +845,20 @@
     <value>Иса - это как кнопка паузы, которая даёт понять, что можно замедлиться и сделать перерыв. Вместо того чтобы спешить, используйте это время для размышлений, будьте терпеливы и подождите, пока всё прояснится, прежде чем предпринимать какие-либо серьёзные действия.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Jera_Name" xml:space="preserve">
+    <value>Джера</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Jera_Brief" xml:space="preserve">
     <value>Награда приходит с терпением</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Jera_Full" xml:space="preserve">
     <value>Джера напоминает, что на хорошие вещи нужно время - как на ожидание, пока прорастут посаженные семена. Продолжайте прилагать усилия, и ваши награды найдут вас, даже если это займет некоторое время. Терпение в конце концов окупается!</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Eihwaz_Name" xml:space="preserve">
+    <value>Эйхваз</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Eihwaz_Brief" xml:space="preserve">
@@ -813,12 +869,20 @@
     <value>Руна Эйхваз - ваш верный помощник на пути к достижению целей. Она помогает вам оставаться в безопасности и проявлять стойкость, а также побуждает вас использовать свое воображение для решения сложных задач и поиска креативных решений.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Perthro_Name" xml:space="preserve">
+    <value>Пертро</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Perthro_Brief" xml:space="preserve">
     <value>Тайны, секреты, сюрпризы</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Perthro_Full" xml:space="preserve">
     <value>Руна Пертро - это о раскрытии тайн и принятии неожиданностей. Это напоминание о том, что нужно быть открытым к неожиданным поворотам сюжета и верить, что даже загадки могут привести к важным урокам и личностному росту.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Algiz_Name" xml:space="preserve">
+    <value>Альгиз</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Algiz_Brief" xml:space="preserve">
@@ -829,12 +893,20 @@
     <value>Руна Алгиз создает ощущение защиты, оберегая вас от опасностей. Она также побуждает вас быть бдительными, полагаться на друзей и сообщество и с нетерпением ждать счастливых моментов в будущем.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Sowilo_Name" xml:space="preserve">
+    <value>Совило</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Sowilo_Brief" xml:space="preserve">
     <value>Здоровье, расслабление, отпустите тревоги</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Sowilo_Full" xml:space="preserve">
     <value>Руна Совило - это прежде всего хорошее самочувствие и поддержание высокого уровня энергии. Она призывает расслабиться, отпустить заботы и позаботиться о своем теле, потому что здоровое состояние облегчает все остальное.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Tiwaz_Name" xml:space="preserve">
+    <value>Тиваз</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Tiwaz_Brief" xml:space="preserve">
@@ -845,12 +917,20 @@
     <value>Руна Тиваз дарит вам уверенность и смелость. Независимо от того, стремитесь ли вы к своим целям или начинаете новые отношения, эта руна говорит: продолжайте двигаться вперед - у вас есть сила воли, чтобы победить и выйти победителем.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Berkano_Name" xml:space="preserve">
+    <value>Беркано</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Berkano_Brief" xml:space="preserve">
     <value>Семья, женская энергия, новые начинания</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Berkano_Full" xml:space="preserve">
     <value>Руна Беркано - это знак заботы, семьи и новых начинаний. Она часто предвещает радостные события, такие как свадьбы или рождение детей, и призывает к личностному росту и позитивным переменам.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ehwaz_Name" xml:space="preserve">
+    <value>Эхваз</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Ehwaz_Brief" xml:space="preserve">
@@ -861,12 +941,20 @@
     <value>Руна Эхваз символизирует движение вперед и адаптацию к новым обстоятельствам. Путешествуете ли вы, меняете работу или начинаете все с чистого листа, верьте, что эти перемены ведут вас к чему-то лучшему.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Mannaz_Name" xml:space="preserve">
+    <value>Манназ</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Mannaz_Brief" xml:space="preserve">
     <value>Командная работа, поддержка, расширение контактов</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Mannaz_Full" xml:space="preserve">
     <value>Руна Манназ - это прежде всего сотрудничество и построение прочных связей. Она поощряет инициативность, принятие поддержки и расширение сети контактов - успех достигается легче, когда ты часть команды.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Laguz_Name" xml:space="preserve">
+    <value>Лагуз</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Laguz_Brief" xml:space="preserve">
@@ -877,6 +965,10 @@
     <value>Руна Лагуз - ваш проводник в мир доверия интуиции и умения плыть по течению. Она поможет вам раскрыть свой творческий потенциал и вашу духовную сторону, чтобы вы могли с достоинством справляться со всеми трудностями, которые встретятся на вашем пути.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Ingwaz_Name" xml:space="preserve">
+    <value>Ингваз</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Ingwaz_Brief" xml:space="preserve">
     <value>Завершение, исполнение желаний, новые начинания</value>
     <comment>CalculationService.cs</comment>
@@ -885,12 +977,20 @@
     <value>Руна Ингваз помогает подвести итоги и начать все заново. Это о чувстве удовлетворения, закрытии старых глав и уверенном шаге навстречу новым начинаниям с чувством спокойствия.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Othala_Name" xml:space="preserve">
+    <value>Отала</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Othala_Brief" xml:space="preserve">
     <value>Культурное наследие, материальные блага, советы старших</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Othala_Full" xml:space="preserve">
     <value>Отала помогает вам соединиться со своими корнями и семейными традициями. Речь идёт о том, чтобы ценить то, что вы унаследовали - будь то мудрость, ценности или материальные вещи - и обращаться за советом к старшим и старым друзьям, когда это необходимо.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Dagaz_Name" xml:space="preserve">
+    <value>Дагаз</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Dagaz_Brief" xml:space="preserve">
@@ -906,7 +1006,7 @@
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_BirthRuneMethod" xml:space="preserve">
-    <value>Старший Футарк - это древнейший рунический алфавит, использовавшийся германскими племенами примерно с 150 по 800 год н.э. для надписей на артефактах. Он состоит из 24 символов, разделенных на три семейства - группы по восемь символов (аэттир), названные по первым шести буквам (F-U-Þ-A-R-K). Руническая система рождения в Старшем Футарке присваивает определенные руны датам рождения, часто на основе 24-рунного цикла, связанного с положением Солнца в течение года. В скандинавской мистике каждая руна - это больше, чем просто символ: это знак с глубоким смыслом, отражающий различные аспекты жизни, природы и божественных сил, почитаемых скандинавами и другими германскими народами.</value>
+    <value>Старший Футарк - это древнейший рунический алфавит, использовавшийся германскими племенами примерно с 150 по 800 год н.э. для надписей на артефактах. Он состоит из 24 символов, разделенных на три семейства - группы по восемь символов (аэттир), названные по первым шести буквам (F-U-Þ-A-R-K). Руническая система рождения в Старшем Футарке присваивает определенные руны датам рождения, часто на основе 24-Rune цикла, связанного с положением Солнца в течение года. В скандинавской мистике каждая руна - это больше, чем просто символ: это знак с глубоким смыслом, отражающий различные аспекты жизни, природы и божественных сил, почитаемых скандинавами и другими германскими народами.</value>
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_BirthRuneSource" xml:space="preserve">
@@ -918,11 +1018,11 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_PersonalYearBrief_Template" xml:space="preserve">
-    <value>Год {curYear} - это нумерологический год {personalYear}: {interpretations[personalYear - 1].Brief}</value>
+    <value>Год &lt;b&gt;{curYear}&lt;/b&gt; - это нумерологический год &lt;b&gt;{personalYear}&lt;/b&gt;: {interpretations[personalYear - 1].Brief}</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PersonalYearFull_Template" xml:space="preserve">
-    <value>В нумерологии для тех, кто родился {baseDate:d}, год {curYear} - это личный год {personalYear}: {interpretations[personalYear - 1].Full}</value>
+    <value>В нумерологии для тех, кто родился {baseDate:d}, год {curYear} - это &lt;b&gt;личный год {personalYear}&lt;/b&gt;: &lt;br&gt;{interpretations[personalYear - 1].Full}</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="PersonalYear1_Brief" xml:space="preserve">
@@ -930,7 +1030,7 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="PersonalYear1_Full" xml:space="preserve">
-    <value>Личный Год 1 характеризуется чувством одиночества и трудностями в отношениях, поскольку люди стремятся к большей независимости и начинают всё с чистого листа. Этот сдвиг может вызывать напряжение в отношениях с партнерами, привыкшими делать всё вместе, что приводит к недопониманию. Люди часто не осознают, что их стремление к уединению обусловлено вибрацией этого года, что затрудняет объяснение их поведения. Опыт может быть разным - некоторые могут столкнуться с ситуациями, требующими проявления напористости, и неспособность воспользоваться этими возможностями может привести к потерям или одиночеству. Несмотря на трудности, Личный Год 1 предлагает шанс на обновление, отдых от прошлых обязанностей и вознаграждение за прошлые усилия. Хотя могут завязаться важные связи, романтические отношения обычно начинаются в Личном Году 2 или 6.</value>
+    <value>Личный Год 1 характеризуется чувством одиночества и трудностями в отношениях, поскольку люди стремятся к большей независимости и начинают всё с чистого листа. Этот сдвиг может вызывать напряжение в отношениях с партнерами, привыкшими делать всё вместе, что приводит к недопониманию. Люди часто не осознают, что их стремление к уединению обусловлено вибрацией этого года, что затрудняет объяснение их поведения. Опыт может быть разным - некоторые могут столкнуться с ситуациями, требующими проявления напористости, и неспособность воспользоваться этими возможностями может привести к потерям или одиночества. Несмотря на трудности, Личный Год 1 предлагает шанс на обновление, отдых от прошлых обязанностей и вознаграждение за прошлые усилия. Хотя могут завязаться важные связи, романтические отношения обычно начинаются в Личном Году 2 или 6.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="PersonalYear2_Brief" xml:space="preserve">
@@ -946,7 +1046,7 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="PersonalYear3_Full" xml:space="preserve">
-    <value>Вибрации числа три стимулируют умственную активность, социальное взаимодействие и самовыражение. Личный Год 3 не подходит для рутинных задач - вместо этого он требует стимулирующих и творческих занятий, чтобы направить возросшую умственную энергию в нужное русло. Если эту энергию не направить должным образом, это может привести к раздражительности или нарушениям сна. Этот период также предоставляет возможности для разрешения прошлых отношений и проблем, часто посредством рационального общения, что помогает смягчить эмоциональное напряжение. Кроме того, это идеальное время для учебы, поскольку умственная энергия достигает своего пика.</value>
+    <value>Вибрации числа три стимулируют умственную активность, социальное взаимодействие и самовыражение. Личный Год 3 не подходит для рутинных задач - вместо этого он требует刺激ирующих и творческих занятий, чтобы направить возросшую умственную энергию в нужное русло. Если эту энергию не направить должным образом, это может привести к irritability или нарушениям сна. Этот период также предоставляет возможности для разрешения прошлых отношений и проблем, часто посредством рационального общения, что помогает смягчить эмоциональное напряжение. Кроме того, это идеальное время для учебы, поскольку умственная энергия достигает своего пика.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="PersonalYear4_Brief" xml:space="preserve">
@@ -994,7 +1094,7 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="PersonalYear9_Full" xml:space="preserve">
-    <value>Личный Год 9 знаменует собой завершение циклов и готовит людей к новым начинаниям в следующем году - Личном Году 1. Этот период может вызывать чувство нестабильности, побуждая к переменам, даже если они неприятны. Хотя он может вызывать замешательство и трудности - иногда приводя к разрыву отношений или значительным жизненным переменам - он также способствует росту самосознания и ответственности. Люди часто пересматривают приоритеты и берут на себя новые обязанности, способствуя саморазвитию. Несмотря на сложности, Личный Год 9 предоставляет ценные возможности для обучения и закладывает основу для будущего прогресса.</value>
+    <value>Личный Год 9 знаменует собой завершение циклов и готовит людей к новым начиначим в следующем году - Личном Году 1. Этот период может вызывать чувство нестабильности, побуждая к переменам, даже если они неприятны. Хотя он может вызывать замешательство и трудности - иногда приводя к разрыву отношений или значительным жизненным переменам - он также способствует росту самосознания и ответственности. Люди часто пересматривают приоритеты и берут на себя новые обязанности, способствуя саморазвитию. Несмотря на сложности, Личный Год 9 предоставляет ценные возможности для обучения и закладывает основу для будущего прогресса.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_PersonalYearTitle" xml:space="preserve">
@@ -1022,19 +1122,19 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePreXX_Brief" xml:space="preserve">
-    <value>До 1900 года было выброшено {amount} CO2</value>
+    <value>До 1900 года было выброшено &lt;b&gt;{amount}&lt;/b&gt; CO2</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePreXX_Full" xml:space="preserve">
-    <value>Дата "{baseDateName}" до XX века. За весь период до 1900 года человечество произвело выброс в атмосферу {amount} CO2. Это всё ещё ничтожно мало по сравнению с более поздними периодами.</value>
+    <value>Дата "{baseDateName}" до XX века. За весь период до 1900 года человечество произвело выброс в атмосферу &lt;b&gt;{amount}&lt;/b&gt; CO2. Это всё ещё ничтожно мало по сравнению с более поздними периодами.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePostXX_Brief" xml:space="preserve">
-    <value>{amount} выброшенного CO2</value>
+    <value>&lt;b&gt;{amount}&lt;/b&gt; выброшенного CO2</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePostXX_Full" xml:space="preserve">
-    <value>Начиная с даты "{baseDateName}" {baseDate:d}, человечество произвело выброс в атмосферу {amount} CO2. Это невероятно масштабный глобальный выброс углекислого газа.</value>
+    <value>Начиная с даты "{baseDateName}" {baseDate:d}, человечество произвело выброс в атмосферу &lt;b&gt;{amount}&lt;/b&gt; CO2. Это невероятно масштабный глобальный выброс углекислого газа.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_GlobalExhaleTitle" xml:space="preserve">
@@ -1447,102 +1547,6 @@
   </data>
   <data name="Star_Achernar_Name" xml:space="preserve">
     <value>Ахернар</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Fehu_Name" xml:space="preserve">
-    <value>Феху</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Uruz_Name" xml:space="preserve">
-    <value>Уруз</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Thurisaz_Name" xml:space="preserve">
-    <value>Турисаз</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Ansuz_Name" xml:space="preserve">
-    <value>Ансуз</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Raidho_Name" xml:space="preserve">
-    <value>Райдо</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Kenaz_Name" xml:space="preserve">
-    <value>Кеназ</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Gebo_Name" xml:space="preserve">
-    <value>Гебо</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Wunjo_Name" xml:space="preserve">
-    <value>Вунджо</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Hagalaz_Name" xml:space="preserve">
-    <value>Хагалаз</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Nauthiz_Name" xml:space="preserve">
-    <value>Наутиз</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Isa_Name" xml:space="preserve">
-    <value>Иса</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Jera_Name" xml:space="preserve">
-    <value>Джера</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Eihwaz_Name" xml:space="preserve">
-    <value>Эйхваз</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Perthro_Name" xml:space="preserve">
-    <value>Пертро</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Algiz_Name" xml:space="preserve">
-    <value>Альгиз</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Sowilo_Name" xml:space="preserve">
-    <value>Совило</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Tiwaz_Name" xml:space="preserve">
-    <value>Тиваз</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Berkano_Name" xml:space="preserve">
-    <value>Беркано</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Ehwaz_Name" xml:space="preserve">
-    <value>Эхваз</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Mannaz_Name" xml:space="preserve">
-    <value>Манназ</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Laguz_Name" xml:space="preserve">
-    <value>Лагуз</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Ingwaz_Name" xml:space="preserve">
-    <value>Ингваз</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Othala_Name" xml:space="preserve">
-    <value>Отала</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Dagaz_Name" xml:space="preserve">
-    <value>Дагаз</value>
     <comment>CalculationService.cs</comment>
   </data>
 </root>

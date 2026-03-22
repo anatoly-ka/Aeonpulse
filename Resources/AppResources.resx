@@ -282,11 +282,11 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_TimeJubileesBrief" xml:space="preserve">
-    <value>Next milestone: {nextJubilee} on {nearestJubileeDate:d}</value>
+    <value>Next milestone: &lt;b&gt;{nextJubilee}&lt;/b&gt; on &lt;b&gt;{nearestJubileeDate:d}&lt;/b&gt;</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_TimeJubileesFull" xml:space="preserve">
-    <value>Since {baseDateName} on {baseDate:d}, incredible milestones of time have passed. The next big marker is {nextJubilee} on {nearestJubileeDate:d}!</value>
+    <value>Since {baseDateName} on {baseDate:d}, incredible milestones of time have passed. The next big marker is &lt;b&gt;{nextJubilee}&lt;/b&gt; on &lt;b&gt;{nearestJubileeDate:d}&lt;/b&gt;!</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_TimeJubileesTitle" xml:space="preserve">
@@ -306,23 +306,23 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_CountdownBrief_HoursOnly" xml:space="preserve">
-    <value>{hrs}h : {mins}m : {secs}s until next anniversary</value>
+    <value>&lt;b&gt;{hrs}h : {mins}m : {secs}s&lt;/b&gt; until next anniversary</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_CountdownBrief_DaysHours" xml:space="preserve">
-    <value>{days} days {hrs}h : {mins}m until next anniversary</value>
+    <value>&lt;b&gt;{days} days {hrs}h : {mins}m&lt;/b&gt; until next anniversary</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_CountdownBrief_DaysOnly" xml:space="preserve">
-    <value>{days} days until next anniversary</value>
+    <value>&lt;b&gt;{days} days&lt;/b&gt; until next anniversary</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_CountdownFull_HoursOnly" xml:space="preserve">
-    <value>We're counting the seconds! Only {hrs} hours, {mins} minutes, and {secs} seconds left until you hit the next anniversary on {nearest:d}.</value>
+    <value>We're counting the seconds! Only &lt;b&gt;{hrs} hours, {mins} minutes, and {secs}&lt;/b&gt; seconds left until you hit the next anniversary on &lt;b&gt;{nearest:d}&lt;/b&gt;.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_CountdownFull_WithDays" xml:space="preserve">
-    <value>We're counting the seconds! Only {days} days, {hrs} hours, {mins} minutes, and {secs} seconds left until you hit the next anniversary on {nearest:d}.</value>
+    <value>We're counting the seconds! Only &lt;b&gt;{days} days, {hrs} hours, {mins} minutes, and {secs}&lt;/b&gt; seconds left until you hit the next anniversary on &lt;b&gt;{nearest:d}&lt;/b&gt;.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_CountdownTitle" xml:space="preserve">
@@ -342,11 +342,11 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_LifeOdometerBrief" xml:space="preserve">
-    <value>{heartbeats:N0} heartbeats and {breaths:N0} breaths</value>
+    <value>&lt;b&gt;{heartbeats:N0}&lt;/b&gt; heartbeats and &lt;b&gt;{breaths:N0}&lt;/b&gt; breaths</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_LifeOdometerFull" xml:space="preserve">
-    <value>Approximately {heartbeats:N0} heartbeats have drummed and {breaths:N0} breaths have been processed since {baseDateName} on {baseDate:d}.</value>
+    <value>Approximately &lt;b&gt;{heartbeats:N0} heartbeats&lt;/b&gt; have drummed and &lt;b&gt;{breaths:N0} breaths&lt;/b&gt; have been processed since {baseDateName} on {baseDate:d}.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_LifeOdometerTitle" xml:space="preserve">
@@ -366,11 +366,11 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_AlienAnniversariesBrief" xml:space="preserve">
-    <value>{marsYears:F2} years on Mars, {venusYears:F2} on Venus</value>
+    <value>&lt;b&gt;{marsYears:F2}&lt;/b&gt; years on Mars, &lt;b&gt;{venusYears:F2}&lt;/b&gt; on Venus</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_AlienAnniversariesFull" xml:space="preserve">
-    <value>Since {baseDateName} on {baseDate:d}, the planets have finished their laps at different speeds. On Mars, this timeline has spanned {marsYears:F2} Martian years, while on Venus, this timeline has spanned {venusYears:F2} Venusian years.</value>
+    <value>Since {baseDateName} on {baseDate:d}, the planets have finished their laps at different speeds. On Mars, this timeline has spanned &lt;b&gt;{marsYears:F2} Martian years&lt;/b&gt;, while on Venus, this timeline has spanned &lt;b&gt;{venusYears:F2} Venusian years&lt;/b&gt;.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_AlienAnniversariesTitle" xml:space="preserve">
@@ -390,14 +390,18 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_GalacticCommuteBrief" xml:space="preserve">
-    <value>{distance} through the Galaxy</value>
+    <value>&lt;b&gt;{distance}&lt;/b&gt; through the Galaxy</value>
     <comment>CalculationService.cs</comment>
   </data>
-  <data name="Ticker_GalacticCommuteFull" xml:space="preserve">
-    <value>Since {baseDate:d}, Earth has hitched a ride for a {distance} {fullDistance}journey around the center of the Milky Way.</value>
+	<data name="Ticker_GalacticCommuteFull" xml:space="preserve">
+    <value>Since {baseDate:d}, Earth has hitched a ride for a &lt;b&gt;{distance}&lt;/b&gt; journey around the center of the Milky Way.</value>
     <comment>CalculationService.cs</comment>
   </data>
-  <data name="Info_GalacticCommuteTitle" xml:space="preserve">
+	<data name="Ticker_GalacticCommuteFullWithRounded" xml:space="preserve">
+    <value>Since {baseDate:d}, Earth has hitched a ride for a &lt;b&gt;{distance}&lt;/b&gt; (&lt;b&gt;{fullDistance}&lt;/b&gt;) journey around the center of the Milky Way.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+	<data name="Info_GalacticCommuteTitle" xml:space="preserve">
     <value>Galactic Commute</value>
     <comment>MainPage.xaml.cs</comment>
   </data>
@@ -414,43 +418,43 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_PhotonPathHeliopause_Brief" xml:space="preserve">
-    <value>Light has reached the Heliopause</value>
+    <value>Light has reached &lt;b&gt;the Heliopause&lt;/b&gt;</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathHeliopause_Full" xml:space="preserve">
-    <value>If a starship left at light speed on {baseDate:d}, it would have traveled {fullDistance}, and already reached the Heliopause - the boundary, roughly 11-12 billion miles (18-20 billion km) out, where solar wind is halted by the interstellar medium.</value>
+    <value>If a starship left at light speed on {baseDate:d}, it would have traveled &lt;b&gt;{fullDistance}&lt;/b&gt;, and already reached the Heliopause - the boundary, roughly 11-12 billion miles (18-20 billion km) out, where solar wind is halted by the interstellar medium.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathSolarSystem_Brief" xml:space="preserve">
-    <value>Light is still within the Solar System</value>
+    <value>Light is still within &lt;b&gt;the Solar System&lt;/b&gt;</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathSolarSystem_Full" xml:space="preserve">
-    <value>If a starship left at light speed on {baseDate:d}, it would have traveled {fullDistance}, and is within our Solar System still.</value>
+    <value>If a starship left at light speed on {baseDate:d}, it would have traveled &lt;b&gt;{fullDistance}&lt;/b&gt;, and is within our Solar System still.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathOortCloud_Brief" xml:space="preserve">
-    <value>Light has reached the Oort Cloud</value>
+    <value>Light has reached &lt;b&gt;the Oort Cloud&lt;/b&gt;</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathOortCloud_Full" xml:space="preserve">
-    <value>If a starship left at light speed on {baseDate:d}, it would have traveled {fullDistance}, and already reached the Oort Cloud of our Solar System - the theoretical outer edge of the Sun's gravitational influence.</value>
+    <value>If a starship left at light speed on {baseDate:d}, it would have traveled &lt;b&gt;{fullDistance}&lt;/b&gt;, and already reached the Oort Cloud of our Solar System - the theoretical outer edge of the Sun's gravitational influence.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathInterstellar_Brief" xml:space="preserve">
-    <value>Light has reached interstellar space</value>
+    <value>Light has reached &lt;b&gt;interstellar space&lt;/b&gt;</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathInterstellar_Full" xml:space="preserve">
-    <value>If a starship left at light speed on {baseDate:d}, it would have traveled {distance} ({fullDistance}), and already reached interstellar space - the vast, mostly empty region between stars. The next stop is Proxima Centauri, located 4.246 light-years away.</value>
+    <value>If a starship left at light speed on {baseDate:d}, it would have traveled &lt;b&gt;{distance}&lt;/b&gt; (&lt;b&gt;{fullDistance}&lt;/b&gt;), and already reached interstellar space - the vast, mostly empty region between stars. The next stop is Proxima Centauri, located 4.246 light-years away.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathStar_BriefTemplate" xml:space="preserve">
-    <value>Light has reached {star.Name}</value>
+    <value>Light has reached &lt;b&gt;{star.Name}&lt;/b&gt;</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PhotonPathStar_FullTemplate" xml:space="preserve">
-    <value>If a starship left at light speed on {baseDate:d}, it would have traveled {distance} ({fullDistance}), and already reached {star.Name}, located {star.Ly} light-years away - {star.Info}</value>
+    <value>If a starship left at light speed on {baseDate:d}, it would have traveled &lt;b&gt;{distance}&lt;/b&gt; (&lt;b&gt;{fullDistance}&lt;/b&gt;), and already reached &lt;b&gt;{star.Name}&lt;/b&gt;, located &lt;b&gt;{star.Ly}&lt;/b&gt; light-years away - {star.Info}</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Star_ProximaCentauri_Info" xml:space="preserve">
@@ -670,19 +674,19 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_HumanBirthRankPreXX_Brief" xml:space="preserve">
-    <value>One of the first 104,510,976,956 humans</value>
+    <value>One of the first &lt;b&gt;104,510,976,956&lt;/b&gt; humans</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_HumanBirthRankPreXX_Full" xml:space="preserve">
-    <value>The moment when {baseDateName} is before the XX century, the number of humans have ever lived on Earth till 1900 is estimated as 104,510,976,956.</value>
+    <value>The moment when {baseDateName} is before the XX century, the number of humans have ever lived on Earth till 1900 is estimated as &lt;b&gt;104,510,976,956&lt;/b&gt;.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_HumanBirthRankPostXX_Brief" xml:space="preserve">
-    <value>Human #{estimatedRank:N0} on this date</value>
+    <value>Human #&lt;b&gt;{estimatedRank:N0}&lt;/b&gt; on this date</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_HumanBirthRankPostXX_Full" xml:space="preserve">
-    <value>The moment when {baseDateName} marks the arrival of human #{estimatedRank:N0} in the story of Earth, out of all who have ever lived.</value>
+    <value>The moment when {baseDateName} marks the arrival of human #&lt;b&gt;{estimatedRank:N0}&lt;/b&gt; in the story of Earth, out of all who have ever lived.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_HumanBirthRankTitle" xml:space="preserve">
@@ -702,11 +706,15 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_BirthRuneBrief_Template" xml:space="preserve">
-    <value>Date rune is {birthRune.Name}: {birthRune.Brief}</value>
+    <value>Date rune is &lt;b&gt;{birthRune.Name}&lt;/b&gt;: {birthRune.Brief}</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_BirthRuneFull_Template" xml:space="preserve">
-    <value>According to Viking lore, {baseDate:d} is governed by the {birthRune.Name} rune: {birthRune.Full}.</value>
+    <value>According to Viking lore, {baseDate:d} is governed by the &lt;b&gt;{birthRune.Name}&lt;/b&gt; rune:  &lt;br&gt;{birthRune.Full}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Fehu_Name" xml:space="preserve">
+    <value>Fehu</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Fehu_Brief" xml:space="preserve">
@@ -717,12 +725,20 @@
     <value>Fehu is all about getting the rewards you've earned - think money, success, and good fortune from your hard work. It's a reminder to be thankful for what you have and to share your good luck with others, which can help you keep the good vibes going.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Uruz_Name" xml:space="preserve">
+    <value>Uruz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Uruz_Brief" xml:space="preserve">
     <value>Good health and inner strength</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Uruz_Full" xml:space="preserve">
     <value>Uruz is like a boost of pure energy and strength. It encourages you to tap into your inner power, stay resilient, and keep pushing through tough times. It's about feeling strong, healthy, and ready to take on whatever life throws at you.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Thurisaz_Name" xml:space="preserve">
+    <value>Thurisaz</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Thurisaz_Brief" xml:space="preserve">
@@ -733,12 +749,20 @@
     <value>Thurisaz is your protective shield, inspired by Thor. It's telling you to pause and think things through before acting. Use your judgment, be careful, and don't rush - sometimes waiting for the right moment is the smartest move.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Ansuz_Name" xml:space="preserve">
+    <value>Ansuz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Ansuz_Brief" xml:space="preserve">
     <value>Communication and advice from wise people</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Ansuz_Full" xml:space="preserve">
     <value>Ansuz is all about clear communication and learning from those who've been around the block. Listen to wise friends or mentors, soak up their advice, and let it help you grow smarter and wiser yourself.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Raidho_Name" xml:space="preserve">
+    <value>Raidho</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Raidho_Brief" xml:space="preserve">
@@ -749,12 +773,20 @@
     <value>Raidho is the rune for life's journey - whether you're traveling, moving, or just chasing your dreams. It encourages you to embrace changes, trust the process, and keep moving toward your goals, one step at a time.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Kenaz_Name" xml:space="preserve">
+    <value>Kenaz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Kenaz_Brief" xml:space="preserve">
     <value>Intuition, clarity, hope</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Kenaz_Full" xml:space="preserve">
     <value>Kenaz shines a light in dark or confusing times. It helps you find clarity, spark new ideas, and gives you hope when things feel tough. Trust your gut - sometimes your intuition leads you straight to the answers you need.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Gebo_Name" xml:space="preserve">
+    <value>Gebo</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Gebo_Brief" xml:space="preserve">
@@ -765,12 +797,20 @@
     <value>Gebo is all about give-and-take in relationships. When you're generous and open, you create harmony and attract kindness in return. It's a reminder that good things happen when you share and connect with others.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Wunjo_Name" xml:space="preserve">
+    <value>Wunjo</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Wunjo_Brief" xml:space="preserve">
     <value>Happiness and well-being</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Wunjo_Full" xml:space="preserve">
     <value>Wunjo brings happiness and peaceful vibes. It's about enjoying the simple pleasures in life, feeling content, and spreading joy to those around you. Take time to relax and appreciate your own well-being.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Hagalaz_Name" xml:space="preserve">
+    <value>Hagalaz</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Hagalaz_Brief" xml:space="preserve">
@@ -781,12 +821,20 @@
     <value>Hagalaz shakes things up, but in a good way - it helps you break old, bad habits and make room for positive changes. Even if things feel chaotic, it's clearing the path for a fresh start and better days ahead.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Nauthiz_Name" xml:space="preserve">
+    <value>Nauthiz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Nauthiz_Brief" xml:space="preserve">
     <value>Stay alert and patient in tough times</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Nauthiz_Full" xml:space="preserve">
     <value>Naudhiz is your reminder to stay strong and patient when life gets tough. It's about facing obstacles head-on, staying alert, and learning from every challenge. Don't be afraid - you've got what it takes to get through.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Isa_Name" xml:space="preserve">
+    <value>Isa</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Isa_Brief" xml:space="preserve">
@@ -797,12 +845,20 @@
     <value>Isa is like a pause button, letting you know it's okay to slow down and take a break. Instead of rushing, use this time to reflect, be patient, and wait for things to clear up before making any big moves.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Jera_Name" xml:space="preserve">
+    <value>Jera</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Jera_Brief" xml:space="preserve">
     <value>Karma, reward comes with patience</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Jera_Full" xml:space="preserve">
     <value>Jera reminds you that good things take time - like planting seeds and waiting for them to grow. Keep putting in effort, and your rewards will come, even if they take a while. Patience pays off in the end!</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Eihwaz_Name" xml:space="preserve">
+    <value>Eihwaz</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Eihwaz_Brief" xml:space="preserve">
@@ -813,12 +869,20 @@
     <value>Eihwaz is your trusty sidekick when you're working toward your goals. It helps you stay safe and resilient, and encourages you to use your imagination to tackle challenges and find creative solutions.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Perthro_Name" xml:space="preserve">
+    <value>Perthro</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Perthro_Brief" xml:space="preserve">
     <value>Mysteries, secrets, surprises</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Perthro_Full" xml:space="preserve">
     <value>Perthro is all about uncovering secrets and embracing surprises. It's a reminder to be open to unexpected twists and to trust that even mysteries can lead to important lessons and personal growth.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Algiz_Name" xml:space="preserve">
+    <value>Algiz</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Algiz_Brief" xml:space="preserve">
@@ -829,12 +893,20 @@
     <value>Algiz offers a protective vibe, keeping you safe from harm. It also encourages you to stay aware, rely on your friends and community, and look forward to happy times ahead.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Sowilo_Name" xml:space="preserve">
+    <value>Sowilo</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Sowilo_Brief" xml:space="preserve">
     <value>Health, relax, let go of worries</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Sowilo_Full" xml:space="preserve">
     <value>Sowilo is all about feeling good and keeping your energy up. It tells you to relax, let go of worries, and take care of your body - because staying healthy makes everything else easier.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Tiwaz_Name" xml:space="preserve">
+    <value>Tiwaz</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Tiwaz_Brief" xml:space="preserve">
@@ -845,12 +917,20 @@
     <value>Tiwaz gives you a boost of confidence and courage. Whether you're chasing goals or starting a new romance, this rune says keep going - you've got the willpower to win and come out on top.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Berkano_Name" xml:space="preserve">
+    <value>Berkano</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Berkano_Brief" xml:space="preserve">
     <value>Family, feminine energy, new beginnings</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Berkano_Full" xml:space="preserve">
     <value>Berkano is all about nurturing, family, and new beginnings. It often signals happy events like weddings or births, and encourages you to embrace growth and positive changes in your personal life.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Ehwaz_Name" xml:space="preserve">
+    <value>Ehwaz</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Ehwaz_Brief" xml:space="preserve">
@@ -861,12 +941,20 @@
     <value>Ehwaz is the rune for moving forward and adapting to new things. Whether you're traveling, changing jobs, or starting fresh, trust that these changes are leading you to something better.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Mannaz_Name" xml:space="preserve">
+    <value>Mannaz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Mannaz_Brief" xml:space="preserve">
     <value>Teamwork, support, expanding contacts</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Mannaz_Full" xml:space="preserve">
     <value>Mannaz is all about working together and building strong connections. It encourages you to reach out, accept support, and grow your network - success is easier when you're part of a team.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Laguz_Name" xml:space="preserve">
+    <value>Laguz</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Laguz_Brief" xml:space="preserve">
@@ -877,6 +965,10 @@
     <value>Laguz is your guide to trusting your intuition and going with the flow. It helps you tap into your creativity and spiritual side, so you can handle whatever comes your way with grace.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Ingwaz_Name" xml:space="preserve">
+    <value>Ingwaz</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Ingwaz_Brief" xml:space="preserve">
     <value>Closure, fulfillment, new beginnings</value>
     <comment>CalculationService.cs</comment>
@@ -885,12 +977,20 @@
     <value>Ingwaz helps you wrap things up and start fresh. It's about feeling fulfilled, closing old chapters, and stepping confidently into new beginnings with a sense of peace.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Rune_Othala_Name" xml:space="preserve">
+    <value>Othala</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Rune_Othala_Brief" xml:space="preserve">
     <value>Heritage, material goods, advice from elders</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Othala_Full" xml:space="preserve">
     <value>Othala connects you to your roots and family traditions. It's about appreciating what you've inherited - whether it's wisdom, values, or material things - and seeking guidance from elders and old friends when you need it.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Rune_Dagaz_Name" xml:space="preserve">
+    <value>Dagaz</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Rune_Dagaz_Brief" xml:space="preserve">
@@ -918,11 +1018,11 @@
     <comment>MainPage.xaml</comment>
   </data>
   <data name="Ticker_PersonalYearBrief_Template" xml:space="preserve">
-    <value>Year {curYear} is Numerology Year {personalYear}: {interpretations[personalYear - 1].Brief}</value>
+    <value>Year &lt;b&gt;{curYear}&lt;/b&gt; is Numerology &lt;b&gt;Year {personalYear}&lt;/b&gt;: {interpretations[personalYear - 1].Brief}</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_PersonalYearFull_Template" xml:space="preserve">
-    <value>In Numerology, for those who were born on {baseDate:d}, year {curYear} is Personal Year {personalYear}: {interpretations[personalYear - 1].Full}</value>
+    <value>In Numerology, for those who were born on {baseDate:d}, year {curYear} is &lt;b&gt;Personal Year {personalYear}&lt;/b&gt;: &lt;br&gt;{interpretations[personalYear - 1].Full}</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="PersonalYear1_Brief" xml:space="preserve">
@@ -1022,19 +1122,19 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePreXX_Brief" xml:space="preserve">
-    <value>Till 1900, {amount} of CO2 emitted</value>
+    <value>Till 1900, &lt;b&gt;{amount}&lt;/b&gt; of CO2 emitted</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePreXX_Full" xml:space="preserve">
-    <value>The moment when {baseDateName} is before the XX century - till 1900, humanity has released {amount} of CO2 into the atmosphere. Still a tiny amount compared to later times.</value>
+    <value>The moment when {baseDateName} is before the XX century - till 1900, humanity has released &lt;b&gt;{amount}&lt;/b&gt; of CO2 into the atmosphere. Still a tiny amount compared to later times.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePostXX_Brief" xml:space="preserve">
-    <value>{amount} of CO2 emitted</value>
+    <value>&lt;b&gt;{amount}&lt;/b&gt; of CO2 emitted</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePostXX_Full" xml:space="preserve">
-    <value>Since {baseDateName} on {baseDate:d}, humanity has released {amount} of CO2 into the atmosphere. A massive global exhale.</value>
+    <value>Since {baseDateName} on {baseDate:d}, humanity has released &lt;b&gt;{amount}&lt;/b&gt; of CO2 into the atmosphere. A massive global exhale.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_GlobalExhaleTitle" xml:space="preserve">
@@ -1447,102 +1547,6 @@
   </data>
   <data name="Star_Achernar_Name" xml:space="preserve">
     <value>Achernar</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Fehu_Name" xml:space="preserve">
-    <value>Fehu</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Uruz_Name" xml:space="preserve">
-    <value>Uruz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Thurisaz_Name" xml:space="preserve">
-    <value>Thurisaz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Ansuz_Name" xml:space="preserve">
-    <value>Ansuz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Raidho_Name" xml:space="preserve">
-    <value>Raidho</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Kenaz_Name" xml:space="preserve">
-    <value>Kenaz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Gebo_Name" xml:space="preserve">
-    <value>Gebo</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Wunjo_Name" xml:space="preserve">
-    <value>Wunjo</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Hagalaz_Name" xml:space="preserve">
-    <value>Hagalaz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Nauthiz_Name" xml:space="preserve">
-    <value>Nauthiz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Isa_Name" xml:space="preserve">
-    <value>Isa</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Jera_Name" xml:space="preserve">
-    <value>Jera</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Eihwaz_Name" xml:space="preserve">
-    <value>Eihwaz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Perthro_Name" xml:space="preserve">
-    <value>Perthro</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Algiz_Name" xml:space="preserve">
-    <value>Algiz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Sowilo_Name" xml:space="preserve">
-    <value>Sowilo</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Tiwaz_Name" xml:space="preserve">
-    <value>Tiwaz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Berkano_Name" xml:space="preserve">
-    <value>Berkano</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Ehwaz_Name" xml:space="preserve">
-    <value>Ehwaz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Mannaz_Name" xml:space="preserve">
-    <value>Mannaz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Laguz_Name" xml:space="preserve">
-    <value>Laguz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Ingwaz_Name" xml:space="preserve">
-    <value>Ingwaz</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Othala_Name" xml:space="preserve">
-    <value>Othala</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Rune_Dagaz_Name" xml:space="preserve">
-    <value>Dagaz</value>
     <comment>CalculationService.cs</comment>
   </data>
 </root>

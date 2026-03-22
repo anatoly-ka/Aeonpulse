@@ -67,11 +67,12 @@ namespace Aeonpulse.Tests
             var long_ = _svc.CalculateGlobalExhale(baseDate,  "T", "1960-01-01", true, now);
             var short_ = _svc.CalculateGlobalExhale(baseDate2, "T", "1990-01-01", true, now);
 
-            // Parse first number from BriefText
+            // Parse first number from BriefText (strip HTML tags first)
             double ParseAmount(string text)
             {
-                var token = text.Split(' ').FirstOrDefault(t => double.TryParse(t, out _));
-                return token != null ? double.Parse(token) : 0;
+                var plain = System.Text.RegularExpressions.Regex.Replace(text, "<[^>]+>", "");
+                var token = plain.Split(' ').FirstOrDefault(t => double.TryParse(t, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out _));
+                return token != null ? double.Parse(token, System.Globalization.CultureInfo.InvariantCulture) : 0;
             }
 
             Assert.True(ParseAmount(long_.BriefText) > ParseAmount(short_.BriefText));

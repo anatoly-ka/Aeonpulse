@@ -519,7 +519,8 @@ namespace Aeonpulse.Services
             double kmTraveled = seconds * 225;
 
             string distance;
-            string fullDistance = $"({(kmTraveled)} km) ";
+            string fullTextResource = AppResources.Ticker_GalacticCommuteFullWithRounded;
+            string fullDistance = $"{(kmTraveled)} km";
             if (useMetric)
             {
                 if (kmTraveled > 1000000000)
@@ -529,13 +530,13 @@ namespace Aeonpulse.Services
                 else
                 {
                     distance = $"{kmTraveled:N0} {AppResources.UnitMetric_Km}";
-                    fullDistance = ""; // same as distance - no need
+                    fullTextResource = AppResources.Ticker_GalacticCommuteFull; // no need to show raw km figure in parentheses when it's already in the main distance string
                 }
             }
             else
             {
                 double miles = kmTraveled * 0.621371;
-                fullDistance = $"({miles:N0} {AppResources.UnitImperial_Miles}) ";
+                fullDistance = $"{miles:N0} {AppResources.UnitImperial_Miles}";
                 if (miles > 1000000000)
                     distance = $"{(miles / 1000000000):F2} {AppResources.UnitImperial_BMiles}";
                 else if (miles > 1000000)
@@ -543,7 +544,7 @@ namespace Aeonpulse.Services
                 else
                 {
                     distance = $"{miles:N0} {AppResources.UnitImperial_Miles}";
-                    fullDistance = ""; // same as distance - no need
+                    fullTextResource = AppResources.Ticker_GalacticCommuteFull; // no need to show raw km figure in parentheses when it's already in the main distance string
                 }
             }
 
@@ -554,7 +555,7 @@ namespace Aeonpulse.Services
                 UseMetric  = useMetric,
                 BriefText = AppResources.Ticker_GalacticCommuteBrief
                     .Replace("{distance}", distance),
-                FullText = AppResources.Ticker_GalacticCommuteFull
+                FullText = fullTextResource
                     .Replace("{baseDate:d}", baseDate.ToString("d"))
                     .Replace("{distance}", distance)
                     .Replace("{fullDistance}", fullDistance)

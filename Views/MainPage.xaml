@@ -212,10 +212,12 @@
 
                                     <!-- Binding: MainViewModel.TimeJubilees.BriefText - always visible -->
                                     <Label Text="{Binding TimeJubilees.BriefText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
                                     <!-- Binding: MainViewModel.TimeJubilees.FullText - visible when expanded -->
                                     <Label Text="{Binding TimeJubilees.FullText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
@@ -273,10 +275,12 @@
                                     </Grid>
                                     <!-- Binding: MainViewModel.Countdown.BriefText - always visible, updates every second -->
                                     <Label Text="{Binding Countdown.BriefText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
                                     <!-- Binding: MainViewModel.Countdown.FullText - visible when expanded -->
                                     <Label Text="{Binding Countdown.FullText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
@@ -332,10 +336,12 @@
                                     </Grid>
                                     <!-- Binding: MainViewModel.LifeOdometer.BriefText - updates every second -->
                                     <Label Text="{Binding LifeOdometer.BriefText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
                                     <!-- Binding: MainViewModel.LifeOdometer.FullText - visible when expanded -->
                                     <Label Text="{Binding LifeOdometer.FullText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
@@ -416,10 +422,12 @@
                                     </Grid>
                                     <!-- Binding: MainViewModel.AlienAnniversaries.BriefText -->
                                     <Label Text="{Binding AlienAnniversaries.BriefText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
                                     <!-- Binding: MainViewModel.AlienAnniversaries.FullText -->
                                     <Label Text="{Binding AlienAnniversaries.FullText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
@@ -473,10 +481,12 @@
                                     </Grid>
                                     <!-- Binding: MainViewModel.GalacticCommute.BriefText - updates every second -->
                                     <Label Text="{Binding GalacticCommute.BriefText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
                                     <!-- Binding: MainViewModel.GalacticCommute.FullText -->
                                     <Label Text="{Binding GalacticCommute.FullText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
@@ -530,10 +540,12 @@
                                     </Grid>
                                     <!-- Binding: MainViewModel.PhotonPath.BriefText - updates every second -->
                                     <Label Text="{Binding PhotonPath.BriefText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
                                     <!-- Binding: MainViewModel.PhotonPath.FullText -->
                                     <Label Text="{Binding PhotonPath.FullText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
@@ -607,10 +619,12 @@
                                     </Grid>
                                     <!-- Binding: MainViewModel.HumanBirthRank.BriefText -->
                                     <Label Text="{Binding HumanBirthRank.BriefText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
                                     <!-- Binding: MainViewModel.HumanBirthRank.FullText -->
                                     <Label Text="{Binding HumanBirthRank.FullText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
@@ -654,10 +668,12 @@
                                     </Grid>
                                     <!-- Binding: MainViewModel.BirthRune.BriefText -->
                                     <Label Text="{Binding BirthRune.BriefText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
                                     <!-- Binding: MainViewModel.BirthRune.FullText -->
                                     <Label Text="{Binding BirthRune.FullText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
@@ -701,10 +717,12 @@
                                     </Grid>
                                     <!-- Binding: MainViewModel.PersonalYear.BriefText -->
                                     <Label Text="{Binding PersonalYear.BriefText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
                                     <!-- Binding: MainViewModel.PersonalYear.FullText -->
                                     <Label Text="{Binding PersonalYear.FullText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
@@ -784,10 +802,12 @@
                                     </Grid>
                                     <!-- Binding: MainViewModel.GlobalExhale.BriefText -->
                                     <Label Text="{Binding GlobalExhale.BriefText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
                                     <!-- Binding: MainViewModel.GlobalExhale.FullText -->
                                     <Label Text="{Binding GlobalExhale.FullText}"
+                                           TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"

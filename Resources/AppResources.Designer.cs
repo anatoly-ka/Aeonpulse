@@ -2590,7 +2590,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {marsYears:F2} years on Mars, {venusYears:F2} on Venus.
+        ///   Looks up a localized string similar to &lt;b&gt;{marsYears:F2}&lt;/b&gt; years on Mars, &lt;b&gt;{venusYears:F2}&lt;/b&gt; on Venus.
         /// </summary>
         public static string Ticker_AlienAnniversariesBrief {
             get {
@@ -2599,7 +2599,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Since {baseDateName} on {baseDate:d}, the planets have finished their laps at different speeds. On Mars, this timeline has spanned {marsYears:F2} Martian years, while on Venus, this timeline has spanned {venusYears:F2} Venusian years..
+        ///   Looks up a localized string similar to Since {baseDateName} on {baseDate:d}, the planets have finished their laps at different speeds. On Mars, this timeline has spanned &lt;b&gt;{marsYears:F2} Martian years&lt;/b&gt;, while on Venus, this timeline has spanned &lt;b&gt;{venusYears:F2} Venusian years&lt;/b&gt;..
         /// </summary>
         public static string Ticker_AlienAnniversariesFull {
             get {
@@ -2617,7 +2617,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Date rune is {birthRune.Name}: {birthRune.Brief}.
+        ///   Looks up a localized string similar to Date rune is &lt;b&gt;{birthRune.Name}&lt;/b&gt;: {birthRune.Brief}.
         /// </summary>
         public static string Ticker_BirthRuneBrief_Template {
             get {
@@ -2626,7 +2626,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to According to Viking lore, {baseDate:d} is governed by the {birthRune.Name} rune: {birthRune.Full}..
+        ///   Looks up a localized string similar to According to Viking lore, {baseDate:d} is governed by the &lt;b&gt;{birthRune.Name}&lt;/b&gt; rune: {birthRune.Full}..
         /// </summary>
         public static string Ticker_BirthRuneFull_Template {
             get {
@@ -2644,7 +2644,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {days} days {hrs}h : {mins}m until next anniversary.
+        ///   Looks up a localized string similar to &lt;b&gt;{days} days {hrs}h : {mins}m&lt;/b&gt; until next anniversary.
         /// </summary>
         public static string Ticker_CountdownBrief_DaysHours {
             get {
@@ -2653,7 +2653,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {days} days until next anniversary.
+        ///   Looks up a localized string similar to &lt;b&gt;{days} days&lt;/b&gt; until next anniversary.
         /// </summary>
         public static string Ticker_CountdownBrief_DaysOnly {
             get {
@@ -2662,7 +2662,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {hrs}h : {mins}m : {secs}s until next anniversary.
+        ///   Looks up a localized string similar to &lt;b&gt;{hrs}h : {mins}m : {secs}s&lt;/b&gt; until next anniversary.
         /// </summary>
         public static string Ticker_CountdownBrief_HoursOnly {
             get {
@@ -2671,7 +2671,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to We&apos;re counting the seconds! Only {hrs} hours, {mins} minutes, and {secs} seconds left until you hit the next anniversary on {nearest:d}..
+        ///   Looks up a localized string similar to We&apos;re counting the seconds! Only &lt;b&gt;{hrs} hours, {mins} minutes, and {secs}&lt;/b&gt; seconds left until you hit the next anniversary on &lt;b&gt;{nearest:d}&lt;/b&gt;..
         /// </summary>
         public static string Ticker_CountdownFull_HoursOnly {
             get {
@@ -2680,7 +2680,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to We&apos;re counting the seconds! Only {days} days, {hrs} hours, {mins} minutes, and {secs} seconds left until you hit the next anniversary on {nearest:d}..
+        ///   Looks up a localized string similar to We&apos;re counting the seconds! Only &lt;b&gt;{days} days, {hrs} hours, {mins} minutes, and {secs}&lt;/b&gt; seconds left until you hit the next anniversary on &lt;b&gt;{nearest:d}&lt;/b&gt;..
         /// </summary>
         public static string Ticker_CountdownFull_WithDays {
             get {
@@ -2698,7 +2698,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {distance} through the Galaxy.
+        ///   Looks up a localized string similar to &lt;b&gt;{distance}&lt;/b&gt; through the Galaxy.
         /// </summary>
         public static string Ticker_GalacticCommuteBrief {
             get {
@@ -2707,11 +2707,20 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Since {baseDate:d}, Earth has hitched a ride for a {distance} {fullDistance}journey around the center of the Milky Way..
+        ///   Looks up a localized string similar to Since {baseDate:d}, Earth has hitched a ride for a &lt;b&gt;{distance}&lt;/b&gt; journey around the center of the Milky Way..
         /// </summary>
         public static string Ticker_GalacticCommuteFull {
             get {
                 return ResourceManager.GetString("Ticker_GalacticCommuteFull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Since {baseDate:d}, Earth has hitched a ride for a &lt;b&gt;{distance}&lt;/b&gt; (&lt;b&gt;{fullDistance}&lt;/b&gt;) journey around the center of the Milky Way..
+        /// </summary>
+        public static string Ticker_GalacticCommuteFullWithRounded {
+            get {
+                return ResourceManager.GetString("Ticker_GalacticCommuteFullWithRounded", resourceCulture);
             }
         }
         
@@ -2743,7 +2752,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {amount} of CO2 emitted.
+        ///   Looks up a localized string similar to &lt;b&gt;{amount}&lt;/b&gt; of CO&lt;sub&gt;2&lt;/sub&gt; emitted.
         /// </summary>
         public static string Ticker_GlobalExhalePostXX_Brief {
             get {
@@ -2752,7 +2761,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Since {baseDateName} on {baseDate:d}, humanity has released {amount} of CO2 into the atmosphere. A massive global exhale..
+        ///   Looks up a localized string similar to Since {baseDateName} on {baseDate:d}, humanity has released &lt;b&gt;{amount}&lt;/b&gt; of CO&lt;sub&gt;2&lt;/sub&gt; into the atmosphere. A massive global exhale..
         /// </summary>
         public static string Ticker_GlobalExhalePostXX_Full {
             get {
@@ -2761,7 +2770,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Till 1900, {amount} of CO2 emitted.
+        ///   Looks up a localized string similar to Till 1900, &lt;b&gt;{amount}&lt;/b&gt; of CO&lt;sub&gt;2&lt;/sub&gt; emitted.
         /// </summary>
         public static string Ticker_GlobalExhalePreXX_Brief {
             get {
@@ -2770,7 +2779,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The moment when {baseDateName} is before the XX century - till 1900, humanity has released {amount} of CO2 into the atmosphere. Still a tiny amount compared to later times..
+        ///   Looks up a localized string similar to The moment when {baseDateName} is before the XX century - till 1900, humanity has released &lt;b&gt;{amount}&lt;/b&gt; of CO&lt;sub&gt;2&lt;/sub&gt; into the atmosphere. Still a tiny amount compared to later times..
         /// </summary>
         public static string Ticker_GlobalExhalePreXX_Full {
             get {
@@ -2788,7 +2797,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Human #{estimatedRank:N0} on this date.
+        ///   Looks up a localized string similar to Human #&lt;b&gt;{estimatedRank:N0}&lt;/b&gt; on this date.
         /// </summary>
         public static string Ticker_HumanBirthRankPostXX_Brief {
             get {
@@ -2797,7 +2806,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The moment when {baseDateName} marks the arrival of human #{estimatedRank:N0} in the story of Earth, out of all who have ever lived..
+        ///   Looks up a localized string similar to The moment when {baseDateName} marks the arrival of human #&lt;b&gt;{estimatedRank:N0}&lt;/b&gt; in the story of Earth, out of all who have ever lived..
         /// </summary>
         public static string Ticker_HumanBirthRankPostXX_Full {
             get {
@@ -2806,7 +2815,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to One of the first 104,510,976,956 humans.
+        ///   Looks up a localized string similar to One of the first &lt;b&gt;104,510,976,956&lt;/b&gt; humans.
         /// </summary>
         public static string Ticker_HumanBirthRankPreXX_Brief {
             get {
@@ -2815,7 +2824,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The moment when {baseDateName} is before the XX century, the number of humans have ever lived on Earth till 1900 is estimated as 104,510,976,956..
+        ///   Looks up a localized string similar to The moment when {baseDateName} is before the XX century, the number of humans have ever lived on Earth till 1900 is estimated as &lt;b&gt;104,510,976,956&lt;/b&gt;..
         /// </summary>
         public static string Ticker_HumanBirthRankPreXX_Full {
             get {
@@ -2833,7 +2842,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {heartbeats:N0} heartbeats and {breaths:N0} breaths.
+        ///   Looks up a localized string similar to &lt;b&gt;{heartbeats:N0}&lt;/b&gt; heartbeats and &lt;b&gt;{breaths:N0}&lt;/b&gt; breaths.
         /// </summary>
         public static string Ticker_LifeOdometerBrief {
             get {
@@ -2842,7 +2851,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Approximately {heartbeats:N0} heartbeats have drummed and {breaths:N0} breaths have been processed since {baseDateName} on {baseDate:d}..
+        ///   Looks up a localized string similar to Approximately &lt;b&gt;{heartbeats:N0} heartbeats&lt;/b&gt; have drummed and &lt;b&gt;{breaths:N0} breaths&lt;/b&gt; have been processed since {baseDateName} on {baseDate:d}..
         /// </summary>
         public static string Ticker_LifeOdometerFull {
             get {
@@ -2860,7 +2869,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Year {curYear} is Numerology Year {personalYear}: {interpretations[personalYear - 1].Brief}.
+        ///   Looks up a localized string similar to Year &lt;b&gt;{curYear}&lt;/b&gt; is Numerology &lt;b&gt;Year {personalYear}&lt;/b&gt;: {interpretations[personalYear - 1].Brief}.
         /// </summary>
         public static string Ticker_PersonalYearBrief_Template {
             get {
@@ -2869,7 +2878,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to In Numerology, for those who were born on {baseDate:d}, year {curYear} is Personal Year {personalYear}: {interpretations[personalYear - 1].Full}.
+        ///   Looks up a localized string similar to In Numerology, for those who were born on {baseDate:d}, year {curYear} is &lt;b&gt;Personal Year {personalYear}&lt;/b&gt;:&lt;p&gt;{interpretations[personalYear - 1].Full}&lt;/p&gt;.
         /// </summary>
         public static string Ticker_PersonalYearFull_Template {
             get {
@@ -2887,7 +2896,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Light has reached the Heliopause.
+        ///   Looks up a localized string similar to Light has reached &lt;b&gt;the Heliopause&lt;/b&gt;.
         /// </summary>
         public static string Ticker_PhotonPathHeliopause_Brief {
             get {
@@ -2896,7 +2905,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If a starship left at light speed on {baseDate:d}, it would have traveled {fullDistance}, and already reached the Heliopause - the boundary, roughly 11-12 billion miles (18-20 billion km) out, where solar wind is halted by the interstellar medium..
+        ///   Looks up a localized string similar to If a starship left at light speed on {baseDate:d}, it would have traveled &lt;b&gt;{fullDistance}&lt;/b&gt;, and already reached the Heliopause - the boundary, roughly 11-12 billion miles (18-20 billion km) out, where solar wind is halted by the interstellar medium..
         /// </summary>
         public static string Ticker_PhotonPathHeliopause_Full {
             get {
@@ -2905,7 +2914,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Light has reached interstellar space.
+        ///   Looks up a localized string similar to Light has reached &lt;b&gt;interstellar space&lt;/b&gt;.
         /// </summary>
         public static string Ticker_PhotonPathInterstellar_Brief {
             get {
@@ -2914,7 +2923,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If a starship left at light speed on {baseDate:d}, it would have traveled {distance} ({fullDistance}), and already reached interstellar space - the vast, mostly empty region between stars. The next stop is Proxima Centauri, located 4.246 light-years away..
+        ///   Looks up a localized string similar to If a starship left at light speed on {baseDate:d}, it would have traveled &lt;b&gt;{distance}&lt;/b&gt; (&lt;b&gt;{fullDistance}&lt;/b&gt;), and already reached interstellar space - the vast, mostly empty region between stars. The next stop is Proxima Centauri, located 4.246 light-years away..
         /// </summary>
         public static string Ticker_PhotonPathInterstellar_Full {
             get {
@@ -2923,7 +2932,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Light has reached the Oort Cloud.
+        ///   Looks up a localized string similar to Light has reached &lt;b&gt;the Oort Cloud&lt;/b&gt;.
         /// </summary>
         public static string Ticker_PhotonPathOortCloud_Brief {
             get {
@@ -2932,7 +2941,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If a starship left at light speed on {baseDate:d}, it would have traveled {fullDistance}, and already reached the Oort Cloud of our Solar System - the theoretical outer edge of the Sun&apos;s gravitational influence..
+        ///   Looks up a localized string similar to If a starship left at light speed on {baseDate:d}, it would have traveled &lt;b&gt;{fullDistance}&lt;/b&gt;, and already reached the Oort Cloud of our Solar System - the theoretical outer edge of the Sun&apos;s gravitational influence..
         /// </summary>
         public static string Ticker_PhotonPathOortCloud_Full {
             get {
@@ -2941,7 +2950,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Light is still within the Solar System.
+        ///   Looks up a localized string similar to Light is still within &lt;b&gt;the Solar System&lt;/b&gt;.
         /// </summary>
         public static string Ticker_PhotonPathSolarSystem_Brief {
             get {
@@ -2950,7 +2959,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If a starship left at light speed on {baseDate:d}, it would have traveled {fullDistance}, and is within our Solar System still..
+        ///   Looks up a localized string similar to If a starship left at light speed on {baseDate:d}, it would have traveled &lt;b&gt;{fullDistance}&lt;/b&gt;, and is within our Solar System still..
         /// </summary>
         public static string Ticker_PhotonPathSolarSystem_Full {
             get {
@@ -2959,7 +2968,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Light has reached {star.Name}.
+        ///   Looks up a localized string similar to Light has reached &lt;b&gt;{star.Name}&lt;/b&gt;.
         /// </summary>
         public static string Ticker_PhotonPathStar_BriefTemplate {
             get {
@@ -2968,7 +2977,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If a starship left at light speed on {baseDate:d}, it would have traveled {distance} ({fullDistance}), and already reached {star.Name}, located {star.Ly} light-years away - {star.Info}.
+        ///   Looks up a localized string similar to If a starship left at light speed on {baseDate:d}, it would have traveled &lt;b&gt;{distance}&lt;/b&gt; (&lt;b&gt;{fullDistance}&lt;/b&gt;), and already reached &lt;b&gt;{star.Name}&lt;/b&gt;, located &lt;b&gt;{star.Ly}&lt;/b&gt; light-years away - {star.Info}.
         /// </summary>
         public static string Ticker_PhotonPathStar_FullTemplate {
             get {
@@ -2986,7 +2995,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Next milestone: {nextJubilee} on {nearestJubileeDate:d}.
+        ///   Looks up a localized string similar to Next milestone: &lt;b&gt;{nextJubilee}&lt;/b&gt; on &lt;b&gt;{nearestJubileeDate:d}&lt;/b&gt;.
         /// </summary>
         public static string Ticker_TimeJubileesBrief {
             get {
@@ -2995,7 +3004,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Since {baseDateName} on {baseDate:d}, incredible milestones of time have passed. The next big marker is {nextJubilee} on {nearestJubileeDate:d}!.
+        ///   Looks up a localized string similar to Since {baseDateName} on {baseDate:d}, incredible milestones of time have passed. The next big marker is &lt;b&gt;{nextJubilee}&lt;/b&gt; on &lt;b&gt;{nearestJubileeDate:d}&lt;/b&gt;!.
         /// </summary>
         public static string Ticker_TimeJubileesFull {
             get {
