@@ -115,8 +115,12 @@ namespace Aeonpulse.ViewModels
         public string Info_GlobalExhaleSource          => AppResources.Info_GlobalExhaleSource;
 
         // -- Tease ------------------------------------------------------------
-        public string Tease_Title      => AppResources.Tease_Title;
-        public string Tease_ButtonOK   => AppResources.Tease_ButtonOK;
+        public string Tease_Title          => AppResources.Tease_Title;
+        public string Tease_ButtonOK       => AppResources.Tease_ButtonOK;
+        public string Tease_ButtonCopy     => AppResources.Tease_ButtonCopy;
+        public string Tease_CopiedTitle    => AppResources.Tease_CopiedTitle;
+        public string Tease_CopiedText     => AppResources.Tease_CopiedText;
+        public string Tease_CopiedButtonOK => AppResources.Tease_CopiedButtonOK;
 
         // -- Refreshing -------------------------------------------------------
         public string Refreshing_Message => AppResources.Refreshing_Message;

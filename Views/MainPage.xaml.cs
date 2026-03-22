@@ -34,6 +34,7 @@ namespace Aeonpulse.Views
         private bool _isChangeDatePopupOpen;
         private bool _isMainMenuOpen;
         private bool _isSettingsOpen;
+        private bool _isTeasePopupOpen;
         private bool _isTimeJubileesDeepDiveOpen;
         private bool _isCountdownDeepDiveOpen;
         private bool _isLifeOdometerDeepDiveOpen;
@@ -96,15 +97,37 @@ namespace Aeonpulse.Views
         }
 
         /// <summary>
-        /// Tapping the logo shows the teaser popup - a single attention-grabbing
-        /// live stat pulled from <see cref="MainViewModel.TeaseText"/>
+        /// Tapping the logo or app name shows the tease popup - a single attention-grabbing
+        /// live stat pulled from <see cref="MainViewModel.TeaseText"/>.
+        /// The popup is positioned flush below the NavBar, left-aligned.
+        /// If the user taps "To Clipboard", the stat is copied and a confirmation
+        /// <see cref="DisplayAlert"/> is shown after the popup has been fully dismissed.
         /// </summary>
-        private void OnLogoTapped(object sender, EventArgs e)
+        private async void OnLogoTapped(object sender, EventArgs e)
         {
-            DisplayAlert(
-                AppResources.Tease_Title,
-                ((MainViewModel)BindingContext).TeaseText,
-                AppResources.Tease_ButtonOK);
+            if (_isTeasePopupOpen) return;
+            _isTeasePopupOpen = true;
+            try
+            {
+                var viewModel  = (MainViewModel)BindingContext;
+                double topOffset  = NavBar.Height;
+                double leftOffset = 16; // matches NavBar Padding="16,12"
+
+                var popup = new TeasePopup(
+                    viewModel.TeaseText,
+                    topOffset,
+                    leftOffset,
+                    onCopiedCallback: async _ =>
+                    {
+                        await DisplayAlert(
+                            AppResources.Tease_CopiedTitle,
+                            AppResources.Tease_CopiedText,
+                            AppResources.Tease_CopiedButtonOK);
+                    });
+
+                await Navigation.PushModalAsync(popup);
+            }
+            finally { _isTeasePopupOpen = false; }
         }
 
         /// <summary>

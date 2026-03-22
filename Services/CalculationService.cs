@@ -1132,7 +1132,7 @@ namespace Aeonpulse.Services
         ///
         /// <para><b>Pool (one chosen at random each call):</b></para>
         /// <list type="number">
-        ///   <item><description>Countdown - reuses <see cref="CountdownResult.BriefText"/>.</description></item>
+        ///   <item><description>Countdown - uses <see cref="CountdownResult.Days"/>, <see cref="CountdownResult.Hours"/>, <see cref="CountdownResult.Minutes"/> directly (DaysHours template, HTML stripped).</description></item>
         ///   <item><description>Heartbeats - uses <see cref="LifeOdometerResult.Heartbeats"/>.</description></item>
         ///   <item><description>Breaths - uses <see cref="LifeOdometerResult.Breaths"/>.</description></item>
         ///   <item><description>Galactic commute - uses <see cref="GalacticCommuteResult.Distance"/>.</description></item>
@@ -1156,7 +1156,9 @@ namespace Aeonpulse.Services
             var teases = new[]
             {
                 AppResources.Tease_Countdown
-                    .Replace("{countdown.BriefText}", countdown.BriefText),
+                    .Replace("{days}", countdown.Days.ToString())
+                    .Replace("{hrs}",  countdown.Hours.ToString())
+                    .Replace("{mins}", countdown.Minutes.ToString()),
                 AppResources.Tease_Heartbeats
                     .Replace("{lifeOdometer.Heartbeats}", lifeOdometer.Heartbeats.ToString("N0"))
                     .Replace("{baseDateValue}", baseDateFormatted),

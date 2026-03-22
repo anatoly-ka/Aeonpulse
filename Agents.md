@@ -1,6 +1,6 @@
-﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
+# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-03-22
+> **Last updated:** 2026-03-23
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -192,6 +192,7 @@ MainPage (always present)
   |-- MainMenuPopup      (hamburger button)
   |-- DeepDivePopup      (info button on any ticker card - generic, reused 10 times)
   |-- RefreshingPopup    (auto-dismissed 3s overlay shown during manual ticker refresh)
+  |-- TeasePopup         (logo or app-name tap - shows a live stat from MainViewModel.TeaseText; Copy button copies text to OS clipboard)
 ```
 
 `MainPage` layout is a 3-row grid:
@@ -316,7 +317,7 @@ All XAML files must be saved as **UTF-8 with BOM**. All colour/font-size referen
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
 | `MainPage.xaml` | Edit freely | *(XAML AI comments)* | The application's only persistent page. 3-row root `Grid`: Row 0 = NavBar (`Border` + inner `Grid`, logo `Image` with `ImageTint`, app name `Label`, hamburger `Button`). Row 1 = TimelineHeading (`Border` + `HorizontalStackLayout` with `FormattedString`). Row 2 = `ScrollView` containing four `CardFrame`-styled `Border` elements (Lab, Cosmos, Mirror, Eco Echoes), each holding a header `Grid` and a collapsible `VerticalStackLayout` of ticker card `Border` elements. Uses `BoolToImageSource` converter for chevron icons. |
-| `MainPage.xaml.cs` | Edit carefully | `NavigationCoordinator` | Code-behind for `MainPage`. **Contains no business logic.** Responsibilities: subscribe to `MainViewModel.RefreshRequested` in constructor; implement `OnMenuClicked`, `OnTimelineHeadingTapped`, `OnLogoTapped`; implement 10 `OnXxxInfoClicked` handlers that push `DeepDivePopup`; implement `OnTickerRefreshRequested` that pushes `RefreshingPopup`. Guard flags (`_isXxxOpen`) on every push prevent double-open. `OpenDeepDiveAsync()` measures `NavBar.Height + TimelineHeading.Height` to pass as `topOffset` to `DeepDivePopup`. |
+| `MainPage.xaml.cs` | Edit carefully | `NavigationCoordinator` | Code-behind for `MainPage`. **Contains no business logic.** Responsibilities: subscribe to `MainViewModel.RefreshRequested` in constructor; implement `OnMenuClicked`, `OnTimelineHeadingTapped`, `OnLogoTapped` (opens `TeasePopup` anchored below NavBar, left-aligned, with Copy-to-clipboard and Close buttons); implement 10 `OnXxxInfoClicked` handlers that push `DeepDivePopup`; implement `OnTickerRefreshRequested` that pushes `RefreshingPopup`. Guard flags (`_isXxxOpen`) on every push prevent double-open. `OpenDeepDiveAsync()` measures `NavBar.Height + TimelineHeading.Height` to pass as `topOffset` to `DeepDivePopup`. Holds 14 guard bools (13 deep-dive/popup guards + `_isTeasePopupOpen`). |
 | `SettingsPopup.xaml` | Edit freely | *(XAML AI comments)* | Full-screen overlay modal (semi-transparent `BackgroundColor`). `Frame` (legacy, `.NET 9` obsolete - do not add more Frames) centred panel. 3-row inner `Grid`: title bar, scrollable settings, close button footer. Settings rendered as a 2-column 14-row `Grid` with custom `RadioButton` `ControlTemplate` (outer ring `Ellipse` + inner dot `Ellipse` driven by `{TemplateBinding IsChecked}`). Groups: Unit System (rows 0-1), Color Scheme (rows 3-5), Text Size (rows 7-9), Language (rows 11-13), with spacer rows between. |
 | `SettingsPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `MainViewModel` via constructor; sets `BindingContext`. `_initialising = true` guard blocks `CheckedChanged` callbacks during radio-button seeding. Handlers `OnUnitSystemChanged`, `OnColorSchemeChanged`, `OnTextSizeChanged`, `OnDisplayLanguageChanged` each read the `RadioButton.Value` string and write to the ViewModel setter, which applies the change immediately and persists it. |
 | `ChangeDatePopup.xaml` | Edit freely | *(XAML AI comments)* | Centred (no full-screen overlay) modal. No backdrop-dismiss tap by design - prevents accidental dismissal of an in-progress edit. Contains `Entry` (event name) and `DatePicker` (date) inside `Frame` wrappers (legacy, `.NET 9` obsolete). Cancel and OK `Button` in a 3-column `Grid`. Uses `{x:Static resources:AppResources.Xxx}` (acceptable: popup is freshly constructed each time). |
@@ -327,6 +328,8 @@ All XAML files must be saved as **UTF-8 with BOM**. All colour/font-size referen
 | `DeepDivePopup.xaml.cs` | Edit freely | `ModalViewController` | Constructor accepts `title`, `section1Title`, `section1Text`, `section2Title`, `section2Text`, `topOffset`. Sets label text and overrides `PopupFrame.Margin` top component. To add more content sections, add new `Label` elements in the XAML and wire them here. |
 | `RefreshingPopup.xaml` | Edit freely | *(XAML AI comments)* | Centred (no full-screen overlay) auto-dismissing overlay. `Frame` (legacy) containing `ActivityIndicator` + message `Label`. No user-dismiss gesture - dismisses automatically after 3 seconds. |
 | `RefreshingPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `Action onDismissed` callback. `OnAppearing()` awaits `Task.Delay(3000)`, awaits `PopModalAsync()`, then invokes `onDismissed`. The callback updates a specific typed ticker result property on the ViewModel. The 3-second delay must remain to give the spinner time to animate. |
+| `TeasePopup.xaml` | Edit freely | *(XAML AI comments)* | Left-aligned modal panel anchored below the NavBar via `Margin` injection. No fixed width - auto-sizes to content to avoid line-wrapping. Full-screen semi-transparent overlay with backdrop-dismiss tap. 3-row inner layout: title bar with divider, tease stat content label (`x:Name` set by code-behind), right-aligned footer with 2-button row (Copy + Close). Button `TextColor`/`BorderColor` use `{DynamicResource TextWhite}` to match content; `FontSize` uses `{DynamicResource FontSizeLarge}`; `MinimumWidthRequest=140` ensures equal size fitting `To Clipboard` at `FontSize=Large`. |
+| `TeasePopup.xaml.cs` | Edit carefully | `ModalViewController` | Constructor accepts `string teaseText`, `double topOffset` (`NavBar.Height`), `double leftOffset` (NavBar left padding = 16), and `Func<string, Task> onCopiedCallback`. Sets `TeasePanel.Margin` top/left from offsets. `OnOkClicked` (also wired to backdrop tap) calls `PopModalAsync()`. `OnCopyClicked` calls `Clipboard.Default.SetTextAsync`, then `PopModalAsync()`, then invokes `onCopiedCallback` which shows a `DisplayAlert` on `MainPage`s navigation context (mandatory iOS pop-before-alert ordering). |
 
 ---
 

@@ -263,11 +263,27 @@
   </data>
   <data name="Tease_Title" xml:space="preserve">
     <value>AeonPulse</value>
-    <comment>MainPage.xaml.cs</comment>
+    <comment>TeasePopup.xaml</comment>
   </data>
   <data name="Tease_ButtonOK" xml:space="preserve">
+    <value>Close</value>
+    <comment>TeasePopup.xaml</comment>
+  </data>
+  <data name="Tease_ButtonCopy" xml:space="preserve">
+    <value>To Clipboard</value>
+    <comment>TeasePopup.xaml</comment>
+  </data>
+  <data name="Tease_CopiedTitle" xml:space="preserve">
+    <value>Teaser</value>
+    <comment>TeasePopup.xaml.cs</comment>
+  </data>
+  <data name="Tease_CopiedText" xml:space="preserve">
+    <value>Copied to clipboard. Paste and send it to your friends or social networks.</value>
+    <comment>TeasePopup.xaml.cs</comment>
+  </data>
+  <data name="Tease_CopiedButtonOK" xml:space="preserve">
     <value>OK</value>
-    <comment>MainPage.xaml.cs</comment>
+    <comment>TeasePopup.xaml.cs</comment>
   </data>
   <data name="Info_MethodTitle" xml:space="preserve">
     <value>The Methodology</value>
@@ -1150,7 +1166,7 @@
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Tease_Countdown" xml:space="preserve">
-    <value>Only {countdown.BriefText}! Time is flying, and I'm counting every second. Find your next big milestone.</value>
+    <value>Only {days} days {hrs}h : {mins}m until next anniversary! Time is flying, and I'm counting every second. Find your next big milestone.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Tease_Heartbeats" xml:space="preserve">

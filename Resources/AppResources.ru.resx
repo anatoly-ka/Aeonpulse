@@ -263,11 +263,27 @@
   </data>
   <data name="Tease_Title" xml:space="preserve">
     <value>AeonPulse</value>
-    <comment>MainPage.xaml.cs</comment>
+    <comment>TeasePopup.xaml</comment>
   </data>
   <data name="Tease_ButtonOK" xml:space="preserve">
+    <value>Закрыть</value>
+    <comment>TeasePopup.xaml</comment>
+  </data>
+  <data name="Tease_ButtonCopy" xml:space="preserve">
+    <value>В буфер</value>
+    <comment>TeasePopup.xaml</comment>
+  </data>
+  <data name="Tease_CopiedTitle" xml:space="preserve">
+    <value>Тизер</value>
+    <comment>TeasePopup.xaml.cs</comment>
+  </data>
+  <data name="Tease_CopiedText" xml:space="preserve">
+    <value>Скопировано в буфер обмена. Вставьте в мессенджер или в социальные сети и отправьте своим друзьям.</value>
+    <comment>TeasePopup.xaml.cs</comment>
+  </data>
+  <data name="Tease_CopiedButtonOK" xml:space="preserve">
     <value>OK</value>
-    <comment>MainPage.xaml.cs</comment>
+    <comment>TeasePopup.xaml.cs</comment>
   </data>
   <data name="Info_MethodTitle" xml:space="preserve">
     <value>Методология</value>
@@ -1150,7 +1166,7 @@
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Tease_Countdown" xml:space="preserve">
-    <value>Всего лишь {countdown.BriefText}! Время летит, и я считаю каждую секунду. Найдите свою следующую важную веху!</value>
+    <value>Всего лишь {days} дней {hrs}ч : {mins}м до следующей годовщины! Время летит, и я считаю каждую секунду. Найдите свою следующую важную веху!</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Tease_Heartbeats" xml:space="preserve">

@@ -2536,7 +2536,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OK.
+        ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Tease_ButtonOK {
             get {
@@ -2545,23 +2545,59 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only {countdown.BriefText}! Time is flying, and I&apos;m counting every second. Find your next big milestone..
+        ///   Looks up a localized string similar to To Clipboard.
+        /// </summary>
+        public static string Tease_ButtonCopy {
+            get {
+                return ResourceManager.GetString("Tease_ButtonCopy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teaser.
+        /// </summary>
+        public static string Tease_CopiedTitle {
+            get {
+                return ResourceManager.GetString("Tease_CopiedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied to clipboard. Paste and send it to your friends or social networks.
+        /// </summary>
+        public static string Tease_CopiedText {
+            get {
+                return ResourceManager.GetString("Tease_CopiedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string Tease_CopiedButtonOK {
+            get {
+                return ResourceManager.GetString("Tease_CopiedButtonOK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {days} days {hrs}h : {mins}m until next anniversary! Time is flying, and I&apos;m counting every second. Find your next big milestone.
         /// </summary>
         public static string Tease_Countdown {
             get {
                 return ResourceManager.GetString("Tease_Countdown", resourceCulture);
             }
         }
-        
+
         /// <summary>
-        ///   Looks up a localized string similar to Since {baseDateValue}, I&apos;ve hitched a ride on Earth for {galacticCommute.Distance}. I&apos;m literally a space traveler! How far have you traveled?.
+        ///   Looks up a localized string similar to Since {baseDateValue}, I've hitched a ride on Earth for {galacticCommute.Distance}.
         /// </summary>
         public static string Tease_GalacticCommute {
             get {
                 return ResourceManager.GetString("Tease_GalacticCommute", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Since {baseDateName}, humanity poisoned our planet with {globalExhale.Amount} of CO2! Find other data on AeonPulse..
         /// </summary>
