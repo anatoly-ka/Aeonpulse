@@ -4171,6 +4171,7 @@ the change violates a guardrail and must be corrected first.
 | 15 | Build produces only known warning codes (CS0618, CS8767, CS0414, XC0022)? | YES |
 | 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (66+ tests, 0 failures)? | YES |
 | 17 | All new `AeonLog` calls use `[Conditional("DEBUG")]` via the gateway (not raw `ILogger` or `Debug.WriteLine`)? `[BLOCK]` tag added only for methods with named internal phases? | YES |
+| 18 | Commit message ends with `AI: GitHub Copilot (<model>)` trailer (§9.13)? If the commit includes **any human-authored edits**, does the trailer read `AI: GitHub Copilot (<model>) + manual changes`? | YES |
 
 
 ---
