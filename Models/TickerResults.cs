@@ -229,4 +229,25 @@ namespace Aeonpulse.Models
         /// <summary><c>true</c> when the base date is before 1900-01-01.</summary>
         public bool IsPreTwentiethCentury { get; init; }
     }
+
+    /// <summary>
+    /// Typed result for <c>CalculationService.CalculateCosmicStretch</c>.
+    /// Carries the raw expansion distance in kilometres so callers can use
+    /// the numeric value directly without parsing the formatted display strings.
+    /// </summary>
+    [AIContext("DataTransferObject")]
+    public class CosmicStretchResult : TickerData
+    {
+        /// <summary>Raw expansion distance in kilometres since the base date.</summary>
+        public double KmExpanded { get; init; }
+
+        /// <summary>
+        /// Formatted, scaled primary distance string including unit label
+        /// (e.g. "3.45 million km" or "2.14 million miles").
+        /// </summary>
+        public string Distance { get; init; } = string.Empty;
+
+        /// <summary><c>true</c> when the result was computed in metric units.</summary>
+        public bool UseMetric { get; init; }
+    }
 }

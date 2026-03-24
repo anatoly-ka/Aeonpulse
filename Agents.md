@@ -1,6 +1,6 @@
-# Agents.md - AI Agent Navigation Guide for Aeonpulse
+﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-03-23
+> **Last updated:** 2026-03-24
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -52,9 +52,9 @@
 | **5 / Node 2** | `App` | Startup bootstrap order, preferences restoration, resource dictionary merge. |
 | **5 / Node 3** | `MainPage` | Navigation coordinator, guard flags, `OpenDeepDiveAsync`, `topOffset` measurement. |
 | **5 / Node 4** | `MainViewModel` | Central state hub, all owned symbols, all callers. Extend here for new tickers/sections/settings. |
-| **5 / Node 5** | `CalculationService` | All 10 ticker methods with AIContext and update type. Extend here for new tickers. |
+| **5 / Node 5** | `CalculationService` | All 11 ticker methods with AIContext and update type. Extend here for new tickers. |
 | **5 / Node 6** | `LocalizedResources` | Live binding bridge, `Invalidate()` mechanism. Extend here for new strings. |
-| **5 / Node 7** | `AppResources.resx` | 359 string keys, prefix group table, template token format. Extend here for new strings/languages. |
+| **5 / Node 7** | `AppResources.resx` | 365 string keys, prefix group table, template token format. Extend here for new strings/languages. |
 | **5 / Node 8** | `ThemeService` + `FontSizeService` | Palette/preset dictionaries, `ApplyScheme`/`ApplyPreset`. Extend here for new schemes/presets. |
 | **5 / Node 9** | `ImageTint` + `TintHelper` | Tint pipeline, per-platform notes. Extend here for new platform tint support. |
 | **5 / Node 10** | Modal Popup Classes | All 5 popups: constructor args, primary action, side effects. Extend here for new popups/settings. |
@@ -157,7 +157,7 @@
 
 **Aeonpulse** is a cross-platform .NET 9 MAUI application. It presents a single-page
 temporal dashboard: the user supplies a **base date** (label + date, typically a birthday)
-and the app continuously transforms it into ten richly-contextualised "ticker cards" grouped
+and the app continuously transforms it into eleven richly-contextualised "ticker cards" grouped
 into four collapsible sections. Perspectives range from scientific (photon travel distance,
 galactic commute, CO2 emitted) to personal (numerology, birth rune, life odometer) and
 astronomical (alien-planet ages, countdown to next anniversary).
@@ -200,7 +200,7 @@ MainPage (always present)
 - **Row 1** - TimelineHeading (base date label, tappable to open `ChangeDatePopup`)
 - **Row 2** - `ScrollView` containing four collapsible section cards, each containing ticker cards
 
-### Ticker Cards (10 total)
+### Ticker Cards (11 total)
 
 Each ticker card has a `BriefText` (always visible) and a `FullText` (shown when expanded).
 LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
@@ -213,10 +213,11 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | 4 | Alien Anniversaries | Cosmos | Static | Yes |
 | 5 | Galactic Commute | Cosmos | **LIVE** | No |
 | 6 | Photon Path | Cosmos | **LIVE** | No |
-| 7 | Human Birth Rank | Mirror | Static | No |
-| 8 | Birth Rune | Mirror | Static | No |
-| 9 | Personal Year | Mirror | Static | No |
-| 10 | Global Exhale | Eco Echoes | Static | Yes |
+| 7 | Cosmic Stretch | Cosmos | **LIVE** | No |
+| 8 | Human Birth Rank | Mirror | Static | No |
+| 9 | Birth Rune | Mirror | Static | No |
+| 10 | Personal Year | Mirror | Static | No |
+| 11 | Global Exhale | Eco Echoes | Static | Yes |
 
 ### User-Configurable Settings (persisted via `Preferences`)
 
@@ -283,8 +284,8 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `TickerData.cs` | Edit freely | `DataTransferObject` | Two-property DTO (`BriefText`, `FullText`) implementing `INotifyPropertyChanged`. All 10 typed result subclasses (see `TickerResults.cs`) inherit from this class. Live tickers mutate `BriefText`/`FullText` in-place every second via property setters so bindings update without replacing the object reference. |
-| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 10 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. |
+| `TickerData.cs` | Edit freely | `DataTransferObject` | Two-property DTO (`BriefText`, `FullText`) implementing `INotifyPropertyChanged`. All 11 typed result subclasses (see `TickerResults.cs`) inherit from this class. Live tickers mutate `BriefText`/`FullText` in-place every second via property setters so bindings update without replacing the object reference. |
+| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 11 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. |
 | `TickerCardModel.cs` | Edit freely | `DataTransferObject` | Structural metadata for a ticker card: `Title`, `IconGlyph`, `IsLive`, `IsExpanded`, `HasRefresh`. Not yet wired to a `CollectionView` - reserved for a future refactor that replaces individually-templated XAML blocks. |
 | `SubsectionState.cs` | Edit freely | - | Snapshot of a collapsible section: `Title` (used as key) and `IsExpanded`. Defined but not yet actively used for persistence - available for future state-save/restore logic. |
 
@@ -295,7 +296,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
 | ``AeonLog.cs`` | Edit freely | ``DiagnosticsGateway`` | Static logging gateway. Zero MAUI dependencies; also linked into ``Aeonpulse.Tests``. Wired by ``AeonLog.Initialise(ILoggerFactory)`` called from ``MauiProgram`` after ``builder.Build()``. Three ``[Conditional("DEBUG")]`` methods: ``Debug(cat, sub, msg, block?)``, ``Info(cat, sub, msg)``, ``Warn(cat, sub, msg)``. Falls back to ``NullLogger.Instance`` before initialisation. See Section 8.1 for message-format convention and ``[BLOCK]`` tag rules. |
-| `CalculationService.cs` | Edit freely | `CoreCalculationEngine` | The single domain-logic class. Stateless - reads `DateTime.Now` internally so every call produces a fresh result. All 10 ticker methods return typed subclasses of `TickerData` (see `TickerResults.cs`). `FindNearestJubilee`, `ReduceToSingleDigit`, and `GetRandomTeaseText` live here. All output strings are pulled from `AppResources` at call time, so output automatically reflects the active locale. Thread-safe; called from both the UI thread and the 1-second timer (via `MainThread.BeginInvokeOnMainThread`). All 10 public `Calculate*` methods accept an optional `DateTime? now = null` parameter for deterministic testing - production callers omit it and get `DateTime.Now`. `FindNearestJubilee` and `ReduceToSingleDigit` are `internal static` and accessible to `Aeonpulse.Tests` via `InternalsVisibleTo`. |
+| `CalculationService.cs` | Edit freely | `CoreCalculationEngine` | The single domain-logic class. Stateless - reads `DateTime.Now` internally so every call produces a fresh result. All 11 ticker methods return typed subclasses of `TickerData` (see `TickerResults.cs`). `FindNearestJubilee`, `ReduceToSingleDigit`, and `GetRandomTeaseText` live here. All output strings are pulled from `AppResources` at call time, so output automatically reflects the active locale. Thread-safe; called from both the UI thread and the 1-second timer (via `MainThread.BeginInvokeOnMainThread`). All 11 public `Calculate*` methods accept an optional `DateTime? now = null` parameter for deterministic testing - production callers omit it and get `DateTime.Now`. `FindNearestJubilee` and `ReduceToSingleDigit` are `internal static` and accessible to `Aeonpulse.Tests` via `InternalsVisibleTo`. |
 | `ThemeService.cs` | Edit freely | - | Singleton (`Instance`). Stores three `Dictionary<string, Color>` palettes: `_defaultColors` (DefaultDark), `_highContrastDarkColors`, `_highContrastLightColors`. `ApplyScheme(string)` iterates the chosen palette and writes each key directly into `Application.Current.Resources`, causing all `DynamicResource` bindings to repaint immediately. To add a new colour scheme: add a new palette dict and a new `const string` identifier, then add a case to the switch in `ApplyScheme`. |
 | `FontSizeService.cs` | Edit freely | - | Singleton (`Instance`). Same pattern as `ThemeService` but for five font-size keys (`FontSizeSmall` through `FontSizeTitle`). `ApplyPreset(string)` mutates the resource dict. Three presets: `Small`, `Normal`, `Large`. |
 
@@ -305,7 +306,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 10 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, etc. - see `TickerResults.cs`); 4 section `bool XxxExpanded` properties; 10 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `UpdateStaticCalculations()` recalculates 6 tickers; `UpdateLiveCalculations()` recalculates 4 tickers + `TeaseText`. |
+| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 11 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, etc. - see `TickerResults.cs`); 4 section `bool XxxExpanded` properties; 11 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `UpdateStaticCalculations()` recalculates 6 tickers; `UpdateLiveCalculations()` recalculates 5 tickers + `TeaseText`. |
 | `LocalizedResources.cs` | Edit freely | - | Singleton (`Instance`). A thin passthrough wrapper: every property is `=> AppResources.SomeKey`. Bound in XAML as `{Binding Loc.PropertyName}`. `Invalidate()` fires `PropertyChanged(string.Empty)` which causes every bound property to re-read from `AppResources` with the newly-set culture. When adding a new localised string: add the `AppResources` key, then add the passthrough property here. |
 
 ---
@@ -317,14 +318,14 @@ All XAML files must be saved as **UTF-8 with BOM**. All colour/font-size referen
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
 | `MainPage.xaml` | Edit freely | *(XAML AI comments)* | The application's only persistent page. 3-row root `Grid`: Row 0 = NavBar (`Border` + inner `Grid`, logo `Image` with `ImageTint`, app name `Label`, hamburger `Button`). Row 1 = TimelineHeading (`Border` + `HorizontalStackLayout` with `FormattedString`). Row 2 = `ScrollView` containing four `CardFrame`-styled `Border` elements (Lab, Cosmos, Mirror, Eco Echoes), each holding a header `Grid` and a collapsible `VerticalStackLayout` of ticker card `Border` elements. Uses `BoolToImageSource` converter for chevron icons. |
-| `MainPage.xaml.cs` | Edit carefully | `NavigationCoordinator` | Code-behind for `MainPage`. **Contains no business logic.** Responsibilities: subscribe to `MainViewModel.RefreshRequested` in constructor; implement `OnMenuClicked`, `OnTimelineHeadingTapped`, `OnLogoTapped` (opens `TeasePopup` anchored below NavBar, left-aligned, with Copy-to-clipboard and Close buttons); implement 10 `OnXxxInfoClicked` handlers that push `DeepDivePopup`; implement `OnTickerRefreshRequested` that pushes `RefreshingPopup`. Guard flags (`_isXxxOpen`) on every push prevent double-open. `OpenDeepDiveAsync()` measures `NavBar.Height + TimelineHeading.Height` to pass as `topOffset` to `DeepDivePopup`. Holds 14 guard bools (13 deep-dive/popup guards + `_isTeasePopupOpen`). |
+| `MainPage.xaml.cs` | Edit carefully | `NavigationCoordinator` | Code-behind for `MainPage`. **Contains no business logic.** Responsibilities: subscribe to `MainViewModel.RefreshRequested` in constructor; implement `OnMenuClicked`, `OnTimelineHeadingTapped`, `OnLogoTapped` (opens `TeasePopup` anchored below NavBar, left-aligned, with Copy-to-clipboard and Close buttons); implement 11 `OnXxxInfoClicked` handlers that push `DeepDivePopup`; implement `OnTickerRefreshRequested` that pushes `RefreshingPopup`. Guard flags (`_isXxxOpen`) on every push prevent double-open. `OpenDeepDiveAsync()` measures `NavBar.Height + TimelineHeading.Height` to pass as `topOffset` to `DeepDivePopup`. Holds 15 guard bools (14 deep-dive/popup guards + `_isTeasePopupOpen`). |
 | `SettingsPopup.xaml` | Edit freely | *(XAML AI comments)* | Full-screen overlay modal (semi-transparent `BackgroundColor`). `Frame` (legacy, `.NET 9` obsolete - do not add more Frames) centred panel. 3-row inner `Grid`: title bar, scrollable settings, close button footer. Settings rendered as a 2-column 14-row `Grid` with custom `RadioButton` `ControlTemplate` (outer ring `Ellipse` + inner dot `Ellipse` driven by `{TemplateBinding IsChecked}`). Groups: Unit System (rows 0-1), Color Scheme (rows 3-5), Text Size (rows 7-9), Language (rows 11-13), with spacer rows between. |
 | `SettingsPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `MainViewModel` via constructor; sets `BindingContext`. `_initialising = true` guard blocks `CheckedChanged` callbacks during radio-button seeding. Handlers `OnUnitSystemChanged`, `OnColorSchemeChanged`, `OnTextSizeChanged`, `OnDisplayLanguageChanged` each read the `RadioButton.Value` string and write to the ViewModel setter, which applies the change immediately and persists it. |
 | `ChangeDatePopup.xaml` | Edit freely | *(XAML AI comments)* | Centred (no full-screen overlay) modal. No backdrop-dismiss tap by design - prevents accidental dismissal of an in-progress edit. Contains `Entry` (event name) and `DatePicker` (date) inside `Frame` wrappers (legacy, `.NET 9` obsolete). Cancel and OK `Button` in a 3-column `Grid`. Uses `{x:Static resources:AppResources.Xxx}` (acceptable: popup is freshly constructed each time). |
 | `ChangeDatePopup.xaml.cs` | Edit carefully | `ModalViewController` | Pre-populates `EventNameEntry.Text` and `EventDatePicker.Date` from the ViewModel in constructor. `OnOkClicked` validates the name entry is non-empty, then calls `MainViewModel.SaveDate(name, date)` atomically before `PopModalAsync()`. |
 | `MainMenuPopup.xaml` | Edit freely | *(XAML AI comments)* | Full-screen overlay. `Frame` (legacy) panel positioned `HorizontalOptions=End` with top/right `Margin` injected in code-behind to sit below the NavBar hamburger button. Menu items are `Grid` + `TapGestureRecognizer` (not `Button`) to avoid nested hit-testing issues on Android. Items: Change Date, Settings, Exit. Close `Button` in footer. |
 | `MainMenuPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `MainViewModel`, `topOffset`, `rightOffset`, `openChangeDateCallback`, `openSettingsCallback` via constructor. Each menu item first `await`s `PopModalAsync()` to finish its own dismiss animation, **then** invokes the callback. This ordering is mandatory on iOS to avoid `InvalidOperationException`. Exit calls `Application.Current.Quit()`. |
-| `DeepDivePopup.xaml` | Edit freely | *(XAML AI comments)* | Generic info popup reused by all 10 ticker info buttons. Full-screen overlay. `Frame` (legacy) panel with top `Margin` overridden by code-behind. 3-row layout: non-scrollable title, `ScrollView` with two labelled content sections (methodology + sources), footer with close button. All text labels are set by code-behind via `x:Name`. |
+| `DeepDivePopup.xaml` | Edit freely | *(XAML AI comments)* | Generic info popup reused by all 11 ticker info buttons. Full-screen overlay. `Frame` (legacy) panel with top `Margin` overridden by code-behind. 3-row layout: non-scrollable title, `ScrollView` with two labelled content sections (methodology + sources), footer with close button. All text labels are set by code-behind via `x:Name`. |
 | `DeepDivePopup.xaml.cs` | Edit freely | `ModalViewController` | Constructor accepts `title`, `section1Title`, `section1Text`, `section2Title`, `section2Text`, `topOffset`. Sets label text and overrides `PopupFrame.Margin` top component. To add more content sections, add new `Label` elements in the XAML and wire them here. |
 | `RefreshingPopup.xaml` | Edit freely | *(XAML AI comments)* | Centred (no full-screen overlay) auto-dismissing overlay. `Frame` (legacy) containing `ActivityIndicator` + message `Label`. No user-dismiss gesture - dismisses automatically after 3 seconds. |
 | `RefreshingPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `Action onDismissed` callback. `OnAppearing()` awaits `Task.Delay(3000)`, awaits `PopModalAsync()`, then invokes `onDismissed`. The callback updates a specific typed ticker result property on the ViewModel. The 3-second delay must remain to give the spinner time to animate. |
@@ -474,7 +475,8 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 | `CalculatePersonalYearTests.cs` | Edit freely | Tests for numerology personal year with known input/output pairs. |
 | `CalculateGlobalExhaleTests.cs` | Edit freely | Tests for the CO2 polynomial model including metric/imperial toggle and range comparison. |
 | `CalculateTimeJubileesTests.cs` | Edit freely | Tests for jubilee selection across all seven time units including the overflow guard for very old dates. |
-| `TickerDataTests.cs` | Edit freely | Tests for TickerData INotifyPropertyChanged behaviour (BriefText and FullText fire PropertyChanged; repeated sets; same-value re-sets; default empty strings) and correct round-trip population of the raw init fields on all 10 typed result subclasses. No MAUI dependency - runs in the plain net9.0 test project. |
+| `TickerDataTests.cs` | Edit freely | Tests for TickerData INotifyPropertyChanged behaviour (BriefText and FullText fire PropertyChanged; repeated sets; same-value re-sets; default empty strings) and correct round-trip population of the raw init fields on all 11 typed result subclasses. No MAUI dependency - runs in the plain net9.0 test project. |
+| `CalculateCosmicStretchTests.cs` | Edit freely | Tests for `CalculateCosmicStretch` with injected `now`. Covers correct km expansion formula (elapsed seconds * 3,300,000), metric billion-km formatting, imperial billion-miles formatting, zero elapsed time, very old dates, and unit-system independence of `KmExpanded`. |
 | `TypedResultFieldTests.cs` | Edit freely | Tests that each CalculationService method correctly populates the raw numeric fields of its typed result subclass - not covered by the existing string-assertion tests. Uses injected now for deterministic results. Covers CountdownResult decomposition, LifeOdometerResult formulas, AlienAnniversariesResult planet-year formulas, GalacticCommuteResult km calculation, PhotonPathResult phase and speed-of-light check, HumanBirthRankResult rank ordering, PersonalYearResult range, GlobalExhaleResult flags, TimeJubileesResult coherence. |
 | `README.md` | Edit freely | High-level project README. Human-facing. Contains a project structure overview and migration notes from the original React implementation. |
 | `IMPLEMENTATION_GUIDE.md` | Edit freely | Original React-to-MAUI migration guide. Contains early extension recipes and build commands. Some content is superseded by `Agents.md`. |
@@ -493,7 +495,7 @@ Every pattern is implemented by hand.
 | **View** | `*.xaml` + `*.xaml.cs` | Declare UI structure; bind to ViewModel properties and commands; handle navigation gestures only |
 | **ViewModel** | `MainViewModel` | Own all application state; expose `ICommand` instances; fire `PropertyChanged`; coordinate the timer |
 | **Service** | `CalculationService`, `ThemeService`, `FontSizeService` | Stateless domain logic; no UI references; no `INotifyPropertyChanged` |
-| **Model** | `TickerData` (base), `TickerResults` (10 typed subclasses), `TickerCardModel`, `SubsectionState` | `TickerData` is the INPC base; typed subclasses add raw computed fields per ticker |
+| **Model** | `TickerData` (base), `TickerResults` (11 typed subclasses), `TickerCardModel`, `SubsectionState` | `TickerData` is the INPC base; typed subclasses add raw computed fields per ticker |
 
 #### INotifyPropertyChanged pattern used throughout
 
@@ -628,6 +630,7 @@ TIMER (every 1 second, thread-pool thread)
                     --> CalculateLifeOdometer()    --> LifeOdometer.BriefText/FullText
                     --> CalculateGalacticCommute() --> GalacticCommute.BriefText/FullText
                     --> CalculatePhotonPath()      --> PhotonPath.BriefText/FullText
+                    --> CalculateCosmicStretch()    --> CosmicStretch.BriefText/FullText
                     --> GetRandomTeaseText()       --> TeaseText
                             each setter fires PropertyChanged
                                 --> {Binding Xxx.BriefText} Labels repaint
@@ -916,7 +919,7 @@ genuinely novel and not covered by any existing role.
 | `AppBootstrap` | Application startup and configuration. Runs before the UI is inflated. | `App` (class + ctor), `MauiProgram` (class + `CreateMauiApp`) |
 | `CoreCalculationEngine` | The top-level stateless calculation service class. | `CalculationService` (class) |
 | `CoreCalculation` | A specific ticker calculation that runs once on demand (not live). | `CalculateTimeJubilees`, `CalculateAlienAnniversaries`, `CalculateHumanBirthRank`, `CalculateBirthRune`, `CalculatePersonalYear`, `CalculateGlobalExhale` |
-| `LiveTicker` | A calculation called every second by the 1-second timer. | `CalculateCountdown`, `CalculateLifeOdometer`, `CalculateGalacticCommute`, `CalculatePhotonPath` |
+| `LiveTicker` | A calculation called every second by the 1-second timer. | `CalculateCountdown`, `CalculateLifeOdometer`, `CalculateGalacticCommute`, `CalculatePhotonPath`, `CalculateCosmicStretch` |
 | `JubileeSelectionAlgorithm` | The private helper that finds the next round-number milestone. | `FindNearestJubilee` |
 | `StarCatalogueLookup` | Method that contains and queries the inline 57-star distance catalogue. | `CalculatePhotonPath` (second attribute) |
 | `ExternalDataModel` | Method whose constants derive from a named external scientific dataset. | `CalculateHumanBirthRank` (PRB data), `CalculateGlobalExhale` (Global Carbon Budget 2025) |
@@ -1404,11 +1407,11 @@ AIContext:   (none - state orchestrator)
 
 **Responsibilities:**
 - The **central application state hub**. Every bound value in the UI originates here.
-- Owns all 10 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, etc.), each a subclass of `TickerData` carrying both the display strings and raw computed values.
-- Owns 4 section expansion bools (`LabExpanded` etc.) and 10 card expansion bools (`TimeJubileesExpanded` etc.).
+- Owns all 11 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, etc.), each a subclass of `TickerData` carrying both the display strings and raw computed values.
+- Owns 4 section expansion bools (`LabExpanded` etc.) and 11 card expansion bools (`TimeJubileesExpanded` etc.).
 - Owns user settings properties: `UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`.
 - Each settings setter immediately applies the change (`ThemeService`, `FontSizeService`, `ApplyLanguage`) **and** persists it via `Preferences`.
-- Owns 16 `ICommand` instances (4 section toggles, 10 card toggles, 3 card refreshes, 2 bulk refresh commands).
+- Owns 17 `ICommand` instances (4 section toggles, 11 card toggles, 3 card refreshes, 2 bulk refresh commands).
 - Owns the `event Func<Action, Task>? RefreshRequested` - the bridge between ViewModel refresh commands and `MainPage`'s `RefreshingPopup` lifecycle.
 - Owns the 1-second `System.Timers.Timer` that calls `UpdateLiveCalculations()` on the UI thread via `MainThread.BeginInvokeOnMainThread`.
 - `SaveDate(name, date)` is the **only correct entry point** for updating the base date - sets all three backing fields atomically before calling `UpdateAllCalculations()` once.
@@ -1416,15 +1419,15 @@ AIContext:   (none - state orchestrator)
 - `Loc { get; } = LocalizedResources.Instance` - exposes the localisation singleton so XAML binds as `{Binding Loc.Xxx}`.
 
 **Owns:**
-- All 10 typed ticker result instances (`TimeJubileesResult`, `CountdownResult`, etc. - all subclasses of `TickerData`)
-- All section/card `bool` expanded states (14 total)
+- All 11 typed ticker result instances (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, etc. - all subclasses of `TickerData`)
+- All section/card `bool` expanded states (15 total)
 - All user settings state
 - The 1-second live-update timer
 - All `ICommand` instances
 - `RefreshRequested` event
 
 **Calls:**
-- `CalculationService` - all 10 ticker calculation methods + `GetRandomTeaseText`
+- `CalculationService` - all 11 ticker calculation methods + `GetRandomTeaseText`
 - `ThemeService.Instance.ApplyScheme(string)` - from `ColorScheme` setter
 - `FontSizeService.Instance.ApplyPreset(string)` - from `TextSize` setter
 - `MainViewModel.ApplyLanguage(string)` - from `DisplayLanguage` setter
@@ -1455,7 +1458,7 @@ AIContext:   CoreCalculationEngine
 ```
 
 **Responsibilities:**
-- The **sole domain logic class**. Stateless. All 10 ticker calculations live here as separate `public` methods.
+- The **sole domain logic class**. Stateless. All 11 ticker calculations live here as separate `public` methods.
 - Reads `DateTime.Now` internally - not a pure function by design; produces different output on each call (intentional for live tickers).
 - Reads all output strings from `AppResources` at call time - strings automatically reflect whichever culture `MainViewModel.ApplyLanguage()` has set.
 - Never writes global state. Thread-safe. Safe to call from background timer threads.
@@ -1473,6 +1476,7 @@ AIContext:   CoreCalculationEngine
 | `CalculateAlienAnniversaries` | `CoreCalculation` | Static | `baseDateName`, `baseDateValue` |
 | `CalculateGalacticCommute` | `LiveTicker` | LIVE (1s) | `baseDateValue`, `useMetric` |
 | `CalculatePhotonPath` | `LiveTicker`, `StarCatalogueLookup` | LIVE (1s) | `baseDateValue`, `useMetric` |
+| `CalculateCosmicStretch` | `LiveTicker` | LIVE (1s) | `baseDateValue`, `useMetric` |
 | `CalculateHumanBirthRank` | `CoreCalculation`, `ExternalDataModel` | Static | `baseDateName` |
 | `CalculateBirthRune` | `CoreCalculation` | Static | `baseDateValue` |
 | `CalculatePersonalYear` | `CoreCalculation` | Static | `baseDateValue` |
@@ -1494,7 +1498,7 @@ AIContext:   CoreCalculationEngine
 
 **Called by:**
 - `MainViewModel.UpdateStaticCalculations()` - 6 methods
-- `MainViewModel.UpdateLiveCalculations()` - 4 methods + `GetRandomTeaseText`
+- `MainViewModel.UpdateLiveCalculations()` - 5 methods + `GetRandomTeaseText`
 - `MainViewModel` refresh command lambdas - 3 specific methods (TimeJubilees, AlienAnniversaries, GlobalExhale)
 
 **Extend here when:**
@@ -1516,7 +1520,7 @@ AIContext:   (none - localisation hub)
 - Singleton (`static readonly Instance`). Every XAML `{Binding Loc.Xxx}` expression resolves through this instance.
 - Every property is a simple passthrough getter: `public string MyKey => AppResources.MyKey;`
 - `Invalidate()` fires `PropertyChanged(string.Empty)` which causes MAUI's binding engine to re-read **every** property on this object simultaneously - the mechanism that makes language switching instant without page reload.
-- Contains passthrough properties for all 359 string keys in `AppResources.resx`, grouped by: AppName/Badge, Timeline, Sections (4), Ticker titles (10), Settings, ChangeDate, MainMenu, DeepDive/Info (30), Units (metric + imperial), Stars (57), Runes (24), PersonalYear interpretations (9), Tease, Refreshing.
+- Contains passthrough properties for all 365 string keys in `AppResources.resx`, grouped by: AppName/Badge, Timeline, Sections (4), Ticker titles (11), Settings, ChangeDate, MainMenu, DeepDive/Info (30), Units (metric + imperial), Stars (57), Runes (24), PersonalYear interpretations (9), Tease, Refreshing.
 
 **Owns:**
 - The `Invalidate()` mass-rebind mechanism
@@ -1547,7 +1551,7 @@ AIContext:   (none - string repository)
 ```
 
 **Responsibilities:**
-- The **single source of truth for all user-visible strings**. 359 string keys total.
+- The **single source of truth for all user-visible strings**. 365 string keys total.
 - Organised into named groups by prefix (see key prefix table below).
 - `AppResources.Culture` is set globally by `MainViewModel.ApplyLanguage()`. The .NET resource system automatically selects `AppResources.ru.resx` when the culture is `ru`.
 - `AppResources.Designer.cs` provides the strongly-typed `AppResources.SomeKey` accessor used throughout `CalculationService` and `LocalizedResources`.
@@ -1558,8 +1562,8 @@ AIContext:   (none - string repository)
 |--------|-------|---------|
 | `Star_` | 108 | 57 stars: `_Name`, `_Info` pairs + shared constellation infos |
 | `Rune_` | 72 | 24 Elder Futhark runes: `_Name`, `_Brief`, `_Full` triples |
-| `Ticker_` | 47 | BriefText/FullText templates for all 10 tickers (multi-variant some tickers) |
-| `Info_` | 33 | DeepDivePopup content: `_Title`, `_Method`, `_Source` per ticker |
+| `Ticker_` | 50 | BriefText/FullText templates for all 11 tickers (multi-variant some tickers) |
+| `Info_` | 36 | DeepDivePopup content: `_Title`, `_Method`, `_Source` per ticker |
 | `Settings_` | 22 | All settings popup labels and values |
 | `Unit_` / `UnitMetric_` / `UnitImperial_` | 16 | Distance, time, and mass unit strings |
 | `PersonalYear1_` ... `PersonalYear9_` | 18 | Brief + Full interpretations for numerology years 1-9 |
@@ -1835,11 +1839,12 @@ directly so no TFM-incompatibility issues arise. Run all tests with:
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
 ```
 
-**What can be tested without a device (66 tests in 8 test classes):**
+**What can be tested without a device (143 tests in 9 test classes):**
 - `FindNearestJubilee()` / `ReduceToSingleDigit()` (pure algorithms, `internal` + `InternalsVisibleTo`)
 - `CalculateTimeJubilees`, `CalculateCountdown`, `CalculateLifeOdometer`
 - `CalculateAlienAnniversaries`, `CalculateHumanBirthRank`
 - `CalculatePersonalYear`, `CalculateGlobalExhale`
+- `CalculateCosmicStretch` (Hubble-Lemaitre expansion rate, injected `now`)
 - All `Calculate*` methods accept `DateTime? now = null` - pass a fixed value to make tests deterministic
 
 **What requires a device or simulator:**
@@ -4172,7 +4177,7 @@ the change violates a guardrail and must be corrected first.
 | 13 | All new structural XAML elements have `<!-- AI: ... -->` comments? | YES |
 | 14 | `Agents.md` updated for every structural change? | YES |
 | 15 | Build produces only known warning codes (CS0618, CS8767, CS0414, XC0022)? | YES |
-| 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (66+ tests, 0 failures)? | YES |
+| 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (143+ tests, 0 failures)? | YES |
 | 17 | All new `AeonLog` calls use `[Conditional("DEBUG")]` via the gateway (not raw `ILogger` or `Debug.WriteLine`)? `[BLOCK]` tag added only for methods with named internal phases? | YES |
 | 18 | Commit message ends with `AI: GitHub Copilot (<model>)` trailer (§9.13)? If the commit includes **any human-authored edits**, does the trailer read `AI: GitHub Copilot (<model>) + manual changes`? | YES |
 

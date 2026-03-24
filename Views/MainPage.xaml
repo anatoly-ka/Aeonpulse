@@ -179,6 +179,7 @@
                                     <!-- AI: Ticker card header - 3-column:
                                          [Col0: emoji icon | Col1: title | Col2: action buttons (info, refresh, expand)] -->
                                     <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F4C5; -->
                                         <Label Grid.Column="0"
                                                Text="📅"
                                                FontSize="{DynamicResource FontSizeTitle}"
@@ -237,6 +238,7 @@
                                     Padding="12">
                                 <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x23F1;&#xFE0F; -->
                                         <Label Grid.Column="0"
                                                Text="⏱️"
                                                FontSize="{DynamicResource FontSizeTitle}"
@@ -300,6 +302,7 @@
                                     Padding="12">
                                 <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x2764;&#xFE0F; -->
                                         <Label Grid.Column="0"
                                                Text="❤️"
                                                FontSize="{DynamicResource FontSizeTitle}"
@@ -392,6 +395,7 @@
                                     Padding="12">
                                 <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F47D; -->
                                         <Label Grid.Column="0"
                                                Text="👽"
                                                FontSize="{DynamicResource FontSizeTitle}"
@@ -447,6 +451,7 @@
                                     Padding="12">
                                 <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F680; -->
                                         <Label Grid.Column="0"
                                                Text="🚀"
                                                FontSize="{DynamicResource FontSizeTitle}"
@@ -506,6 +511,7 @@
                                     Padding="12">
                                 <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F4A1; -->
                                         <Label Grid.Column="0"
                                                Text="💡"
                                                FontSize="{DynamicResource FontSizeTitle}"
@@ -543,13 +549,82 @@
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}" />
-                                    <!-- Binding: MainViewModel.PhotonPath.FullText -->
+                                    <!-- Binding: MainViewModel.PhotonPath.FullText - visible when expanded -->
                                     <Label Text="{Binding PhotonPath.FullText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding PhotonPathExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- == TICKER: COSMIC STRETCH =========================
+                                 LIVE ticker - updated every second.
+                                 Shows how much the observable universe has expanded since base date.
+                                 Binding: MainViewModel.CosmicStretch (CosmicStretchResult)
+                                 Command: ToggleCosmicStretchCommand
+                            ======================================================== -->
+                            <Border BackgroundColor="{DynamicResource CardDark}"
+                                    StrokeThickness="1"
+                                    Stroke="{DynamicResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+
+                                    <!-- AI: Ticker card header - 3-column:
+                                         [Col0: emoji icon | Col1: title + LIVE badge | Col2: info + expand buttons].
+                                         Binding: MainViewModel.CosmicStretch.BriefText / FullText (live-localised). -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F30C; -->
+                                        <Label Grid.Column="0"
+                                               Text="🌌"
+                                               FontSize="{DynamicResource FontSizeTitle}"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <HorizontalStackLayout Grid.Column="1"
+                                                               Spacing="8"
+                                                               VerticalOptions="Center">
+                                            <!-- Binding: MainViewModel.Loc.Ticker_CosmicStretchTitle (live-localised) -->
+                                            <Label Text="{Binding Loc.Ticker_CosmicStretchTitle}"
+                                                   Style="{StaticResource BaseLabel}"
+                                                   TextColor="{DynamicResource CyberPurple}"
+                                                   FontAttributes="Bold" />
+                                            <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
+                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   TextColor="{DynamicResource NeonGreen}"
+                                                   BackgroundColor="{DynamicResource NeonGreenDark}"
+                                                   Padding="4,2"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <!-- Info: opens DeepDivePopup with Hubble-Lemaitre methodology -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnCosmicStretchInfoClicked" />
+                                            <!-- Expand/collapse: toggles CosmicStretchExpanded -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding CosmicStretchExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleCosmicStretchCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <!-- Binding: MainViewModel.CosmicStretch.BriefText - updates every second -->
+                                    <Label Text="{Binding CosmicStretch.BriefText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                    <!-- Binding: MainViewModel.CosmicStretch.FullText - visible when expanded -->
+                                    <Label Text="{Binding CosmicStretch.FullText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding CosmicStretchExpanded}" />
+
                                 </VerticalStackLayout>
                             </Border>
 
@@ -594,6 +669,7 @@
                                     Padding="12">
                                 <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F3C5; -->
                                         <Label Grid.Column="0"
                                                Text="🏅"
                                                FontSize="{DynamicResource FontSizeTitle}"
@@ -643,6 +719,7 @@
                                     Padding="12">
                                 <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F52E; -->
                                         <Label Grid.Column="0"
                                                Text="🔮"
                                                FontSize="{DynamicResource FontSizeTitle}"
@@ -692,6 +769,7 @@
                                     Padding="12">
                                 <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F5D3;&#xFE0F; -->
                                         <Label Grid.Column="0"
                                                Text="🗓️"
                                                FontSize="{DynamicResource FontSizeTitle}"
@@ -772,6 +850,7 @@
                                     Padding="12">
                                 <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F33F; -->
                                         <Label Grid.Column="0"
                                                Text="🌿"
                                                FontSize="{DynamicResource FontSizeTitle}"

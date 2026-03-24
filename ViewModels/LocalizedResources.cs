@@ -33,6 +33,7 @@ namespace Aeonpulse.ViewModels
         public string Ticker_AlienAnniversariesTitle   => AppResources.Ticker_AlienAnniversariesTitle;
         public string Ticker_GalacticCommuteTitle      => AppResources.Ticker_GalacticCommuteTitle;
         public string Ticker_PhotonPathTitle           => AppResources.Ticker_PhotonPathTitle;
+        public string Ticker_CosmicStretchTitle        => AppResources.Ticker_CosmicStretchTitle;
         public string Ticker_HumanBirthRankTitle       => AppResources.Ticker_HumanBirthRankTitle;
         public string Ticker_BirthRuneTitle            => AppResources.Ticker_BirthRuneTitle;
         public string Ticker_PersonalYearTitle         => AppResources.Ticker_PersonalYearTitle;
@@ -101,6 +102,9 @@ namespace Aeonpulse.ViewModels
         public string Info_PhotonPathTitle             => AppResources.Info_PhotonPathTitle;
         public string Info_PhotonPathMethod            => AppResources.Info_PhotonPathMethod;
         public string Info_PhotonPathSource            => AppResources.Info_PhotonPathSource;
+        public string Info_CosmicStretchTitle          => AppResources.Info_CosmicStretchTitle;
+        public string Info_CosmicStretchMethod         => AppResources.Info_CosmicStretchMethod;
+        public string Info_CosmicStretchSource         => AppResources.Info_CosmicStretchSource;
         public string Info_HumanBirthRankTitle         => AppResources.Info_HumanBirthRankTitle;
         public string Info_HumanBirthRankMethod        => AppResources.Info_HumanBirthRankMethod;
         public string Info_HumanBirthRankSource        => AppResources.Info_HumanBirthRankSource;

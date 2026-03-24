@@ -224,6 +224,13 @@ namespace Aeonpulse.ViewModels
             set { _photonPathExpanded = value; OnPropertyChanged(); }
         }
 
+        private bool _cosmicStretchExpanded = true;
+        public bool CosmicStretchExpanded
+        {
+            get => _cosmicStretchExpanded;
+            set { _cosmicStretchExpanded = value; OnPropertyChanged(); }
+        }
+
         private bool _humanBirthRankExpanded = false;
         public bool HumanBirthRankExpanded
         {
@@ -295,6 +302,13 @@ namespace Aeonpulse.ViewModels
             set { _photonPath = value; OnPropertyChanged(); }
         }
 
+        private CosmicStretchResult _cosmicStretch = new CosmicStretchResult();
+        public CosmicStretchResult CosmicStretch
+        {
+            get => _cosmicStretch;
+            set { _cosmicStretch = value; OnPropertyChanged(); }
+        }
+
         private HumanBirthRankResult _humanBirthRank = new HumanBirthRankResult();
         public HumanBirthRankResult HumanBirthRank
         {
@@ -348,6 +362,7 @@ namespace Aeonpulse.ViewModels
         public ICommand ToggleAlienAnniversariesCommand { get; }
         public ICommand ToggleGalacticCommuteCommand { get; }
         public ICommand TogglePhotonPathCommand { get; }
+        public ICommand ToggleCosmicStretchCommand { get; }
         public ICommand ToggleHumanBirthRankCommand { get; }
         public ICommand ToggleBirthRuneCommand { get; }
         public ICommand TogglePersonalYearCommand { get; }
@@ -403,6 +418,7 @@ namespace Aeonpulse.ViewModels
             ToggleAlienAnniversariesCommand = new Command(() => AlienAnniversariesExpanded = !AlienAnniversariesExpanded);
             ToggleGalacticCommuteCommand = new Command(() => GalacticCommuteExpanded = !GalacticCommuteExpanded);
             TogglePhotonPathCommand = new Command(() => PhotonPathExpanded = !PhotonPathExpanded);
+            ToggleCosmicStretchCommand = new Command(() => CosmicStretchExpanded = !CosmicStretchExpanded);
             ToggleHumanBirthRankCommand = new Command(() => HumanBirthRankExpanded = !HumanBirthRankExpanded);
             ToggleBirthRuneCommand = new Command(() => BirthRuneExpanded = !BirthRuneExpanded);
             TogglePersonalYearCommand = new Command(() => PersonalYearExpanded = !PersonalYearExpanded);
@@ -467,6 +483,7 @@ namespace Aeonpulse.ViewModels
             LifeOdometer = _calculationService.CalculateLifeOdometer(BaseDate, BaseDateName, BaseDateValue);
             GalacticCommute = _calculationService.CalculateGalacticCommute(BaseDate, BaseDateValue, UseMetric);
             PhotonPath   = _calculationService.CalculatePhotonPath(BaseDate, BaseDateValue, UseMetric);
+            CosmicStretch = _calculationService.CalculateCosmicStretch(BaseDate, BaseDateValue, UseMetric);
 
             TeaseText = _calculationService.GetRandomTeaseText(
                 Countdown,

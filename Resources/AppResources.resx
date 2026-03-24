@@ -685,6 +685,30 @@
     <value>Star Data from the HYG Star Database (v3.0), distributed under the Creative Commons Attribution-ShareAlike 2.5 License.</value>
     <comment>MainPage.xaml.cs</comment>
   </data>
+  <data name="Ticker_CosmicStretchTitle" xml:space="preserve">
+    <value>Cosmic Stretch</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_CosmicStretchBrief" xml:space="preserve">
+    <value>Universe expansion: &lt;b&gt;{distance}&lt;/b&gt;</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_CosmicStretchFull" xml:space="preserve">
+    <value>Since {baseDate:d}, the observable universe has expanded by approximately &lt;b&gt;{distance}&lt;/b&gt; due to the Hubble-Lemaître law, stretching the fabric of space-time itself.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_CosmicStretchTitle" xml:space="preserve">
+    <value>Cosmic Stretch</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_CosmicStretchMethod" xml:space="preserve">
+    <value>The expansion of the Universe is the process of increasing the space between galaxies, which began after the Big Bang 13.8 billion years ago. It is not the space within the Universe that is expanding, but space-time itself, causing galaxies to move away from each other, even though they themselves may be stationary. According to the Hubble-Lemaître law, the farther away a galaxy is, the faster it moves away. Currently, the radius of the observable Universe is approximately 46.5 billion light-years. Using the Hubble constant (H0 = approximately 70 km/s/Mpc), the overall expansion rate of this radius is approximately 3.3 million kilometers (2.05 million miles) per second.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_CosmicStretchSource" xml:space="preserve">
+    <value>Hubble E. "A relation between distance and radial velocity among extra-galactic nebulae" from Proceedings of the National Academy of Sciences 15 (3) 1929.&lt;br&gt;"The International Astronomical Union recommends that the law should now be known as the Hubble-Lemaitre law, to pay tribute to the Belgian priest and astronomer Georges Lemaitre, who derived the speed-distance relationship two years earlier than did US astronomer Edwin Hubble." from Nature 563 (7729) 2018.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
   <data name="Ticker_HumanBirthRankTitle" xml:space="preserve">
     <value>Human Birth Rank</value>
     <comment>MainPage.xaml</comment>

@@ -1123,6 +1123,78 @@ namespace Aeonpulse.Services
 
         #endregion
 
+        #region Cosmic Stretch
+
+        /// <summary>
+        /// Calculates how much the observable universe has expanded in kilometres
+        /// since <paramref name="baseDate"/>, based on the Hubble-Lemaitre Law.
+        ///
+        /// <para>
+        /// <b>Algorithm:</b> the radius of the observable universe is approximately
+        /// 46.5 billion light-years. Applying the Hubble Constant (H0 ~ 70 km/s/Mpc),
+        /// the expansion rate of that radius is approximately 3,300,000 km/s.
+        /// Elapsed seconds since the base date are multiplied by 3,300,000 to yield
+        /// the total expansion in kilometres.
+        /// </para>
+        /// <para>
+        /// <b>Scale choice:</b> the result is formatted in <b>million km</b> (dividing by
+        /// 1,000,000). At 3.3 million km/s the display increments by 3 every second, which
+        /// is the minimum change visible to the eye in a live ticker. Billion km would
+        /// increment by 0.003 per second and never visibly change; raw km would overflow
+        /// any mobile screen. The <c>fullDistance</c> parenthetical is therefore omitted.
+        /// </para>
+        /// <para>
+        /// This is a <b>live ticker</b> - called every second by the VM timer.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The origin date from which expansion is measured.</param>
+        /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
+        /// <param name="useMetric">
+        /// <c>true</c> to display kilometres; <c>false</c> to display miles.
+        /// Sourced from <see cref="ViewModels.MainViewModel.UseMetric"/>.
+        /// </param>
+        /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
+        /// <returns>A <see cref="CosmicStretchResult"/> describing the universe expansion since the base date.</returns>
+        [AIContext("LiveTicker")]
+        public CosmicStretchResult CalculateCosmicStretch(DateTime baseDate, string baseDateValue, bool useMetric, DateTime? now = null)
+        {
+            DateTime now_ = now ?? DateTime.UtcNow;
+            double totalSeconds = (now_ - baseDate).TotalSeconds;
+            AeonLog.Debug(LogCat, nameof(CalculateCosmicStretch), $"baseDate={baseDate:d} totalSeconds={totalSeconds} useMetric={useMetric}");
+
+            // Observable universe radius expansion rate: ~3,300,000 km/s (Hubble flow)
+            double kmExpanded = totalSeconds * 3300000.0;
+
+            // Format in million km/miles: increments by ~3 every second at N0 - visibly live.
+            // Billion km increments by 0.003/s and never visibly changes, so it is not used.
+            string distance;
+            if (useMetric)
+            {
+                long millionKm = (long)(kmExpanded / 1_000_000);
+                distance = $"{millionKm:N0} {AppResources.UnitMetric_MKm}";
+            }
+            else
+            {
+                double miles = kmExpanded * 0.621371;
+                long millionMiles = (long)(miles / 1_000_000);
+                distance = $"{millionMiles:N0} {AppResources.UnitImperial_MMiles}";
+            }
+
+            return new CosmicStretchResult
+            {
+                KmExpanded = kmExpanded,
+                Distance   = distance,
+                UseMetric  = useMetric,
+                BriefText = AppResources.Ticker_CosmicStretchBrief
+                    .Replace("{distance}", distance),
+                FullText = AppResources.Ticker_CosmicStretchFull
+                    .Replace("{baseDate:d}", baseDate.ToString("d"))
+                    .Replace("{distance}", distance)
+            };
+        }
+
+        #endregion
+
         #region Tease Text
 
         /// <summary>

@@ -412,6 +412,33 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cosmic Stretch.
+        /// </summary>
+        public static string Info_CosmicStretchTitle {
+            get {
+                return ResourceManager.GetString("Info_CosmicStretchTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to the Hubble-Lemaitre Law calculation.
+        /// </summary>
+        public static string Info_CosmicStretchMethod {
+            get {
+                return ResourceManager.GetString("Info_CosmicStretchMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hubble E. (1929) and IAU recommendation (Nature 2018).
+        /// </summary>
+        public static string Info_CosmicStretchSource {
+            get {
+                return ResourceManager.GetString("Info_CosmicStretchSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data Sources &amp; Attribution.
         /// </summary>
         public static string Info_SourceTitle {
@@ -2676,6 +2703,33 @@ namespace Aeonpulse.Resources {
         public static string Ticker_BirthRuneTitle {
             get {
                 return ResourceManager.GetString("Ticker_BirthRuneTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Universe expansion: {distance}.
+        /// </summary>
+        public static string Ticker_CosmicStretchBrief {
+            get {
+                return ResourceManager.GetString("Ticker_CosmicStretchBrief", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Since {baseDate:d}, the observable universe has expanded by approximately {distance} ({fullDistance}).
+        /// </summary>
+        public static string Ticker_CosmicStretchFull {
+            get {
+                return ResourceManager.GetString("Ticker_CosmicStretchFull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cosmic Stretch.
+        /// </summary>
+        public static string Ticker_CosmicStretchTitle {
+            get {
+                return ResourceManager.GetString("Ticker_CosmicStretchTitle", resourceCulture);
             }
         }
         

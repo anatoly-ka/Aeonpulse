@@ -41,6 +41,7 @@ namespace Aeonpulse.Views
         private bool _isAlienAnniversariesDeepDiveOpen;
         private bool _isGalacticCommuteDeepDiveOpen;
         private bool _isPhotonPathDeepDiveOpen;
+        private bool _isCosmicStretchDeepDiveOpen;
         private bool _isHumanBirthRankDeepDiveOpen;
         private bool _isBirthRuneDeepDiveOpen;
         private bool _isPersonalYearDeepDiveOpen;
@@ -267,6 +268,14 @@ namespace Aeonpulse.Views
                 AppResources.Info_PhotonPathTitle,
                 AppResources.Info_MethodTitle, AppResources.Info_PhotonPathMethod,
                 AppResources.Info_SourceTitle, AppResources.Info_PhotonPathSource);
+
+        /// <summary>Opens the Cosmic Stretch deep-dive info panel.</summary>
+        private async void OnCosmicStretchInfoClicked(object sender, EventArgs e) =>
+            await OpenDeepDiveAsync(
+                () => _isCosmicStretchDeepDiveOpen, v => _isCosmicStretchDeepDiveOpen = v,
+                AppResources.Info_CosmicStretchTitle,
+                AppResources.Info_MethodTitle, AppResources.Info_CosmicStretchMethod,
+                AppResources.Info_SourceTitle, AppResources.Info_CosmicStretchSource);
 
         /// <summary>Opens the Human Birth Rank deep-dive info panel.</summary>
         private async void OnHumanBirthRankInfoClicked(object sender, EventArgs e) =>
