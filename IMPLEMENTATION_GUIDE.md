@@ -97,21 +97,32 @@ Please do not commit the changes until the fix is confirmed by me.
 ### Add a new ticker card
 
 ```
-Please read Agents.md first, specifically Section 7.2 (Adding a New Ticker Card).
+[META] [Ticker Name] ticker
+Please read Agents.md fully before making any changes.
+It is the authoritative navigation guide for this codebase.
+Please don't start any change before completing a full read of this prompt and plan of every affected location.
 
-Add a new ticker card called "[Name]" in the [Lab / Cosmos / Mirror / Eco Echoes] section.
+Add a new ticker card called "[Ticker Name]" in the [Lab / Cosmos / Mirror / Eco Echoes] section, following guidelines in the Section 7.2 of Agents.md.
 It should show: [describe what the ticker calculates and displays]
+Ticker Details & Content:
+- UNICODE Symbol: [ ] (U+????)
+- Brief Text Template: "..."
+- Full Text Template: "..."
+- Methodology: ...
+- Credit/Source: ...
 Update type: [Static / Live (every second)]
 Has refresh button: [Yes / No]
+The core C# calculation must be: ...
 
-Please follow the Section 7.2 recipe exactly, including:
-- Both .resx files (AppResources.resx and AppResources.ru.resx)
+Please follow the Section 7.2 of Agents.md recipe exactly, including:
+- Both .resx files (AppResources.resx and AppResources.ru.resx); please follow the Section 9.5 of Agents.md.
 - LocalizedResources.cs
 - CalculationService.cs (new Calculate* method)
 - MainViewModel.cs
 - MainPage.xaml and MainPage.xaml.cs
 - A test in Aeonpulse.Tests
-- Agents.md updates (Sections 1.3, 2, 5)
+- Agents.md; please follow the Section 9.11 of Agents.md.
+
 Run the build and all tests before finishing.
 ```
 
