@@ -271,4 +271,26 @@ namespace Aeonpulse.Models
         /// <summary><c>true</c> when the result was computed in metric units (CO2 mass display only).</summary>
         public bool UseMetric { get; init; }
     }
+
+    /// <summary>
+    /// Typed result for <c>CalculationService.CalculateCellularRefresh</c>.
+    /// Carries the raw skin cycle count and red blood cell count so callers can
+    /// use the numeric values directly without parsing the formatted display strings.
+    /// </summary>
+    [AIContext("DataTransferObject")]
+    public class CellularRefreshResult : TickerData
+    {
+        /// <summary>
+        /// Number of complete (and partial) outer skin layer replacement cycles since
+        /// the base date. The epidermis renews itself approximately every 27 days.
+        /// Stored as double to capture fractional in-progress cycles (formatted as N2).
+        /// </summary>
+        public double SkinCycles { get; init; }
+
+        /// <summary>
+        /// Total estimated red blood cells generated since the base date.
+        /// Based on a production rate of 2,000,000 new RBCs per second.
+        /// </summary>
+        public double TotalRbcsCreated { get; init; }
+    }
 }

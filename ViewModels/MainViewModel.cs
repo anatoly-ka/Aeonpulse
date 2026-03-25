@@ -266,6 +266,13 @@ namespace Aeonpulse.ViewModels
             set { _yourBreathExpanded = value; OnPropertyChanged(); }
         }
 
+        private bool _cellularRefreshExpanded = false;
+        public bool CellularRefreshExpanded
+        {
+            get => _cellularRefreshExpanded;
+            set { _cellularRefreshExpanded = value; OnPropertyChanged(); }
+        }
+
         // Ticker Data
         private TimeJubileesResult _timeJubilees = new TimeJubileesResult();
         public TimeJubileesResult TimeJubilees
@@ -351,6 +358,13 @@ namespace Aeonpulse.ViewModels
             set { _yourBreath = value; OnPropertyChanged(); }
         }
 
+        private CellularRefreshResult _cellularRefresh = new CellularRefreshResult();
+        public CellularRefreshResult CellularRefresh
+        {
+            get => _cellularRefresh;
+            set { _cellularRefresh = value; OnPropertyChanged(); }
+        }
+
         private string _teaseText = "";
         public string TeaseText
         {
@@ -382,11 +396,13 @@ namespace Aeonpulse.ViewModels
         public ICommand TogglePersonalYearCommand { get; }
         public ICommand ToggleGlobalExhaleCommand { get; }
         public ICommand ToggleYourBreathCommand { get; }
+        public ICommand ToggleCellularRefreshCommand { get; }
 
         // Card-level refresh commands
         public ICommand RefreshTimeJubileesCommand { get; }
         public ICommand RefreshAlienAnniversariesCommand { get; }
         public ICommand RefreshGlobalExhaleCommand { get; }
+        public ICommand RefreshCellularRefreshCommand { get; }
 
         /// <summary>
         /// Raised when a live refresh is requested, so the View layer can show
@@ -439,6 +455,7 @@ namespace Aeonpulse.ViewModels
             TogglePersonalYearCommand = new Command(() => PersonalYearExpanded = !PersonalYearExpanded);
             ToggleGlobalExhaleCommand = new Command(() => GlobalExhaleExpanded = !GlobalExhaleExpanded);
             ToggleYourBreathCommand = new Command(() => YourBreathExpanded = !YourBreathExpanded);
+            ToggleCellularRefreshCommand = new Command(() => CellularRefreshExpanded = !CellularRefreshExpanded);
 
             // Initialize card-level refresh commands
             RefreshTimeJubileesCommand = new Command(async () =>
@@ -465,6 +482,14 @@ namespace Aeonpulse.ViewModels
                 else
                     GlobalExhale = _calculationService.CalculateGlobalExhale(BaseDate, BaseDateName, BaseDateValue, UseMetric);
             });
+            RefreshCellularRefreshCommand = new Command(async () =>
+            {
+                if (RefreshRequested != null)
+                    await RefreshRequested.Invoke(() =>
+                        CellularRefresh = _calculationService.CalculateCellularRefresh(BaseDate, BaseDateName, BaseDateValue));
+                else
+                    CellularRefresh = _calculationService.CalculateCellularRefresh(BaseDate, BaseDateName, BaseDateValue);
+            });
 
             // Initial calculations
             UpdateAllCalculations();
@@ -490,6 +515,7 @@ namespace Aeonpulse.ViewModels
             BirthRune = _calculationService.CalculateBirthRune(BaseDate, BaseDateValue);
             PersonalYear = _calculationService.CalculatePersonalYear(BaseDate, BaseDateValue);
             GlobalExhale = _calculationService.CalculateGlobalExhale(BaseDate, BaseDateName, BaseDateValue, UseMetric);
+            CellularRefresh = _calculationService.CalculateCellularRefresh(BaseDate, BaseDateName, BaseDateValue);
         }
 
         public void UpdateLiveCalculations()

@@ -134,7 +134,7 @@
             <VerticalStackLayout Spacing="16">
 
                 <!-- == LAB SECTION ============================================
-                     Tickers: Time Jubilees, Countdown (LIVE), Life Odometer (LIVE)
+                     Tickers: Time Jubilees, Countdown (LIVE), Life Odometer (LIVE), Cellular Refresh
                      Binding: MainViewModel.LabExpanded -> ToggleLabCommand
                 ================================================================ -->
                 <Border Style="{StaticResource CardFrame}">
@@ -159,7 +159,7 @@
                         </Grid>
 
                         <!-- AI: Section body - visible only when LabExpanded=true.
-                             Contains 3 ticker cards: Time Jubilees, Countdown, Life Odometer. -->
+                             Contains 4 ticker cards: Time Jubilees, Countdown, Life Odometer, Cellular Refresh. -->
                         <VerticalStackLayout Spacing="12"
                                              IsVisible="{Binding LabExpanded}">
 
@@ -349,6 +349,71 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding LifeOdometerExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- == TICKER: CELLULAR REFRESH =======================
+                                 Static ticker - recalculated on base date change
+                                 or via explicit RefreshCellularRefreshCommand.
+                                 Binding: MainViewModel.CellularRefresh (CellularRefreshResult)
+                                 Commands: RefreshCellularRefreshCommand, ToggleCellularRefreshCommand
+                            ======================================================== -->
+                            <Border BackgroundColor="{DynamicResource CardDark}"
+                                    StrokeThickness="1"
+                                    Stroke="{DynamicResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+
+                                    <!-- AI: Ticker card header - 3-column:
+                                         [Col0: DNA emoji icon | Col1: title label | Col2: action buttons (info, refresh, expand)].
+                                         Static ticker: no LIVE badge; refresh button recalculates via RefreshCellularRefreshCommand. -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F9EC; (DNA double helix) -->
+                                        <Label Grid.Column="0"
+                                               Text="🧬"
+                                               FontSize="{DynamicResource FontSizeTitle}"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <!-- Binding: MainViewModel.Loc.Ticker_CellularRefreshTitle (live-localised) -->
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Loc.Ticker_CellularRefreshTitle}"
+                                               Style="{StaticResource BaseLabel}"
+                                               TextColor="{DynamicResource CyberPurple}"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center" />
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <!-- Info: opens DeepDivePopup with methodology + sources -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnCellularRefreshInfoClicked" />
+                                            <!-- Refresh: shows RefreshingPopup then recalculates CellularRefresh -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="refresh.png"
+                                                         Command="{Binding RefreshCellularRefreshCommand}" />
+                                            <!-- Expand/collapse: toggles CellularRefreshExpanded -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding CellularRefreshExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleCellularRefreshCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <!-- Binding: MainViewModel.CellularRefresh.BriefText - always visible -->
+                                    <Label Text="{Binding CellularRefresh.BriefText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                    <!-- Binding: MainViewModel.CellularRefresh.FullText - visible when expanded -->
+                                    <Label Text="{Binding CellularRefresh.FullText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding CellularRefreshExpanded}" />
+
                                 </VerticalStackLayout>
                             </Border>
 

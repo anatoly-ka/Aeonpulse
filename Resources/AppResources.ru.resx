@@ -277,6 +277,10 @@
     <value>миллиардов имперских (длинных) тонн</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Unit_Billion" xml:space="preserve">
+    <value>млрд</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Tease_Title" xml:space="preserve">
     <value>AeonPulse</value>
     <comment>TeasePopup.xaml</comment>
@@ -1196,6 +1200,24 @@
   <data name="Ticker_YourBreathFull" xml:space="preserve">
     <value>Вы сделали около &lt;b&gt;{breath_count}&lt;/b&gt; вдохов, переработав &lt;b&gt;{air_volume}&lt;/b&gt; литров воздуха и выдохнув &lt;b&gt;{co2_mass}&lt;/b&gt; CO₂ в биосферу.</value>
     <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_CellularRefreshTitle" xml:space="preserve">
+    <value>Регенерация</value>
+  </data>
+  <data name="Ticker_CellularRefreshBrief" xml:space="preserve">
+    <value>&lt;b&gt;{skin_count}&lt;/b&gt; циклов кожи, &lt;b&gt;{rbc_count_billions}&lt;/b&gt; {unit_billion} эритроцитов</value>
+  </data>
+  <data name="Ticker_CellularRefreshFull" xml:space="preserve">
+    <value>Ваше тело полностью заменило внешний слой кожи &lt;b&gt;{skin_count}&lt;/b&gt; раз и создало примерно &lt;b&gt;{rbc_count_billions}&lt;/b&gt; {unit_billion} новых эритроцитов с  {baseDate:d}.</value>
+  </data>
+  <data name="Info_CellularRefreshTitle" xml:space="preserve">
+    <value>Регенерация</value>
+  </data>
+  <data name="Info_CellularRefreshMethod" xml:space="preserve">
+    <value>Человеческое тело постоянно обновляется с помощью митоза клеток. Расчёт обновления кожи основан на стандартных физиологических средних значениях: эпидермис человека полностью регенерируется примерно каждые 27 дней. Кроме того, приблизительно четверть (или больше) всех клеток в теле человека - эритроциты (красные кровяные тельца). Человеческий организм вырабатывает около 2 млн новых эритроцитов в секунду, и каждый из них живёт около 120 дней.</value>
+  </data>
+  <data name="Info_CellularRefreshSource" xml:space="preserve">
+    <value>Расчеты основаны на данных, предоставленных National Center for Biotechnology Information (NCBI) от National Library of Medicine (NIH).</value>
   </data>
   <data name="Info_YourBreathTitle" xml:space="preserve">
     <value>Ваше дыхание</value>

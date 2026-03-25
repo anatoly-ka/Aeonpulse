@@ -1,4 +1,4 @@
-# Agents.md - AI Agent Navigation Guide for Aeonpulse
+﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
 > **Last updated:** 2026-03-25
 > **Maintained by:** AI Agents and human developers collaboratively.
@@ -219,6 +219,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | 10 | Personal Year | Mirror | Static | No |
 | 11 | Global Exhale | Eco Echoes | Static | Yes |
 | 12 | Your Breath | Eco Echoes | **LIVE** | No |
+| 13 | Cellular Refresh | Lab | Static | Yes |
 
 ### User-Configurable Settings (persisted via `Preferences`)
 
@@ -286,7 +287,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
 | `TickerData.cs` | Edit freely | `DataTransferObject` | Two-property DTO (`BriefText`, `FullText`) implementing `INotifyPropertyChanged`. All 12 typed result subclasses (see `TickerResults.cs`) inherit from this class. Live tickers mutate `BriefText`/`FullText` in-place every second via property setters so bindings update without replacing the object reference. |
-| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 12 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`, `YourBreathResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. |
+| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 12 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`, `YourBreathResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum and `CellularRefreshResult`. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. |
 | `TickerCardModel.cs` | Edit freely | `DataTransferObject` | Structural metadata for a ticker card: `Title`, `IconGlyph`, `IsLive`, `IsExpanded`, `HasRefresh`. Not yet wired to a `CollectionView` - reserved for a future refactor that replaces individually-templated XAML blocks. |
 | `SubsectionState.cs` | Edit freely | - | Snapshot of a collapsible section: `Title` (used as key) and `IsExpanded`. Defined but not yet actively used for persistence - available for future state-save/restore logic. |
 
@@ -478,7 +479,9 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 | `CalculateTimeJubileesTests.cs` | Edit freely | Tests for jubilee selection across all seven time units including the overflow guard for very old dates. |
 | `TickerDataTests.cs` | Edit freely | Tests for TickerData INotifyPropertyChanged behaviour (BriefText and FullText fire PropertyChanged; repeated sets; same-value re-sets; default empty strings) and correct round-trip population of the raw init fields on all 11 typed result subclasses. No MAUI dependency - runs in the plain net9.0 test project. |
 | `CalculateYourBreathTests.cs` | Edit freely | Tests for `CalculateYourBreath` with injected `now`. Covers breath count formula (14 breaths/min), air volume formula (0.5 L/breath), CO2 formula (1.04 kg/day), metric/imperial CO2 toggle, air volume always in litres regardless of unit system, zero elapsed time, very old dates, proportional growth, and `UseMetric` field round-trip. 16 tests total. |
-| `CalculateCosmicStretchTests.cs` | Edit freely | Tests for `CalculateCosmicStretch` with injected `now`. Covers correct km expansion formula (elapsed seconds * 3,300,000), metric billion-km formatting, imperial billion-miles formatting, zero elapsed time, very old dates, and unit-system independence of `KmExpanded`. |
+| `CalculateCellularRefreshTests.cs` | Edit freely | Tests for `CalculateCellularRefresh` with injected `now`. Covers skin cycle formula (27-day period, N0 format), RBC formula (2,000,000/s displayed in billions N2), unit string in BriefText, zero elapsed time, very old dates, proportional growth, and raw field round-trip. 16 tests total. |
+| \CalculateCosmicStretchTests.cs\ | Edit freely | Tests for \CalculateCosmicStretch\ with injected \
+ow\. Covers correct km expansion formula (elapsed seconds * 3,300,000), metric billion-km formatting, imperial billion-miles formatting, zero elapsed time, very old dates, and unit-system independence of `KmExpanded`. |
 | `TypedResultFieldTests.cs` | Edit freely | Tests that each CalculationService method correctly populates the raw numeric fields of its typed result subclass - not covered by the existing string-assertion tests. Uses injected now for deterministic results. Covers CountdownResult decomposition, LifeOdometerResult formulas, AlienAnniversariesResult planet-year formulas, GalacticCommuteResult km calculation, PhotonPathResult phase and speed-of-light check, HumanBirthRankResult rank ordering, PersonalYearResult range, GlobalExhaleResult flags, TimeJubileesResult coherence. |
 | `README.md` | Edit freely | High-level project README. Human-facing. Contains a project structure overview and migration notes from the original React implementation. |
 | `IMPLEMENTATION_GUIDE.md` | Edit freely | Original React-to-MAUI migration guide. Contains early extension recipes and build commands. Some content is superseded by `Agents.md`. |
@@ -1034,6 +1037,7 @@ a map to navigate without reading every XAML file.
 | `Views/MainPage.xaml` | 161 | Section body `VerticalStackLayout` - `IsVisible` binding, contained tickers |
 | `Views/MainPage.xaml` | 179 | Ticker card header `Grid` - 3-column `[emoji|title|action buttons]` |
 | `Views/MainPage.xaml` | 910 | Your Breath ticker card header `Grid` - 3-column `[lung emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.YourBreath` (live-updated every second). |
+| `Views/MainPage.xaml` | ~970 | Cellular Refresh ticker card header `Grid` - 3-column `[DNA emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.CellularRefresh` (live-updated every second). |
 | `Views/MainPage.xaml` | 243 | Title + LIVE badge `HorizontalStackLayout` - side-by-side layout reason |
 | `Views/SettingsPopup.xaml` | 9 | Full-screen overlay `Grid` - Layer 0/1 z-order explanation |
 | `Views/SettingsPopup.xaml` | 25 | `Frame` panel - floats over backdrop, `DynamicResource` theme note |
@@ -1486,6 +1490,7 @@ AIContext:   CoreCalculationEngine
 | `CalculatePersonalYear` | `CoreCalculation` | Static | `baseDateValue` |
 | `CalculateGlobalExhale` | `CoreCalculation`, `ExternalDataModel` | Static | `baseDateName`, `baseDateValue`, `useMetric` |
 | `CalculateYourBreath` | `LiveTicker` | LIVE (1s) | `baseDateValue`, `useMetric` |
+| `CalculateCellularRefresh` | `CoreCalculation` | Static | `baseDateName`, `baseDateValue` |
 | `GetRandomTeaseText` | `UIPresentation` | LIVE (1s) | `CountdownResult`, `LifeOdometerResult`, `GalacticCommuteResult`, `GlobalExhaleResult`, `baseDateName`, `baseDate` (`DateTime`, formatted with `"d"` inside) - returns 1 of 5 random tease strings |
 
 **Owns:**
@@ -1504,7 +1509,7 @@ AIContext:   CoreCalculationEngine
 **Called by:**
 - `MainViewModel.UpdateStaticCalculations()` - 6 methods
 - `MainViewModel.UpdateLiveCalculations()` - 5 methods + `GetRandomTeaseText`
-- `MainViewModel` refresh command lambdas - 3 specific methods (TimeJubilees, AlienAnniversaries, GlobalExhale)
+- `MainViewModel` refresh command lambdas - 4 specific methods (TimeJubilees, AlienAnniversaries, GlobalExhale, CellularRefresh)
 
 **Extend here when:**
 - Adding a new ticker: add a new `public XxxResult CalculateXxx(...)` method returning a typed subclass of `TickerData` defined in `TickerResults.cs`. Decorate with `[AIContext]`, add `///` docs, source all strings from `AppResources` only. No UI references. Add an `AeonLog.Debug` entry call; add `[BLOCK]`-tagged calls only if the method has named internal phases.
@@ -1844,7 +1849,7 @@ directly so no TFM-incompatibility issues arise. Run all tests with:
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
 ```
 
-**What can be tested without a device (159 tests in 10 test classes):**
+**What can be tested without a device (176 tests in 11 test classes):**
 - `FindNearestJubilee()` / `ReduceToSingleDigit()` (pure algorithms, `internal` + `InternalsVisibleTo`)
 - `CalculateTimeJubilees`, `CalculateCountdown`, `CalculateLifeOdometer`
 - `CalculateAlienAnniversaries`, `CalculateHumanBirthRank`

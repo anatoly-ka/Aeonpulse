@@ -47,6 +47,7 @@ namespace Aeonpulse.Views
         private bool _isPersonalYearDeepDiveOpen;
         private bool _isGlobalExhaleDeepDiveOpen;
         private bool _isYourBreathDeepDiveOpen;
+        private bool _isCellularRefreshDeepDiveOpen;
 
         /// <summary>
         /// Constructs the page and subscribes to the ViewModel's
@@ -317,5 +318,13 @@ namespace Aeonpulse.Views
                 AppResources.Info_YourBreathTitle,
                 AppResources.Info_MethodTitle, AppResources.Info_YourBreathMethod,
                 AppResources.Info_SourceTitle, AppResources.Info_YourBreathSource);
+
+        /// <summary>Opens the Cellular Refresh deep-dive info panel.</summary>
+        private async void OnCellularRefreshInfoClicked(object sender, EventArgs e) =>
+            await OpenDeepDiveAsync(
+                () => _isCellularRefreshDeepDiveOpen, v => _isCellularRefreshDeepDiveOpen = v,
+                AppResources.Info_CellularRefreshTitle,
+                AppResources.Info_MethodTitle, AppResources.Info_CellularRefreshMethod,
+                AppResources.Info_SourceTitle, AppResources.Info_CellularRefreshSource);
     }
 }

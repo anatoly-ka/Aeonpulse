@@ -1221,6 +1221,71 @@ namespace Aeonpulse.Services
 
         #endregion
 
+        #region Cellular Refresh
+
+        /// <summary>
+        /// Estimates the number of times the outer skin layer (epidermis) has been
+        /// replaced and the total number of red blood cells generated since
+        /// <paramref name="baseDate"/>, based on standard physiological averages.
+        ///
+        /// <para>
+        /// <b>Algorithm:</b>
+        /// <list type="bullet">
+        ///   <item><description>Skin cycle duration: 27 days (average epidermal renewal period). Formatted as a whole number (N0).</description></item>
+        ///   <item><description>RBC production rate: 2,000,000 new red blood cells per second. Displayed in billions (N2) for readability on a mobile screen.</description></item>
+        /// </list>
+        /// </para>
+        /// <para>
+        /// <b>Data source:</b> National Center for Biotechnology Information (NCBI),
+        /// National Library of Medicine (NIH).
+        /// </para>
+        /// <para>
+        /// This is a <b>static ticker</b> - recalculated on base date change or
+        /// via explicit user refresh. Not called by the 1-second timer.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The user-selected origin date.</param>
+        /// <param name="baseDateName">Human-readable label for display in the full text.</param>
+        /// <param name="baseDateValue">ISO-8601 string for the base date for output formatting.</param>
+        /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
+        /// <returns>A <see cref="CellularRefreshResult"/> with skin cycle count and total RBCs (in billions) since the base date.</returns>
+        [AIContext("CoreCalculation")]
+        public CellularRefreshResult CalculateCellularRefresh(DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
+        {
+            DateTime now_ = now ?? DateTime.Now;
+            AeonLog.Debug(LogCat, nameof(CalculateCellularRefresh), $"baseDate={baseDate:d}");
+
+            double totalSeconds = (now_ - baseDate).TotalSeconds;
+            double totalDays    = (now_ - baseDate).TotalDays;
+
+            double skinCycles        = totalDays / 27.0;
+            double totalRbcsCreated  = totalSeconds * 2000000.0;
+            double totalRbcsBillions = totalRbcsCreated / 1_000_000_000.0;
+
+            string unitBillion = AppResources.Unit_Billion;
+
+            string briefText = AppResources.Ticker_CellularRefreshBrief
+                .Replace("{skin_count}", skinCycles.ToString("N0"))
+                .Replace("{rbc_count_billions}", totalRbcsBillions.ToString("N2"))
+                .Replace("{unit_billion}", unitBillion);
+
+            string fullText = AppResources.Ticker_CellularRefreshFull
+                .Replace("{skin_count}", skinCycles.ToString("N0"))
+                .Replace("{rbc_count_billions}", totalRbcsBillions.ToString("N2"))
+                .Replace("{unit_billion}", unitBillion)
+                .Replace("{baseDate:d}", baseDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture));
+
+            return new CellularRefreshResult
+            {
+                SkinCycles       = skinCycles,
+                TotalRbcsCreated = totalRbcsCreated,
+                BriefText        = briefText,
+                FullText         = fullText
+            };
+        }
+
+        #endregion
+
         #region Cosmic Stretch
 
         /// <summary>
