@@ -26,14 +26,23 @@ namespace Aeonpulse
     /// <para>
     /// <b>File resolution:</b> the source filename is obtained from the MAUI handler's
     /// <c>VirtualView.Source</c> (<see cref="FileImageSource.File"/>) and resolved to
-    /// the scaled PNG in <see cref="AppContext.BaseDirectory"/> — the exe output
+    /// the scaled PNG in <see cref="AppContext.BaseDirectory"/> - the exe output
     /// directory where <c>WindowsPackageType=None</c> copies all
     /// <c>MauiImage</c> assets (e.g. <c>info.scale-100.png</c>).
     /// </para>
     /// <para>
     /// <b>Caching:</b> tinted <see cref="WriteableBitmap"/> instances are cached by
     /// (filename, colour) so repeated theme switches do not re-run the Win2D pipeline.
-    /// The cache is cleared when a new tint colour is applied to the same file.
+    /// </para>
+    /// <para>
+    /// <b>ImageButton tint lifecycle:</b> MAUI sets the inner <see cref="WinUIImage"/>
+    /// source asynchronously and may reset it on source-binding changes (e.g. chevron
+    /// toggle via <c>BoolToImageSourceConverter</c>). To survive these resets, once the
+    /// inner <see cref="WinUIImage"/> is found we store the desired tint parameters for
+    /// it and subscribe to <c>ImageOpened</c>. Every time MAUI loads a new bitmap into
+    /// the image, our handler fires and immediately replaces the source with the tinted
+    /// <see cref="WriteableBitmap"/>. The subscription is updated (not duplicated) on
+    /// each call via a <see cref="System.Runtime.CompilerServices.ConditionalWeakTable"/>.
     /// </para>
     /// </summary>
     [AIContext("PlatformTintImplementation")]
@@ -44,6 +53,22 @@ namespace Aeonpulse
 
         // Shared CanvasDevice - expensive to create, safe to reuse across calls.
         private static CanvasDevice? _canvasDevice;
+
+        // Per-WinUIImage: the tint params (file + colour) to apply when ImageOpened fires.
+        // Keyed on the inner Image so the subscription survives source changes.
+        private sealed class ImageTintState
+        {
+            public string File  = "";
+            public Color? Tint;
+            public RoutedEventHandler? OpenedHandler;
+        }
+        private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<WinUIImage, ImageTintState>
+            _imageStates = new();
+
+        // Per-WinUIButton: the Loaded handler box so the exact delegate can be unsubscribed.
+        private sealed class LoadedHandlerBox { public RoutedEventHandler? Handler; }
+        private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<WinUIButton, LoadedHandlerBox>
+            _pendingLoadedHandlers = new();
 
         /// <summary>
         /// Resolves the source filename from the MAUI <c>Image</c> handler's
@@ -73,7 +98,10 @@ namespace Aeonpulse
         /// <summary>
         /// Walks the WinUI visual tree of the <c>Button</c> backing
         /// <c>ImageButton</c> to find the inner <c>Image</c> child, then
-        /// applies the same Win2D tint pipeline used for plain <c>Image</c>.
+        /// applies the Win2D tint pipeline and subscribes to <c>ImageOpened</c>
+        /// so the tint survives any future source resets by MAUI.
+        /// Calls <c>ApplyTemplate()</c> first to ensure the template is inflated
+        /// even for buttons inside <c>Visibility.Collapsed</c> parents.
         /// </summary>
         static partial void ApplyImageButtonTint(
             Microsoft.Maui.Handlers.ImageButtonHandler handler, Color? tint)
@@ -84,35 +112,97 @@ namespace Aeonpulse
             var file = GetScaledFileName(handler.VirtualView?.Source);
             if (file is null) return;
 
-            ApplyTintToButtonAsync(nativeBtn, file, tint);
+            ApplyTintToButton(nativeBtn, file, tint);
         }
 
         // --- Private helpers -------------------------------------------------
 
         /// <summary>
-        /// Dispatches an async tint operation to the <paramref name="button"/>,
-        /// deferring until the WinUI template is loaded if necessary.
+        /// Forces WinUI <c>ControlTemplate</c> inflation via <c>ApplyTemplate()</c>,
+        /// finds the inner <see cref="WinUIImage"/>, then calls
+        /// <see cref="AttachAndTint"/> to subscribe to <c>ImageOpened</c> and
+        /// schedule the immediate tint pass.
+        ///
+        /// <para>
+        /// <b>Why ApplyTemplate() and not Loaded:</b> <c>Loaded</c> fires once at
+        /// tree-insertion (page load) for every element, including those inside
+        /// <c>Visibility.Collapsed</c> containers. By the time our mapper runs,
+        /// <c>Loaded</c> has already fired, so a Loaded-deferred handler registered
+        /// after that point never fires. <c>ApplyTemplate()</c> is the correct API
+        /// to force template inflation on demand, and it succeeds synchronously even
+        /// for collapsed elements.
+        /// </para>
         /// </summary>
-        private static void ApplyTintToButtonAsync(WinUIButton button, string file, Color? tint)
+        private static void ApplyTintToButton(WinUIButton button, string file, Color? tint)
         {
+            // Cancel any pending Loaded subscription - kept for safety in case a stale
+            // one was registered by a prior version.
+            if (_pendingLoadedHandlers.TryGetValue(button, out var existingBox) &&
+                existingBox.Handler is not null)
+            {
+                button.Loaded -= existingBox.Handler;
+                existingBox.Handler = null;
+            }
+
+            // ApplyTemplate() synchronously inflates the WinUI Button ControlTemplate
+            // even when the button is inside a Visibility.Collapsed parent. Without this
+            // call, FindDescendantImage returns null for all buttons in collapsed sections
+            // because WinUI defers template inflation until first measure - which never
+            // happens for collapsed elements. The Loaded event is NOT a substitute: it
+            // fires once at tree-insertion (page load), before our mapper runs, so a
+            // Loaded-deferred handler registered after that point never fires.
+            button.ApplyTemplate();
+
             var image = FindDescendantImage(button);
             if (image is not null)
             {
-                ScheduleTint(image, file, tint);
+                AttachAndTint(image, file, tint);
                 return;
             }
 
-            // Template not yet applied - defer to Loaded.
-            button.Loaded -= OnLoaded;
-            button.Loaded += OnLoaded;
+            // ApplyTemplate() should always succeed for a WinUI Button. Reaching here
+            // means an unexpected template structure - log and bail silently.
+            System.Diagnostics.Debug.WriteLine(
+                $"[TintHelper] ApplyTintToButton: inner Image not found after ApplyTemplate() for file='{file}'");
+        }
 
-            void OnLoaded(object s, RoutedEventArgs e)
+        /// <summary>
+        /// Updates the <see cref="ImageTintState"/> for <paramref name="image"/>,
+
+        /// subscribes to <c>ImageOpened</c> (replacing any prior subscription) so
+        /// every future MAUI source reset is immediately re-tinted, then schedules
+        /// an immediate tint pass on the dispatcher queue.
+        /// </summary>
+        private static void AttachAndTint(WinUIImage image, string file, Color? tint)
+        {
+            var state = _imageStates.GetOrCreateValue(image);
+
+            // Remove old ImageOpened handler before attaching a new one.
+            if (state.OpenedHandler is not null)
             {
-                button.Loaded -= OnLoaded;
-                var img = FindDescendantImage(button);
-                if (img is not null)
-                    ScheduleTint(img, file, tint);
+                image.ImageOpened -= state.OpenedHandler;
+                state.OpenedHandler = null;
             }
+
+            state.File = file;
+            state.Tint = tint;
+
+            // Subscribe so every time MAUI resets the source (e.g. chevron flip,
+            // first paint of a newly-visible collapsed section), we re-tint.
+            RoutedEventHandler openedHandler = null!;
+            openedHandler = (s, e) =>
+            {
+                // s is the WinUIImage; read current state at the time the event fires.
+                if (_imageStates.TryGetValue(image, out var st))
+                    ScheduleTint(image, st.File, st.Tint);
+            };
+            state.OpenedHandler = openedHandler;
+            image.ImageOpened += openedHandler;
+
+            // Also schedule an immediate tint in case the source is already loaded
+            // (WriteableBitmap does not fire ImageOpened, and BitmapImage may already
+            // be decoded if it was cached by WinUI).
+            ScheduleTint(image, file, tint);
         }
 
         /// <summary>
@@ -235,8 +325,8 @@ namespace Aeonpulse
                 return null;
 
             // Resizetizer renames files to {stem}.scale-100.{ext} for Windows.
-            var stem      = System.IO.Path.GetFileNameWithoutExtension(plain);
-            var ext       = System.IO.Path.GetExtension(plain);
+            var stem = System.IO.Path.GetFileNameWithoutExtension(plain);
+            var ext  = System.IO.Path.GetExtension(plain);
             return $"{stem}.scale-100{ext}";
         }
 

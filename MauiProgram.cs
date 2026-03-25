@@ -68,6 +68,27 @@ namespace Aeonpulse
                             if (handler is Microsoft.Maui.Handlers.ImageButtonHandler imageButtonHandler)
                                 ApplyImageButtonTint(imageButtonHandler, tint);
                         });
+
+                    // Also hook the Source mapper for ImageButton so the tint is re-applied
+                    // immediately after MAUI sets or resets the native image source.
+                    // This covers two cases that the ColorProperty mapper alone cannot handle:
+                    //   1. Buttons inside a collapsed section: their WinUI Button ControlTemplate
+                    //      is not applied until the section first becomes visible, so MAUI fires
+                    //      the Source mapper at that point to paint the image for the first time.
+                    //   2. Chevron buttons whose Source binding flips (BoolToImageSourceConverter):
+                    //      MAUI fires the Source mapper with the new filename, which would
+                    //      overwrite our previously-tinted WriteableBitmap with an un-tinted one.
+                    // Appending here ensures tint always runs right after MAUI sets the source.
+                    Microsoft.Maui.Handlers.ImageButtonHandler.Mapper.AppendToMapping(
+                        "Source",
+                        (handler, view) =>
+                        {
+                            if (view is not BindableObject bindable) return;
+                            var tint = ImageTint.GetColor(bindable);
+                            if (tint is null) return;
+                            if (handler is Microsoft.Maui.Handlers.ImageButtonHandler imageButtonHandler)
+                                ApplyImageButtonTint(imageButtonHandler, tint);
+                        });
                 });
 
 #if DEBUG
