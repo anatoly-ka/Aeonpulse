@@ -520,7 +520,7 @@ namespace Aeonpulse.Services
 
             string distance;
             string fullTextResource = AppResources.Ticker_GalacticCommuteFullWithRounded;
-            string fullDistance = $"{(kmTraveled)} km";
+            string fullDistance = $"{kmTraveled:N0} {AppResources.UnitMetric_Km}";
             if (useMetric)
             {
                 if (kmTraveled > 1000000000)
@@ -676,7 +676,7 @@ namespace Aeonpulse.Services
             AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"ly={lightYears:F4} km={kmTraveled:N0}", "DISTANCE");
 
             string distance = $"{lightYears:F2} {AppResources.Unit_LightYears}";
-            string fullDistance = useMetric ? $"{(kmTraveled / 1000000):F2} {AppResources.UnitMetric_MKm}" : $"{(kmTraveled * 0.621371 / 1000000):F2} {AppResources.UnitImperial_MMiles}";
+            string fullDistance = useMetric ? $"{(kmTraveled / 1000000):N2} {AppResources.UnitMetric_MKm}" : $"{(kmTraveled * 0.621371 / 1000000):N2} {AppResources.UnitImperial_MMiles}";
 
             string bText = "";
             string fText = "";
@@ -742,7 +742,7 @@ namespace Aeonpulse.Services
                         .Replace("{distance}", distance)
                         .Replace("{fullDistance}", fullDistance)
                         .Replace("{star.Name}", star.Name)
-                        .Replace("{star.Ly}", star.Ly.ToString())
+                        .Replace("{star.Ly}", star.Ly.ToString("F2"))
                         .Replace("{star.Info}", star.Info);
                 }
             }
