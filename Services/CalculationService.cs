@@ -1095,7 +1095,7 @@ namespace Aeonpulse.Services
             int baseYears = (int)((baseDate - year1900).TotalDays / 365.25);
 
             double totalCO2 = 11.77; // billion tons of CO2 emitted till 1900
-            string amount = useMetric ? $"{totalCO2} {AppResources.Ticker_GlobalExhaleMetric_BTonnes}" : $"{(totalCO2 * 0.984252):F2} {AppResources.Ticker_GlobalExhaleImperial_BTons}";
+            string amount = useMetric ? $"{totalCO2} {AppResources.UnitMetric_BTonnes}" : $"{(totalCO2 * 0.984252):F2} {AppResources.UnitImperial_BTons}";
 
             if (baseYears < 0)
             {
@@ -1126,7 +1126,7 @@ namespace Aeonpulse.Services
             double totalCO2Base = 0.0008 / 3 * Math.Pow(x1, 3) - 0.0122 / 2 * Math.Pow(x1, 2) + 0.6859 * x1;
             double totalCO2Now = 0.0008 / 3 * Math.Pow(x2, 3) - 0.0122 / 2 * Math.Pow(x2, 2) + 0.6859 * x2;
             totalCO2 = totalCO2Now - totalCO2Base;
-            amount = useMetric ? $"{totalCO2:F2} {AppResources.Ticker_GlobalExhaleMetric_BTonnes}" : $"{(totalCO2 * 0.984252):F2} {AppResources.Ticker_GlobalExhaleImperial_BTons}";
+            amount = useMetric ? $"{totalCO2:F2} {AppResources.UnitMetric_BTonnes}" : $"{(totalCO2 * 0.984252):F2} {AppResources.UnitImperial_BTons}";
 
             return new GlobalExhaleResult
             {
@@ -1194,8 +1194,9 @@ namespace Aeonpulse.Services
 
             // CO2 mass: metric = kg, imperial = lbs (1 kg = 2.20462 lbs)
             double co2Display   = useMetric ? co2Kg : co2Kg * 2.20462;
-            string co2Unit      = useMetric ? AppResources.Ticker_YourBreathMetric_Kg
-                                            : AppResources.Ticker_YourBreathImperial_Lbs;
+            string co2Unit      = useMetric ? AppResources.UnitMetric_Kg
+                                            : AppResources.UnitImperial_Lbs;
+
             string co2Formatted = $"{co2Display:N2} {co2Unit}";
 
             string briefText = AppResources.Ticker_YourBreathBrief

@@ -1,4 +1,4 @@
-﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
+# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
 > **Last updated:** 2026-03-25
 > **Maintained by:** AI Agents and human developers collaboratively.
@@ -1567,10 +1567,10 @@ AIContext:   (none - string repository)
 |--------|-------|---------|
 | `Star_` | 108 | 57 stars: `_Name`, `_Info` pairs + shared constellation infos |
 | `Rune_` | 72 | 24 Elder Futhark runes: `_Name`, `_Brief`, `_Full` triples |
-| `Ticker_` | 50 | BriefText/FullText templates for all 11 tickers (multi-variant some tickers) |
+| `Ticker_` | 46 | BriefText/FullText templates for all 11 tickers (multi-variant some tickers) |
 | `Info_` | 36 | DeepDivePopup content: `_Title`, `_Method`, `_Source` per ticker |
 | `Settings_` | 22 | All settings popup labels and values |
-| `Unit_` / `UnitMetric_` / `UnitImperial_` | 16 | Distance, time, and mass unit strings |
+| `Unit_` / `UnitMetric_` / `UnitImperial_` | 20 | Distance, time, and mass unit strings (includes `UnitMetric_Kg`, `UnitImperial_Lbs`, `UnitMetric_BTonnes`, `UnitImperial_BTons`) |
 | `PersonalYear1_` ... `PersonalYear9_` | 18 | Brief + Full interpretations for numerology years 1-9 |
 | `ChangeDate_` | 7 | Change date popup labels |
 | `Tease_` | 7 | Tease popup title, button, and 5 randomly-selected tease templates (`Tease_Countdown`, `Tease_Heartbeats`, `Tease_Breaths`, `Tease_GalacticCommute`, `Tease_GlobalExhale`) |

@@ -261,6 +261,22 @@
     <value>{0} лет</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="UnitMetric_Kg" xml:space="preserve">
+    <value>кг</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_Lbs" xml:space="preserve">
+    <value>фунтов</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitMetric_BTonnes" xml:space="preserve">
+    <value>миллиардов тонн</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="UnitImperial_BTons" xml:space="preserve">
+    <value>миллиардов имперских (длинных) тонн</value>
+    <comment>CalculationService.cs</comment>
+  </data>
   <data name="Tease_Title" xml:space="preserve">
     <value>AeonPulse</value>
     <comment>TeasePopup.xaml</comment>
@@ -1153,14 +1169,6 @@
     <value>Дыхание мира</value>
     <comment>MainPage.xaml</comment>
   </data>
-  <data name="Ticker_GlobalExhaleMetric_BTonnes" xml:space="preserve">
-    <value>миллиардов тонн</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Ticker_GlobalExhaleImperial_BTons" xml:space="preserve">
-    <value>миллиардов имперских (длинных)  тонн</value>
-    <comment>CalculationService.cs</comment>
-  </data>
   <data name="Ticker_GlobalExhalePreXX_Brief" xml:space="preserve">
     <value>До 1900 года было выброшено &lt;b&gt;{amount}&lt;/b&gt; CO₂</value>
     <comment>CalculationService.cs</comment>
@@ -1187,14 +1195,6 @@
   </data>
   <data name="Ticker_YourBreathFull" xml:space="preserve">
     <value>Вы сделали около &lt;b&gt;{breath_count}&lt;/b&gt; вдохов, переработав &lt;b&gt;{air_volume}&lt;/b&gt; литров воздуха и выдохнув &lt;b&gt;{co2_mass}&lt;/b&gt; CO₂ в биосферу.</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Ticker_YourBreathMetric_Kg" xml:space="preserve">
-    <value>кг</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Ticker_YourBreathImperial_Lbs" xml:space="preserve">
-    <value>фунтов</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_YourBreathTitle" xml:space="preserve">
