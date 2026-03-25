@@ -250,4 +250,25 @@ namespace Aeonpulse.Models
         /// <summary><c>true</c> when the result was computed in metric units.</summary>
         public bool UseMetric { get; init; }
     }
+
+    /// <summary>
+    /// Typed result for <c>CalculationService.CalculateYourBreath</c>.
+    /// Carries the raw breath count, air volume, and CO2 mass so callers can
+    /// use the numeric values directly without parsing the formatted display strings.
+    /// </summary>
+    [AIContext("DataTransferObject")]
+    public class YourBreathResult : TickerData
+    {
+        /// <summary>Total estimated breaths taken since the base date (14 breaths/min average).</summary>
+        public double BreathCount { get; init; }
+
+        /// <summary>Total air volume processed in litres since the base date (0.5 L per breath).</summary>
+        public double AirLiters { get; init; }
+
+        /// <summary>Total CO2 mass exhaled in kilograms since the base date (1.04 kg/day).</summary>
+        public double Co2Kg { get; init; }
+
+        /// <summary><c>true</c> when the result was computed in metric units (CO2 mass display only).</summary>
+        public bool UseMetric { get; init; }
+    }
 }

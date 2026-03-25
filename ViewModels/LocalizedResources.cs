@@ -38,6 +38,7 @@ namespace Aeonpulse.ViewModels
         public string Ticker_BirthRuneTitle            => AppResources.Ticker_BirthRuneTitle;
         public string Ticker_PersonalYearTitle         => AppResources.Ticker_PersonalYearTitle;
         public string Ticker_GlobalExhaleTitle         => AppResources.Ticker_GlobalExhaleTitle;
+        public string Ticker_YourBreathTitle           => AppResources.Ticker_YourBreathTitle;
 
         // -- Settings --------------------------------------------------------
         public string Settings_Title                   => AppResources.Settings_Title;
@@ -117,6 +118,9 @@ namespace Aeonpulse.ViewModels
         public string Info_GlobalExhaleTitle           => AppResources.Info_GlobalExhaleTitle;
         public string Info_GlobalExhaleMethod          => AppResources.Info_GlobalExhaleMethod;
         public string Info_GlobalExhaleSource          => AppResources.Info_GlobalExhaleSource;
+        public string Info_YourBreathTitle             => AppResources.Info_YourBreathTitle;
+        public string Info_YourBreathMethod            => AppResources.Info_YourBreathMethod;
+        public string Info_YourBreathSource            => AppResources.Info_YourBreathSource;
 
         // -- Tease ------------------------------------------------------------
         public string Tease_Title          => AppResources.Tease_Title;

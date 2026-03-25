@@ -126,6 +126,22 @@ namespace Aeonpulse.Services
             return num;
         }
 
+        /// <summary>
+        /// Calculates the total number of breaths taken over <paramref name="totalSeconds"/>
+        /// using the NCBI-sourced average rate of 14 breaths per minute
+        /// (midpoint of the normal adult resting range of 12-16 breaths/min).
+        ///
+        /// <para>
+        /// This helper is the single source of truth for the breath rate used by both
+        /// <see cref="CalculateLifeOdometer"/> and <see cref="CalculateYourBreath"/>,
+        /// ensuring the two tickers always agree.
+        /// </para>
+        /// </summary>
+        /// <param name="totalSeconds">Elapsed time in seconds.</param>
+        /// <returns>Total breath count as a whole number.</returns>
+        private static long CalculateBreaths(double totalSeconds)
+            => (long)((totalSeconds / 60.0) * 14.0);
+
         #endregion
 
         #region Time Jubilees
@@ -397,12 +413,18 @@ namespace Aeonpulse.Services
         /// <summary>
         /// Estimates the total number of heartbeats and breaths accumulated since
         /// <paramref name="baseDate"/>, using population-average physiological rates:
-        /// 70 bpm and 16 breaths/min.
+        /// 70 bpm and 14 breaths/min (NCBI midpoint of the 12-16 resting range).
         ///
         /// <para>
         /// This is a <b>live ticker</b> - called every second by the VM timer.
         /// Results are intentionally approximate; the goal is experiential impact,
         /// not medical precision.
+        /// </para>
+        /// <para>
+        /// <b>Side effect:</b> breath count is computed via
+        /// <see cref="CalculateBreaths"/>, the same helper used by
+        /// <see cref="CalculateYourBreath"/>, so both tickers always show
+        /// the same breath total.
         /// </para>
         /// </summary>
         /// <param name="baseDate">The start of the lifespan being measured.</param>
@@ -420,7 +442,7 @@ namespace Aeonpulse.Services
             AeonLog.Debug(LogCat, nameof(CalculateLifeOdometer), $"baseDate={baseDate:d} seconds={seconds}");
 
             long heartbeats = seconds * 70 / 60;
-            long breaths = seconds * 16 / 60;
+            long breaths    = CalculateBreaths(seconds);
 
             return new LifeOdometerResult
             {
@@ -1123,6 +1145,81 @@ namespace Aeonpulse.Services
 
         #endregion
 
+        #region Your Breath
+
+        /// <summary>
+        /// Estimates the cumulative number of breaths taken, total volume of air processed,
+        /// and total mass of CO2 exhaled since <paramref name="baseDate"/>.
+        ///
+        /// <para>
+        /// <b>Algorithm:</b>
+        /// <list type="bullet">
+        ///   <item><description>Breath rate: 14 breaths/min (midpoint of the 12-16 range).</description></item>
+        ///   <item><description>Tidal volume: 0.5 litres per breath.</description></item>
+        ///   <item><description>CO2 output: 1.04 kg/day.</description></item>
+        ///   <item><description>Air volume is always in litres regardless of the active unit system,
+        ///     because respiratory physiology uses metric exclusively.</description></item>
+        ///   <item><description>CO2 mass respects the active unit system: kg (metric) or lbs (imperial).</description></item>
+        /// </list>
+        /// </para>
+        /// <para>
+        /// <b>Data source:</b> National Center for Biotechnology Information (NCBI),
+        /// National Library of Medicine (NIH).
+        /// </para>
+        /// <para>
+        /// This is a <b>live ticker</b> - called every second by the
+        /// <see cref="ViewModels.MainViewModel"/> timer.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The user-selected origin date.</param>
+        /// <param name="baseDateValue">ISO-8601 string of the base date for output formatting.</param>
+        /// <param name="useMetric">
+        /// <c>true</c> for kg (CO2 mass); <c>false</c> for lbs.
+        /// Air volume is always litres regardless of this flag.
+        /// </param>
+        /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
+        /// <returns>A <see cref="YourBreathResult"/> with breath count, air volume, and CO2 mass since the base date.</returns>
+        [AIContext("LiveTicker")]
+        public YourBreathResult CalculateYourBreath(DateTime baseDate, string baseDateValue, bool useMetric, DateTime? now = null)
+        {
+            DateTime now_ = now ?? DateTime.Now;
+            AeonLog.Debug(LogCat, nameof(CalculateYourBreath), $"baseDate={baseDate:d} useMetric={useMetric}");
+
+            double totalSeconds = (now_ - baseDate).TotalSeconds;
+            double totalDays    = (now_ - baseDate).TotalDays;
+
+            double breaths   = CalculateBreaths(totalSeconds);
+            double co2Kg     = totalDays * 1.04;
+            double airLiters = breaths * 0.5;
+
+            // CO2 mass: metric = kg, imperial = lbs (1 kg = 2.20462 lbs)
+            double co2Display   = useMetric ? co2Kg : co2Kg * 2.20462;
+            string co2Unit      = useMetric ? AppResources.Ticker_YourBreathMetric_Kg
+                                            : AppResources.Ticker_YourBreathImperial_Lbs;
+            string co2Formatted = $"{co2Display:N2} {co2Unit}";
+
+            string briefText = AppResources.Ticker_YourBreathBrief
+                .Replace("{breath_count}", breaths.ToString("N0"))
+                .Replace("{co2_mass}",     co2Formatted);
+
+            string fullText = AppResources.Ticker_YourBreathFull
+                .Replace("{breath_count}", breaths.ToString("N0"))
+                .Replace("{air_volume}",   airLiters.ToString("N0"))
+                .Replace("{co2_mass}",     co2Formatted);
+
+            return new YourBreathResult
+            {
+                BreathCount = breaths,
+                AirLiters   = airLiters,
+                Co2Kg       = co2Kg,
+                UseMetric   = useMetric,
+                BriefText   = briefText,
+                FullText    = fullText
+            };
+        }
+
+        #endregion
+
         #region Cosmic Stretch
 
         /// <summary>
@@ -1158,7 +1255,7 @@ namespace Aeonpulse.Services
         [AIContext("LiveTicker")]
         public CosmicStretchResult CalculateCosmicStretch(DateTime baseDate, string baseDateValue, bool useMetric, DateTime? now = null)
         {
-            DateTime now_ = now ?? DateTime.UtcNow;
+            DateTime now_ = now ?? DateTime.Now;
             double totalSeconds = (now_ - baseDate).TotalSeconds;
             AeonLog.Debug(LogCat, nameof(CalculateCosmicStretch), $"baseDate={baseDate:d} totalSeconds={totalSeconds} useMetric={useMetric}");
 
@@ -1170,14 +1267,14 @@ namespace Aeonpulse.Services
             string distance;
             if (useMetric)
             {
-                long millionKm = (long)(kmExpanded / 1_000_000);
-                distance = $"{millionKm:N0} {AppResources.UnitMetric_MKm}";
+                long millionaireKm = (long)(kmExpanded / 1_000_000);
+                distance = $"{millionaireKm:N0} {AppResources.UnitMetric_MKm}";
             }
             else
             {
                 double miles = kmExpanded * 0.621371;
-                long millionMiles = (long)(miles / 1_000_000);
-                distance = $"{millionMiles:N0} {AppResources.UnitImperial_MMiles}";
+                long millionaireMiles = (long)(miles / 1_000_000);
+                distance = $"{millionaireMiles:N0} {AppResources.UnitImperial_MMiles}";
             }
 
             return new CosmicStretchResult

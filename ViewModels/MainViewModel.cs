@@ -259,6 +259,13 @@ namespace Aeonpulse.ViewModels
             set { _globalExhaleExpanded = value; OnPropertyChanged(); }
         }
 
+        private bool _yourBreathExpanded = false;
+        public bool YourBreathExpanded
+        {
+            get => _yourBreathExpanded;
+            set { _yourBreathExpanded = value; OnPropertyChanged(); }
+        }
+
         // Ticker Data
         private TimeJubileesResult _timeJubilees = new TimeJubileesResult();
         public TimeJubileesResult TimeJubilees
@@ -337,6 +344,13 @@ namespace Aeonpulse.ViewModels
             set { _globalExhale = value; OnPropertyChanged(); }
         }
 
+        private YourBreathResult _yourBreath = new YourBreathResult();
+        public YourBreathResult YourBreath
+        {
+            get => _yourBreath;
+            set { _yourBreath = value; OnPropertyChanged(); }
+        }
+
         private string _teaseText = "";
         public string TeaseText
         {
@@ -367,6 +381,7 @@ namespace Aeonpulse.ViewModels
         public ICommand ToggleBirthRuneCommand { get; }
         public ICommand TogglePersonalYearCommand { get; }
         public ICommand ToggleGlobalExhaleCommand { get; }
+        public ICommand ToggleYourBreathCommand { get; }
 
         // Card-level refresh commands
         public ICommand RefreshTimeJubileesCommand { get; }
@@ -423,6 +438,7 @@ namespace Aeonpulse.ViewModels
             ToggleBirthRuneCommand = new Command(() => BirthRuneExpanded = !BirthRuneExpanded);
             TogglePersonalYearCommand = new Command(() => PersonalYearExpanded = !PersonalYearExpanded);
             ToggleGlobalExhaleCommand = new Command(() => GlobalExhaleExpanded = !GlobalExhaleExpanded);
+            ToggleYourBreathCommand = new Command(() => YourBreathExpanded = !YourBreathExpanded);
 
             // Initialize card-level refresh commands
             RefreshTimeJubileesCommand = new Command(async () =>
@@ -484,6 +500,7 @@ namespace Aeonpulse.ViewModels
             GalacticCommute = _calculationService.CalculateGalacticCommute(BaseDate, BaseDateValue, UseMetric);
             PhotonPath   = _calculationService.CalculatePhotonPath(BaseDate, BaseDateValue, UseMetric);
             CosmicStretch = _calculationService.CalculateCosmicStretch(BaseDate, BaseDateValue, UseMetric);
+            YourBreath   = _calculationService.CalculateYourBreath(BaseDate, BaseDateValue, UseMetric);
 
             TeaseText = _calculationService.GetRandomTeaseText(
                 Countdown,

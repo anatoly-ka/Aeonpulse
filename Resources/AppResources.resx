@@ -1162,20 +1162,52 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePreXX_Brief" xml:space="preserve">
-    <value>Till 1900, &lt;b&gt;{amount}&lt;/b&gt; of CO2 emitted</value>
+    <value>Till 1900, &lt;b&gt;{amount}&lt;/b&gt; of CO₂ emitted</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePreXX_Full" xml:space="preserve">
-    <value>The moment when {baseDateName} is before the XX century - till 1900, humanity has released &lt;b&gt;{amount}&lt;/b&gt; of CO2 into the atmosphere. Still a tiny amount compared to later times.</value>
+    <value>The moment when {baseDateName} is before the XX century - till 1900, humanity has released &lt;b&gt;{amount}&lt;/b&gt; of CO₂ into the atmosphere. Still a tiny amount compared to later times.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePostXX_Brief" xml:space="preserve">
-    <value>&lt;b&gt;{amount}&lt;/b&gt; of CO2 emitted</value>
+    <value>&lt;b&gt;{amount}&lt;/b&gt; of CO₂ emitted</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePostXX_Full" xml:space="preserve">
-    <value>Since {baseDateName} on {baseDate:d}, humanity has released &lt;b&gt;{amount}&lt;/b&gt; of CO2 into the atmosphere. A massive global exhale.</value>
+    <value>Since {baseDateName} on {baseDate:d}, humanity has released &lt;b&gt;{amount}&lt;/b&gt; of CO₂ into the atmosphere. A massive global exhale.</value>
     <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_YourBreathTitle" xml:space="preserve">
+    <value>Your Breath</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_YourBreathBrief" xml:space="preserve">
+    <value>&lt;b&gt;{breath_count}&lt;/b&gt; breaths ⇨ &lt;b&gt;{co2_mass}&lt;/b&gt; CO₂</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_YourBreathFull" xml:space="preserve">
+    <value>You have taken approximately &lt;b&gt;{breath_count}&lt;/b&gt; breaths, processing &lt;b&gt;{air_volume}&lt;/b&gt; liters of air and exhaling &lt;b&gt;{co2_mass}&lt;/b&gt; of CO₂ into the biosphere.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_YourBreathMetric_Kg" xml:space="preserve">
+    <value>kg</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_YourBreathImperial_Lbs" xml:space="preserve">
+    <value>lbs</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_YourBreathTitle" xml:space="preserve">
+    <value>Your Breath</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_YourBreathMethod" xml:space="preserve">
+    <value>A human physical existence is connected to the global ecosystem - the numbers are illustrating the cumulative metabolic footprint of a single human life. The calculation assumes a constant average of 12-16 breaths per minute, a tidal volume of 0.5 liters of air per breath, and a daily CO₂ emission of 1.04 kg.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_YourBreathSource" xml:space="preserve">
+    <value>Calculation based on the data provided by the National Center for Biotechnology Information (NCBI) of the National Library of Medicine (NIH).</value>
+    <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_GlobalExhaleTitle" xml:space="preserve">
     <value>Global Exhale</value>
@@ -1206,7 +1238,7 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Tease_GlobalExhale" xml:space="preserve">
-    <value>Since {baseDateName}, humanity poisoned our planet with {globalExhale.Amount} of CO2! Find other data on AeonPulse.</value>
+    <value>Since {baseDateName}, humanity poisoned our planet with {globalExhale.Amount} of CO₂! Find other data on AeonPulse.</value>
     <comment>CalculationService.cs</comment>
   </data>
 	<data name="Info_ButtonClose" xml:space="preserve">

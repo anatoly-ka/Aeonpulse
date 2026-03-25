@@ -6,8 +6,9 @@ namespace Aeonpulse.Tests
     /// <summary>
     /// Unit tests for <see cref="CalculationService.CalculateLifeOdometer"/>.
     ///
-    /// Rates: 70 heartbeats/min, 16 breaths/min.
-    /// Formula: heartbeats = totalSeconds * 70 / 60, breaths = totalSeconds * 16 / 60.
+    /// Rates: 70 heartbeats/min, 14 breaths/min (NCBI midpoint of 12-16 resting range).
+    /// Formula: heartbeats = totalSeconds * 70 / 60, breaths = (totalSeconds / 60.0) * 14.0.
+    /// Both tickers (LifeOdometer and YourBreath) share the same rate via CalculateBreaths().
     /// </summary>
     public class CalculateLifeOdometerTests
     {
@@ -20,7 +21,7 @@ namespace Aeonpulse.Tests
         }
 
         [Fact]
-        public void ExactlyOneMinute_Returns70HeartbeatsAnd16Breaths()
+        public void ExactlyOneMinute_Returns70HeartbeatsAnd14Breaths()
         {
             var baseDate = new DateTime(2000, 1, 1, 0, 0, 0);
             var now      = baseDate.AddSeconds(60);
@@ -28,21 +29,21 @@ namespace Aeonpulse.Tests
             var result = _svc.CalculateLifeOdometer(baseDate, "Test", "2000-01-01", now);
 
             Assert.Contains("70",  result.BriefText);
-            Assert.Contains("16",  result.BriefText);
+            Assert.Contains("14",  result.BriefText);
             Assert.NotEmpty(result.FullText);
         }
 
         [Fact]
-        public void ExactlyOneHour_Returns4200HeartbeatsAnd960Breaths()
+        public void ExactlyOneHour_Returns4200HeartbeatsAnd840Breaths()
         {
             var baseDate = new DateTime(2000, 1, 1, 0, 0, 0);
             var now      = baseDate.AddSeconds(3600);
 
             var result = _svc.CalculateLifeOdometer(baseDate, "Test", "2000-01-01", now);
 
-            // 3600 * 70 / 60 = 4200; 3600 * 16 / 60 = 960
+            // 3600 * 70 / 60 = 4200; (3600 / 60.0) * 14 = 840
             Assert.Contains("4,200", result.BriefText);
-            Assert.Contains("960",   result.BriefText);
+            Assert.Contains("840",   result.BriefText);
         }
 
         [Fact]

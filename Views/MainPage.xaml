@@ -814,7 +814,7 @@
                 <!-- End Mirror Section -->
 
                 <!-- == ECO ECHOES SECTION =====================================
-                     Tickers: Global Exhale (static with explicit refresh)
+                     Tickers: Global Exhale (static with explicit refresh), Your Breath (LIVE)
                      Binding: MainViewModel.EcoExpanded -> ToggleEcoCommand
                 ================================================================ -->
                 <Border Style="{StaticResource CardFrame}">
@@ -891,6 +891,76 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding GlobalExhaleExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- == TICKER: YOUR BREATH ============================
+                                 LIVE ticker - updated every second by MainViewModel timer.
+                                 Binding: MainViewModel.YourBreath (YourBreathResult)
+                                 Commands: ToggleYourBreathCommand
+                                 Note: air volume is always litres; CO2 mass follows UseMetric.
+                            ======================================================== -->
+                            <Border BackgroundColor="{DynamicResource CardDark}"
+                                    StrokeThickness="1"
+                                    Stroke="{DynamicResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+
+                                    <!-- AI: Ticker card header - 3-column:
+                                         [Col0: lung emoji icon | Col1: title + LIVE badge | Col2: action buttons (info, expand)] -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1FAC1; (lungs) -->
+                                        <Label Grid.Column="0"
+                                               Text="🫁"
+                                               FontSize="{DynamicResource FontSizeTitle}"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <!-- AI: Title + LIVE badge side-by-side in a HorizontalStackLayout.
+                                             Badge visibility is static (always shown for live tickers). -->
+                                        <HorizontalStackLayout Grid.Column="1"
+                                                               Spacing="8"
+                                                               VerticalOptions="Center">
+                                            <!-- Binding: MainViewModel.Loc.Ticker_YourBreathTitle (live-localised) -->
+                                            <Label Text="{Binding Loc.Ticker_YourBreathTitle}"
+                                                   Style="{StaticResource BaseLabel}"
+                                                   TextColor="{DynamicResource CyberPurple}"
+                                                   FontAttributes="Bold"
+                                                   VerticalOptions="Center" />
+                                            <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised badge label) -->
+                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                                   TextColor="{DynamicResource NeonGreen}"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   FontAttributes="Bold"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <!-- Info: opens DeepDivePopup with methodology + sources -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnYourBreathInfoClicked" />
+                                            <!-- Expand/collapse: toggles YourBreathExpanded -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding YourBreathExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleYourBreathCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <!-- Binding: MainViewModel.YourBreath.BriefText - always visible -->
+                                    <Label Text="{Binding YourBreath.BriefText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                    <!-- Binding: MainViewModel.YourBreath.FullText - visible when expanded -->
+                                    <Label Text="{Binding YourBreath.FullText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding YourBreathExpanded}" />
+
                                 </VerticalStackLayout>
                             </Border>
 

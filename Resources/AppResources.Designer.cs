@@ -297,6 +297,33 @@ namespace Aeonpulse.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Demographic estimations based on historical global population models and UN data..
         /// </summary>
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your Breath.
+        /// </summary>
+        public static string Info_YourBreathTitle {
+            get {
+                return ResourceManager.GetString("Info_YourBreathTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to the methodology text for the Your Breath ticker.
+        /// </summary>
+        public static string Info_YourBreathMethod {
+            get {
+                return ResourceManager.GetString("Info_YourBreathMethod", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to the source citation for the Your Breath ticker.
+        /// </summary>
+        public static string Info_YourBreathSource {
+            get {
+                return ResourceManager.GetString("Info_YourBreathSource", resourceCulture);
+            }
+        }
         public static string Info_HumanBirthRankMethod {
             get {
                 return ResourceManager.GetString("Info_HumanBirthRankMethod", resourceCulture);
@@ -2889,6 +2916,51 @@ namespace Aeonpulse.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Human #&lt;b&gt;{estimatedRank:N0}&lt;/b&gt; on this date.
         /// </summary>
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your Breath.
+        /// </summary>
+        public static string Ticker_YourBreathTitle {
+            get {
+                return ResourceManager.GetString("Ticker_YourBreathTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to the brief text template for the Your Breath ticker.
+        /// </summary>
+        public static string Ticker_YourBreathBrief {
+            get {
+                return ResourceManager.GetString("Ticker_YourBreathBrief", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to the full text template for the Your Breath ticker.
+        /// </summary>
+        public static string Ticker_YourBreathFull {
+            get {
+                return ResourceManager.GetString("Ticker_YourBreathFull", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to kg.
+        /// </summary>
+        public static string Ticker_YourBreathMetric_Kg {
+            get {
+                return ResourceManager.GetString("Ticker_YourBreathMetric_Kg", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to lbs.
+        /// </summary>
+        public static string Ticker_YourBreathImperial_Lbs {
+            get {
+                return ResourceManager.GetString("Ticker_YourBreathImperial_Lbs", resourceCulture);
+            }
+        }
         public static string Ticker_HumanBirthRankPostXX_Brief {
             get {
                 return ResourceManager.GetString("Ticker_HumanBirthRankPostXX_Brief", resourceCulture);

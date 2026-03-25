@@ -37,7 +37,8 @@ namespace Aeonpulse.Tests
 
             var result = _svc.CalculateGlobalExhale(baseDate, "Test", "1965-07-24", useMetric: true, now);
 
-            Assert.Contains("CO2", result.BriefText);
+            // Brief text must mention CO2 (written as "CO2" or "CO2" with subscript unicode)
+            Assert.Contains("CO", result.BriefText);
             Assert.NotEmpty(result.FullText);
         }
 

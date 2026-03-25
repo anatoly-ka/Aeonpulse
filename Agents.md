@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-03-24
+> **Last updated:** 2026-03-25
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -218,6 +218,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | 9 | Birth Rune | Mirror | Static | No |
 | 10 | Personal Year | Mirror | Static | No |
 | 11 | Global Exhale | Eco Echoes | Static | Yes |
+| 12 | Your Breath | Eco Echoes | **LIVE** | No |
 
 ### User-Configurable Settings (persisted via `Preferences`)
 
@@ -284,8 +285,8 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `TickerData.cs` | Edit freely | `DataTransferObject` | Two-property DTO (`BriefText`, `FullText`) implementing `INotifyPropertyChanged`. All 11 typed result subclasses (see `TickerResults.cs`) inherit from this class. Live tickers mutate `BriefText`/`FullText` in-place every second via property setters so bindings update without replacing the object reference. |
-| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 11 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. |
+| `TickerData.cs` | Edit freely | `DataTransferObject` | Two-property DTO (`BriefText`, `FullText`) implementing `INotifyPropertyChanged`. All 12 typed result subclasses (see `TickerResults.cs`) inherit from this class. Live tickers mutate `BriefText`/`FullText` in-place every second via property setters so bindings update without replacing the object reference. |
+| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 12 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`, `YourBreathResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. |
 | `TickerCardModel.cs` | Edit freely | `DataTransferObject` | Structural metadata for a ticker card: `Title`, `IconGlyph`, `IsLive`, `IsExpanded`, `HasRefresh`. Not yet wired to a `CollectionView` - reserved for a future refactor that replaces individually-templated XAML blocks. |
 | `SubsectionState.cs` | Edit freely | - | Snapshot of a collapsible section: `Title` (used as key) and `IsExpanded`. Defined but not yet actively used for persistence - available for future state-save/restore logic. |
 
@@ -306,7 +307,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 11 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, etc. - see `TickerResults.cs`); 4 section `bool XxxExpanded` properties; 11 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `UpdateStaticCalculations()` recalculates 6 tickers; `UpdateLiveCalculations()` recalculates 5 tickers + `TeaseText`. |
+| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 12 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, etc. - see `TickerResults.cs`); 4 section `bool XxxExpanded` properties; 12 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `UpdateStaticCalculations()` recalculates 6 tickers; `UpdateLiveCalculations()` recalculates 6 tickers + `TeaseText`. |
 | `LocalizedResources.cs` | Edit freely | - | Singleton (`Instance`). A thin passthrough wrapper: every property is `=> AppResources.SomeKey`. Bound in XAML as `{Binding Loc.PropertyName}`. `Invalidate()` fires `PropertyChanged(string.Empty)` which causes every bound property to re-read from `AppResources` with the newly-set culture. When adding a new localised string: add the `AppResources` key, then add the passthrough property here. |
 
 ---
@@ -476,6 +477,7 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 | `CalculateGlobalExhaleTests.cs` | Edit freely | Tests for the CO2 polynomial model including metric/imperial toggle and range comparison. |
 | `CalculateTimeJubileesTests.cs` | Edit freely | Tests for jubilee selection across all seven time units including the overflow guard for very old dates. |
 | `TickerDataTests.cs` | Edit freely | Tests for TickerData INotifyPropertyChanged behaviour (BriefText and FullText fire PropertyChanged; repeated sets; same-value re-sets; default empty strings) and correct round-trip population of the raw init fields on all 11 typed result subclasses. No MAUI dependency - runs in the plain net9.0 test project. |
+| `CalculateYourBreathTests.cs` | Edit freely | Tests for `CalculateYourBreath` with injected `now`. Covers breath count formula (14 breaths/min), air volume formula (0.5 L/breath), CO2 formula (1.04 kg/day), metric/imperial CO2 toggle, air volume always in litres regardless of unit system, zero elapsed time, very old dates, proportional growth, and `UseMetric` field round-trip. 16 tests total. |
 | `CalculateCosmicStretchTests.cs` | Edit freely | Tests for `CalculateCosmicStretch` with injected `now`. Covers correct km expansion formula (elapsed seconds * 3,300,000), metric billion-km formatting, imperial billion-miles formatting, zero elapsed time, very old dates, and unit-system independence of `KmExpanded`. |
 | `TypedResultFieldTests.cs` | Edit freely | Tests that each CalculationService method correctly populates the raw numeric fields of its typed result subclass - not covered by the existing string-assertion tests. Uses injected now for deterministic results. Covers CountdownResult decomposition, LifeOdometerResult formulas, AlienAnniversariesResult planet-year formulas, GalacticCommuteResult km calculation, PhotonPathResult phase and speed-of-light check, HumanBirthRankResult rank ordering, PersonalYearResult range, GlobalExhaleResult flags, TimeJubileesResult coherence. |
 | `README.md` | Edit freely | High-level project README. Human-facing. Contains a project structure overview and migration notes from the original React implementation. |
@@ -495,7 +497,7 @@ Every pattern is implemented by hand.
 | **View** | `*.xaml` + `*.xaml.cs` | Declare UI structure; bind to ViewModel properties and commands; handle navigation gestures only |
 | **ViewModel** | `MainViewModel` | Own all application state; expose `ICommand` instances; fire `PropertyChanged`; coordinate the timer |
 | **Service** | `CalculationService`, `ThemeService`, `FontSizeService` | Stateless domain logic; no UI references; no `INotifyPropertyChanged` |
-| **Model** | `TickerData` (base), `TickerResults` (11 typed subclasses), `TickerCardModel`, `SubsectionState` | `TickerData` is the INPC base; typed subclasses add raw computed fields per ticker |
+| **Model** | `TickerData` (base), `TickerResults` (12 typed subclasses), `TickerCardModel`, `SubsectionState` | `TickerData` is the INPC base; typed subclasses add raw computed fields per ticker |
 
 #### INotifyPropertyChanged pattern used throughout
 
@@ -631,6 +633,7 @@ TIMER (every 1 second, thread-pool thread)
                     --> CalculateGalacticCommute() --> GalacticCommute.BriefText/FullText
                     --> CalculatePhotonPath()      --> PhotonPath.BriefText/FullText
                     --> CalculateCosmicStretch()    --> CosmicStretch.BriefText/FullText
+                    --> CalculateYourBreath()       --> YourBreath.BriefText/FullText
                     --> GetRandomTeaseText()       --> TeaseText
                             each setter fires PropertyChanged
                                 --> {Binding Xxx.BriefText} Labels repaint
@@ -1030,6 +1033,7 @@ a map to navigate without reading every XAML file.
 | `Views/MainPage.xaml` | 143 | Section header `Grid` - 2-column `[title|chevron]`, `BoolToImageSource` binding |
 | `Views/MainPage.xaml` | 161 | Section body `VerticalStackLayout` - `IsVisible` binding, contained tickers |
 | `Views/MainPage.xaml` | 179 | Ticker card header `Grid` - 3-column `[emoji|title|action buttons]` |
+| `Views/MainPage.xaml` | 910 | Your Breath ticker card header `Grid` - 3-column `[lung emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.YourBreath` (live-updated every second). |
 | `Views/MainPage.xaml` | 243 | Title + LIVE badge `HorizontalStackLayout` - side-by-side layout reason |
 | `Views/SettingsPopup.xaml` | 9 | Full-screen overlay `Grid` - Layer 0/1 z-order explanation |
 | `Views/SettingsPopup.xaml` | 25 | `Frame` panel - floats over backdrop, `DynamicResource` theme note |
@@ -1407,7 +1411,7 @@ AIContext:   (none - state orchestrator)
 
 **Responsibilities:**
 - The **central application state hub**. Every bound value in the UI originates here.
-- Owns all 11 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, etc.), each a subclass of `TickerData` carrying both the display strings and raw computed values.
+- Owns all 12 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, etc.), each a subclass of `TickerData` carrying both the display strings and raw computed values.
 - Owns 4 section expansion bools (`LabExpanded` etc.) and 11 card expansion bools (`TimeJubileesExpanded` etc.).
 - Owns user settings properties: `UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`.
 - Each settings setter immediately applies the change (`ThemeService`, `FontSizeService`, `ApplyLanguage`) **and** persists it via `Preferences`.
@@ -1419,7 +1423,7 @@ AIContext:   (none - state orchestrator)
 - `Loc { get; } = LocalizedResources.Instance` - exposes the localisation singleton so XAML binds as `{Binding Loc.Xxx}`.
 
 **Owns:**
-- All 11 typed ticker result instances (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, etc. - all subclasses of `TickerData`)
+- All 12 typed ticker result instances (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, etc. - all subclasses of `TickerData`)
 - All section/card `bool` expanded states (15 total)
 - All user settings state
 - The 1-second live-update timer
@@ -1481,6 +1485,7 @@ AIContext:   CoreCalculationEngine
 | `CalculateBirthRune` | `CoreCalculation` | Static | `baseDateValue` |
 | `CalculatePersonalYear` | `CoreCalculation` | Static | `baseDateValue` |
 | `CalculateGlobalExhale` | `CoreCalculation`, `ExternalDataModel` | Static | `baseDateName`, `baseDateValue`, `useMetric` |
+| `CalculateYourBreath` | `LiveTicker` | LIVE (1s) | `baseDateValue`, `useMetric` |
 | `GetRandomTeaseText` | `UIPresentation` | LIVE (1s) | `CountdownResult`, `LifeOdometerResult`, `GalacticCommuteResult`, `GlobalExhaleResult`, `baseDateName`, `baseDate` (`DateTime`, formatted with `"d"` inside) - returns 1 of 5 random tease strings |
 
 **Owns:**
@@ -1839,12 +1844,13 @@ directly so no TFM-incompatibility issues arise. Run all tests with:
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
 ```
 
-**What can be tested without a device (143 tests in 9 test classes):**
+**What can be tested without a device (159 tests in 10 test classes):**
 - `FindNearestJubilee()` / `ReduceToSingleDigit()` (pure algorithms, `internal` + `InternalsVisibleTo`)
 - `CalculateTimeJubilees`, `CalculateCountdown`, `CalculateLifeOdometer`
 - `CalculateAlienAnniversaries`, `CalculateHumanBirthRank`
 - `CalculatePersonalYear`, `CalculateGlobalExhale`
 - `CalculateCosmicStretch` (Hubble-Lemaitre expansion rate, injected `now`)
+- `CalculateYourBreath` (breath/air/CO2 formulas, metric/imperial toggle, injected `now`)
 - All `Calculate*` methods accept `DateTime? now = null` - pass a fixed value to make tests deterministic
 
 **What requires a device or simulator:**
@@ -3887,10 +3893,10 @@ they describe what the code already does and must continue to do.
   that are not re-read after a language change. `CalculationService` reads
   `AppResources` at call time on every invocation specifically to avoid this.
 
-- **Do not edit `AppResources.resx` or `AppResources.ru.resx` in one pass using
-  the `edit_file` tool.** These files are too large for the tool (each exceeds
-  60 KB) and a single-pass edit will silently truncate content or corrupt XML
-  structure. Use targeted terminal writes instead: one
+- **Do not edit `AppResources.resx` or `AppResources.ru.resx` or AppResources.Designer.cs
+  in one pass using  the `edit_file` tool.** These files are too large for the
+  tool (each exceeds 60 KB) and a single-pass edit will silently truncate
+  content or corrupt file structure. Use targeted terminal writes instead: one
   `[System.IO.File]::ReadAllText` / `Replace` / `WriteAllText` call per logical
   change, saving after each replacement so that a mid-sequence failure leaves the
   file in a consistent partial state rather than destroying it.

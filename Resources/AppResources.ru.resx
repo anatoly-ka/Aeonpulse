@@ -1162,20 +1162,52 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePreXX_Brief" xml:space="preserve">
-    <value>До 1900 года было выброшено &lt;b&gt;{amount}&lt;/b&gt; CO2</value>
+    <value>До 1900 года было выброшено &lt;b&gt;{amount}&lt;/b&gt; CO₂</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePreXX_Full" xml:space="preserve">
-    <value>Дата "{baseDateName}" до XX века. За весь период до 1900 года человечество произвело выброс в атмосферу &lt;b&gt;{amount}&lt;/b&gt; CO2. Это всё ещё ничтожно мало по сравнению с более поздними периодами.</value>
+    <value>Дата "{baseDateName}" до XX века. За весь период до 1900 года человечество произвело выброс в атмосферу &lt;b&gt;{amount}&lt;/b&gt; CO₂. Это всё ещё ничтожно мало по сравнению с более поздними периодами.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePostXX_Brief" xml:space="preserve">
-    <value>&lt;b&gt;{amount}&lt;/b&gt; выброшенного CO2</value>
+    <value>&lt;b&gt;{amount}&lt;/b&gt; выброшенного CO₂</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePostXX_Full" xml:space="preserve">
-    <value>Начиная с даты "{baseDateName}" {baseDate:d}, человечество произвело выброс в атмосферу &lt;b&gt;{amount}&lt;/b&gt; CO2. Это невероятно масштабный глобальный выброс углекислого газа.</value>
+    <value>Начиная с даты "{baseDateName}" {baseDate:d}, человечество произвело выброс в атмосферу &lt;b&gt;{amount}&lt;/b&gt; CO₂. Это невероятно масштабный глобальный выброс углекислого газа.</value>
     <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_YourBreathTitle" xml:space="preserve">
+    <value>Ваше дыхание</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_YourBreathBrief" xml:space="preserve">
+    <value>&lt;b&gt;{breath_count}&lt;/b&gt; вдохов ⇨ &lt;b&gt;{co2_mass}&lt;/b&gt; CO₂</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_YourBreathFull" xml:space="preserve">
+    <value>Вы сделали около &lt;b&gt;{breath_count}&lt;/b&gt; вдохов, переработав &lt;b&gt;{air_volume}&lt;/b&gt; литров воздуха и выдохнув &lt;b&gt;{co2_mass}&lt;/b&gt; CO₂ в биосферу.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_YourBreathMetric_Kg" xml:space="preserve">
+    <value>кг</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_YourBreathImperial_Lbs" xml:space="preserve">
+    <value>фунтов</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_YourBreathTitle" xml:space="preserve">
+    <value>Ваше дыхание</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_YourBreathMethod" xml:space="preserve">
+    <value>Физическое существование человека непосредственно связано с глобальной экосистемой - эти цифры иллюстрируют совокупный метаболический след одного человека. Расчёт предполагает постоянное среднее значение 12-16 вдохов в минуту, дыхательный объём 0,5 литра воздуха за вдох и суточное выделение CO₂ в размере 1,04 кг.</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_YourBreathSource" xml:space="preserve">
+    <value>Расчеты основаны на данных, предоставленных National Center for Biotechnology Information (NCBI) от National Library of Medicine (NIH).</value>
+    <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_GlobalExhaleTitle" xml:space="preserve">
     <value>Дыхание мира</value>
@@ -1206,7 +1238,7 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Tease_GlobalExhale" xml:space="preserve">
-    <value>Начиная с даты "{baseDateName}" человечество отравило нашу планету {globalExhale.Amount} CO2. Узнайте другие данные на AeonPulse.</value>
+    <value>Начиная с даты "{baseDateName}" человечество отравило нашу планету {globalExhale.Amount} CO₂. Узнайте другие данные на AeonPulse.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_ButtonClose" xml:space="preserve">

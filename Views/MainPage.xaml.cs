@@ -46,6 +46,7 @@ namespace Aeonpulse.Views
         private bool _isBirthRuneDeepDiveOpen;
         private bool _isPersonalYearDeepDiveOpen;
         private bool _isGlobalExhaleDeepDiveOpen;
+        private bool _isYourBreathDeepDiveOpen;
 
         /// <summary>
         /// Constructs the page and subscribes to the ViewModel's
@@ -308,5 +309,13 @@ namespace Aeonpulse.Views
                 AppResources.Info_GlobalExhaleTitle,
                 AppResources.Info_MethodTitle, AppResources.Info_GlobalExhaleMethod,
                 AppResources.Info_SourceTitle, AppResources.Info_GlobalExhaleSource);
+
+        /// <summary>Opens the Your Breath deep-dive info panel.</summary>
+        private async void OnYourBreathInfoClicked(object sender, EventArgs e) =>
+            await OpenDeepDiveAsync(
+                () => _isYourBreathDeepDiveOpen, v => _isYourBreathDeepDiveOpen = v,
+                AppResources.Info_YourBreathTitle,
+                AppResources.Info_MethodTitle, AppResources.Info_YourBreathMethod,
+                AppResources.Info_SourceTitle, AppResources.Info_YourBreathSource);
     }
 }

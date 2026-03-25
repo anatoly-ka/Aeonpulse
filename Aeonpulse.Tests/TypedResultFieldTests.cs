@@ -110,8 +110,8 @@ namespace Aeonpulse.Tests
 
             var result = _svc.CalculateLifeOdometer(baseDate, "T", "2000-01-01", now);
 
-            // 3600 s * 16 breaths/min / 60 s/min = 960
-            Assert.Equal(960L, result.Breaths);
+            // (3600 / 60.0) * 14 = 840
+            Assert.Equal(840L, result.Breaths);
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace Aeonpulse.Tests
         }
 
         [Fact]
-        public void CalculateLifeOdometer_ExactlyOneMinute_Returns70HeartbeatsAnd16Breaths()
+        public void CalculateLifeOdometer_ExactlyOneMinute_Returns70HeartbeatsAnd14Breaths()
         {
             var baseDate = new DateTime(2000, 1, 1, 0, 0, 0);
             var now      = baseDate.AddSeconds(60);
@@ -134,7 +134,7 @@ namespace Aeonpulse.Tests
             var result = _svc.CalculateLifeOdometer(baseDate, "T", "2000-01-01", now);
 
             Assert.Equal(70L, result.Heartbeats);
-            Assert.Equal(16L, result.Breaths);
+            Assert.Equal(14L, result.Breaths);
         }
 
         // ---------------------------------------------------------------
