@@ -41,6 +41,7 @@ namespace Aeonpulse.ViewModels
         public string Ticker_YourBreathTitle           => AppResources.Ticker_YourBreathTitle;
         public string Ticker_CellularRefreshTitle      => AppResources.Ticker_CellularRefreshTitle;
         public string Ticker_VibrantCosmosTitle        => AppResources.Ticker_VibrantCosmosTitle;
+        public string Ticker_GlobalCrowdTitle          => AppResources.Ticker_GlobalCrowdTitle;
 
         // -- Settings --------------------------------------------------------
         public string Settings_Title                   => AppResources.Settings_Title;
@@ -129,6 +130,9 @@ namespace Aeonpulse.ViewModels
         public string Info_VibrantCosmosTitle          => AppResources.Info_VibrantCosmosTitle;
         public string Info_VibrantCosmosMethod         => AppResources.Info_VibrantCosmosMethod;
         public string Info_VibrantCosmosSource         => AppResources.Info_VibrantCosmosSource;
+        public string Info_GlobalCrowdTitle            => AppResources.Info_GlobalCrowdTitle;
+        public string Info_GlobalCrowdMethod           => AppResources.Info_GlobalCrowdMethod;
+        public string Info_GlobalCrowdSource           => AppResources.Info_GlobalCrowdSource;
 
         // -- Tease ------------------------------------------------------------
         public string Tease_Title          => AppResources.Tease_Title;

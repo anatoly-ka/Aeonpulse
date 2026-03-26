@@ -1661,4 +1661,28 @@
     <value>Achernar</value>
     <comment>CalculationService.cs</comment>
   </data>
+
+  <data name="Ticker_GlobalCrowdTitle" xml:space="preserve">
+    <value>Global Crowd</value>
+  </data>
+
+  <data name="Ticker_GlobalCrowdBrief" xml:space="preserve">
+    <value>&lt;b&gt;{base_population}&lt;/b&gt; ⇨ &lt;b&gt;{current_population}&lt;/b&gt;</value>
+  </data>
+
+  <data name="Ticker_GlobalCrowdFull" xml:space="preserve">
+    <value>When this timeline began on {baseDate:d}, the Earth was shared by approximately &lt;b&gt;{base_population}&lt;/b&gt; people. Today, you are part of a global crowd of &lt;b&gt;{current_population}&lt;/b&gt; humans.</value>
+  </data>
+
+  <data name="Info_GlobalCrowdTitle" xml:space="preserve">
+    <value>Global Crowd</value>
+  </data>
+
+  <data name="Info_GlobalCrowdMethod" xml:space="preserve">
+    <value>This ticker reflects the scale of humanity's expansion since the base date. As a pure-computational model, it uses historical demographic data and an average net global growth rate (births minus deaths, roughly 2.35 humans per second) to extrapolate both historical and current population figures.</value>
+  </data>
+
+  <data name="Info_GlobalCrowdSource" xml:space="preserve">
+    <value>World population statistics and projections courtesy of the United Nations, Department of Economic and Social Affairs, Population Division (2024 Revision). Historical estimates by Human Mortality Database (2025 revision) and the Population Reference Bureau (2024).</value>
+  </data>
 </root>

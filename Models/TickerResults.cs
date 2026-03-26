@@ -308,4 +308,20 @@ namespace Aeonpulse.Models
         /// <summary>Total supernovas since the base date (30 per second).</summary>
         public double Supernovas { get; init; }
     }
+
+    /// <summary>
+    /// Typed result for <c>CalculationService.CalculateGlobalCrowd</c>.
+    /// Carries the estimated human population at the base date and at the
+    /// current moment so callers can use the numeric values directly without
+    /// parsing the formatted display strings.
+    /// </summary>
+    [AIContext("DataTransferObject")]
+    public class GlobalCrowdResult : TickerData
+    {
+        /// <summary>Estimated global population at the user's base date.</summary>
+        public double BasePopulation { get; init; }
+
+        /// <summary>Estimated current global population at calculation time.</summary>
+        public double CurrentPopulation { get; init; }
+    }
 }

@@ -1414,6 +1414,149 @@ namespace Aeonpulse.Services
 
         #endregion
 
+        #region Global Crowd
+
+        /// <summary>
+        /// Estimates the global human population at <paramref name="baseDate"/> and at the
+        /// current moment using a piecewise linear demographic model, then returns the
+        /// comparison as a live-updating ticker.
+        ///
+        /// <para>
+        /// <b>Algorithm:</b> three linear segments calibrated to UN demographic estimates:
+        /// <list type="bullet">
+        ///   <item><description>Before 1900: anchored at 978,000,000 on 1800-01-01, growing 18,398/day.</description></item>
+        ///   <item><description>1900-1950: anchored at 1,650,000,000 on 1900-01-01, growing 47,919/day.</description></item>
+        ///   <item><description>1950 onward: anchored at 2,525,149,000 on 1950-01-01, growing 203,206/day (approx 2.35/s net).</description></item>
+        /// </list>
+        /// All epoch anchors use UTC midnight to prevent local timezone shifts from
+        /// causing visible population jumps at midnight.
+        /// </para>
+        /// <para>
+        /// <b>Live ticker:</b> called every second by the VM timer. The 1950-onward
+        /// segment adds ~2.35 people per second, producing a visibly incrementing count.
+        /// </para>
+        /// <para>
+        /// <b>Side effect:</b> reads <see cref="AppResources"/> for output strings so
+        /// the result language follows <c>AppResources.Culture</c>.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The user-selected origin date (e.g., birthday).</param>
+        /// <param name="baseDateValue">ISO-8601 string of the base date for output formatting in the full text.</param>
+        /// <param name="now">Optional override for current time; used by unit tests for determinism.</param>
+        /// <returns>
+        /// A <see cref="GlobalCrowdResult"/> with formatted population counts at the base
+        /// date and at the current moment.
+        /// </returns>
+        [AIContext("LiveTicker")]
+        public GlobalCrowdResult CalculateGlobalCrowd(DateTime baseDate, string baseDateValue, DateTime? now = null)
+        {
+            DateTime now_ = now ?? DateTime.UtcNow;
+            AeonLog.Debug(LogCat, nameof(CalculateGlobalCrowd), $"baseDate={baseDate:d}");
+
+            double currentPopulation = GetPopulationByDate(now_);
+            double basePopulation    = GetPopulationByDate(baseDate.ToUniversalTime());
+
+            string baseFormatted    = basePopulation    < 0 ? "0" : ((long)basePopulation).ToString("N0");
+            string currentFormatted = currentPopulation < 0 ? "0" : ((long)currentPopulation).ToString("N0");
+
+            string briefText = AppResources.Ticker_GlobalCrowdBrief
+                .Replace("{base_population}",    baseFormatted)
+                .Replace("{current_population}", currentFormatted);
+
+            string fullText = AppResources.Ticker_GlobalCrowdFull
+                .Replace("{baseDate:d}",         baseDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture))
+                .Replace("{base_population}",    baseFormatted)
+                .Replace("{current_population}", currentFormatted);
+
+            return new GlobalCrowdResult
+            {
+                BasePopulation    = basePopulation,
+                CurrentPopulation = currentPopulation,
+                BriefText         = briefText,
+                FullText          = fullText
+            };
+        }
+
+        /// <summary>
+        /// Returns the estimated global human population on <paramref name="date"/> using a
+        /// piecewise linear model anchored to three UN demographic reference points.
+        ///
+        /// <para>
+        /// <b>Segments:</b>
+        /// <list type="bullet">
+        ///   <item><description>Before 1900-01-01 UTC: base 978,000,000 at 1800-01-01, rate 18,398/day.</description></item>
+        ///   <item><description>1900-01-01 to 1950-01-01 UTC: base 1,650,000,000 at 1900-01-01, rate 47,919/day.</description></item>
+        ///   <item><description>1950-01-01 onward UTC: base 2,525,149,000 at 1950-01-01, rate 203,206/day (~2.35/s).</description></item>
+        /// </list>
+        /// </para>
+        /// <para>
+        /// All epoch anchors use UTC midnight to prevent local timezone shifts from
+        /// causing population jumps at midnight.
+        /// </para>
+        /// </summary>
+        /// <param name="date">The date for which to estimate the global population.</param>
+        /// <returns>Estimated population as a non-negative double.</returns>
+        private double GetPopulationByDate(DateTime date)
+        {
+            /* Data from "Estimates of historical world population" Wikipedia
+               (https://en.wikipedia.org/wiki/Estimates_of_historical_world_population)
+               derived from Department of Economic and Social Affairs of the United
+               Nations (https://social.desa.un.org/, https://www.un.org/en/desa).
+
+               Year | Population
+                  1 | 300000000
+               1000 | 310000000
+               1250 | 400000000
+               1500 | 500000000
+               1750 | 791000000
+               1800 | 978000000
+               1850 | 1262000000
+               1900 | 1650000000
+               1910 | 1750000000
+               1920 | 1860000000
+               1930 | 2070000000
+               1940 | 2300000000
+               1950 | 2525149000
+               1951 | 2572850917
+               1952 | 2619292068
+                ...
+               2013 | 7162119434
+               2014 | 7243784000
+               2015 | 7349472000
+            */
+
+            // Use UTC to prevent local timezone shifts from causing population jumps
+            DateTime epoch1800 = new DateTime(1800, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            DateTime epoch1900 = new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            DateTime epoch1950 = new DateTime(1950, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            double population = 0;
+
+            // We'll use 3 different linear approximations for the periods before 1900, between 1900 and 1950, and after 1950,
+            // since the growth rate of population has changed significantly in these periods.
+            // The estimates won't be perfect, but they should give a reasonable approximation of the population for these dates.
+            if (date < epoch1900)
+            {
+                double days = (date - epoch1800).TotalDays;
+                population = days * 18398.0 + 978000000.0;
+            }
+            else if (date < epoch1950)
+            {
+                double days = (date - epoch1900).TotalDays;
+                population = days * 47919.0 + 1650000000.0;
+            }
+            else
+            {
+                double days = (date - epoch1950).TotalDays;
+                population = days * 203206.0 + 2525149000.0;
+            }
+
+            // Ensure we don't return negative populations for extreme edge cases
+            return Math.Max(0, population);
+        }
+
+        #endregion
+
         #region Tease Text
 
         /// <summary>

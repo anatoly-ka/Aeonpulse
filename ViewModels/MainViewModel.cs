@@ -281,6 +281,13 @@ namespace Aeonpulse.ViewModels
             set { _vibrantCosmosExpanded = value; OnPropertyChanged(); }
         }
 
+        private bool _globalCrowdExpanded = false;
+        public bool GlobalCrowdExpanded
+        {
+            get => _globalCrowdExpanded;
+            set { _globalCrowdExpanded = value; OnPropertyChanged(); }
+        }
+
         // Ticker Data
         private TimeJubileesResult _timeJubilees = new TimeJubileesResult();
         public TimeJubileesResult TimeJubilees
@@ -380,6 +387,13 @@ namespace Aeonpulse.ViewModels
             set { _vibrantCosmos = value; OnPropertyChanged(); }
         }
 
+        private GlobalCrowdResult _globalCrowd = new GlobalCrowdResult();
+        public GlobalCrowdResult GlobalCrowd
+        {
+            get => _globalCrowd;
+            set { _globalCrowd = value; OnPropertyChanged(); }
+        }
+
         private string _teaseText = "";
         public string TeaseText
         {
@@ -413,6 +427,7 @@ namespace Aeonpulse.ViewModels
         public ICommand ToggleYourBreathCommand { get; }
         public ICommand ToggleCellularRefreshCommand { get; }
         public ICommand ToggleVibrantCosmosCommand { get; }
+        public ICommand ToggleGlobalCrowdCommand { get; }
 
         // Card-level refresh commands
         public ICommand RefreshTimeJubileesCommand { get; }
@@ -473,6 +488,7 @@ namespace Aeonpulse.ViewModels
             ToggleYourBreathCommand = new Command(() => YourBreathExpanded = !YourBreathExpanded);
             ToggleCellularRefreshCommand = new Command(() => CellularRefreshExpanded = !CellularRefreshExpanded);
             ToggleVibrantCosmosCommand = new Command(() => VibrantCosmosExpanded = !VibrantCosmosExpanded);
+            ToggleGlobalCrowdCommand = new Command(() => GlobalCrowdExpanded = !GlobalCrowdExpanded);
 
             // Initialize card-level refresh commands
             RefreshTimeJubileesCommand = new Command(async () =>
@@ -551,6 +567,7 @@ namespace Aeonpulse.ViewModels
             PhotonPath   = _calculationService.CalculatePhotonPath(BaseDate, BaseDateValue, UseMetric);
             CosmicStretch = _calculationService.CalculateCosmicStretch(BaseDate, BaseDateValue, UseMetric);
             YourBreath   = _calculationService.CalculateYourBreath(BaseDate, BaseDateValue, UseMetric);
+            GlobalCrowd  = _calculationService.CalculateGlobalCrowd(BaseDate, BaseDateValue);
 
             TeaseText = _calculationService.GetRandomTeaseText(
                 Countdown,

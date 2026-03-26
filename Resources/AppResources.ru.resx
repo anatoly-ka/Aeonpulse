@@ -1661,4 +1661,28 @@
     <value>Ахернар</value>
     <comment>CalculationService.cs</comment>
   </data>
+
+  <data name="Ticker_GlobalCrowdTitle" xml:space="preserve">
+    <value>Население планеты</value>
+  </data>
+
+  <data name="Ticker_GlobalCrowdBrief" xml:space="preserve">
+    <value>&lt;b&gt;{base_population}&lt;/b&gt; ⇨ &lt;b&gt;{current_population}&lt;/b&gt;</value>
+  </data>
+
+  <data name="Ticker_GlobalCrowdFull" xml:space="preserve">
+    <value>На момент  {baseDate:d}, Землю населяло приблизительно &lt;b&gt;{base_population}&lt;/b&gt; человек. Сегодня вы часть мирового сообщества из &lt;b&gt;{current_population}&lt;/b&gt; людей.</value>
+  </data>
+
+  <data name="Info_GlobalCrowdTitle" xml:space="preserve">
+    <value>Население планеты</value>
+  </data>
+
+  <data name="Info_GlobalCrowdMethod" xml:space="preserve">
+    <value>Этот счётчик отражает масштаб прироста человечества за прошедшее время. Используется вычислительная модель на основе исторических демографических данных и среднего чистого глобального прироста населения (около 2,35 человека в секунду).</value>
+  </data>
+
+  <data name="Info_GlobalCrowdSource" xml:space="preserve">
+    <value>Мировые статистические данные и прогнозы численности населения взяты из Population Division (2024 Revision), предоставленном Департаментом по экономическим и социальным вопросам ООН. Исторические оценки взяты из баз данных Human Mortality Database (2025 revision) и Population Reference Bureau (2024).</value>
+  </data>
 </root>
