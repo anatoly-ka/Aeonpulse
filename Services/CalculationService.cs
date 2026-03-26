@@ -1358,6 +1358,62 @@ namespace Aeonpulse.Services
 
         #endregion
 
+        #region Vibrant Cosmos
+
+        /// <summary>
+        /// Calculates a continuously updating estimation of how many stars were born
+        /// and supernovas appeared in the observable universe since the user's base date.
+        ///
+        /// <para>
+        /// <b>Algorithm:</b> based on standard astronomical estimates:
+        /// 4,800 stars are born per second and 30 supernovas occur per second in the
+        /// observable universe. Elapsed seconds since the base date are multiplied by
+        /// each rate. Both values are formatted with N0 for readability on mobile screens.
+        /// </para>
+        /// <para>
+        /// <b>Live ticker:</b> called every 200 ms by the VM's dedicated Vibrant Cosmos
+        /// timer to produce a non-uniform, natural rhythmic pulse in the display.
+        /// </para>
+        /// <para>
+        /// <b>Side effect:</b> reads <see cref="AppResources"/> for output strings so
+        /// the result language follows <c>AppResources.Culture</c>.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The origin date from which cosmic activity is measured.</param>
+        /// <param name="now">Optional override for the current time; used by unit tests for determinism.</param>
+        /// <returns>A <see cref="VibrantCosmosResult"/> with formatted star and supernova counts.</returns>
+        [AIContext("LiveTicker")]
+        public VibrantCosmosResult CalculateVibrantCosmos(DateTime baseDate, DateTime? now = null)
+        {
+            DateTime now_ = now ?? DateTime.Now;
+            double totalSeconds = (now_ - baseDate).TotalSeconds;
+            AeonLog.Debug(LogCat, nameof(CalculateVibrantCosmos), $"baseDate={baseDate:d} totalSeconds={totalSeconds}");
+
+            double starsBorn  = totalSeconds * 4800.0;
+            double supernovas = totalSeconds * 30.0;
+
+            string starsBornFormatted  = starsBorn < 0  ? "0" : ((long)starsBorn).ToString("N0");
+            string supernovasFormatted = supernovas < 0 ? "0" : ((long)supernovas).ToString("N0");
+
+            string briefText = AppResources.Ticker_VibrantCosmosBrief
+                .Replace("{stars_born}", starsBornFormatted)
+                .Replace("{supernovas}", supernovasFormatted);
+
+            string fullText = AppResources.Ticker_VibrantCosmosFull
+                .Replace("{stars_born}", starsBornFormatted)
+                .Replace("{supernovas}", supernovasFormatted);
+
+            return new VibrantCosmosResult
+            {
+                StarsBorn  = starsBorn,
+                Supernovas = supernovas,
+                BriefText  = briefText,
+                FullText   = fullText
+            };
+        }
+
+        #endregion
+
         #region Tease Text
 
         /// <summary>

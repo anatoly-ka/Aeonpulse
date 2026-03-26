@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-03-25
+> **Last updated:** 2026-03-26
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -220,6 +220,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | 11 | Global Exhale | Eco Echoes | Static | Yes |
 | 12 | Your Breath | Eco Echoes | **LIVE** | No |
 | 13 | Cellular Refresh | Lab | Static | Yes |
+| 14 | Vibrant Cosmos | Cosmos | **LIVE** (200 ms) | No |
 
 ### User-Configurable Settings (persisted via `Preferences`)
 
@@ -286,8 +287,8 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `TickerData.cs` | Edit freely | `DataTransferObject` | Two-property DTO (`BriefText`, `FullText`) implementing `INotifyPropertyChanged`. All 12 typed result subclasses (see `TickerResults.cs`) inherit from this class. Live tickers mutate `BriefText`/`FullText` in-place every second via property setters so bindings update without replacing the object reference. |
-| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 12 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`, `YourBreathResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum and `CellularRefreshResult`. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. |
+| `TickerData.cs` | Edit freely | `DataTransferObject` | Two-property DTO (`BriefText`, `FullText`) implementing `INotifyPropertyChanged`. All 13 typed result subclasses (see `TickerResults.cs`) inherit from this class. Live tickers mutate `BriefText`/`FullText` in-place every second via property setters so bindings update without replacing the object reference. |
+| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 13 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`, `YourBreathResult`, `VibrantCosmosResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum and `CellularRefreshResult`. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. |
 | `TickerCardModel.cs` | Edit freely | `DataTransferObject` | Structural metadata for a ticker card: `Title`, `IconGlyph`, `IsLive`, `IsExpanded`, `HasRefresh`. Not yet wired to a `CollectionView` - reserved for a future refactor that replaces individually-templated XAML blocks. |
 | `SubsectionState.cs` | Edit freely | - | Snapshot of a collapsible section: `Title` (used as key) and `IsExpanded`. Defined but not yet actively used for persistence - available for future state-save/restore logic. |
 
@@ -308,7 +309,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 12 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, etc. - see `TickerResults.cs`); 4 section `bool XxxExpanded` properties; 12 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `UpdateStaticCalculations()` recalculates 6 tickers; `UpdateLiveCalculations()` recalculates 6 tickers + `TeaseText`. |
+| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 13 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, `VibrantCosmosResult`, etc. - see `TickerResults.cs`); 4 section `bool XxxExpanded` properties; 13 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `UpdateStaticCalculations()` recalculates 6 tickers; `UpdateLiveCalculations()` recalculates 6 tickers + `TeaseText`; `UpdateVibrantCosmos()` is called every 200 ms by a dedicated `_vibrantCosmosTimer`. |
 | `LocalizedResources.cs` | Edit freely | - | Singleton (`Instance`). A thin passthrough wrapper: every property is `=> AppResources.SomeKey`. Bound in XAML as `{Binding Loc.PropertyName}`. `Invalidate()` fires `PropertyChanged(string.Empty)` which causes every bound property to re-read from `AppResources` with the newly-set culture. When adding a new localised string: add the `AppResources` key, then add the passthrough property here. |
 
 ---
@@ -480,6 +481,7 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 | `TickerDataTests.cs` | Edit freely | Tests for TickerData INotifyPropertyChanged behaviour (BriefText and FullText fire PropertyChanged; repeated sets; same-value re-sets; default empty strings) and correct round-trip population of the raw init fields on all 11 typed result subclasses. No MAUI dependency - runs in the plain net9.0 test project. |
 | `CalculateYourBreathTests.cs` | Edit freely | Tests for `CalculateYourBreath` with injected `now`. Covers breath count formula (14 breaths/min), air volume formula (0.5 L/breath), CO2 formula (1.04 kg/day), metric/imperial CO2 toggle, air volume always in litres regardless of unit system, zero elapsed time, very old dates, proportional growth, and `UseMetric` field round-trip. 16 tests total. |
 | `CalculateCellularRefreshTests.cs` | Edit freely | Tests for `CalculateCellularRefresh` with injected `now`. Covers skin cycle formula (27-day period, N0 format), RBC formula (2,000,000/s displayed in billions N2), unit string in BriefText, zero elapsed time, very old dates, proportional growth, and raw field round-trip. 16 tests total. |
+| `CalculateVibrantCosmosTests.cs` | Edit freely | Tests for `CalculateVibrantCosmos` with injected `now`. Covers star-born formula (4,800/s), supernova formula (30/s), N0 formatting in BriefText, zero elapsed time, very old dates, proportional growth, and 160:1 star-to-supernova ratio. 11 tests total. |
 | \CalculateCosmicStretchTests.cs\ | Edit freely | Tests for \CalculateCosmicStretch\ with injected \
 ow\. Covers correct km expansion formula (elapsed seconds * 3,300,000), metric billion-km formatting, imperial billion-miles formatting, zero elapsed time, very old dates, and unit-system independence of `KmExpanded`. |
 | `TypedResultFieldTests.cs` | Edit freely | Tests that each CalculationService method correctly populates the raw numeric fields of its typed result subclass - not covered by the existing string-assertion tests. Uses injected now for deterministic results. Covers CountdownResult decomposition, LifeOdometerResult formulas, AlienAnniversariesResult planet-year formulas, GalacticCommuteResult km calculation, PhotonPathResult phase and speed-of-light check, HumanBirthRankResult rank ordering, PersonalYearResult range, GlobalExhaleResult flags, TimeJubileesResult coherence. |
@@ -1038,6 +1040,7 @@ a map to navigate without reading every XAML file.
 | `Views/MainPage.xaml` | 179 | Ticker card header `Grid` - 3-column `[emoji|title|action buttons]` |
 | `Views/MainPage.xaml` | 910 | Your Breath ticker card header `Grid` - 3-column `[lung emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.YourBreath` (live-updated every second). |
 | `Views/MainPage.xaml` | ~970 | Cellular Refresh ticker card header `Grid` - 3-column `[DNA emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.CellularRefresh` (live-updated every second). |
+| `Views/MainPage.xaml` | ~710 | Vibrant Cosmos ticker card header `Grid` - 3-column `[sparkles emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.VibrantCosmos` (live-updated every 200 ms). |
 | `Views/MainPage.xaml` | 243 | Title + LIVE badge `HorizontalStackLayout` - side-by-side layout reason |
 | `Views/SettingsPopup.xaml` | 9 | Full-screen overlay `Grid` - Layer 0/1 z-order explanation |
 | `Views/SettingsPopup.xaml` | 25 | `Frame` panel - floats over backdrop, `DynamicResource` theme note |
@@ -1427,10 +1430,10 @@ AIContext:   (none - state orchestrator)
 - `Loc { get; } = LocalizedResources.Instance` - exposes the localisation singleton so XAML binds as `{Binding Loc.Xxx}`.
 
 **Owns:**
-- All 12 typed ticker result instances (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, etc. - all subclasses of `TickerData`)
-- All section/card `bool` expanded states (15 total)
+- All 13 typed ticker result instances (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, `VibrantCosmosResult`, etc. - all subclasses of `TickerData`)
+- All section/card `bool` expanded states (16 total, including `VibrantCosmosExpanded`)
 - All user settings state
-- The 1-second live-update timer
+- The 1-second live-update timer and the 200 ms `_vibrantCosmosTimer` (dedicated to Vibrant Cosmos)
 - All `ICommand` instances
 - `RefreshRequested` event
 
@@ -1849,7 +1852,7 @@ directly so no TFM-incompatibility issues arise. Run all tests with:
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
 ```
 
-**What can be tested without a device (176 tests in 11 test classes):**
+**What can be tested without a device (191 tests in 12 test classes):**
 - `FindNearestJubilee()` / `ReduceToSingleDigit()` (pure algorithms, `internal` + `InternalsVisibleTo`)
 - `CalculateTimeJubilees`, `CalculateCountdown`, `CalculateLifeOdometer`
 - `CalculateAlienAnniversaries`, `CalculateHumanBirthRank`
@@ -4188,7 +4191,7 @@ the change violates a guardrail and must be corrected first.
 | 13 | All new structural XAML elements have `<!-- AI: ... -->` comments? | YES |
 | 14 | `Agents.md` updated for every structural change? | YES |
 | 15 | Build produces only known warning codes (CS0618, CS8767, CS0414, XC0022)? | YES |
-| 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (143+ tests, 0 failures)? | YES |
+| 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (191+ tests, 0 failures)? | YES |
 | 17 | All new `AeonLog` calls use `[Conditional("DEBUG")]` via the gateway (not raw `ILogger` or `Debug.WriteLine`)? `[BLOCK]` tag added only for methods with named internal phases? | YES |
 | 18 | Commit message ends with `AI: GitHub Copilot (<model>)` trailer (§9.13)? If the commit includes **any human-authored edits**, does the trailer read `AI: GitHub Copilot (<model>) + manual changes`? | YES |
 

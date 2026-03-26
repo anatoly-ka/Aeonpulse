@@ -3488,5 +3488,41 @@ namespace Aeonpulse.Resources {
                 return ResourceManager.GetString("Unit_Billion", resourceCulture);
             }
         }
+
+        public static string Ticker_VibrantCosmosTitle {
+            get {
+                return ResourceManager.GetString("Ticker_VibrantCosmosTitle", resourceCulture);
+            }
+        }
+
+        public static string Ticker_VibrantCosmosBrief {
+            get {
+                return ResourceManager.GetString("Ticker_VibrantCosmosBrief", resourceCulture);
+            }
+        }
+
+        public static string Ticker_VibrantCosmosFull {
+            get {
+                return ResourceManager.GetString("Ticker_VibrantCosmosFull", resourceCulture);
+            }
+        }
+
+        public static string Info_VibrantCosmosTitle {
+            get {
+                return ResourceManager.GetString("Info_VibrantCosmosTitle", resourceCulture);
+            }
+        }
+
+        public static string Info_VibrantCosmosMethod {
+            get {
+                return ResourceManager.GetString("Info_VibrantCosmosMethod", resourceCulture);
+            }
+        }
+
+        public static string Info_VibrantCosmosSource {
+            get {
+                return ResourceManager.GetString("Info_VibrantCosmosSource", resourceCulture);
+            }
+        }
     }
 }

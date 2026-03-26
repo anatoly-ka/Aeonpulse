@@ -1201,6 +1201,24 @@
     <value>You have taken approximately &lt;b&gt;{breath_count}&lt;/b&gt; breaths, processing &lt;b&gt;{air_volume}&lt;/b&gt; liters of air and exhaling &lt;b&gt;{co2_mass}&lt;/b&gt; of CO₂ into the biosphere.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Ticker_VibrantCosmosTitle" xml:space="preserve">
+    <value>Vibrant Cosmos</value>
+  </data>
+  <data name="Ticker_VibrantCosmosBrief" xml:space="preserve">
+    <value>&lt;b&gt;{stars_born}&lt;/b&gt; stars born, &lt;b&gt;{supernovas}&lt;/b&gt; supernovas</value>
+  </data>
+  <data name="Ticker_VibrantCosmosFull" xml:space="preserve">
+    <value>The universe has been busy! Approximately &lt;b&gt;{stars_born}&lt;/b&gt; stars have ignited and &lt;b&gt;{supernovas}&lt;/b&gt; supernovas have flared since this date.</value>
+  </data>
+  <data name="Info_VibrantCosmosTitle" xml:space="preserve">
+    <value>Vibrant Cosmos</value>
+  </data>
+  <data name="Info_VibrantCosmosMethod" xml:space="preserve">
+    <value>Cosmic activity is on an incredible scale! The calculations use standard astronomical estimates: approximately 4,800 stars are born every second in the observable universe, while approximately 30 stars explode as supernovas every second.</value>
+  </data>
+  <data name="Info_VibrantCosmosSource" xml:space="preserve">
+    <value>Star Formation Rate (SFR) sourced from the NASA/ESA Cosmic Evolution Survey (COSMOS) and findings from the James Webb Space Telescope (JWST) deep field surveys. Supernova Frequency estimates from the International Astronomical Union (IAU).</value>
+  </data>
   <data name="Ticker_CellularRefreshTitle" xml:space="preserve">
     <value>Cellular Refresh</value>
   </data>

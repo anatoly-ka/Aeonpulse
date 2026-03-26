@@ -293,4 +293,19 @@ namespace Aeonpulse.Models
         /// </summary>
         public double TotalRbcsCreated { get; init; }
     }
+
+    /// <summary>
+    /// Typed result for <c>CalculationService.CalculateVibrantCosmos</c>.
+    /// Carries the raw astronomical counts so callers can use the numeric values
+    /// directly without parsing the formatted display strings.
+    /// </summary>
+    [AIContext("DataTransferObject")]
+    public class VibrantCosmosResult : TickerData
+    {
+        /// <summary>Total stars born since the base date (4,800 per second).</summary>
+        public double StarsBorn { get; init; }
+
+        /// <summary>Total supernovas since the base date (30 per second).</summary>
+        public double Supernovas { get; init; }
+    }
 }

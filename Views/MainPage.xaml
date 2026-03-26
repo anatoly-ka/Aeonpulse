@@ -423,7 +423,8 @@
                 <!-- End Lab Section -->
 
                 <!-- == COSMOS SECTION =========================================
-                     Tickers: Alien Anniversaries, Galactic Commute (LIVE), Photon Path (LIVE)
+                     Tickers: Alien Anniversaries, Galactic Commute (LIVE), Photon Path (LIVE),
+                              Cosmic Stretch (LIVE), Vibrant Cosmos (LIVE 200ms)
                      Binding: MainViewModel.CosmosExpanded -> ToggleCosmosCommand
                 ================================================================ -->
                 <Border Style="{StaticResource CardFrame}">
@@ -689,6 +690,80 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding CosmicStretchExpanded}" />
+
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- == TICKER: VIBRANT COSMOS =========================
+                                 LIVE ticker - updated every 200 ms by a dedicated
+                                 IDispatcherTimer in MainViewModel, producing a
+                                 non-uniform rhythmic pulse effect.
+                                 Shows cumulative star births and supernovas since base date.
+                                 Binding: MainViewModel.VibrantCosmos (VibrantCosmosResult)
+                                 Command: ToggleVibrantCosmosCommand
+                                 Note: no refresh button - counts are purely elapsed-time driven.
+                            ======================================================== -->
+                            <Border BackgroundColor="{DynamicResource CardDark}"
+                                    StrokeThickness="1"
+                                    Stroke="{DynamicResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+
+                                    <!-- AI: Ticker card header - 3-column:
+                                         [Col0: sparkles emoji | Col1: title + LIVE badge | Col2: info + expand buttons].
+                                         Binding: MainViewModel.VibrantCosmos.BriefText / FullText (live 200ms updates). -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x2728; (U+2728 sparkles) -->
+                                        <Label Grid.Column="0"
+                                               Text="✨"
+                                               FontSize="{DynamicResource FontSizeTitle}"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <!-- AI: Title + LIVE badge side-by-side in a HorizontalStackLayout. -->
+                                        <HorizontalStackLayout Grid.Column="1"
+                                                               Spacing="8"
+                                                               VerticalOptions="Center">
+                                            <!-- Binding: MainViewModel.Loc.Ticker_VibrantCosmosTitle (live-localised) -->
+                                            <Label Text="{Binding Loc.Ticker_VibrantCosmosTitle}"
+                                                   Style="{StaticResource BaseLabel}"
+                                                   TextColor="{DynamicResource CyberPurple}"
+                                                   FontAttributes="Bold"
+                                                   VerticalOptions="Center" />
+                                            <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised badge label) -->
+                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   TextColor="{DynamicResource NeonGreen}"
+                                                   BackgroundColor="{DynamicResource NeonGreenDark}"
+                                                   Padding="4,2"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <!-- Info: opens DeepDivePopup with methodology + sources -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnVibrantCosmosInfoClicked" />
+                                            <!-- Expand/collapse: toggles VibrantCosmosExpanded -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding VibrantCosmosExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleVibrantCosmosCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <!-- Binding: MainViewModel.VibrantCosmos.BriefText - updates every 200 ms -->
+                                    <Label Text="{Binding VibrantCosmos.BriefText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                    <!-- Binding: MainViewModel.VibrantCosmos.FullText - visible when expanded -->
+                                    <Label Text="{Binding VibrantCosmos.FullText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding VibrantCosmosExpanded}" />
 
                                 </VerticalStackLayout>
                             </Border>

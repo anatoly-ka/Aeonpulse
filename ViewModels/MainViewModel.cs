@@ -11,6 +11,7 @@ namespace Aeonpulse.ViewModels
     {
         private readonly CalculationService _calculationService;
         private IDispatcherTimer _updateTimer;
+        private IDispatcherTimer _vibrantCosmosTimer;
         private const string LogCat = "VM";
 
         #region Language constants
@@ -273,6 +274,13 @@ namespace Aeonpulse.ViewModels
             set { _cellularRefreshExpanded = value; OnPropertyChanged(); }
         }
 
+        private bool _vibrantCosmosExpanded = false;
+        public bool VibrantCosmosExpanded
+        {
+            get => _vibrantCosmosExpanded;
+            set { _vibrantCosmosExpanded = value; OnPropertyChanged(); }
+        }
+
         // Ticker Data
         private TimeJubileesResult _timeJubilees = new TimeJubileesResult();
         public TimeJubileesResult TimeJubilees
@@ -365,6 +373,13 @@ namespace Aeonpulse.ViewModels
             set { _cellularRefresh = value; OnPropertyChanged(); }
         }
 
+        private VibrantCosmosResult _vibrantCosmos = new VibrantCosmosResult();
+        public VibrantCosmosResult VibrantCosmos
+        {
+            get => _vibrantCosmos;
+            set { _vibrantCosmos = value; OnPropertyChanged(); }
+        }
+
         private string _teaseText = "";
         public string TeaseText
         {
@@ -397,6 +412,7 @@ namespace Aeonpulse.ViewModels
         public ICommand ToggleGlobalExhaleCommand { get; }
         public ICommand ToggleYourBreathCommand { get; }
         public ICommand ToggleCellularRefreshCommand { get; }
+        public ICommand ToggleVibrantCosmosCommand { get; }
 
         // Card-level refresh commands
         public ICommand RefreshTimeJubileesCommand { get; }
@@ -456,6 +472,7 @@ namespace Aeonpulse.ViewModels
             ToggleGlobalExhaleCommand = new Command(() => GlobalExhaleExpanded = !GlobalExhaleExpanded);
             ToggleYourBreathCommand = new Command(() => YourBreathExpanded = !YourBreathExpanded);
             ToggleCellularRefreshCommand = new Command(() => CellularRefreshExpanded = !CellularRefreshExpanded);
+            ToggleVibrantCosmosCommand = new Command(() => VibrantCosmosExpanded = !VibrantCosmosExpanded);
 
             // Initialize card-level refresh commands
             RefreshTimeJubileesCommand = new Command(async () =>
@@ -499,12 +516,19 @@ namespace Aeonpulse.ViewModels
             _updateTimer.Interval = TimeSpan.FromSeconds(1);
             _updateTimer.Tick += (s, e) => UpdateLiveCalculations();
             _updateTimer.Start();
+
+            // Setup 200ms timer for Vibrant Cosmos - non-uniform rhythmic pulse
+            _vibrantCosmosTimer = Application.Current!.Dispatcher.CreateTimer();
+            _vibrantCosmosTimer.Interval = TimeSpan.FromMilliseconds(200);
+            _vibrantCosmosTimer.Tick += (s, e) => UpdateVibrantCosmos();
+            _vibrantCosmosTimer.Start();
         }
 
         public void UpdateAllCalculations()
         {
             UpdateStaticCalculations();
             UpdateLiveCalculations();
+            UpdateVibrantCosmos();
         }
 
         public void UpdateStaticCalculations()
@@ -536,6 +560,11 @@ namespace Aeonpulse.ViewModels
                 BaseDateName,
                 BaseDate
             );
+        }
+
+        public void UpdateVibrantCosmos()
+        {
+            VibrantCosmos = _calculationService.CalculateVibrantCosmos(BaseDate);
         }
 
         /// <summary>

@@ -48,6 +48,7 @@ namespace Aeonpulse.Views
         private bool _isGlobalExhaleDeepDiveOpen;
         private bool _isYourBreathDeepDiveOpen;
         private bool _isCellularRefreshDeepDiveOpen;
+        private bool _isVibrantCosmosDeepDiveOpen;
 
         /// <summary>
         /// Constructs the page and subscribes to the ViewModel's
@@ -326,5 +327,13 @@ namespace Aeonpulse.Views
                 AppResources.Info_CellularRefreshTitle,
                 AppResources.Info_MethodTitle, AppResources.Info_CellularRefreshMethod,
                 AppResources.Info_SourceTitle, AppResources.Info_CellularRefreshSource);
+
+        /// <summary>Opens the Vibrant Cosmos deep-dive info panel.</summary>
+        private async void OnVibrantCosmosInfoClicked(object sender, EventArgs e) =>
+            await OpenDeepDiveAsync(
+                () => _isVibrantCosmosDeepDiveOpen, v => _isVibrantCosmosDeepDiveOpen = v,
+                AppResources.Info_VibrantCosmosTitle,
+                AppResources.Info_MethodTitle, AppResources.Info_VibrantCosmosMethod,
+                AppResources.Info_SourceTitle, AppResources.Info_VibrantCosmosSource);
     }
 }

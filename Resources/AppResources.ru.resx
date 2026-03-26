@@ -1201,6 +1201,24 @@
     <value>Вы сделали около &lt;b&gt;{breath_count}&lt;/b&gt; вдохов, переработав &lt;b&gt;{air_volume}&lt;/b&gt; литров воздуха и выдохнув &lt;b&gt;{co2_mass}&lt;/b&gt; CO₂ в биосферу.</value>
     <comment>CalculationService.cs</comment>
   </data>
+  <data name="Ticker_VibrantCosmosTitle" xml:space="preserve">
+    <value>Живой Космос</value>
+  </data>
+  <data name="Ticker_VibrantCosmosBrief" xml:space="preserve">
+    <value>&lt;b&gt;{stars_born}&lt;/b&gt; звёзд родилось, &lt;b&gt;{supernovas}&lt;/b&gt; сверхновых</value>
+  </data>
+  <data name="Ticker_VibrantCosmosFull" xml:space="preserve">
+    <value>Вселенная не дремлет! Приблизительно зажглось &lt;b&gt;{stars_born}&lt;/b&gt; звёзд и вспыхнуло &lt;b&gt;{supernovas}&lt;/b&gt; сверхновых с этой даты.</value>
+  </data>
+  <data name="Info_VibrantCosmosTitle" xml:space="preserve">
+    <value>Живой Космос</value>
+  </data>
+  <data name="Info_VibrantCosmosMethod" xml:space="preserve">
+    <value>Посмотрите на активность Космоса - она потрясает воображение! В расчётах используются принятые астрономические оценки: приблизительно 4 800 звёзд рождаются каждую секунду в наблюдаемой Вселенной, и каждую секунду около 30 звёзд взрываются как сверхновые.</value>
+  </data>
+  <data name="Info_VibrantCosmosSource" xml:space="preserve">
+    <value>Скорость звездообразования (SFR) из обзора NASA/ESA Cosmic Evolution Survey (COSMOS) и данных телескопа James Webb (JWST). Оценки частоты сверхновых от International Astronomical Union (IAU).</value>
+  </data>
   <data name="Ticker_CellularRefreshTitle" xml:space="preserve">
     <value>Регенерация</value>
   </data>
