@@ -1441,14 +1441,13 @@ namespace Aeonpulse.Services
         /// </para>
         /// </summary>
         /// <param name="baseDate">The user-selected origin date (e.g., birthday).</param>
-        /// <param name="baseDateValue">ISO-8601 string of the base date for output formatting in the full text.</param>
         /// <param name="now">Optional override for current time; used by unit tests for determinism.</param>
         /// <returns>
         /// A <see cref="GlobalCrowdResult"/> with formatted population counts at the base
         /// date and at the current moment.
         /// </returns>
         [AIContext("LiveTicker")]
-        public GlobalCrowdResult CalculateGlobalCrowd(DateTime baseDate, string baseDateValue, DateTime? now = null)
+        public GlobalCrowdResult CalculateGlobalCrowd(DateTime baseDate, DateTime? now = null)
         {
             DateTime now_ = now ?? DateTime.UtcNow;
             AeonLog.Debug(LogCat, nameof(CalculateGlobalCrowd), $"baseDate={baseDate:d}");

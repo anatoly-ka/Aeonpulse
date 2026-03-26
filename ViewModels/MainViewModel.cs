@@ -567,7 +567,7 @@ namespace Aeonpulse.ViewModels
             PhotonPath   = _calculationService.CalculatePhotonPath(BaseDate, BaseDateValue, UseMetric);
             CosmicStretch = _calculationService.CalculateCosmicStretch(BaseDate, BaseDateValue, UseMetric);
             YourBreath   = _calculationService.CalculateYourBreath(BaseDate, BaseDateValue, UseMetric);
-            GlobalCrowd  = _calculationService.CalculateGlobalCrowd(BaseDate, BaseDateValue);
+            GlobalCrowd  = _calculationService.CalculateGlobalCrowd(BaseDate);
 
             TeaseText = _calculationService.GetRandomTeaseText(
                 Countdown,
