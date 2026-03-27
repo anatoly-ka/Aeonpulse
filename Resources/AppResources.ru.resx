@@ -1724,4 +1724,49 @@
   <data name="LifeLog_Activity_PersonalCare" xml:space="preserve">
     <value>Личная гигиена</value>
   </data>
+  <data name="Ticker_SpaceWaitTitle" xml:space="preserve">
+    <value>Внеземные ожидания</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_SpaceWaitBrief" xml:space="preserve">
+    <value>Следующая: &lt;b&gt;{planet}&lt;/b&gt; через &lt;b&gt;{countdown}&lt;/b&gt;</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_SpaceWaitFull" xml:space="preserve">
+    <value>Следующая внеземная годовщина - &lt;b&gt;{age}&lt;/b&gt; на планете &lt;b&gt;{planet}&lt;/b&gt;! Она наступит ровно через &lt;b&gt;{countdown}&lt;/b&gt;.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_SpaceWaitTitle" xml:space="preserve">
+    <value>Внеземные ожидания</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_SpaceWaitMethod" xml:space="preserve">
+    <value>Год - это просто время, за которое планета совершает полный оборот по орбите вокруг своей звезды. Этот таймер отслеживает орбитальные периоды основных планет Солнечной системы, чтобы вычислить точное время до следующего полного орбитального оборота.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_SpaceWaitSource" xml:space="preserve">
+    <value>Орбитальные периоды (в земных сутках) из таблицы планетарных фактов NASA Goddard Space Flight Center.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Planet_Mercury" xml:space="preserve">
+    <value>Меркурий</value>
+  </data>
+  <data name="Planet_Venus" xml:space="preserve">
+    <value>Венера</value>
+  </data>
+  <data name="Planet_Mars" xml:space="preserve">
+    <value>Марс</value>
+  </data>
+  <data name="Planet_Jupiter" xml:space="preserve">
+    <value>Юпитер</value>
+  </data>
+  <data name="Planet_Saturn" xml:space="preserve">
+    <value>Сатурн</value>
+  </data>
+  <data name="Planet_Uranus" xml:space="preserve">
+    <value>Уран</value>
+  </data>
+  <data name="Planet_Neptune" xml:space="preserve">
+    <value>Нептун</value>
+  </data>
 </root>

@@ -1724,4 +1724,49 @@
   <data name="LifeLog_Activity_PersonalCare" xml:space="preserve">
     <value>Personal Care</value>
   </data>
+  <data name="Ticker_SpaceWaitTitle" xml:space="preserve">
+    <value>Space Wait</value>
+    <comment>MainPage.xaml</comment>
+  </data>
+  <data name="Ticker_SpaceWaitBrief" xml:space="preserve">
+    <value>Next: &lt;b&gt;{planet}&lt;/b&gt; in &lt;b&gt;{countdown}&lt;/b&gt;</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_SpaceWaitFull" xml:space="preserve">
+    <value>Your next extraterrestrial milestone is your &lt;b&gt;{age}&lt;/b&gt; birthday on &lt;b&gt;{planet}&lt;/b&gt;! It happens in exactly &lt;b&gt;{countdown}&lt;/b&gt;.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_SpaceWaitTitle" xml:space="preserve">
+    <value>Space Wait</value>
+    <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Info_SpaceWaitMethod" xml:space="preserve">
+    <value>A year is simply the time it takes for a planet to complete one orbit around its star. This ticker tracks the orbital periods of the major planets in our solar system to calculate the exact time until the user completes their next full orbit equivalent on another world.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Info_SpaceWaitSource" xml:space="preserve">
+    <value>Orbital periods (in Earth days) sourced from the NASA Goddard Space Flight Center Planetary Fact Sheet.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Planet_Mercury" xml:space="preserve">
+    <value>Mercury</value>
+  </data>
+  <data name="Planet_Venus" xml:space="preserve">
+    <value>Venus</value>
+  </data>
+  <data name="Planet_Mars" xml:space="preserve">
+    <value>Mars</value>
+  </data>
+  <data name="Planet_Jupiter" xml:space="preserve">
+    <value>Jupiter</value>
+  </data>
+  <data name="Planet_Saturn" xml:space="preserve">
+    <value>Saturn</value>
+  </data>
+  <data name="Planet_Uranus" xml:space="preserve">
+    <value>Uranus</value>
+  </data>
+  <data name="Planet_Neptune" xml:space="preserve">
+    <value>Neptune</value>
+  </data>
 </root>

@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-03-28
+> **Last updated:** 2026-03-27
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -223,6 +223,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | 14 | Vibrant Cosmos | Cosmos | **LIVE** (200 ms) | No |
 | 15 | Global Crowd | Mirror | **LIVE** | No |
 | 16 | Life Log | Mirror | Static | Yes |
+| 17 | Space Wait | Cosmos | **LIVE** | No |
 
 ### User-Configurable Settings (persisted via `Preferences`)
 
@@ -488,6 +489,7 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 | \CalculateCosmicStretchTests.cs\ | Edit freely | Tests for \CalculateCosmicStretch\ with injected \
 ow\. Covers correct km expansion formula (elapsed seconds * 3,300,000), metric billion-km formatting, imperial billion-miles formatting, zero elapsed time, very old dates, and unit-system independence of `KmExpanded`. |
 | `TypedResultFieldTests.cs` | Edit freely | Tests that each CalculationService method correctly populates the raw numeric fields of its typed result subclass - not covered by the existing string-assertion tests. Uses injected now for deterministic results. Covers CountdownResult decomposition, LifeOdometerResult formulas, AlienAnniversariesResult planet-year formulas, GalacticCommuteResult km calculation, PhotonPathResult phase and speed-of-light check, HumanBirthRankResult rank ordering, PersonalYearResult range, GlobalExhaleResult flags, TimeJubileesResult coherence. |
+| `Aeonpulse.Tests/CalculateSpaceWaitTests.cs` | Edit freely | Tests for `CalculateSpaceWait` with injected `now`. Covers happy path, countdown always less than Mercury period, Mercury birthday countdown formula, zero elapsed time, very old base dates, English ordinal suffix (1st/2nd/3rd/th/11th/21st), BriefText/FullText content, and typed result field round-trip. 14 tests total. |
 | `README.md` | Edit freely | High-level project README. Human-facing. Contains a project structure overview and migration notes from the original React implementation. |
 | `IMPLEMENTATION_GUIDE.md` | Edit freely | Original React-to-MAUI migration guide. Contains early extension recipes and build commands. Some content is superseded by `Agents.md`. |
 
@@ -643,6 +645,7 @@ TIMER (every 1 second, thread-pool thread)
                     --> CalculateCosmicStretch()    --> CosmicStretch.BriefText/FullText
                     --> CalculateYourBreath()       --> YourBreath.BriefText/FullText
                     --> CalculateGlobalCrowd()      --> GlobalCrowd.BriefText/FullText
+                    --> CalculateSpaceWait()       --> SpaceWait.BriefText/FullText
                     --> GetRandomTeaseText()       --> TeaseText
                             each setter fires PropertyChanged
                                 --> {Binding Xxx.BriefText} Labels repaint
@@ -1045,7 +1048,8 @@ a map to navigate without reading every XAML file.
 | `Views/MainPage.xaml` | 910 | Your Breath ticker card header `Grid` - 3-column `[lung emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.YourBreath` (live-updated every second). |
 | `Views/MainPage.xaml` | ~1020 | Global Crowd ticker card header `Grid` - 3-column `[people emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.GlobalCrowd` (live-updated every second). |
 | `Views/MainPage.xaml` | ~1022 | Life Log ticker card header `Grid` - 3-column `[clock emoji|title|info+refresh+expand buttons]`, bound to `MainViewModel.LifeLog` (static, re-randomises on refresh). |
-| `Views/MainPage.xaml` | ~970 | Cellular Refresh ticker card header `Grid` - 3-column `[DNA emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.CellularRefresh` (live-updated every second). |
+| `Views/MainPage.xaml` | ~970 | Cellular Refresh ticker card header
+| `Views/MainPage.xaml` | ~1070 | Space Wait ticker card header `Grid` - 3-column `[planet emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.SpaceWait` (live-updated every second). | `Grid` - 3-column `[DNA emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.CellularRefresh` (live-updated every second). |
 | `Views/MainPage.xaml` | ~710 | Vibrant Cosmos ticker card header `Grid` - 3-column `[sparkles emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.VibrantCosmos` (live-updated every 200 ms). |
 | `Views/MainPage.xaml` | 243 | Title + LIVE badge `HorizontalStackLayout` - side-by-side layout reason |
 | `Views/SettingsPopup.xaml` | 9 | Full-screen overlay `Grid` - Layer 0/1 z-order explanation |
@@ -1437,7 +1441,7 @@ AIContext:   (none - state orchestrator)
 
 **Owns:**
 - All 15 typed ticker result instances (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, `VibrantCosmosResult`, `LifeLogResult`, etc. - all subclasses of `TickerData`)
-- All section/card `bool` expanded states (18 total, including `VibrantCosmosExpanded`, `LifeLogExpanded`)
+- All section/card `bool` expanded states (19 total, including `VibrantCosmosExpanded`, `LifeLogExpanded`, `SpaceWaitExpanded`)
 - All user settings state
 - The 1-second live-update timer and the 200 ms `_vibrantCosmosTimer` (dedicated to Vibrant Cosmos)
 - All `ICommand` instances
@@ -1475,7 +1479,7 @@ AIContext:   CoreCalculationEngine
 ```
 
 **Responsibilities:**
-- The **sole domain logic class**. Stateless. All 11 ticker calculations live here as separate `public` methods.
+- The **sole domain logic class**. Stateless. All 12 ticker calculations live here as separate `public` methods.
 - Reads `DateTime.Now` internally - not a pure function by design; produces different output on each call (intentional for live tickers).
 - Reads all output strings from `AppResources` at call time - strings automatically reflect whichever culture `MainViewModel.ApplyLanguage()` has set.
 - Never writes global state. Thread-safe. Safe to call from background timer threads.
@@ -1502,6 +1506,7 @@ AIContext:   CoreCalculationEngine
 | `CalculateCellularRefresh` | `CoreCalculation` | Static | `baseDateName`, `baseDateValue` |
 | `CalculateGlobalCrowd` | `LiveTicker` | LIVE (1s) | *(none)* |
 | `CalculateLifeLog` | `CoreCalculation` | Static | `baseDateName`, `baseDateValue`, optional `rand` for brief-text randomisation |
+| `CalculateSpaceWait` | `LiveTicker` | LIVE (1s) | *(none beyond `baseDate`)* |
 | `GetRandomTeaseText` | `UIPresentation` | LIVE (1s) | `CountdownResult`, `LifeOdometerResult`, `GalacticCommuteResult`, `GlobalExhaleResult`, `baseDateName`, `baseDate` (`DateTime`, formatted with `"d"` inside) - returns 1 of 5 random tease strings |
 
 **Owns:**
@@ -1519,7 +1524,7 @@ AIContext:   CoreCalculationEngine
 
 **Called by:**
 - `MainViewModel.UpdateStaticCalculations()` - 6 methods
-- `MainViewModel.UpdateLiveCalculations()` - 5 methods + `GetRandomTeaseText`
+- `MainViewModel.UpdateLiveCalculations()` - 6 methods + `GetRandomTeaseText`
 - `MainViewModel` refresh command lambdas - 5 specific methods (TimeJubilees, AlienAnniversaries, GlobalExhale, CellularRefresh, LifeLog)
 
 **Extend here when:**
@@ -1860,7 +1865,7 @@ directly so no TFM-incompatibility issues arise. Run all tests with:
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
 ```
 
-**What can be tested without a device (222 tests in 14 test classes):**
+**What can be tested without a device (247 tests in 15 test classes):**
 - `FindNearestJubilee()` / `ReduceToSingleDigit()` (pure algorithms, `internal` + `InternalsVisibleTo`)
 - `CalculateTimeJubilees`, `CalculateCountdown`, `CalculateLifeOdometer`
 - `CalculateAlienAnniversaries`, `CalculateHumanBirthRank`

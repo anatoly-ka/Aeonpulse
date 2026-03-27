@@ -3625,5 +3625,70 @@ namespace Aeonpulse.Resources {
                 return ResourceManager.GetString("LifeLog_Activity_PersonalCare", resourceCulture);
             }
         }
+        public static string Ticker_SpaceWaitTitle {
+            get {
+                return ResourceManager.GetString("Ticker_SpaceWaitTitle", resourceCulture);
+            }
+        }
+        public static string Ticker_SpaceWaitBrief {
+            get {
+                return ResourceManager.GetString("Ticker_SpaceWaitBrief", resourceCulture);
+            }
+        }
+        public static string Ticker_SpaceWaitFull {
+            get {
+                return ResourceManager.GetString("Ticker_SpaceWaitFull", resourceCulture);
+            }
+        }
+        public static string Info_SpaceWaitTitle {
+            get {
+                return ResourceManager.GetString("Info_SpaceWaitTitle", resourceCulture);
+            }
+        }
+        public static string Info_SpaceWaitMethod {
+            get {
+                return ResourceManager.GetString("Info_SpaceWaitMethod", resourceCulture);
+            }
+        }
+        public static string Info_SpaceWaitSource {
+            get {
+                return ResourceManager.GetString("Info_SpaceWaitSource", resourceCulture);
+            }
+        }
+        public static string Planet_Mercury {
+            get {
+                return ResourceManager.GetString("Planet_Mercury", resourceCulture);
+            }
+        }
+        public static string Planet_Venus {
+            get {
+                return ResourceManager.GetString("Planet_Venus", resourceCulture);
+            }
+        }
+        public static string Planet_Mars {
+            get {
+                return ResourceManager.GetString("Planet_Mars", resourceCulture);
+            }
+        }
+        public static string Planet_Jupiter {
+            get {
+                return ResourceManager.GetString("Planet_Jupiter", resourceCulture);
+            }
+        }
+        public static string Planet_Saturn {
+            get {
+                return ResourceManager.GetString("Planet_Saturn", resourceCulture);
+            }
+        }
+        public static string Planet_Uranus {
+            get {
+                return ResourceManager.GetString("Planet_Uranus", resourceCulture);
+            }
+        }
+        public static string Planet_Neptune {
+            get {
+                return ResourceManager.GetString("Planet_Neptune", resourceCulture);
+            }
+        }
     }
 }

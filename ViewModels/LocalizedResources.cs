@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Aeonpulse.Resources;
 
@@ -43,6 +43,7 @@ namespace Aeonpulse.ViewModels
         public string Ticker_VibrantCosmosTitle        => AppResources.Ticker_VibrantCosmosTitle;
         public string Ticker_GlobalCrowdTitle          => AppResources.Ticker_GlobalCrowdTitle;
         public string Ticker_LifeLogTitle              => AppResources.Ticker_LifeLogTitle;
+        public string Ticker_SpaceWaitTitle            => AppResources.Ticker_SpaceWaitTitle;
 
         // -- Settings --------------------------------------------------------
         public string Settings_Title                   => AppResources.Settings_Title;
@@ -137,6 +138,9 @@ namespace Aeonpulse.ViewModels
         public string Info_LifeLogTitle                => AppResources.Info_LifeLogTitle;
         public string Info_LifeLogMethod               => AppResources.Info_LifeLogMethod;
         public string Info_LifeLogSource               => AppResources.Info_LifeLogSource;
+        public string Info_SpaceWaitTitle             => AppResources.Info_SpaceWaitTitle;
+        public string Info_SpaceWaitMethod            => AppResources.Info_SpaceWaitMethod;
+        public string Info_SpaceWaitSource            => AppResources.Info_SpaceWaitSource;
 
         // -- Tease ------------------------------------------------------------
         public string Tease_Title          => AppResources.Tease_Title;

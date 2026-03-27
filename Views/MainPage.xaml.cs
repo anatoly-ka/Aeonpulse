@@ -51,6 +51,7 @@ namespace Aeonpulse.Views
         private bool _isVibrantCosmosDeepDiveOpen;
         private bool _isGlobalCrowdDeepDiveOpen;
         private bool _isLifeLogDeepDiveOpen;
+        private bool _isSpaceWaitDeepDiveOpen;
 
         /// <summary>
         /// Constructs the page and subscribes to the ViewModel's
@@ -353,5 +354,14 @@ namespace Aeonpulse.Views
                 AppResources.Info_LifeLogTitle,
                 AppResources.Info_MethodTitle, AppResources.Info_LifeLogMethod,
                 AppResources.Info_SourceTitle, AppResources.Info_LifeLogSource);
+
+
+        /// <summary>Opens the Space Wait deep-dive info panel.</summary>
+        private async void OnSpaceWaitInfoClicked(object sender, EventArgs e) =>
+            await OpenDeepDiveAsync(
+                () => _isSpaceWaitDeepDiveOpen, v => _isSpaceWaitDeepDiveOpen = v,
+                AppResources.Info_SpaceWaitTitle,
+                AppResources.Info_MethodTitle, AppResources.Info_SpaceWaitMethod,
+                AppResources.Info_SourceTitle, AppResources.Info_SpaceWaitSource);
     }
 }

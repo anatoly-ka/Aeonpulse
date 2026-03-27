@@ -1703,6 +1703,160 @@ namespace Aeonpulse.Services
         #endregion
 
 
+        #region Space Wait
+
+        /// <summary>
+        /// Calculates the countdown to the user's next "birthday" (orbital completion) on
+        /// the planet in our solar system whose next full orbit is closest in time.
+        ///
+        /// <para>
+        /// <b>Algorithm:</b> For each of the seven major planets (Mercury through Neptune),
+        /// the method computes how many full orbital periods have elapsed since the base date,
+        /// then determines the fractional day count until the next whole-number orbital birthday.
+        /// The planet with the smallest remaining time is selected as the next milestone.
+        /// Orbital periods are sourced from the NASA Goddard Space Flight Center Planetary Fact Sheet.
+        /// </para>
+        /// <para>
+        /// <b>Ordinal suffix:</b> An English-language ordinal suffix (st/nd/rd/th) is appended
+        /// to the age integer when the active culture is English. For all other cultures a plain
+        /// numeric string is used.
+        /// </para>
+        /// <para>
+        /// <b>Side effects:</b> reads <see cref="AppResources"/> for all output strings and
+        /// planet names, so the result automatically reflects <c>AppResources.Culture</c>.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The user-selected origin date (UTC).</param>
+        /// <param name="now">Optional override for the current time; used in tests for determinism.</param>
+        /// <returns>
+        /// A <see cref="SpaceWaitResult"/> with brief and full countdown descriptions, the next
+        /// planet name, the ordinal age, and the raw <see cref="TimeSpan"/> countdown.
+        /// </returns>
+        [AIContext("LiveTicker")]
+        public SpaceWaitResult CalculateSpaceWait(DateTime baseDate, DateTime? now = null)
+        {
+            DateTime now_ = now ?? DateTime.UtcNow;
+            AeonLog.Debug(LogCat, nameof(CalculateSpaceWait), $"baseDate={baseDate:d}");
+
+            // Orbital periods in Earth days (NASA Goddard Planetary Fact Sheet)
+            var planets = new (string Key, string LocalizedName, double OrbitalDays)[]
+            {
+                ("Mercury", AppResources.Planet_Mercury, 87.97),
+                ("Venus",   AppResources.Planet_Venus,   224.70),
+                ("Mars",    AppResources.Planet_Mars,    686.98),
+                ("Jupiter", AppResources.Planet_Jupiter, 4332.59),
+                ("Saturn",  AppResources.Planet_Saturn,  10759.22),
+                ("Uranus",  AppResources.Planet_Uranus,  30685.40),
+                ("Neptune", AppResources.Planet_Neptune, 60189.00),
+            };
+
+            double totalDaysAlive = (now_ - baseDate).TotalDays;
+
+            string nextPlanet = "";
+            string nextPlanetLocalized = "";
+            double minDaysToNext = double.MaxValue;
+            int nextAge = 0;
+
+            foreach (var planet in planets)
+            {
+                double orbitalPeriod = planet.OrbitalDays;
+                double currentAgeFraction = totalDaysAlive / orbitalPeriod;
+                int currentAge = (int)Math.Floor(currentAgeFraction);
+
+                // Days until the next full orbit is completed
+                double daysToNext = (currentAge + 1) * orbitalPeriod - totalDaysAlive;
+
+                if (daysToNext < minDaysToNext)
+                {
+                    minDaysToNext = daysToNext;
+                    nextPlanet = planet.Key;
+                    nextPlanetLocalized = planet.LocalizedName;
+                    nextAge = currentAge + 1;
+                }
+            }
+
+            TimeSpan countdown = TimeSpan.FromDays(minDaysToNext);
+
+            // Format the countdown readably for mobile: e.g. "12d 14h 32m 10s"
+            string countdownFormatted = FormatCountdown(countdown);
+
+            // Build ordinal age string: "4th", "21st" etc. in English; plain number otherwise
+            string ageOrdinal = FormatOrdinal(nextAge);
+
+            string briefText = AppResources.Ticker_SpaceWaitBrief
+                .Replace("{planet}",    nextPlanetLocalized)
+                .Replace("{countdown}", countdownFormatted);
+
+            string fullText = AppResources.Ticker_SpaceWaitFull
+                .Replace("{age}",       ageOrdinal)
+                .Replace("{planet}",    nextPlanetLocalized)
+                .Replace("{countdown}", countdownFormatted);
+
+            return new SpaceWaitResult
+            {
+                NextPlanet = nextPlanetLocalized,
+                NextAge    = nextAge,
+                Countdown  = countdown,
+                BriefText  = briefText,
+                FullText   = fullText,
+            };
+        }
+
+        /// <summary>
+        /// Formats a <see cref="TimeSpan"/> as a compact, mobile-friendly countdown string.
+        /// Shows only the non-zero components from days down to seconds.
+        /// </summary>
+        /// <param name="ts">The time span to format.</param>
+        /// <returns>A string such as "12d 14h 32m 10s".</returns>
+        private static string FormatCountdown(TimeSpan ts)
+        {
+            int days    = (int)ts.TotalDays;
+            int hours   = ts.Hours;
+            int minutes = ts.Minutes;
+            int seconds = ts.Seconds;
+
+            if (days > 0)
+                return $"{days}d {hours}h {minutes}m {seconds}s";
+            if (hours > 0)
+                return $"{hours}h {minutes}m {seconds}s";
+            if (minutes > 0)
+                return $"{minutes}m {seconds}s";
+            return $"{seconds}s";
+        }
+
+        /// <summary>
+        /// Returns an ordinal string for <paramref name="n"/> when the active UI culture is
+        /// English (e.g. 1 -> "1st", 2 -> "2nd", 21 -> "21st").
+        /// For all other cultures, returns the plain number as a string.
+        /// </summary>
+        /// <param name="n">Non-negative integer to ordinalize.</param>
+        /// <returns>Ordinal string respecting the active locale.</returns>
+        private static string FormatOrdinal(int n)
+        {
+            var culture = System.Globalization.CultureInfo.CurrentUICulture;
+            if (!culture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase))
+                return n.ToString();
+
+            int abs = Math.Abs(n);
+            int lastTwo = abs % 100;
+            int lastOne = abs % 10;
+
+            string suffix;
+            if (lastTwo >= 11 && lastTwo <= 13)
+                suffix = "th";
+            else if (lastOne == 1)
+                suffix = "st";
+            else if (lastOne == 2)
+                suffix = "nd";
+            else if (lastOne == 3)
+                suffix = "rd";
+            else
+                suffix = "th";
+
+            return $"{n}{suffix}";
+        }
+
+        #endregion
         #region Tease Text
 
         /// <summary>

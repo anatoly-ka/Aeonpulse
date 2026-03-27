@@ -295,6 +295,13 @@ namespace Aeonpulse.ViewModels
             set { _lifeLogExpanded = value; OnPropertyChanged(); }
         }
 
+        private bool _spaceWaitExpanded = false;
+        public bool SpaceWaitExpanded
+        {
+            get => _spaceWaitExpanded;
+            set { _spaceWaitExpanded = value; OnPropertyChanged(); }
+        }
+
         // Ticker Data
         private TimeJubileesResult _timeJubilees = new TimeJubileesResult();
         public TimeJubileesResult TimeJubilees
@@ -408,6 +415,13 @@ namespace Aeonpulse.ViewModels
             set { _lifeLog = value; OnPropertyChanged(); }
         }
 
+        private SpaceWaitResult _spaceWait = new SpaceWaitResult();
+        public SpaceWaitResult SpaceWait
+        {
+            get => _spaceWait;
+            set { _spaceWait = value; OnPropertyChanged(); }
+        }
+
         private string _teaseText = "";
         public string TeaseText
         {
@@ -442,6 +456,7 @@ namespace Aeonpulse.ViewModels
         public ICommand ToggleCellularRefreshCommand { get; }
         public ICommand ToggleVibrantCosmosCommand { get; }
         public ICommand ToggleGlobalCrowdCommand { get; }
+        public ICommand ToggleSpaceWaitCommand { get; }
 
         // Card-level refresh commands
         public ICommand RefreshTimeJubileesCommand { get; }
@@ -505,6 +520,7 @@ namespace Aeonpulse.ViewModels
             ToggleCellularRefreshCommand = new Command(() => CellularRefreshExpanded = !CellularRefreshExpanded);
             ToggleVibrantCosmosCommand = new Command(() => VibrantCosmosExpanded = !VibrantCosmosExpanded);
             ToggleGlobalCrowdCommand = new Command(() => GlobalCrowdExpanded = !GlobalCrowdExpanded);
+            ToggleSpaceWaitCommand   = new Command(() => SpaceWaitExpanded = !SpaceWaitExpanded);
 
             ToggleLifeLogCommand = new Command(() => LifeLogExpanded = !LifeLogExpanded);
 
@@ -595,6 +611,7 @@ namespace Aeonpulse.ViewModels
             CosmicStretch = _calculationService.CalculateCosmicStretch(BaseDate, BaseDateValue, UseMetric);
             YourBreath   = _calculationService.CalculateYourBreath(BaseDate, BaseDateValue, UseMetric);
             GlobalCrowd  = _calculationService.CalculateGlobalCrowd(BaseDate);
+            SpaceWait    = _calculationService.CalculateSpaceWait(BaseDate);
 
             TeaseText = _calculationService.GetRandomTeaseText(
                 Countdown,

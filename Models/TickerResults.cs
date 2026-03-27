@@ -354,4 +354,23 @@ namespace Aeonpulse.Models
         /// <summary>Total hours for the second randomly selected activity (raw, unformatted).</summary>
         public double Activity2Hours { get; init; }
     }
+
+    /// <summary>
+    /// Typed result for <c>CalculationService.CalculateSpaceWait</c>.
+    /// Carries the name of the next planet, the ordinal age milestone, and
+    /// the countdown TimeSpan so callers can use the values directly without
+    /// parsing the formatted display strings.
+    /// </summary>
+    [AIContext("DataTransferObject")]
+    public class SpaceWaitResult : TickerData
+    {
+        /// <summary>Localised name of the planet whose orbital birthday comes next.</summary>
+        public string NextPlanet { get; init; } = string.Empty;
+
+        /// <summary>The ordinal age (birthday number) that will be reached on that planet.</summary>
+        public int NextAge { get; init; }
+
+        /// <summary>Time remaining until the next planetary orbital birthday.</summary>
+        public TimeSpan Countdown { get; init; }
+    }
 }

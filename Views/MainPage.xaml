@@ -505,6 +505,83 @@
                                 </VerticalStackLayout>
                             </Border>
 
+                            <!-- == TICKER: SPACE WAIT ========================================
+                                 LIVE ticker - updated every second.
+                                 Binding: MainViewModel.SpaceWait (SpaceWaitResult)
+                                 Commands: ToggleSpaceWaitCommand
+                                 No refresh button - live ticker.
+                                 ============================================================= -->
+                            <Border BackgroundColor="{DynamicResource CardDark}"
+                                    StrokeThickness="1"
+                                    Stroke="{DynamicResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+
+                                    <!-- AI: Ticker card header - 3-column layout:
+                                         [Col0: planet emoji | Col1: title + LIVE badge HorizontalStackLayout | Col2: info + expand buttons].
+                                         Bound to MainViewModel.SpaceWait (live-updated every second). -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1FA90; (U+1FA90 ringed planet) -->
+                                        <Label Grid.Column="0"
+                                               Text="🪐"
+                                               FontSize="{DynamicResource FontSizeTitle}"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <!-- AI: Title + LIVE badge side-by-side in a HorizontalStackLayout
+                                             so the badge sits flush to the right of the title text. -->
+                                        <!-- Binding: MainViewModel.Loc.Ticker_SpaceWaitTitle (live-localised) -->
+                                        <HorizontalStackLayout Grid.Column="1"
+                                                               Spacing="6"
+                                                               VerticalOptions="Center">
+                                            <Label Text="{Binding Loc.Ticker_SpaceWaitTitle}"
+                                                   Style="{StaticResource BaseLabel}"
+                                                   TextColor="{DynamicResource CyberPurple}"
+                                                   FontAttributes="Bold"
+                                                   VerticalOptions="Center" />
+                                            <Border BackgroundColor="{DynamicResource CyberCyan}"
+                                                    StrokeThickness="0"
+                                                    StrokeShape="RoundRectangle 4"
+                                                    Padding="4,1">
+                                                <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
+                                                <Label Text="{Binding Loc.Badge_LIVE}"
+                                                       FontSize="{DynamicResource FontSizeSmall}"
+                                                       TextColor="{DynamicResource SpaceDark}"
+                                                       FontAttributes="Bold"
+                                                       VerticalOptions="Center" />
+                                            </Border>
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <!-- Info: opens DeepDivePopup with methodology + sources -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnSpaceWaitInfoClicked" />
+                                            <!-- Expand/collapse: toggles SpaceWaitExpanded -->
+                                            <!-- Binding: MainViewModel.SpaceWaitExpanded -> BoolToImageSource -> icon -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding SpaceWaitExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleSpaceWaitCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <!-- Binding: MainViewModel.SpaceWait.BriefText - always visible, HTML-formatted -->
+                                    <Label Text="{Binding SpaceWait.BriefText}"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           TextType="Html" />
+                                    <!-- Binding: MainViewModel.SpaceWait.FullText - visible when expanded, HTML-formatted -->
+                                    <Label Text="{Binding SpaceWait.FullText}"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           TextType="Html"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding SpaceWaitExpanded}" />
+
+                                </VerticalStackLayout>
+                            </Border>
+
                             <!-- == TICKER: GALACTIC COMMUTE =======================
                                  LIVE ticker - updated every second. Distance varies with UseMetric.
                                  Binding: MainViewModel.GalacticCommute (TickerData)
