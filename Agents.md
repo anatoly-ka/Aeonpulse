@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-03-27
+> **Last updated:** 2026-03-28
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -99,7 +99,7 @@
 | **9.9** | Platform-Specific Code | `partial` methods only, all 4 platforms, no `#if` in shared files, tombstone rule. |
 | **9.10** | Persistence | `Preferences` only, 4 persisted keys, read-before-`InitializeComponent` rule. |
 | **9.11** | `Agents.md` Maintenance | When and what to update, change-type table, date update rule. |
-| **9.12** | Quick Violation Checklist | 16-item YES/NO checklist. Run before every commit. |
+| **9.12** | Quick Violation Checklist | 20-item YES/NO checklist. Run before every commit. |
 | **9.13** | Commit Signature | AI agent signature trailer format, ``+ manual changes`` rule. |
 
 ---
@@ -4208,6 +4208,7 @@ the change violates a guardrail and must be corrected first.
 | 17 | All new `AeonLog` calls use `[Conditional("DEBUG")]` via the gateway (not raw `ILogger` or `Debug.WriteLine`)? `[BLOCK]` tag added only for methods with named internal phases? | YES |
 | 18 | Commit message ends with `AI: GitHub Copilot (<model>)` trailer (§9.13)? If the commit includes **any human-authored edits**, does the trailer read `AI: GitHub Copilot (<model>) + manual changes`? | YES |
 | 19 | All `edit_file` calls on large/repetitive files (`CalculationService.cs`, `AppResources.Designer.cs`, `MainPage.xaml`) replaced by character-offset terminal splices per §9.14.2? | YES |
+| 20 | Did every `run_command_in_terminal` call in this session pass the Pre-Flight Gate (§9.14.1)? Did any parse error or empty output trigger the Terminal Error Recovery Protocol before continuing? Was the last terminal call confirmed to have produced expected output before finishing? | YES |
 
 
 ---
@@ -4261,11 +4262,70 @@ avoid interruptions, recovery loops, and data loss.
 
 #### 9.14.1 PowerShell Terminal Commands
 
+---
+
+#### PRE-FLIGHT GATE - evaluate ALL three conditions before EVERY `run_command_in_terminal` call
+
+> This gate is **mandatory**. Skipping it is the single most common source of
+> broken terminal sessions and silent data loss. Read it at the moment of action,
+> not once at session start.
+
+| Condition | Rule |
+|-----------|------|
+| Does the string contain `&`, `{`, `}`, `(`, `)`, newlines, or `-` at word-start? | **STOP.** Write a `.ps1` file instead. Do not use `-Command "..."` at all. |
+| Did the previous terminal command produce a parse error or unexpected output? | **STOP.** Apply the Terminal Error Recovery Protocol below before continuing. |
+| Did the previous terminal command return empty / `nothing` output when at least one `Write-Host` was present? | **STOP.** Treat as a broken session - not a silent success. Apply the Terminal Error Recovery Protocol below. |
+
+**Concrete forbidden pattern** (causes the session to break silently):
+
+```
+# WRONG - & characters in -Command string cause parse errors and break session state
+run_command_in_terminal: powershell -Command "...<value>&lt;b&gt;text&lt;/b&gt;</value>..."
+
+# RIGHT - always write content with special characters to a .ps1 file first
+1. create_file "myscript.ps1"  <- put the content here, no quoting issues
+2. run_command_in_terminal: powershell -ExecutionPolicy Bypass -File "myscript.ps1"
+3. remove_file "myscript.ps1"
+```
+
+---
+
+#### Terminal Error Recovery Protocol (mandatory after any parse error or empty output)
+
+Execute these steps in order. Do not skip any step. Do not proceed with real work until Step 3 confirms a clean session.
+
+```
+Step 1: run_command_in_terminal -> Write-Host "reset"
+Step 2: Confirm the output is exactly the word "reset".
+        If the output is empty, a parse error, or anything else: repeat Step 1 up to three times.
+Step 3: Only after confirmed "reset" output, continue with the next real command.
+Step 4: If three consecutive resets fail to produce output, stop entirely and
+        report the broken session to the user before making any further changes.
+```
+
+---
+
+#### Silent Failure Rule
+
+If a `run_command_in_terminal` call returns **empty output** and the script contained
+at least one `Write-Host` statement, this is **not** a successful no-output run.
+It is a broken session. Do not proceed. Apply the Terminal Error Recovery Protocol above.
+
+Symptoms that indicate a broken session:
+- `run_command_in_terminal` returns `nothing`
+- A `Write-Host` line that should have produced output did not
+- A file-write script ran but the file size did not change as expected
+
+---
+
 ##### DO
 
 - **Always write multi-line PowerShell logic to a `.ps1` script file** and
   execute it with `powershell -ExecutionPolicy Bypass -File script.ps1`.
   Never pass multi-line logic via `-Command "..."`.
+
+- **Apply the pre-flight gate before every terminal call** - at the moment of
+  action, not just once at session start.
 
 - **Send a no-op reset command after any terminal parse error** before
   continuing with the next real command:
@@ -4288,8 +4348,13 @@ avoid interruptions, recovery loops, and data loss.
 - **Do not assume a terminal session is clean** after a failed command.
   Always reset and confirm before the next command.
 
----
+- **Do not treat empty terminal output as success** when output was expected.
+  Always apply the Silent Failure Rule above.
 
+- **Do not proceed past a broken terminal session** by switching to a different
+  task or file. Fix the session first, then continue.
+
+---
 #### 9.14.2 `edit_file` Usage
 
 ##### DO
