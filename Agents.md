@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-03-27
+> **Last updated:** 2026-03-28
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -4202,6 +4202,7 @@ the change violates a guardrail and must be corrected first.
 | 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (222+ tests, 0 failures)? | YES |
 | 17 | All new `AeonLog` calls use `[Conditional("DEBUG")]` via the gateway (not raw `ILogger` or `Debug.WriteLine`)? `[BLOCK]` tag added only for methods with named internal phases? | YES |
 | 18 | Commit message ends with `AI: GitHub Copilot (<model>)` trailer (§9.13)? If the commit includes **any human-authored edits**, does the trailer read `AI: GitHub Copilot (<model>) + manual changes`? | YES |
+| 19 | All `edit_file` calls on large/repetitive files (`CalculationService.cs`, `AppResources.Designer.cs`, `MainPage.xaml`) replaced by character-offset terminal splices per §9.14.2? | YES |
 
 
 ---
@@ -4242,3 +4243,153 @@ the change violates a guardrail and must be corrected first.
 
 - **Do not add the signature to commits made entirely by a human** without
   AI assistance.
+
+
+---
+
+### 9.14 Agent Tool-Use Guardrails
+
+Rules derived from observed failure modes. Follow them in every session to
+avoid interruptions, recovery loops, and data loss.
+
+---
+
+#### 9.14.1 PowerShell Terminal Commands
+
+##### DO
+
+- **Always write multi-line PowerShell logic to a `.ps1` script file** and
+  execute it with `powershell -ExecutionPolicy Bypass -File script.ps1`.
+  Never pass multi-line logic via `-Command "..."`.
+
+- **Send a no-op reset command after any terminal parse error** before
+  continuing with the next real command:
+  ```
+  Write-Host "reset"
+  ```
+  Confirm the output is `reset` before proceeding. A failed command can leave
+  the session in a broken state that silently corrupts the next command.
+
+- **Delete helper `.ps1` / `.csx` script files immediately** after their
+  single-use purpose is complete using `remove_file`. Do not leave them
+  in the repository.
+
+##### DO NOT
+
+- **Do not use `powershell -Command "..."` for any string that contains**
+  `&`, `{`, `}`, `(`, `)`, `-` at the start of a word, or newlines. These
+  characters are parsed as PowerShell operators and cause parse errors.
+
+- **Do not assume a terminal session is clean** after a failed command.
+  Always reset and confirm before the next command.
+
+---
+
+#### 9.14.2 `edit_file` Usage
+
+##### DO
+
+- **Use `edit_file` only for targeted, self-contained changes** where the
+  anchor text is unique in the file and does not match any structural
+  boilerplate (`#endregion`, `}`, closing XML tags).
+
+- **For large files with repetitive structure** (e.g. `CalculationService.cs`
+  with many `#region`/`#endregion` blocks, `AppResources.Designer.cs` with
+  many identical property patterns, deeply-nested `MainPage.xaml`), prefer a
+  `.ps1` or `.csx` script that splices content at a **precise character
+  offset** obtained with `IndexOf` / `LastIndexOf`.
+
+- **Verify the result immediately after every `edit_file` call** by reading
+  back the affected lines with `get_file` or `Select-String` to confirm the
+  edit landed exactly where intended before moving on.
+
+##### DO NOT
+
+- **Do not use `// ...existing code...` or `<!-- ...existing... -->`
+  placeholders as anchors in files that have many similar regions.** The
+  `edit_file` tool may match the placeholder against the wrong region and
+  silently delete intervening content.
+
+- **Do not use `edit_file` to append to `AppResources.Designer.cs`.**
+  That file is auto-generated with a highly regular pattern. Use the
+  `.csx`-script approach instead: read the git-original with
+  `git show HEAD:path`, cut before the closing braces, append new properties
+  programmatically, write back.
+
+- **Do not use `edit_file` for XAML insertions inside deeply-nested
+  hierarchies.** Use a character-offset terminal splice (read full text,
+  locate the exact insertion point, write `before + newBlock + after`).
+
+---
+
+#### 9.14.3 File Creation and Editing
+
+##### DO
+
+- **Fully plan the content of every helper script before calling
+  `create_file`.** `create_file` cannot overwrite an existing file.
+  If the content needs changing after creation, use `edit_file` to update
+  it or `remove_file` then `create_file` to replace it.
+
+- **Use `remove_file` + `create_file` to replace any file** whose content
+  must change substantially and where `edit_file` cannot apply a clean diff.
+
+##### DO NOT
+
+- **Do not call `create_file` on a path that may already exist** without
+  first confirming with `file_search`. The call will silently fail and the
+  stale content will remain, causing subsequent steps to operate on the
+  wrong version.
+
+---
+
+#### 9.14.4 XAML Structural Edits
+
+##### DO
+
+- **Verify indentation levels before and after every XAML insertion.**
+  Run this check immediately after writing the file:
+  ```powershell
+  $lines = Get-Content "path\to\file.xaml"
+  @(lineNumbers) | ForEach-Object {
+      $sp = $lines[$_-1].Length - $lines[$_-1].TrimStart().Length
+      Write-Host "L$_ sp=$sp [$($lines[$_-1].Trim())]"
+  }
+  ```
+  Confirm every opening tag has a matching closing tag at the same indent
+  level before calling `run_build`.
+
+- **Count opening and closing tags for the affected element type** after
+  every XAML splice to catch missing close tags early:
+  ```powershell
+  $c = Get-Content "file.xaml" -Raw
+  $open  = ([regex]::Matches($c, "<VerticalStackLayout")).Count
+  $close = ([regex]::Matches($c, "</VerticalStackLayout>")).Count
+  Write-Host "open=$open close=$close"
+  ```
+
+##### DO NOT
+
+- **Do not rely on `edit_file` placeholder comments to anchor XAML
+  insertions** inside sections that contain multiple sibling containers at
+  the same nesting depth. The tool may consume a structural closing tag as
+  part of the match, breaking the tag balance.
+
+---
+
+#### 9.14.5 Recovery Procedure
+
+When a build fails after a file-modification step, follow this sequence
+before attempting any further edits:
+
+1. Run `git diff --stat HEAD` to identify exactly which files changed.
+2. For each changed file, run `Select-String` to verify the key symbols
+   (method names, region names, property names) are still present and appear
+   exactly once.
+3. If a file was truncated or duplicated, restore it with
+   `git show HEAD:path > C:\Temp\orig.txt`, then splice in only the new
+   content programmatically via a `.ps1` or `.csx` script.
+4. Never attempt a second `edit_file` on a file that was already corrupted
+   by a first `edit_file`. Restore from git first.
+5. Run `run_build` after each individual file fix - do not batch multiple
+   file fixes before building, so errors are attributed to the correct file.
