@@ -1,4 +1,4 @@
-using Aeonpulse.Attributes;
+﻿using Aeonpulse.Attributes;
 using Aeonpulse.ViewModels;
 using Aeonpulse.Resources;
 
@@ -50,6 +50,7 @@ namespace Aeonpulse.Views
         private bool _isCellularRefreshDeepDiveOpen;
         private bool _isVibrantCosmosDeepDiveOpen;
         private bool _isGlobalCrowdDeepDiveOpen;
+        private bool _isLifeLogDeepDiveOpen;
 
         /// <summary>
         /// Constructs the page and subscribes to the ViewModel's
@@ -344,5 +345,13 @@ namespace Aeonpulse.Views
                 AppResources.Info_GlobalCrowdTitle,
                 AppResources.Info_MethodTitle, AppResources.Info_GlobalCrowdMethod,
                 AppResources.Info_SourceTitle, AppResources.Info_GlobalCrowdSource);
+
+        /// <summary>Opens the Life Log deep-dive info panel.</summary>
+        private async void OnLifeLogInfoClicked(object sender, EventArgs e) =>
+            await OpenDeepDiveAsync(
+                () => _isLifeLogDeepDiveOpen, v => _isLifeLogDeepDiveOpen = v,
+                AppResources.Info_LifeLogTitle,
+                AppResources.Info_MethodTitle, AppResources.Info_LifeLogMethod,
+                AppResources.Info_SourceTitle, AppResources.Info_LifeLogSource);
     }
 }

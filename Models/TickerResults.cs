@@ -324,4 +324,34 @@ namespace Aeonpulse.Models
         /// <summary>Estimated current global population at calculation time.</summary>
         public double CurrentPopulation { get; init; }
     }
+
+    /// <summary>
+    /// Typed result for <c>CalculationService.CalculateLifeLog</c>.
+    /// Carries the raw computed total hours per activity and the two activity
+    /// names/hours chosen for the brief view so callers can re-randomise without
+    /// re-running the full calculation.
+    /// </summary>
+    [AIContext("DataTransferObject")]
+    public class LifeLogResult : TickerData
+    {
+        /// <summary>Total elapsed days since the base date used for all activity calculations.</summary>
+        public double TotalDays { get; init; }
+
+        /// <summary>
+        /// Dictionary mapping localised activity name to total hours accumulated since the base date.
+        /// </summary>
+        public Dictionary<string, double> ActivityHours { get; init; } = new();
+
+        /// <summary>Name of the first randomly selected activity shown in the brief view.</summary>
+        public string Activity1Name { get; init; } = string.Empty;
+
+        /// <summary>Total hours for the first randomly selected activity (raw, unformatted).</summary>
+        public double Activity1Hours { get; init; }
+
+        /// <summary>Name of the second randomly selected activity shown in the brief view.</summary>
+        public string Activity2Name { get; init; } = string.Empty;
+
+        /// <summary>Total hours for the second randomly selected activity (raw, unformatted).</summary>
+        public double Activity2Hours { get; init; }
+    }
 }

@@ -288,6 +288,13 @@ namespace Aeonpulse.ViewModels
             set { _globalCrowdExpanded = value; OnPropertyChanged(); }
         }
 
+        private bool _lifeLogExpanded = false;
+        public bool LifeLogExpanded
+        {
+            get => _lifeLogExpanded;
+            set { _lifeLogExpanded = value; OnPropertyChanged(); }
+        }
+
         // Ticker Data
         private TimeJubileesResult _timeJubilees = new TimeJubileesResult();
         public TimeJubileesResult TimeJubilees
@@ -394,6 +401,13 @@ namespace Aeonpulse.ViewModels
             set { _globalCrowd = value; OnPropertyChanged(); }
         }
 
+        private LifeLogResult _lifeLog = new LifeLogResult();
+        public LifeLogResult LifeLog
+        {
+            get => _lifeLog;
+            set { _lifeLog = value; OnPropertyChanged(); }
+        }
+
         private string _teaseText = "";
         public string TeaseText
         {
@@ -434,6 +448,8 @@ namespace Aeonpulse.ViewModels
         public ICommand RefreshAlienAnniversariesCommand { get; }
         public ICommand RefreshGlobalExhaleCommand { get; }
         public ICommand RefreshCellularRefreshCommand { get; }
+        public ICommand ToggleLifeLogCommand { get; }
+        public ICommand RefreshLifeLogCommand { get; }
 
         /// <summary>
         /// Raised when a live refresh is requested, so the View layer can show
@@ -490,6 +506,8 @@ namespace Aeonpulse.ViewModels
             ToggleVibrantCosmosCommand = new Command(() => VibrantCosmosExpanded = !VibrantCosmosExpanded);
             ToggleGlobalCrowdCommand = new Command(() => GlobalCrowdExpanded = !GlobalCrowdExpanded);
 
+            ToggleLifeLogCommand = new Command(() => LifeLogExpanded = !LifeLogExpanded);
+
             // Initialize card-level refresh commands
             RefreshTimeJubileesCommand = new Command(async () =>
             {
@@ -522,6 +540,14 @@ namespace Aeonpulse.ViewModels
                         CellularRefresh = _calculationService.CalculateCellularRefresh(BaseDate, BaseDateName, BaseDateValue));
                 else
                     CellularRefresh = _calculationService.CalculateCellularRefresh(BaseDate, BaseDateName, BaseDateValue);
+            });
+            RefreshLifeLogCommand = new Command(async () =>
+            {
+                if (RefreshRequested != null)
+                    await RefreshRequested.Invoke(() =>
+                        LifeLog = _calculationService.CalculateLifeLog(BaseDate, BaseDateName, BaseDateValue));
+                else
+                    LifeLog = _calculationService.CalculateLifeLog(BaseDate, BaseDateName, BaseDateValue);
             });
 
             // Initial calculations
@@ -556,6 +582,7 @@ namespace Aeonpulse.ViewModels
             PersonalYear = _calculationService.CalculatePersonalYear(BaseDate, BaseDateValue);
             GlobalExhale = _calculationService.CalculateGlobalExhale(BaseDate, BaseDateName, BaseDateValue, UseMetric);
             CellularRefresh = _calculationService.CalculateCellularRefresh(BaseDate, BaseDateName, BaseDateValue);
+            LifeLog = _calculationService.CalculateLifeLog(BaseDate, BaseDateName, BaseDateValue);
         }
 
         public void UpdateLiveCalculations()

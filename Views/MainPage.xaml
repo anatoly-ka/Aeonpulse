@@ -1015,6 +1015,69 @@
                                            IsVisible="{Binding GlobalCrowdExpanded}" />
                                 </VerticalStackLayout>
                             </Border>
+
+                                <!-- == TICKER: LIFE LOG ================================
+                                 Static ticker with refresh button - recalculated on
+                                 base date change or via explicit RefreshLifeLogCommand.
+                                 Brief view randomly picks 2 activities; refresh re-randomises.
+                                 Binding: MainViewModel.LifeLog (LifeLogResult)
+                                 Commands: RefreshLifeLogCommand, ToggleLifeLogCommand
+                            ======================================================== -->
+                            <Border BackgroundColor="{DynamicResource CardDark}"
+                                    StrokeThickness="1"
+                                    Stroke="{DynamicResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <!-- AI: Ticker card header - 3-column:
+                                         [Col0: clock emoji | Col1: title | Col2: info + refresh + expand buttons]
+                                         Bound to MainViewModel.LifeLog (static, re-randomises on refresh). -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F570; (U+1F570 Mantelpiece Clock) -->
+                                        <Label Grid.Column="0"
+                                               Text="🕰️"
+                                               FontSize="{DynamicResource FontSizeTitle}"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <!-- Binding: MainViewModel.Loc.Ticker_LifeLogTitle (live-localised) -->
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Loc.Ticker_LifeLogTitle}"
+                                               Style="{StaticResource BaseLabel}"
+                                               TextColor="{DynamicResource CyberPurple}"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center" />
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <!-- Info: opens DeepDivePopup with methodology and sources -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnLifeLogInfoClicked" />
+                                            <!-- Refresh: re-randomises the two brief-view activities -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="refresh.png"
+                                                         Command="{Binding RefreshLifeLogCommand}" />
+                                            <!-- Expand/collapse: toggles LifeLogExpanded -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding LifeLogExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleLifeLogCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                    <!-- Binding: MainViewModel.LifeLog.BriefText - always visible; HTML formatted -->
+                                    <Label Text="{Binding LifeLog.BriefText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                    <!-- Binding: MainViewModel.LifeLog.FullText - visible when expanded; HTML formatted -->
+                                    <Label Text="{Binding LifeLog.FullText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding LifeLogExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>

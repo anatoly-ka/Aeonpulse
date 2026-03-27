@@ -1685,4 +1685,43 @@
   <data name="Info_GlobalCrowdSource" xml:space="preserve">
     <value>Мировые статистические данные и прогнозы численности населения взяты из Population Division (2024 Revision), предоставленном Департаментом по экономическим и социальным вопросам ООН. Исторические оценки взяты из баз данных Human Mortality Database (2025 revision) и Population Reference Bureau (2024).</value>
   </data>
+  <data name="Ticker_LifeLogTitle" xml:space="preserve">
+    <value>Дневник жизни</value>
+  </data>
+  <data name="Ticker_LifeLogBrief" xml:space="preserve">
+    <value>{activity_1}: {hours_1} ч, {activity_2}: {hours_2} ч</value>
+  </data>
+  <data name="Ticker_LifeLogFull" xml:space="preserve">
+    <value>С {baseDateName} ({baseDate:d}) средний человек потратил бы время на:&lt;br&gt;{all_activities_list}</value>
+  </data>
+  <data name="Info_LifeLogTitle" xml:space="preserve">
+    <value>Дневник жизни</value>
+  </data>
+  <data name="Info_LifeLogMethod" xml:space="preserve">
+    <value>Вот несколько удивительных статистик о том, как мы проводим время. Расчёт выполняется путём умножения общего числа дней на среднее число часов в день.</value>
+  </data>
+  <data name="Info_LifeLogSource" xml:space="preserve">
+    <value>Средние показатели основаны на статистике учёта времени и данных Американского опроса использования времени (ATUS).</value>
+  </data>
+  <data name="LifeLog_Activity_Sleeping" xml:space="preserve">
+    <value>Сон</value>
+  </data>
+  <data name="LifeLog_Activity_LeisureScreenTime" xml:space="preserve">
+    <value>Досуг и время у экрана</value>
+  </data>
+  <data name="LifeLog_Activity_Working" xml:space="preserve">
+    <value>Работа</value>
+  </data>
+  <data name="LifeLog_Activity_HouseholdChores" xml:space="preserve">
+    <value>Домашние дела</value>
+  </data>
+  <data name="LifeLog_Activity_EatingDrinking" xml:space="preserve">
+    <value>Еда и питьё</value>
+  </data>
+  <data name="LifeLog_Activity_Commuting" xml:space="preserve">
+    <value>В дороге</value>
+  </data>
+  <data name="LifeLog_Activity_PersonalCare" xml:space="preserve">
+    <value>Личная гигиена</value>
+  </data>
 </root>

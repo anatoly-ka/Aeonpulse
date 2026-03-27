@@ -1685,4 +1685,43 @@
   <data name="Info_GlobalCrowdSource" xml:space="preserve">
     <value>World population statistics and projections courtesy of the United Nations, Department of Economic and Social Affairs, Population Division (2024 Revision). Historical estimates by Human Mortality Database (2025 revision) and the Population Reference Bureau (2024).</value>
   </data>
+  <data name="Ticker_LifeLogTitle" xml:space="preserve">
+    <value>Life Log</value>
+  </data>
+  <data name="Ticker_LifeLogBrief" xml:space="preserve">
+    <value>{activity_1}: {hours_1} hrs, {activity_2}: {hours_2} hrs</value>
+  </data>
+  <data name="Ticker_LifeLogFull" xml:space="preserve">
+    <value>Since {baseDateName} on {baseDate:d}, an average person would have spent their time on:&lt;br&gt;{all_activities_list}</value>
+  </data>
+  <data name="Info_LifeLogTitle" xml:space="preserve">
+    <value>Life Log</value>
+  </data>
+  <data name="Info_LifeLogMethod" xml:space="preserve">
+    <value>Here are some surprising statistics about how we spend our time. This is calculated by multiplying the total number of days passed by the average number of hours per day spent sleeping, working, eating, resting, etc.</value>
+  </data>
+  <data name="Info_LifeLogSource" xml:space="preserve">
+    <value>Averages based on time-tracking statistics and the American Time Use Survey (ATUS) data.</value>
+  </data>
+  <data name="LifeLog_Activity_Sleeping" xml:space="preserve">
+    <value>Sleeping</value>
+  </data>
+  <data name="LifeLog_Activity_LeisureScreenTime" xml:space="preserve">
+    <value>Leisure &amp; Screen Time</value>
+  </data>
+  <data name="LifeLog_Activity_Working" xml:space="preserve">
+    <value>Working</value>
+  </data>
+  <data name="LifeLog_Activity_HouseholdChores" xml:space="preserve">
+    <value>Household Chores</value>
+  </data>
+  <data name="LifeLog_Activity_EatingDrinking" xml:space="preserve">
+    <value>Eating &amp; Drinking</value>
+  </data>
+  <data name="LifeLog_Activity_Commuting" xml:space="preserve">
+    <value>Commuting</value>
+  </data>
+  <data name="LifeLog_Activity_PersonalCare" xml:space="preserve">
+    <value>Personal Care</value>
+  </data>
 </root>

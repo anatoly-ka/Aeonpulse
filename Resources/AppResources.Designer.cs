@@ -178,7 +178,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Elder Futhark is the oldest runic alphabet, used by Germanic tribes from approximately AD 150 to 800 for inscriptions on artifacts. It consists of 24 characters, divided into three families - groups of eight (aettir), named after its first six letters (F-U-Þ-A-R-K). The Elder Futhark birth rune system assigns specific runes to birth dates, often based on a 24-rune cycle linked to the Sun&apos;s position throughout the year. In the Norse mysticism, each rune is more than just a symbol; it is a richly meaningf [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to The Elder Futhark is the oldest runic alphabet, used by Germanic tribes from approximately AD 150 to 800 for inscriptions on artifacts. It consists of 24 characters, divided into three families - groups of eight (aettir), named after its first six letters (F-U-├₧-A-R-K). The Elder Futhark birth rune system assigns specific runes to birth dates, often based on a 24-rune cycle linked to the Sun&apos;s position throughout the year. In the Norse mysticism, each rune is more than just a symbol; it is a richly meaningf [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Info_BirthRuneMethod {
             get {
@@ -1970,7 +1970,7 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to the brightest star in the constellation Boötes and the fourth-brightest star in the night sky.
+        ///   Looks up a localized string similar to the brightest star in the constellation Bo├╢tes and the fourth-brightest star in the night sky.
         /// </summary>
         public static string Star_Arcturus_Info {
             get {
@@ -3558,6 +3558,71 @@ namespace Aeonpulse.Resources {
         public static string Info_GlobalCrowdSource {
             get {
                 return ResourceManager.GetString("Info_GlobalCrowdSource", resourceCulture);
+            }
+        }
+        public static string Ticker_LifeLogTitle {
+            get {
+                return ResourceManager.GetString("Ticker_LifeLogTitle", resourceCulture);
+            }
+        }
+        public static string Ticker_LifeLogBrief {
+            get {
+                return ResourceManager.GetString("Ticker_LifeLogBrief", resourceCulture);
+            }
+        }
+        public static string Ticker_LifeLogFull {
+            get {
+                return ResourceManager.GetString("Ticker_LifeLogFull", resourceCulture);
+            }
+        }
+        public static string Info_LifeLogTitle {
+            get {
+                return ResourceManager.GetString("Info_LifeLogTitle", resourceCulture);
+            }
+        }
+        public static string Info_LifeLogMethod {
+            get {
+                return ResourceManager.GetString("Info_LifeLogMethod", resourceCulture);
+            }
+        }
+        public static string Info_LifeLogSource {
+            get {
+                return ResourceManager.GetString("Info_LifeLogSource", resourceCulture);
+            }
+        }
+        public static string LifeLog_Activity_Sleeping {
+            get {
+                return ResourceManager.GetString("LifeLog_Activity_Sleeping", resourceCulture);
+            }
+        }
+        public static string LifeLog_Activity_LeisureScreenTime {
+            get {
+                return ResourceManager.GetString("LifeLog_Activity_LeisureScreenTime", resourceCulture);
+            }
+        }
+        public static string LifeLog_Activity_Working {
+            get {
+                return ResourceManager.GetString("LifeLog_Activity_Working", resourceCulture);
+            }
+        }
+        public static string LifeLog_Activity_HouseholdChores {
+            get {
+                return ResourceManager.GetString("LifeLog_Activity_HouseholdChores", resourceCulture);
+            }
+        }
+        public static string LifeLog_Activity_EatingDrinking {
+            get {
+                return ResourceManager.GetString("LifeLog_Activity_EatingDrinking", resourceCulture);
+            }
+        }
+        public static string LifeLog_Activity_Commuting {
+            get {
+                return ResourceManager.GetString("LifeLog_Activity_Commuting", resourceCulture);
+            }
+        }
+        public static string LifeLog_Activity_PersonalCare {
+            get {
+                return ResourceManager.GetString("LifeLog_Activity_PersonalCare", resourceCulture);
             }
         }
     }

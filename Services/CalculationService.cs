@@ -1,4 +1,4 @@
-using Aeonpulse.Attributes;
+﻿using Aeonpulse.Attributes;
 using Aeonpulse.Models;
 using System;
 using System.Linq;
@@ -1555,6 +1555,153 @@ namespace Aeonpulse.Services
         }
 
         #endregion
+
+        #region Life Log
+
+        /// <summary>
+        /// Estimates the total time an average person would have spent on various
+        /// daily activities since <paramref name="baseDate"/>, based on American
+        /// Time Use Survey (ATUS) average daily hours per activity.
+        ///
+        /// <para>
+        /// <b>Algorithm:</b> each activity has a fixed average daily-hours constant
+        /// sourced from ATUS data. The total hours for each activity equals
+        /// <c>averageHoursPerDay * totalDays</c>. The brief view randomly selects
+        /// two activities and formats their raw hours as N0. The full view lists
+        /// all activities with hours converted to a readable
+        /// "Y years M months D days H hours" string, omitting leading zero segments.
+        /// </para>
+        /// <para>
+        /// <b>Side effect:</b> reads <see cref="AppResources"/> for all output
+        /// strings and activity names so results automatically reflect the active
+        /// locale set by <c>AppResources.Culture</c>.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The user-selected origin date.</param>
+        /// <param name="baseDateName">Human-readable label for display in output strings.</param>
+        /// <param name="baseDateValue">ISO-8601 string of the base date for output formatting.</param>
+        /// <param name="rand">Optional <see cref="Random"/> instance for deterministic testing of brief-text activity selection.</param>
+        /// <param name="now">Optional <see cref="DateTime"/> override for deterministic testing.</param>
+        /// <returns>
+        /// A <see cref="LifeLogResult"/> with brief text showing two random activities
+        /// and full text listing all activities with readable time breakdowns.
+        /// </returns>
+        [AIContext("CoreCalculation")]
+        public LifeLogResult CalculateLifeLog(DateTime baseDate, string baseDateName, string baseDateValue, Random? rand = null, DateTime? now = null)
+        {
+            DateTime now_ = now ?? DateTime.Now;
+            AeonLog.Debug(LogCat, nameof(CalculateLifeLog), $"baseDate={baseDate:d}");
+
+            // Average daily hours spent on various activities (ATUS data)
+            var dailyAverages = new Dictionary<string, double>
+            {
+                { AppResources.LifeLog_Activity_Sleeping,          8.8 },
+                { AppResources.LifeLog_Activity_LeisureScreenTime, 5.2 },
+                { AppResources.LifeLog_Activity_Working,           3.6 },
+                { AppResources.LifeLog_Activity_HouseholdChores,   1.8 },
+                { AppResources.LifeLog_Activity_EatingDrinking,    1.2 },
+                { AppResources.LifeLog_Activity_Commuting,         1.1 },
+                { AppResources.LifeLog_Activity_PersonalCare,      0.8 },
+            };
+
+            double totalDays = (now_ - baseDate).TotalDays;
+
+            // Calculate total hours for each activity
+            var calculatedActivities = dailyAverages.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value * totalDays
+            );
+
+            // For the brief view: randomly select 2 activities
+            var rng = rand ?? new Random();
+            var randomKeys = calculatedActivities.Keys.OrderBy(_ => rng.Next()).Take(2).ToList();
+            string activity1Name  = randomKeys[0];
+            double activity1Hours = calculatedActivities[activity1Name];
+            string activity2Name  = randomKeys[1];
+            double activity2Hours = calculatedActivities[activity2Name];
+
+            string briefText = AppResources.Ticker_LifeLogBrief
+                .Replace("{activity_1}", activity1Name)
+                .Replace("{hours_1}",    activity1Hours.ToString("N0"))
+                .Replace("{activity_2}", activity2Name)
+                .Replace("{hours_2}",    activity2Hours.ToString("N0"));
+
+            // For the full view: convert raw hours to readable time string per activity
+            var activityLines = new System.Text.StringBuilder();
+            foreach (var kvp in calculatedActivities)
+            {
+                string readable     = FormatHoursAsReadableTime(kvp.Value);
+                string activityName = kvp.Key.Replace("&", "&amp;");
+                activityLines.Append("&bull; ").Append(activityName).Append(": ").Append(readable).Append("<br>");
+            }
+
+            string fullText = AppResources.Ticker_LifeLogFull
+                .Replace("{baseDateName}",       baseDateName)
+                .Replace("{baseDate:d}",         baseDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture))
+                .Replace("{all_activities_list}", activityLines.ToString());
+
+            return new LifeLogResult
+            {
+                TotalDays      = totalDays,
+                ActivityHours  = calculatedActivities,
+                Activity1Name  = activity1Name,
+                Activity1Hours = activity1Hours,
+                Activity2Name  = activity2Name,
+                Activity2Hours = activity2Hours,
+                BriefText      = briefText,
+                FullText       = fullText
+            };
+        }
+
+        /// <summary>
+        /// Converts a raw total-hours value into a human-readable time string of the
+        /// form "Y years M months D days H hours", omitting any leading components
+        /// whose value is zero.
+        /// </summary>
+        /// <param name="totalHours">Raw total hours to convert.</param>
+        /// <returns>
+        /// A non-empty string such as "3 years 2 months 15 days 4 hours" or
+        /// "45 days 6 hours". Returns "0 hours" when <paramref name="totalHours"/>
+        /// is less than one.
+        /// </returns>
+        private static string FormatHoursAsReadableTime(double totalHours)
+        {
+            if (totalHours < 1.0)
+                return string.Format(AppResources.Unit_HoursTemplate, 0);
+
+            long hoursTotal   = (long)totalHours;
+            long years        = hoursTotal / 8766;      // avg hours per year (365.25 * 24)
+            long remaining    = hoursTotal % 8766;
+            long months       = remaining / 730;        // avg hours per month (365.25/12 * 24)
+            remaining         = remaining % 730;
+            long days         = remaining / 24;
+            long hours        = remaining % 24;
+
+            var parts = new System.Text.StringBuilder();
+
+            if (years > 0)
+                parts.Append(string.Format(AppResources.Unit_YearsTemplate, years)).Append(' ');
+            if (months > 0 || years > 0)
+            {
+                if (months > 0)
+                    parts.Append(string.Format(AppResources.Unit_MonthsTemplate, months)).Append(' ');
+            }
+            if (days > 0 || months > 0 || years > 0)
+            {
+                if (days > 0)
+                    parts.Append(string.Format(AppResources.Unit_DaysTemplate, days)).Append(' ');
+            }
+            if (hours > 0)
+                parts.Append(string.Format(AppResources.Unit_HoursTemplate, hours));
+
+            string result = parts.ToString().Trim();
+            return string.IsNullOrEmpty(result)
+                ? string.Format(AppResources.Unit_HoursTemplate, 0)
+                : result;
+        }
+
+        #endregion
+
 
         #region Tease Text
 
