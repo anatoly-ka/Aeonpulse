@@ -4212,7 +4212,7 @@ the change violates a guardrail and must be corrected first.
 | 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (222+ tests, 0 failures)? | YES |
 | 17 | All new `AeonLog` calls use `[Conditional("DEBUG")]` via the gateway (not raw `ILogger` or `Debug.WriteLine`)? `[BLOCK]` tag added only for methods with named internal phases? | YES |
 | 18 | Commit message ends with `AI: GitHub Copilot (<model>)` trailer (§9.13)? If the commit includes **any human-authored edits**, does the trailer read `AI: GitHub Copilot (<model>) + manual changes`? | YES |
-| 19 | All `edit_file` calls on large/repetitive files (`CalculationService.cs`, `AppResources.Designer.cs`, `MainPage.xaml`) replaced by character-offset terminal splices per §9.14.2? | YES |
+| 19 | Was the PRE-EDIT GATE (§9.14.2) evaluated before every `edit_file` call in this session? Was the three-part post-edit verification (presence, uniqueness, no-deletion) run after each one? Were all "Never use `edit_file`" files in the routing table edited via `.ps1` scripts only? | YES |
 | 20 | Did every `run_command_in_terminal` call in this session pass the Pre-Flight Gate (§9.14.1)? Did any parse error or empty output trigger the Terminal Error Recovery Protocol before continuing? Was the last terminal call confirmed to have produced expected output before finishing? | YES |
 
 
@@ -4362,21 +4362,76 @@ Symptoms that indicate a broken session:
 ---
 #### 9.14.2 `edit_file` Usage
 
+---
+
+#### PRE-EDIT GATE - evaluate before EVERY `edit_file` call
+
+> This gate is **mandatory**. Apply it at the moment of action, not once at session start.
+
+| Condition | Rule |
+|-----------|------|
+| Is the target file in the "Never use `edit_file`" row of the per-file routing table below? | **STOP.** Write a `.ps1` script instead. |
+| Does the anchor text consist solely of structural boilerplate (`#endregion`, `}`, `-->`, closing XML tags) with no unique identifier on the same line? | **STOP.** The anchor is not unique enough. Write a `.ps1` script instead. |
+| Has this same file already been modified by `edit_file` in this session and the three-part post-edit verification has not yet been completed? | **STOP.** Complete the verification first, then proceed. |
+
+---
+
+#### Per-File Routing Table (non-negotiable)
+
+Consult this table before every edit. "Never use `edit_file`" means always use a `.ps1` script.
+
+| File | Rule |
+|------|------|
+| `Services/CalculationService.cs` | **Never use `edit_file`.** The file has 34+ `#region`/`#endregion` pairs that produce identical structural boilerplate. All insertions and modifications must use a `.ps1` script with `string.Replace()` anchors of at least 3 unique consecutive lines. |
+| `Views/MainPage.xaml` | **Never use `edit_file` for insertions.** The file has 23+ `<!-- == TICKER: ... -->` blocks with identical sibling structure. All insertions must use a `.ps1` script with a multi-line string anchor. `edit_file` is permitted only for isolated single-attribute changes where a unique `x:Name` value appears in the anchor. |
+| `Resources/AppResources.resx` / `AppResources.ru.resx` | **Never use `edit_file`.** Files exceed 60 KB. Use targeted `ReadAllText` / `Replace` / `WriteAllText` terminal writes, one logical change per script, per §9.5. |
+| `Resources/AppResources.Designer.cs` | **Never use `edit_file`.** Auto-generated with a highly regular property pattern. Use a `.ps1` script that splices before the closing braces. |
+| All other `.cs` files under 500 lines | `edit_file` is permitted when the anchor contains a complete unique method signature or property name. Structural boilerplate (`}`, `#endregion`) must not be the sole anchor. |
+| All other `.xaml` files under 300 lines | `edit_file` is permitted for attribute changes on named elements only - the unique `x:Name` value must appear in the anchor. |
+
+---
+
+#### Mandatory Pre-Edit Census for `CalculationService.cs`
+
+Before making **any** change to `CalculationService.cs`, run this census and save the output. Run it again after every individual modification and compare:
+
+```powershell
+Select-String -Path "Services\CalculationService.cs" -Pattern "#region|#endregion" |
+    Select-Object LineNumber, Line | Format-Table -AutoSize
+```
+
+**Pass criteria:**
+- Open-region count equals close-region count (always).
+- After inserting 1 new region: total count increases by exactly 2.
+- Every region name that existed before the edit still appears exactly once.
+
+If any criterion fails: the edit corrupted the file. Apply §9.14.5 Recovery Procedure
+immediately before making any further changes.
+
+---
+
 ##### DO
 
 - **Use `edit_file` only for targeted, self-contained changes** where the
   anchor text is unique in the file and does not match any structural
   boilerplate (`#endregion`, `}`, closing XML tags).
 
-- **For large files with repetitive structure** (e.g. `CalculationService.cs`
-  with many `#region`/`#endregion` blocks, `AppResources.Designer.cs` with
-  many identical property patterns, deeply-nested `MainPage.xaml`), prefer a
-  `.ps1` or `.csx` script that splices content at a **precise character
-  offset** obtained with `IndexOf` / `LastIndexOf`.
+- **For files not in the "Never use `edit_file`" routing table above**, prefer a
+  `.ps1` or `.csx` script that splices content using `string.Replace()` with a
+  unique multi-line anchor whenever the insertion point is inside a block with
+  multiple siblings of the same type.
 
-- **Verify the result immediately after every `edit_file` call** by reading
-  back the affected lines with `get_file` or `Select-String` to confirm the
-  edit landed exactly where intended before moving on.
+- **Verify the result immediately after every `edit_file` call using all three
+  of these checks - all three must pass before continuing:**
+  1. **Presence check:** `Select-String` for the new symbol (method name,
+     property name, region name) confirms it exists at the expected line number.
+  2. **Uniqueness check:** The same `Select-String` returns exactly the expected
+     number of occurrences (1 for a new method, 2 for a new `#region`/`#endregion` pair).
+  3. **No-deletion check:** Every symbol that existed before the edit still exists.
+     For `CalculationService.cs` this means running the region census above and
+     confirming no region name has disappeared.
+
+  If any check fails, do not proceed. Apply §9.14.5 Recovery Procedure immediately.
 
 ##### DO NOT
 
@@ -4396,7 +4451,6 @@ Symptoms that indicate a broken session:
   locate the exact insertion point, write `before + newBlock + after`).
 
 ---
-
 #### 9.14.3 File Creation and Editing
 
 ##### DO
@@ -4468,3 +4522,8 @@ before attempting any further edits:
    by a first `edit_file`. Restore from git first.
 5. Run `run_build` after each individual file fix - do not batch multiple
    file fixes before building, so errors are attributed to the correct file.
+6. **For `CalculationService.cs` specifically:** after
+   `git checkout HEAD -- Services/CalculationService.cs`, immediately run
+   the region census (§9.14.2) and confirm all expected region names are
+   present before writing any replacement script. Never write a correction
+   script before confirming the restored file is fully intact.
