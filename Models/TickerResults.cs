@@ -373,4 +373,29 @@ namespace Aeonpulse.Models
         /// <summary>Time remaining until the next planetary orbital birthday.</summary>
         public TimeSpan Countdown { get; init; }
     }
+
+    /// <summary>
+    /// Typed result for <c>CalculationService.CalculateVibrantHumanity</c>.
+    /// Carries the raw demographic counts between the base date and now
+    /// so callers can use the numeric values directly without parsing the
+    /// formatted display strings.
+    /// </summary>
+    [AIContext("DataTransferObject")]
+    public class VibrantHumanityResult : TickerData
+    {
+        /// <summary>Estimated number of people born globally since the base date.</summary>
+        public double BornBetweenDates { get; init; }
+
+        /// <summary>Estimated number of people who died globally since the base date.</summary>
+        public double DiedBetweenDates { get; init; }
+
+        /// <summary>Estimated pairs of twins born since the base date (approx. 2.4% of births).</summary>
+        public double TwinsBorn { get; init; }
+
+        /// <summary>Estimated deaths from heart disease or stroke since the base date (approx. 27% of deaths).</summary>
+        public double HeartDeaths { get; init; }
+
+        /// <summary>Estimated deaths from cancer since the base date (approx. 18% of deaths).</summary>
+        public double CancerDeaths { get; init; }
+    }
 }

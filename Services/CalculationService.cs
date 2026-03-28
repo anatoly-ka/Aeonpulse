@@ -142,6 +142,84 @@ namespace Aeonpulse.Services
         private static long CalculateBreaths(double totalSeconds)
             => (long)((totalSeconds / 60.0) * 14.0);
 
+        /// <summary>
+        /// Returns the estimated global human population on <paramref name="date"/> using
+        /// a 3-epoch piecewise linear model anchored to UN demographic reference points.
+        ///
+        /// <para>
+        /// <b>Epochs (all anchored to 1900-01-01 UTC):</b>
+        /// <list type="bullet">
+        ///   <item><description>Before 1950 (days less than 18262): linear from 1,656,000,000 to 2,499,000,000.</description></item>
+        ///   <item><description>1950-2000 (days 18262-36524): linear from 2,499,000,000 to 6,149,000,000.</description></item>
+        ///   <item><description>After 2000 (days greater than 36525): linear from 6,149,000,000 at 8,036-day rate to 7,963,500,000.</description></item>
+        /// </list>
+        /// Used by both <see cref="CalculateGlobalCrowd"/> and <see cref="CalculateVibrantHumanity"/>
+        /// to ensure mathematical consistency.
+        /// </para>
+        /// </summary>
+        /// <param name="date">The date for which to estimate the global population (UTC recommended).</param>
+        /// <returns>Estimated population as a non-negative double.</returns>
+        public double HumanPopulationByDate(DateTime date)
+        {
+            double days = (double)(date - new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds / 86400.0;
+            double estimatedPopulation;
+
+            if (days < 18262) // before 1950
+                estimatedPopulation = days * (2499000000.0 - 1656000000.0) / 18262.0 + 1656000000.0;
+            else if (days < 36525) // before 2000
+                estimatedPopulation = (days - 18262) * (6149000000.0 - 2499000000.0) / 18263.0 + 2499000000.0;
+            else // after 2000
+                estimatedPopulation = (days - 36525) * (7963500000.0 - 6149000000.0) / 8036.0 + 6149000000.0;
+
+            return estimatedPopulation;
+        }
+
+        /// <summary>
+        /// Returns the estimated cumulative number of humans ever born up to <paramref name="date"/>
+        /// using a 3-epoch piecewise linear model anchored to PRB demographic reference points.
+        ///
+        /// <para>
+        /// <b>Epochs (all anchored to 1900-01-01 UTC):</b>
+        /// <list type="bullet">
+        ///   <item><description>Before 1950 (days less than 18262): linear from rank 104,510,976,956 to 107,901,175,171.</description></item>
+        ///   <item><description>1950-2000 (days 18262-36524): linear from 107,901,175,171 to 113,966,170,055.</description></item>
+        ///   <item><description>After 2000 (days greater than 36525): linear from 113,966,170,055 at 8,036-day rate to 117,020,448,575.</description></item>
+        /// </list>
+        /// Used by both <see cref="CalculateHumanBirthRank"/> and <see cref="CalculateVibrantHumanity"/>
+        /// to ensure mathematical consistency across both tickers.
+        /// </para>
+        /// </summary>
+        /// <param name="date">The date for which to estimate the cumulative birth count (UTC recommended).</param>
+        /// <returns>Estimated cumulative births as a non-negative double.</returns>
+        public double HumanBirthRankbyDate(DateTime date)
+        {
+            double days = (double)(date - new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds / 86400.0;
+            double estimatedRank;
+
+            if (days < 18262) // before 1950
+                estimatedRank = days * (107901175171.0 - 104510976956.0) / 18262.0 + 104510976956.0;
+            else if (days < 36525) // before 2000
+                estimatedRank = (days - 18262) * (113966170055.0 - 107901175171.0) / 18263.0 + 107901175171.0;
+            else // after 2000
+                estimatedRank = (days - 36525) * (117020448575.0 - 113966170055.0) / 8036.0 + 113966170055.0;
+
+            return estimatedRank;
+        }
+
+        /// <summary>
+        /// Returns the estimated cumulative number of humans who have died up to <paramref name="date"/>,
+        /// calculated as the difference between cumulative births and current population.
+        ///
+        /// <para>
+        /// <b>Formula:</b> TotalDeaths = <see cref="HumanBirthRankbyDate"/> - <see cref="HumanPopulationByDate"/>.
+        /// Used by <see cref="CalculateVibrantHumanity"/> for the deaths-between-dates statistic.
+        /// </para>
+        /// </summary>
+        /// <param name="date">The date for which to estimate cumulative deaths (UTC recommended).</param>
+        /// <returns>Estimated cumulative deaths as a non-negative double.</returns>
+        public double TotalDeathsByDate(DateTime date)
+            => HumanBirthRankbyDate(date) - HumanPopulationByDate(date);
+
         #endregion
 
         #region Time Jubilees
@@ -839,12 +917,8 @@ namespace Aeonpulse.Services
                2050 | 9,752,000,000 | 120,847,437,072
             */
 
+            // Pre-1900 dates are outside the piecewise model range
             long days = (long)(baseDate - new DateTime(1900, 1, 1)).TotalDays;
-            double estimatedRank = 0;
-
-            // We'll use 3 different linear approximations for the periods before 1950, between 1950 and 2000, and after 2000,
-            // since the growth rate of population has changed significantly in these periods.
-            // The estimates won't be perfect, but they should give a reasonable approximation of the birth rank for these dates.
             if (days < 0)
             {
                 return new HumanBirthRankResult
@@ -856,18 +930,9 @@ namespace Aeonpulse.Services
                         .Replace("{baseDateName}", baseDateName)
                 };
             }
-            else if (days < 18262) // before 1950
-            {
-                estimatedRank = days * (107901175171.0 - 104510976956.0) / 18262.0 + 104510976956.0;
-            }
-            else if (days < 36525) // before 2000
-            {
-                estimatedRank = (days - 18262) * (113966170055.0 - 107901175171.0) / 18263.0 + 107901175171.0;
-            }
-            else // after 2000
-            {
-                estimatedRank = (days - 36525) * (117020448575.0 - 113966170055.0) / 8036.0 + 113966170055.0;
-            }
+
+            // Use the shared piecewise model for consistent results with CalculateVibrantHumanity
+            double estimatedRank = HumanBirthRankbyDate(baseDate.ToUniversalTime());
 
             return new HumanBirthRankResult
             {
@@ -1452,8 +1517,9 @@ namespace Aeonpulse.Services
             DateTime now_ = now ?? DateTime.UtcNow;
             AeonLog.Debug(LogCat, nameof(CalculateGlobalCrowd), $"baseDate={baseDate:d}");
 
-            double currentPopulation = GetPopulationByDate(now_);
-            double basePopulation    = GetPopulationByDate(baseDate.ToUniversalTime());
+            // Use the shared HumanPopulationByDate helper for consistency with CalculateVibrantHumanity
+            double currentPopulation = HumanPopulationByDate(now_);
+            double basePopulation    = HumanPopulationByDate(baseDate.ToUniversalTime());
 
             string baseFormatted    = basePopulation    < 0 ? "0" : ((long)basePopulation).ToString("N0");
             string currentFormatted = currentPopulation < 0 ? "0" : ((long)currentPopulation).ToString("N0");
@@ -1552,6 +1618,85 @@ namespace Aeonpulse.Services
 
             // Ensure we don't return negative populations for extreme edge cases
             return Math.Max(0, population);
+        }
+
+        #endregion
+
+        #region Vibrant Humanity
+
+        /// <summary>
+        /// Calculates the estimated number of people born and deceased globally since
+        /// the user's base date, including demographic sub-categories such as twins born
+        /// and major causes of death (heart disease/stroke and cancer).
+        ///
+        /// <para>
+        /// <b>Algorithm:</b> Uses the shared 3-epoch piecewise linear models
+        /// <see cref="HumanBirthRankbyDate"/> (cumulative births) and
+        /// <see cref="HumanPopulationByDate"/> (population), anchored to 1900-01-01 UTC.
+        /// The delta between the base date and now gives births and deaths between the
+        /// two dates. Sub-statistics are derived from fixed global ratios:
+        /// twins approximately 2.4% of births, heart disease or stroke approximately
+        /// 27% of deaths, cancer approximately 18% of deaths.
+        /// </para>
+        /// <para>
+        /// <b>Side effect:</b> reads <see cref="AppResources"/> for all output strings
+        /// so result language follows <c>AppResources.Culture</c>.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The user-selected origin date (e.g., birthday).</param>
+        /// <param name="baseDateName">Human-readable label for display in the full text.</param>
+        /// <param name="baseDateValue">ISO-8601 string of the base date for formatted output.</param>
+        /// <param name="now">Optional override for current time; used by unit tests for determinism.</param>
+        /// <returns>
+        /// A <see cref="VibrantHumanityResult"/> with formatted birth and death counts
+        /// and raw numeric fields for all five demographic sub-statistics.
+        /// </returns>
+        [AIContext("LiveTicker")]
+        [AIContext("ExternalDataModel")]
+        public VibrantHumanityResult CalculateVibrantHumanity(
+            DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
+        {
+            DateTime now_        = now ?? DateTime.UtcNow;
+            DateTime baseDateUtc = baseDate.ToUniversalTime();
+
+            AeonLog.Debug(LogCat, nameof(CalculateVibrantHumanity), $"baseDate={baseDate:d}");
+
+            double bornBetweenDates  = Math.Max(0, HumanBirthRankbyDate(now_) - HumanBirthRankbyDate(baseDateUtc));
+            double diedBetweenDates  = Math.Max(0, TotalDeathsByDate(now_) - TotalDeathsByDate(baseDateUtc));
+
+            double twinsBorn    = bornBetweenDates * 0.024;
+            double heartDeaths  = diedBetweenDates * 0.27;
+            double cancerDeaths = diedBetweenDates * 0.18;
+
+            string births  = ((long)bornBetweenDates).ToString("N0");
+            string deaths  = ((long)diedBetweenDates).ToString("N0");
+            string twins   = ((long)twinsBorn).ToString("N0");
+            string heart   = ((long)heartDeaths).ToString("N0");
+            string cancer  = ((long)cancerDeaths).ToString("N0");
+
+            string briefText = AppResources.Ticker_VibrantHumanityBrief
+                .Replace("{births}", births)
+                .Replace("{deaths}", deaths);
+
+            string fullText = AppResources.Ticker_VibrantHumanityFull
+                .Replace("{baseDateName}", baseDateName)
+                .Replace("{baseDate:d}",   baseDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture))
+                .Replace("{births}",  births)
+                .Replace("{deaths}",  deaths)
+                .Replace("{twins}",   twins)
+                .Replace("{heart}",   heart)
+                .Replace("{cancer}",  cancer);
+
+            return new VibrantHumanityResult
+            {
+                BornBetweenDates = bornBetweenDates,
+                DiedBetweenDates = diedBetweenDates,
+                TwinsBorn        = twinsBorn,
+                HeartDeaths      = heartDeaths,
+                CancerDeaths     = cancerDeaths,
+                BriefText        = briefText,
+                FullText         = fullText
+            };
         }
 
         #endregion

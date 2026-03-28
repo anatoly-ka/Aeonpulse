@@ -1155,6 +1155,72 @@
                                            IsVisible="{Binding LifeLogExpanded}" />
                                 </VerticalStackLayout>
                             </Border>
+                            <!-- == TICKER: VIBRANT HUMANITY =========================
+                                 LIVE ticker - recalculated every second by the timer.
+                                 Binding: MainViewModel.VibrantHumanity (VibrantHumanityResult)
+                                 Command: ToggleVibrantHumanityCommand
+                            ======================================================== -->
+                            <Border BackgroundColor="{DynamicResource CardDark}"
+                                    StrokeThickness="1"
+                                    Stroke="{DynamicResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <!-- AI: Ticker card header - 3-column:
+                                         [Col0: globe emoji | Col1: title + LIVE badge | Col2: info + expand buttons]
+                                         Bound to MainViewModel.VibrantHumanity (live-updated every second). -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: globe (U+1F30E) -->
+                                        <Label Grid.Column="0"
+                                               Text="🌍"
+                                               FontSize="{DynamicResource FontSizeTitle}"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <!-- AI: Title + LIVE badge side-by-side. -->
+                                        <!-- Binding: MainViewModel.Loc.Ticker_VibrantHumanityTitle (live-localised) -->
+                                        <HorizontalStackLayout Grid.Column="1"
+                                                               Spacing="6"
+                                                               VerticalOptions="Center">
+                                            <Label Text="{Binding Loc.Ticker_VibrantHumanityTitle}"
+                                                   Style="{StaticResource BaseLabel}"
+                                                   TextColor="{DynamicResource CyberPurple}"
+                                                   FontAttributes="Bold"
+                                                   VerticalOptions="Center" />
+                                            <!-- Binding: MainViewModel.Loc.Badge_LIVE -->
+                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                                   Style="{StaticResource BaseLabel}"
+                                                   TextColor="{DynamicResource NeonGreen}"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <!-- Info: opens DeepDivePopup with methodology and sources -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnVibrantHumanityInfoClicked" />
+                                            <!-- Expand/collapse: toggles VibrantHumanityExpanded -->
+                                            <!-- Binding: MainViewModel.VibrantHumanityExpanded -> BoolToImageSource -> icon -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding VibrantHumanityExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleVibrantHumanityCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                    <!-- Binding: MainViewModel.VibrantHumanity.BriefText - always visible; HTML formatted -->
+                                    <Label Text="{Binding VibrantHumanity.BriefText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                    <!-- Binding: MainViewModel.VibrantHumanity.FullText - visible when expanded; HTML formatted -->
+                                    <Label Text="{Binding VibrantHumanity.FullText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding VibrantHumanityExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>

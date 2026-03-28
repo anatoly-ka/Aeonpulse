@@ -95,40 +95,48 @@ namespace Aeonpulse.Tests
         [Fact]
         public void Post1950_BasePopulationMatchesFormula()
         {
-            // Exactly 365 days after epoch1950 (1951-01-01 UTC)
+            // Exactly 365 days after epoch1950 (1951-01-01 UTC).
+            // New HumanPopulationByDate formula: epoch 1900-2000, anchored 1900-01-01 UTC.
+            // days from 1900-01-01 to 1951-01-01 = 18627 (>= 18262, so 1950-2000 segment).
+            // Expected: (18627 - 18262) * (6149000000 - 2499000000) / 18263 + 2499000000
             var baseDate = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var now      = baseDate.AddSeconds(1);
 
             var result = _svc.CalculateGlobalCrowd(baseDate, now);
 
-            // Expected: 2,525,149,000 + 365 * 203,206 = 2,599,319,190
-            double expectedBase = 2525149000.0 + 365.0 * 203206.0;
+            double days1950Seg = 18627.0 - 18262.0; // days into the 1950-2000 segment
+            double expectedBase = days1950Seg * (6149000000.0 - 2499000000.0) / 18263.0 + 2499000000.0;
             Assert.Equal(expectedBase, result.BasePopulation, precision: 0);
         }
 
         [Fact]
         public void Post1950_AtEpochAnchor_MatchesAnchorValue()
         {
+            // At 1950-01-01 UTC: days from 1900-01-01 = 18262, which is the exact start
+            // of the 1950-2000 segment. Expected: 2,499,000,000.
             var epoch1950 = new DateTime(1950, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var now       = epoch1950.AddSeconds(1);
 
             var result = _svc.CalculateGlobalCrowd(epoch1950, now);
 
-            Assert.Equal(2525149000.0, result.BasePopulation, precision: 0);
+            Assert.Equal(2499000000.0, result.BasePopulation, precision: 0);
         }
 
         [Fact]
         public void Post1950_LiveUpdate_PopulationIncreasesPerSecond()
         {
+            // The new formula is day-based, so per-second increments require
+            // comparing two 'now' values that differ by at least one full day.
+            // Use a 1-day increment to verify the population increases.
             var baseDate = new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var now1     = new DateTime(2025, 6, 1, 0, 0, 0, DateTimeKind.Utc);
-            var now2     = now1.AddSeconds(1);
+            var now2     = now1.AddDays(1);
 
             var result1 = _svc.CalculateGlobalCrowd(baseDate, now1);
             var result2 = _svc.CalculateGlobalCrowd(baseDate, now2);
 
             Assert.True(result2.CurrentPopulation > result1.CurrentPopulation,
-                "Population should increase each second (post-1950 segment rate ~2.35/s).");
+                "Population should increase each day (post-2000 segment of HumanPopulationByDate).");
         }
 
         // ------------------------------------------------------------------ //
@@ -138,14 +146,18 @@ namespace Aeonpulse.Tests
         [Fact]
         public void Pre1900_BasePopulationMatchesFormula()
         {
-            // Exactly 365 days after epoch1800 (1801-01-01 UTC)
-            var baseDate = new DateTime(1801, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            // Dates before 1900-01-01 give negative 'days' relative to the 1900 anchor.
+            // The new HumanPopulationByDate formula extrapolates below zero for pre-1900 dates.
+            // Use 1850-01-01 UTC: days from 1900-01-01 = -18262 (approx -50 years * 365.25).
+            // The formula: days * (2499000000 - 1656000000) / 18262 + 1656000000 gives a
+            // value less than 1,656,000,000. We verify the formula is applied correctly.
+            var baseDate = new DateTime(1850, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var now      = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
             var result = _svc.CalculateGlobalCrowd(baseDate, now);
 
-            // Expected base: 978,000,000 + 365 * 18,398 = 984,715,270
-            double expectedBase = 978000000.0 + 365.0 * 18398.0;
+            long days = (long)(baseDate - new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalDays;
+            double expectedBase = days * (2499000000.0 - 1656000000.0) / 18262.0 + 1656000000.0;
             Assert.Equal(expectedBase, result.BasePopulation, precision: 0);
         }
 
@@ -156,14 +168,15 @@ namespace Aeonpulse.Tests
         [Fact]
         public void Between1900And1950_BasePopulationMatchesFormula()
         {
-            // Exactly 365 days after epoch1900 (1901-01-01 UTC)
+            // Exactly 365 days after 1900-01-01 (1901-01-01 UTC).
+            // New formula: days * (2499000000 - 1656000000) / 18262 + 1656000000
+            // days = 365
             var baseDate = new DateTime(1901, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var now      = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
             var result = _svc.CalculateGlobalCrowd(baseDate, now);
 
-            // Expected base: 1,650,000,000 + 365 * 47,919 = 1,667,490,435
-            double expectedBase = 1650000000.0 + 365.0 * 47919.0;
+            double expectedBase = 365.0 * (2499000000.0 - 1656000000.0) / 18262.0 + 1656000000.0;
             Assert.Equal(expectedBase, result.BasePopulation, precision: 0);
         }
 

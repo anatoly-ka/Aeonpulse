@@ -1769,4 +1769,29 @@
   <data name="Planet_Neptune" xml:space="preserve">
     <value>Нептун</value>
   </data>
+
+  <data name="Ticker_VibrantHumanityTitle" xml:space="preserve">
+    <value>Живое Человечество</value>
+    <comment>CalculationService.cs - LIVE ticker title (ru)</comment>
+  </data>
+  <data name="Ticker_VibrantHumanityBrief" xml:space="preserve">
+    <value>&lt;b&gt;{births}&lt;/b&gt; родилось &#8680; &lt;b&gt;{deaths}&lt;/b&gt; ушло</value>
+    <comment>CalculationService.cs - HTML-formattable brief text (ru)</comment>
+  </data>
+  <data name="Ticker_VibrantHumanityFull" xml:space="preserve">
+    <value>С момента {baseDateName} {baseDate:d} человеческая семья изменилась: &lt;br/&gt;&lt;br/&gt;&amp;bull; &lt;b&gt;{births}&lt;/b&gt; новых жизней (в том числе &lt;b&gt;{twins}&lt;/b&gt; пар близнецов).&lt;br/&gt;&amp;bull; &lt;b&gt;{deaths}&lt;/b&gt; человек завершили свой путь.&lt;br/&gt;&amp;bull; Из ушедших: около &lt;b&gt;{heart}&lt;/b&gt; от болезней сердца или инсульта, и &lt;b&gt;{cancer}&lt;/b&gt; от рака.</value>
+    <comment>CalculationService.cs - HTML-formattable full text (ru)</comment>
+  </data>
+  <data name="Info_VibrantHumanityTitle" xml:space="preserve">
+    <value>Живое Человечество</value>
+    <comment>DeepDivePopup title (ru)</comment>
+  </data>
+  <data name="Info_VibrantHumanityMethod" xml:space="preserve">
+    <value>Используется трёхстадийная линейная аппроксимация мировой численности населения и уровня рождаемости с 1900 года на основе данных Бюро народонаселения (PRB). Для дополнительных статистик используются следующие оценки: близнецы около 2,4% из всех рождений, болезни сердца/инсульт являются причиной около 27% из всех смертей, а онкология - около 18% из всех смертей.</value>
+    <comment>DeepDivePopup methodology (ru)</comment>
+  </data>
+  <data name="Info_VibrantHumanitySource" xml:space="preserve">
+    <value>Мировые статистические данные и прогнозы численности населения взяты из Population Division (2024 Revision), предоставленном Департаментом по экономическим и социальным вопросам ООН. Исторические оценки взяты из баз данных Human Mortality Database (2025 revision) и Population Reference Bureau (2024). Дополнительные статистики (доля близнецы и причины смерти) рассчитаны по фиксированным глобальным коэффициентам ВОЗ.</value>
+    <comment>DeepDivePopup sources (ru)</comment>
+  </data>
 </root>

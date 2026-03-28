@@ -1769,4 +1769,29 @@
   <data name="Planet_Neptune" xml:space="preserve">
     <value>Neptune</value>
   </data>
+
+  <data name="Ticker_VibrantHumanityTitle" xml:space="preserve">
+    <value>Vibrant Humanity</value>
+    <comment>CalculationService.cs - LIVE ticker title</comment>
+  </data>
+  <data name="Ticker_VibrantHumanityBrief" xml:space="preserve">
+    <value>&lt;b&gt;{births}&lt;/b&gt; born &#8680; &lt;b&gt;{deaths}&lt;/b&gt; passed</value>
+    <comment>CalculationService.cs - HTML-formattable brief text; {births} and {deaths} replaced with N0 values</comment>
+  </data>
+  <data name="Ticker_VibrantHumanityFull" xml:space="preserve">
+    <value>Since {baseDateName} on {baseDate:d}, the human family has changed profoundly:&lt;br/&gt;&lt;br/&gt;&amp;bull; &lt;b&gt;{births}&lt;/b&gt; new lives arrived (including &lt;b&gt;{twins}&lt;/b&gt; pairs of twins).&lt;br/&gt;&amp;bull; &lt;b&gt;{deaths}&lt;/b&gt; people completed their journey.&lt;br/&gt;&amp;bull; Of those who passed, approximately &lt;b&gt;{heart}&lt;/b&gt; were due to heart disease or stroke, and &lt;b&gt;{cancer}&lt;/b&gt; were due to cancer.</value>
+    <comment>CalculationService.cs - HTML-formattable full text; all tokens replaced with N0 values</comment>
+  </data>
+  <data name="Info_VibrantHumanityTitle" xml:space="preserve">
+    <value>Vibrant Humanity</value>
+    <comment>DeepDivePopup title</comment>
+  </data>
+  <data name="Info_VibrantHumanityMethod" xml:space="preserve">
+    <value>This ticker uses a 3-epoch linear approximation of global populations and birth ranks since 1900 based on data from the Population Reference Bureau (PRB). The used ratio of sub-statistics (twins and causes of death) is: twins approximately 2.4% of births, heart disease/stroke approximately 27% of deaths, cancer approximately 18% of deaths.</value>
+    <comment>DeepDivePopup methodology</comment>
+  </data>
+  <data name="Info_VibrantHumanitySource" xml:space="preserve">
+    <value>World population statistics and projections courtesy of the United Nations, Department of Economic and Social Affairs, Population Division (2024 Revision). Historical estimates by Human Mortality Database (2025 revision) and the Population Reference Bureau (2024). Sub-statistics (twins and causes of death) are derived using fixed global ratios provided by the WHO Global Health Estimates and demographic researches.</value>
+    <comment>DeepDivePopup sources</comment>
+  </data>
 </root>

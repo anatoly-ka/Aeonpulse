@@ -288,6 +288,13 @@ namespace Aeonpulse.ViewModels
             set { _globalCrowdExpanded = value; OnPropertyChanged(); }
         }
 
+        private bool _vibrantHumanityExpanded = false;
+        public bool VibrantHumanityExpanded
+        {
+            get => _vibrantHumanityExpanded;
+            set { _vibrantHumanityExpanded = value; OnPropertyChanged(); }
+        }
+
         private bool _lifeLogExpanded = false;
         public bool LifeLogExpanded
         {
@@ -408,6 +415,13 @@ namespace Aeonpulse.ViewModels
             set { _globalCrowd = value; OnPropertyChanged(); }
         }
 
+        private VibrantHumanityResult _vibrantHumanity = new VibrantHumanityResult();
+        public VibrantHumanityResult VibrantHumanity
+        {
+            get => _vibrantHumanity;
+            set { _vibrantHumanity = value; OnPropertyChanged(); }
+        }
+
         private LifeLogResult _lifeLog = new LifeLogResult();
         public LifeLogResult LifeLog
         {
@@ -457,6 +471,7 @@ namespace Aeonpulse.ViewModels
         public ICommand ToggleVibrantCosmosCommand { get; }
         public ICommand ToggleGlobalCrowdCommand { get; }
         public ICommand ToggleSpaceWaitCommand { get; }
+        public ICommand ToggleVibrantHumanityCommand { get; }
 
         // Card-level refresh commands
         public ICommand RefreshTimeJubileesCommand { get; }
@@ -521,6 +536,7 @@ namespace Aeonpulse.ViewModels
             ToggleVibrantCosmosCommand = new Command(() => VibrantCosmosExpanded = !VibrantCosmosExpanded);
             ToggleGlobalCrowdCommand = new Command(() => GlobalCrowdExpanded = !GlobalCrowdExpanded);
             ToggleSpaceWaitCommand   = new Command(() => SpaceWaitExpanded = !SpaceWaitExpanded);
+            ToggleVibrantHumanityCommand = new Command(() => VibrantHumanityExpanded = !VibrantHumanityExpanded);
 
             ToggleLifeLogCommand = new Command(() => LifeLogExpanded = !LifeLogExpanded);
 
@@ -612,6 +628,7 @@ namespace Aeonpulse.ViewModels
             YourBreath   = _calculationService.CalculateYourBreath(BaseDate, BaseDateValue, UseMetric);
             GlobalCrowd  = _calculationService.CalculateGlobalCrowd(BaseDate);
             SpaceWait    = _calculationService.CalculateSpaceWait(BaseDate);
+            VibrantHumanity = _calculationService.CalculateVibrantHumanity(BaseDate, BaseDateName, BaseDateValue);
 
             TeaseText = _calculationService.GetRandomTeaseText(
                 Countdown,
