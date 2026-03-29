@@ -314,7 +314,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 14 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, `VibrantCosmosResult`, etc. - see `TickerResults.cs`); 4 section `bool XxxExpanded` properties; 13 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `UpdateStaticCalculations()` recalculates 8 tickers; `UpdateLiveCalculations()` recalculates 6 tickers + `TeaseText`; `UpdateVibrantCosmos()` is called every 200 ms by a dedicated `_vibrantCosmosTimer`. |
+| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 19 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, `VibrantCosmosResult`, etc. - see `TickerResults.cs`); 4 section `bool XxxExpanded` properties; 13 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `UpdateStaticCalculations()` recalculates 8 tickers; `UpdateLiveCalculations()` recalculates 6 tickers + `TeaseText`; `UpdateVibrantCosmos()` is called every 200 ms by a dedicated `_vibrantCosmosTimer`. |
 | `LocalizedResources.cs` | Edit freely | - | Singleton (`Instance`). A thin passthrough wrapper: every property is `=> AppResources.SomeKey`. Bound in XAML as `{Binding Loc.PropertyName}`. `Invalidate()` fires `PropertyChanged(string.Empty)` which causes every bound property to re-read from `AppResources` with the newly-set culture. When adding a new localised string: add the `AppResources` key, then add the passthrough property here. |
 
 ---
@@ -1435,11 +1435,11 @@ AIContext:   (none - state orchestrator)
 
 **Responsibilities:**
 - The **central application state hub**. Every bound value in the UI originates here.
-- Owns all 12 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, etc.), each a subclass of `TickerData` carrying both the display strings and raw computed values.
-- Owns 4 section expansion bools (`LabExpanded` etc.) and 11 card expansion bools (`TimeJubileesExpanded` etc.).
+- Owns all 19 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, etc.), each a subclass of `TickerData` carrying both the display strings and raw computed values.
+- Owns 4 section expansion bools (`LabExpanded` etc.) and 19 card expansion bools (`TimeJubileesExpanded` etc.).
 - Owns user settings properties: `UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`.
 - Each settings setter immediately applies the change (`ThemeService`, `FontSizeService`, `ApplyLanguage`) **and** persists it via `Preferences`.
-- Owns 17 `ICommand` instances (4 section toggles, 11 card toggles, 3 card refreshes, 2 bulk refresh commands).
+- Owns 31 `ICommand` instances (4 section toggles, 19 card toggles, 6 card refreshes, 2 bulk refresh commands).
 - Owns the `event Func<Action, Task>? RefreshRequested` - the bridge between ViewModel refresh commands and `MainPage`'s `RefreshingPopup` lifecycle.
 - Owns the 1-second `System.Timers.Timer` that calls `UpdateLiveCalculations()` on the UI thread via `MainThread.BeginInvokeOnMainThread`.
 - `SaveDate(name, date)` is the **only correct entry point** for updating the base date - sets all three backing fields atomically before calling `UpdateAllCalculations()` once.
@@ -1447,15 +1447,15 @@ AIContext:   (none - state orchestrator)
 - `Loc { get; } = LocalizedResources.Instance` - exposes the localisation singleton so XAML binds as `{Binding Loc.Xxx}`.
 
 **Owns:**
-- All 15 typed ticker result instances (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, `VibrantCosmosResult`, `LifeLogResult`, etc. - all subclasses of `TickerData`)
-- All section/card `bool` expanded states (21 total, including `VibrantCosmosExpanded`, `LifeLogExpanded`, `SpaceWaitExpanded`, `VibrantHumanityExpanded`, `VibrantNatureExpanded`)
+- All 19 typed ticker result instances (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, `VibrantCosmosResult`, `LifeLogResult`, etc. - all subclasses of `TickerData`)
+- All section/card `bool` expanded states (23 total, including `VibrantCosmosExpanded`, `LifeLogExpanded`, `SpaceWaitExpanded`, `VibrantHumanityExpanded`, `VibrantNatureExpanded`)
 - All user settings state
 - The 1-second live-update timer and the 200 ms `_vibrantCosmosTimer` (dedicated to Vibrant Cosmos)
 - All `ICommand` instances
 - `RefreshRequested` event
 
 **Calls:**
-- `CalculationService` - all 12 ticker calculation methods + `GetRandomTeaseText`
+- `CalculationService` - all 19 ticker calculation methods + `GetRandomTeaseText`
 - `ThemeService.Instance.ApplyScheme(string)` - from `ColorScheme` setter
 - `FontSizeService.Instance.ApplyPreset(string)` - from `TextSize` setter
 - `MainViewModel.ApplyLanguage(string)` - from `DisplayLanguage` setter
