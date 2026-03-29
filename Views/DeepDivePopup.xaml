@@ -81,6 +81,7 @@
                                 <Label x:Name="Section1TextLabel"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource TextGray}"
+                                       TextType="Html"
                                        LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
 
@@ -101,6 +102,7 @@
                                 <Label x:Name="Section2TextLabel"
                                        FontSize="{DynamicResource FontSizeMedium}"
                                        TextColor="{DynamicResource TextGray}"
+                                       TextType="Html"
                                        LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
 
