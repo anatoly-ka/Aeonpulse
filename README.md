@@ -1,6 +1,6 @@
 # Aeonpulse
 
-A cross-platform mobile and desktop app that transforms a personal date - typically a birthday - into ten richly-contextualised **ticker cards**: live and on-demand views of that moment in time through scientific, astronomical, personal, and ecological lenses.
+A cross-platform mobile and desktop app that transforms a personal date - typically a birthday - into nineteen richly-contextualised **ticker cards**: live and on-demand views of that moment in time through scientific, astronomical, personal, and ecological lenses.
 
 Built with **.NET 9 MAUI**. Runs on Android, iOS, Mac Catalyst, and Windows from a single shared codebase.
 
@@ -10,20 +10,29 @@ Built with **.NET 9 MAUI**. Runs on Android, iOS, Mac Catalyst, and Windows from
 
 The user provides a **base date** (a label such as "My Birthday" and an ISO date). The app continuously recalculates:
 
-| # | Ticker | What it shows | Updates |
-|---|--------|---------------|---------|
-| 1 | Time Jubilees | Next round-number milestone in years, months, weeks, days, hours, minutes, or seconds | On demand |
-| 2 | Countdown | Live HH:MM:SS (or days) until the next calendar anniversary | Every second |
-| 3 | Life Odometer | Estimated heartbeats and breaths taken since the base date | Every second |
-| 4 | Alien Anniversaries | Age in Mars years and Venus years | On demand |
-| 5 | Galactic Commute | Distance the Solar System has carried you through the Milky Way | Every second |
-| 6 | Photon Path | How far a photon of light has travelled since the base date, with named star milestones | Every second |
-| 7 | Human Birth Rank | Estimated ordinal birth rank among all humans ever born | On demand |
-| 8 | Birth Rune | Elder Futhark rune governing the birth date period | On demand |
-| 9 | Personal Year | Numerological personal year number and its interpretation | On demand |
-| 10 | Global Exhale | Estimated CO2 emitted globally since the base date | On demand |
+| # | Ticker | Section | What it shows | Updates |
+|---|--------|---------|---------------|---------|
+| 1 | Time Jubilees | Lab | Next round-number milestone in years, months, weeks, days, hours, minutes, or seconds | On demand |
+| 2 | Countdown | Lab | Live HH:MM:SS (or days) until the next calendar anniversary | Every second |
+| 3 | Life Odometer | Lab | Estimated heartbeats and breaths taken since the base date | Every second |
+| 4 | Cellular Refresh | Lab | Estimated cell generations turned over since the base date, by tissue type | On demand |
+| 5 | Alien Anniversaries | Cosmos | Age in Mars years and Venus years | On demand |
+| 6 | Galactic Commute | Cosmos | Distance the Solar System has carried you through the Milky Way | Every second |
+| 7 | Photon Path | Cosmos | How far a photon of light has travelled since the base date, with named star milestones | Every second |
+| 8 | Cosmic Stretch | Cosmos | How much the observable universe has expanded since the base date | Every second |
+| 9 | Vibrant Cosmos | Cosmos | Estimated new exoplanets confirmed, stars born, stars collapsed since the base date | Every 200 ms |
+| 10 | Space Wait | Cosmos | Estimated cumulative wait time humanity has spent queuing for orbital flights | Every second |
+| 11 | Human Birth Rank | Mirror | Estimated ordinal birth rank among all humans ever born | On demand |
+| 12 | Birth Rune | Mirror | Elder Futhark rune governing the birth date period | On demand |
+| 13 | Personal Year | Mirror | Numerological personal year number and its interpretation | On demand |
+| 14 | Global Crowd | Mirror | Estimated number of humans born and who have died since the base date | Every second |
+| 15 | Life Log | Mirror | A structured personal log: time elapsed in every unit, age milestones, and next milestone | On demand |
+| 16 | Vibrant Humanity | Mirror | Estimated births and deaths globally since the base date, with sub-statistics | Every second |
+| 17 | Global Exhale | Eco Echoes | Estimated CO2 emitted globally since the base date | On demand |
+| 18 | Your Breath | Eco Echoes | Estimated CO2 exhaled by the user since the base date | Every second |
+| 19 | Vibrant Nature | Eco Echoes | Estimated new species described by science and species driven to extinction since the base date | On demand |
 
-Ticker cards are grouped into four collapsible sections: **Lab**, **Cosmos**, **Mirror**, and **Eco Echoes**. Each card shows a brief summary and expands to reveal the full methodology and sources.
+Ticker cards are grouped into four collapsible sections: **Lab**, **Cosmos**, **Mirror**, and **Eco Echoes**. Each card shows a brief summary and expands to reveal full detail. Static cards (marked "On demand") have a refresh button that shows a brief overlay while recalculating.
 
 ---
 
@@ -74,12 +83,12 @@ The project follows **manual MVVM** - no MVVM toolkit or code generators:
 |-------|-----------|------|
 | View | `Views/*.xaml` + `Views/*.xaml.cs` | UI structure, data binding, modal navigation only |
 | ViewModel | `ViewModels/MainViewModel.cs` | All application state, commands, 1-second live-update timer |
-| Service | `Services/CalculationService.cs` | All ten ticker calculations, stateless and thread-safe |
+| Service | `Services/CalculationService.cs` | All 19 ticker calculation methods, stateless and thread-safe |
 | Service | `Services/ThemeService.cs` | Applies colour palette to `Application.Current.Resources` at runtime |
 | Service | `Services/FontSizeService.cs` | Applies font-size preset to `Application.Current.Resources` at runtime |
 | Service | `Services/AeonLog.cs` | Structured debug logging gateway (`[Conditional("DEBUG")]`, zero production overhead) |
-| Model | `Models/TickerResults.cs` | Ten typed result classes, one per ticker |
-| Resources | `Resources/AppResources.resx` | All user-visible strings (English master) |
+| Model | `Models/TickerResults.cs` | 19 typed result classes, one per ticker, each extending `TickerData` |
+| Resources | `Resources/AppResources.resx` | All user-visible strings (English master, 433 keys) |
 | Resources | `Resources/AppResources.ru.resx` | Russian translations |
 
 ### Key Conventions
@@ -100,7 +109,7 @@ Aeonpulse/
 ├── Attributes/                 AIContextAttribute (codebase navigation marker)
 ├── Converters/                 ValueConverters.cs (bool / visibility / image-source)
 ├── Helpers/                    ImageTint.cs (cross-platform icon tinting via attached property)
-├── Models/                     TickerData, TickerResults (10 typed), TickerCardModel
+├── Models/                     TickerData, TickerResults (19 typed), TickerCardModel
 ├── Platforms/
 │   ├── Android/                Entry point, TintHelper (PorterDuff colour filter)
 │   ├── iOS/                    Entry point, TintHelper (UIKit TintColor)
@@ -108,7 +117,7 @@ Aeonpulse/
 │   ├── Windows/                Entry point, TintHelper (Win2D ColorMatrixEffect)
 │   └── Tizen/                  Entry point (disabled by default)
 ├── Resources/
-│   ├── AppResources.resx       English master strings (359+ keys)
+│   ├── AppResources.resx       English master strings (433 keys)
 │   ├── AppResources.ru.resx    Russian translations
 │   ├── Images/                 PNG assets compiled into platform asset bundles
 │   └── Styles/
@@ -116,7 +125,7 @@ Aeonpulse/
 │       └── Styles.xaml         Named XAML styles (BaseLabel, CyberButton, CardFrame, etc.)
 ├── Services/
 │   ├── AeonLog.cs              Structured logging gateway (DEBUG builds only)
-│   ├── CalculationService.cs   All 10 ticker calculation methods
+│   ├── CalculationService.cs   All 19 ticker calculation methods
 │   ├── FontSizeService.cs      Font-size preset applier (singleton)
 │   └── ThemeService.cs         Colour scheme applier (singleton)
 ├── ViewModels/
@@ -124,7 +133,7 @@ Aeonpulse/
 │   └── MainViewModel.cs        Central state hub, commands, 1-second timer
 ├── Views/
 │   ├── ChangeDatePopup.xaml    Base date entry popup
-│   ├── DeepDivePopup.xaml      Generic ticker info popup (reused for all 10 tickers)
+│   ├── DeepDivePopup.xaml      Generic ticker info popup (reused for all 19 tickers)
 │   ├── MainMenuPopup.xaml      Hamburger menu popup
 │   ├── MainPage.xaml           The application's only persistent page
 │   ├── RefreshingPopup.xaml    3-second refresh spinner overlay
@@ -133,7 +142,7 @@ Aeonpulse/
 ├── MauiProgram.cs              Host builder, font registration, image tint mapper, AeonLog init
 ├── Aeonpulse.csproj            Multi-targeted project file
 ├── Agents.md                   AI agent navigation guide (authoritative development reference)
-└── Aeonpulse.Tests/            xUnit test project (net9.0, no MAUI dependency)
+└── Aeonpulse.Tests/            xUnit test project (net9.0, no MAUI dependency, 286 tests)
 ```
 
 ---
