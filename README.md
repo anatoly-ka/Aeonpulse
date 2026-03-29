@@ -71,6 +71,7 @@ MainPage
   ├── MainMenuPopup       (hamburger button -> menu)
   ├── ChangeDatePopup     (tap timeline heading or menu -> Change Date)
   ├── SettingsPopup       (menu -> Settings)
+  ├── TeasePopup          (tap app logo or app name -> single live stat with copy-to-clipboard)
   ├── DeepDivePopup       (info button on any ticker -> methodology and sources)
   └── RefreshingPopup     (3-second auto-dismissed overlay during manual refresh)
 ```
@@ -137,7 +138,8 @@ Aeonpulse/
 │   ├── MainMenuPopup.xaml      Hamburger menu popup
 │   ├── MainPage.xaml           The application's only persistent page
 │   ├── RefreshingPopup.xaml    3-second refresh spinner overlay
-│   └── SettingsPopup.xaml      Settings panel (unit system, theme, font, language)
+│   ├── SettingsPopup.xaml      Settings panel (unit system, theme, font, language)
+│   └── TeasePopup.xaml         Single live stat popup with copy-to-clipboard (tap logo/app name)
 ├── App.xaml / App.xaml.cs      App bootstrap: applies persisted settings before first frame
 ├── MauiProgram.cs              Host builder, font registration, image tint mapper, AeonLog init
 ├── Aeonpulse.csproj            Multi-targeted project file
