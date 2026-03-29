@@ -398,4 +398,34 @@ namespace Aeonpulse.Models
         /// <summary>Estimated deaths from cancer since the base date (approx. 18% of deaths).</summary>
         public double CancerDeaths { get; init; }
     }
+
+    /// <summary>
+    /// Typed result for <c>CalculationService.CalculateVibrantNature</c>.
+    /// Carries the raw species discovery and extinction counts so callers can
+    /// use the numeric values directly without parsing the formatted display strings.
+    /// </summary>
+    [AIContext("DataTransferObject")]
+    public class VibrantNatureResult : TickerData
+    {
+        /// <summary>Estimated number of new biological species described since the base date.</summary>
+        public double DiscoveredSince { get; init; }
+
+        /// <summary>Estimated number of species driven to extinction since the base date.</summary>
+        public double ExtinctSince { get; init; }
+
+        /// <summary>Estimated insects/invertebrates discovered (approximately 55% of total discoveries).</summary>
+        public double InsectsDiscovered { get; init; }
+
+        /// <summary>Estimated plants discovered (approximately 15% of total discoveries).</summary>
+        public double PlantsDiscovered { get; init; }
+
+        /// <summary>Estimated vertebrates discovered (approximately 2% of total discoveries).</summary>
+        public double VertebratesDiscovered { get; init; }
+
+        /// <summary>Estimated invertebrates extinct (approximately 60% of total extinctions).</summary>
+        public double InsectsExtinct { get; init; }
+
+        /// <summary>Estimated vertebrates extinct (approximately 2% of total extinctions).</summary>
+        public double VertebratesExtinct { get; init; }
+    }
 }

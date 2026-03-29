@@ -1377,6 +1377,70 @@
                                 </VerticalStackLayout>
                             </Border>
 
+                            <!-- == TICKER: VIBRANT NATURE ========================
+                                 Static ticker - recalculated on base date change
+                                 or via explicit RefreshVibrantNatureCommand.
+                                 Binding: MainViewModel.VibrantNature (VibrantNatureResult)
+                                 Commands: RefreshVibrantNatureCommand, ToggleVibrantNatureCommand
+                            ======================================================== -->
+                            <Border BackgroundColor="{DynamicResource CardDark}"
+                                    StrokeThickness="1"
+                                    Stroke="{DynamicResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+
+                                    <!-- AI: Ticker card header - 3-column:
+                                         [Col0: butterfly emoji icon | Col1: title | Col2: action buttons (info, refresh, expand)] -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F98B; (butterfly) -->
+                                        <Label Grid.Column="0"
+                                               Text="🦋"
+                                               FontSize="{DynamicResource FontSizeTitle}"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <!-- Binding: MainViewModel.Loc.Ticker_VibrantNatureTitle (live-localised) -->
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Loc.Ticker_VibrantNatureTitle}"
+                                               Style="{StaticResource BaseLabel}"
+                                               TextColor="{DynamicResource CyberPurple}"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center" />
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <!-- Info: opens DeepDivePopup with methodology + sources -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnVibrantNatureInfoClicked" />
+                                            <!-- Refresh: shows RefreshingPopup then recalculates VibrantNature -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="refresh.png"
+                                                         Command="{Binding RefreshVibrantNatureCommand}" />
+                                            <!-- Expand/collapse: toggles VibrantNatureExpanded -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding VibrantNatureExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleVibrantNatureCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <!-- Binding: MainViewModel.VibrantNature.BriefText - always visible -->
+                                    <Label Text="{Binding VibrantNature.BriefText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                    <!-- Binding: MainViewModel.VibrantNature.FullText - visible when expanded -->
+                                    <Label Text="{Binding VibrantNature.FullText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding VibrantNatureExpanded}" />
+
+                                </VerticalStackLayout>
+                            </Border>
+
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>

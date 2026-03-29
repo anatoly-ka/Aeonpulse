@@ -45,6 +45,7 @@ namespace Aeonpulse.ViewModels
         public string Ticker_LifeLogTitle              => AppResources.Ticker_LifeLogTitle;
         public string Ticker_SpaceWaitTitle            => AppResources.Ticker_SpaceWaitTitle;
         public string Ticker_VibrantHumanityTitle      => AppResources.Ticker_VibrantHumanityTitle;
+        public string Ticker_VibrantNatureTitle        => AppResources.Ticker_VibrantNatureTitle;
 
         // -- Settings --------------------------------------------------------
         public string Settings_Title                   => AppResources.Settings_Title;
@@ -145,6 +146,9 @@ namespace Aeonpulse.ViewModels
         public string Info_VibrantHumanityTitle       => AppResources.Info_VibrantHumanityTitle;
         public string Info_VibrantHumanityMethod      => AppResources.Info_VibrantHumanityMethod;
         public string Info_VibrantHumanitySource      => AppResources.Info_VibrantHumanitySource;
+        public string Info_VibrantNatureTitle          => AppResources.Info_VibrantNatureTitle;
+        public string Info_VibrantNatureMethod         => AppResources.Info_VibrantNatureMethod;
+        public string Info_VibrantNatureSource         => AppResources.Info_VibrantNatureSource;
 
         // -- Tease ------------------------------------------------------------
         public string Tease_Title          => AppResources.Tease_Title;

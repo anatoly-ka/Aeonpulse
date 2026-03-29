@@ -309,6 +309,13 @@ namespace Aeonpulse.ViewModels
             set { _spaceWaitExpanded = value; OnPropertyChanged(); }
         }
 
+        private bool _vibrantNatureExpanded = false;
+        public bool VibrantNatureExpanded
+        {
+            get => _vibrantNatureExpanded;
+            set { _vibrantNatureExpanded = value; OnPropertyChanged(); }
+        }
+
         // Ticker Data
         private TimeJubileesResult _timeJubilees = new TimeJubileesResult();
         public TimeJubileesResult TimeJubilees
@@ -436,6 +443,13 @@ namespace Aeonpulse.ViewModels
             set { _spaceWait = value; OnPropertyChanged(); }
         }
 
+        private VibrantNatureResult _vibrantNature = new VibrantNatureResult();
+        public VibrantNatureResult VibrantNature
+        {
+            get => _vibrantNature;
+            set { _vibrantNature = value; OnPropertyChanged(); }
+        }
+
         private string _teaseText = "";
         public string TeaseText
         {
@@ -472,6 +486,7 @@ namespace Aeonpulse.ViewModels
         public ICommand ToggleGlobalCrowdCommand { get; }
         public ICommand ToggleSpaceWaitCommand { get; }
         public ICommand ToggleVibrantHumanityCommand { get; }
+        public ICommand ToggleVibrantNatureCommand { get; }
 
         // Card-level refresh commands
         public ICommand RefreshTimeJubileesCommand { get; }
@@ -480,6 +495,7 @@ namespace Aeonpulse.ViewModels
         public ICommand RefreshCellularRefreshCommand { get; }
         public ICommand ToggleLifeLogCommand { get; }
         public ICommand RefreshLifeLogCommand { get; }
+        public ICommand RefreshVibrantNatureCommand { get; }
 
         /// <summary>
         /// Raised when a live refresh is requested, so the View layer can show
@@ -537,6 +553,7 @@ namespace Aeonpulse.ViewModels
             ToggleGlobalCrowdCommand = new Command(() => GlobalCrowdExpanded = !GlobalCrowdExpanded);
             ToggleSpaceWaitCommand   = new Command(() => SpaceWaitExpanded = !SpaceWaitExpanded);
             ToggleVibrantHumanityCommand = new Command(() => VibrantHumanityExpanded = !VibrantHumanityExpanded);
+            ToggleVibrantNatureCommand = new Command(() => VibrantNatureExpanded = !VibrantNatureExpanded);
 
             ToggleLifeLogCommand = new Command(() => LifeLogExpanded = !LifeLogExpanded);
 
@@ -581,6 +598,14 @@ namespace Aeonpulse.ViewModels
                 else
                     LifeLog = _calculationService.CalculateLifeLog(BaseDate, BaseDateName, BaseDateValue);
             });
+            RefreshVibrantNatureCommand = new Command(async () =>
+            {
+                if (RefreshRequested != null)
+                    await RefreshRequested.Invoke(() =>
+                        VibrantNature = _calculationService.CalculateVibrantNature(BaseDate));
+                else
+                    VibrantNature = _calculationService.CalculateVibrantNature(BaseDate);
+            });
 
             // Initial calculations
             UpdateAllCalculations();
@@ -615,6 +640,7 @@ namespace Aeonpulse.ViewModels
             GlobalExhale = _calculationService.CalculateGlobalExhale(BaseDate, BaseDateName, BaseDateValue, UseMetric);
             CellularRefresh = _calculationService.CalculateCellularRefresh(BaseDate, BaseDateName, BaseDateValue);
             LifeLog = _calculationService.CalculateLifeLog(BaseDate, BaseDateName, BaseDateValue);
+            VibrantNature = _calculationService.CalculateVibrantNature(BaseDate);
         }
 
         public void UpdateLiveCalculations()

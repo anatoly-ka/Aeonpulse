@@ -1794,4 +1794,28 @@
     <value>World population statistics and projections courtesy of the United Nations, Department of Economic and Social Affairs, Population Division (2024 Revision). Historical estimates by Human Mortality Database (2025 revision) and the Population Reference Bureau (2024). Sub-statistics (twins and causes of death) are derived using fixed global ratios provided by the WHO Global Health Estimates and demographic researches.</value>
     <comment>DeepDivePopup sources</comment>
   </data>
-</root>
+
+  <data name="Ticker_VibrantNatureTitle" xml:space="preserve">
+    <value>Vibrant Nature</value>
+    <comment>Ticker card title for the biodiversity discovery vs extinction counter</comment>
+  </data>
+  <data name="Ticker_VibrantNatureBrief" xml:space="preserve">
+    <value>&lt;b&gt;{discovered}&lt;/b&gt; discovered &#8680; &lt;b&gt;{extinct}&lt;/b&gt; extinct</value>
+    <comment>CalculationService.cs - HTML-formattable brief text; {discovered} and {extinct} replaced with N0 values</comment>
+  </data>
+  <data name="Ticker_VibrantNatureFull" xml:space="preserve">
+    <value>The biosphere is in a constant state of flux.&lt;br/&gt;&lt;br/&gt;Since your timeline began, humanity has scientifically described &lt;b&gt;{discovered}&lt;/b&gt; new species. This includes roughly:&lt;br/&gt;&amp;bull; &lt;b&gt;{insects_discovered}&lt;/b&gt; insects/invertebrates,&lt;br/&gt;&amp;bull; &lt;b&gt;{plants_discovered}&lt;/b&gt; plants,&lt;br/&gt;&amp;bull; and &lt;b&gt;{vertebrates_discovered}&lt;/b&gt; vertebrates.&lt;br/&gt;&lt;br/&gt;In that same time, an estimated &lt;b&gt;{extinct}&lt;/b&gt; species have been lost to extinction, including approximately&lt;br/&gt;&amp;bull; &lt;b&gt;{insects_extinct}&lt;/b&gt; invertebrates&lt;br/&gt;&amp;bull; and &lt;b&gt;{vertebrates_extinct}&lt;/b&gt; vertebrates.</value>
+    <comment>CalculationService.cs - HTML-formattable full text; all tokens replaced with N0 values</comment>
+  </data>
+  <data name="Info_VibrantNatureTitle" xml:space="preserve">
+    <value>Vibrant Nature</value>
+    <comment>DeepDivePopup title</comment>
+  </data>
+  <data name="Info_VibrantNatureMethod" xml:space="preserve">
+    <value>Taxonomy (the describing of new species) has accelerated due to better technology, more scientists, and genetic sequencing. 1900-1950: The rate was relatively steady, relying on traditional field biology. Scientists described roughly 10,000 species per year (approx. 27.4 per day). 1950-2000: Post-WWII scientific expansion and global travel increased the rate to roughly 15,000 species per year (approx. 41.1 per day). 2000-Present: With the advent of DNA barcoding and deep-sea/canopy exploration, the International Institute for Species Exploration (IISE) notes we describe about 18,000 species per year (approx. 49.3 per day). Estimating extinctions is harder because we cannot easily measure what we have not discovered, but conservation organizations (like the UN IPBES and WWF) track the background rate versus the modern Holocene extinction rate. 1900-1950: Industrialization expanded, but massive global habitat loss was just beginning. A conservative estimate for this era is approx. 10 species lost per day. 1950-2000: The Great Acceleration of human population, agriculture, and climate change. The estimated loss rose significantly to approx. 50 species per day. 2000-Present: Current UN estimates suggest dozens to over a hundred species go extinct daily. Using a conservative but impactful scientific consensus, we can approximate approx. 150 species lost per day in the modern era. The taxonomic breakdowns apply robust historical proportions from the Catalogue of Life and IUCN: Insects/Invertebrates make up approximately 55% of discoveries and approximately 60% of total extinction volume, Plants make up approximately 15% of discoveries, and Vertebrates (mammals, birds, fish, etc.) make up roughly 2% of both.</value>
+    <comment>DeepDivePopup methodology</comment>
+  </data>
+  <data name="Info_VibrantNatureSource" xml:space="preserve">
+    <value>Approximations derived from the International Institute for Species Exploration (IISE), the Catalogue of Life taxonomic distribution, and extinction rate estimates from the UN Intergovernmental Science-Policy Platform on Biodiversity and Ecosystem Services (IPBES).</value>
+    <comment>DeepDivePopup sources</comment>
+  </data></root>

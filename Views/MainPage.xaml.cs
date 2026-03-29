@@ -53,6 +53,7 @@ namespace Aeonpulse.Views
         private bool _isLifeLogDeepDiveOpen;
         private bool _isSpaceWaitDeepDiveOpen;
         private bool _isVibrantHumanityDeepDiveOpen;
+        private bool _isVibrantNatureDeepDiveOpen;
 
         /// <summary>
         /// Constructs the page and subscribes to the ViewModel's
@@ -372,5 +373,13 @@ namespace Aeonpulse.Views
                 AppResources.Info_VibrantHumanityTitle,
                 AppResources.Info_MethodTitle, AppResources.Info_VibrantHumanityMethod,
                 AppResources.Info_SourceTitle, AppResources.Info_VibrantHumanitySource);
+
+        /// <summary>Opens the Vibrant Nature deep-dive info panel.</summary>
+        private async void OnVibrantNatureInfoClicked(object sender, EventArgs e) =>
+            await OpenDeepDiveAsync(
+                () => _isVibrantNatureDeepDiveOpen, v => _isVibrantNatureDeepDiveOpen = v,
+                AppResources.Info_VibrantNatureTitle,
+                AppResources.Info_MethodTitle, AppResources.Info_VibrantNatureMethod,
+                AppResources.Info_SourceTitle, AppResources.Info_VibrantNatureSource);
     }
 }

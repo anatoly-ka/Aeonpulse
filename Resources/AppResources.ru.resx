@@ -1794,4 +1794,28 @@
     <value>Мировые статистические данные и прогнозы численности населения взяты из Population Division (2024 Revision), предоставленном Департаментом по экономическим и социальным вопросам ООН. Исторические оценки взяты из баз данных Human Mortality Database (2025 revision) и Population Reference Bureau (2024). Дополнительные статистики (доля близнецы и причины смерти) рассчитаны по фиксированным глобальным коэффициентам ВОЗ.</value>
     <comment>DeepDivePopup sources (ru)</comment>
   </data>
-</root>
+
+  <data name="Ticker_VibrantNatureTitle" xml:space="preserve">
+    <value>Живая Природа</value>
+    <comment>Ticker card title (ru)</comment>
+  </data>
+  <data name="Ticker_VibrantNatureBrief" xml:space="preserve">
+    <value>&lt;b&gt;{discovered}&lt;/b&gt; открыто &#8680; &lt;b&gt;{extinct}&lt;/b&gt; вымерло</value>
+    <comment>CalculationService.cs - HTML-formattable brief text (ru)</comment>
+  </data>
+  <data name="Ticker_VibrantNatureFull" xml:space="preserve">
+    <value>Биосфера находится в постоянном движении.&lt;br/&gt;&lt;br/&gt;Начиная с указанной даты, человечество научно описало &lt;b&gt;{discovered}&lt;/b&gt; новых видов. Среди них приблизительно:&lt;br/&gt;&amp;bull; &lt;b&gt;{insects_discovered}&lt;/b&gt; насекомых и беспозвоночных,&lt;br/&gt;&amp;bull; &lt;b&gt;{plants_discovered}&lt;/b&gt; растений,&lt;br/&gt;&amp;bull; и позвоночных.&lt;b&gt;{vertebrates_discovered}&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;За то же время по оценкам вымерло &lt;b&gt;{extinct}&lt;/b&gt; видов, в том числе приблизительно&lt;br/&gt;&amp;bull; &lt;b&gt;{insects_extinct}&lt;/b&gt; беспозвоночных&lt;br/&gt;&amp;bull; и &lt;b&gt;{vertebrates_extinct}&lt;/b&gt; позвоночных.</value>
+    <comment>CalculationService.cs - HTML-formattable full text (ru)</comment>
+  </data>
+  <data name="Info_VibrantNatureTitle" xml:space="preserve">
+    <value>Живая Природа</value>
+    <comment>DeepDivePopup title (ru)</comment>
+  </data>
+  <data name="Info_VibrantNatureMethod" xml:space="preserve">
+    <value>Описание новых видов ускорилось благодаря технологиям, баркодированию ДНК и росту числа учёных. 1900-1950: около 10 000 видов в год  (прибл. 27,4 в день). 1950-2000: около 15 000 видов в год (прибл. 41,1 в день). 2000-настоящее время: около 18 000 видов в год (прибл. 49,3 в день). Оценка вымирания сложнее. 1900-1950: прибл. 10 видов в день. 1950-2000: прибл. 50 видов в день. 2000-настоящее время: прибл. 150 видов в день. Таксономические пропорции: насекомые/беспозвоночные составляют около 55% открытий и 60% вымираний, растения - около 15% открытий, позвоночные - около 2% обеих категорий.</value>
+    <comment>DeepDivePopup methodology (ru)</comment>
+  </data>
+  <data name="Info_VibrantNatureSource" xml:space="preserve">
+    <value>Оценки получены на основе данных International Institute for Species Exploration (IISE), таксономических распределений от Catalogue of Life, а также оценок темпов вымирания от Intergovernmental Science-Policy Platform on Biodiversity and Ecosystem Services (IPBES) ООН.</value>
+    <comment>DeepDivePopup sources (ru)</comment>
+  </data></root>

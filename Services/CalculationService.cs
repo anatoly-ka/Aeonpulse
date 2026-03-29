@@ -2002,6 +2002,123 @@ namespace Aeonpulse.Services
         }
 
         #endregion
+        #region Vibrant Nature
+
+        /// <summary>
+        /// Estimates the number of new biological species described by science and
+        /// the number of species driven to extinction globally since the user's base date,
+        /// using a 3-epoch piecewise linear daily-rate model anchored to 1900-01-01.
+        /// Recalculated on demand (static ticker with refresh button).
+        ///
+        /// <para>
+        /// <b>Algorithm:</b> Discovery rates: 1900-1950 approx. 27.4/day; 1950-2000 approx. 41.1/day;
+        /// 2000-present approx. 49.3/day. Extinction rates: 1900-1950 approx. 10/day;
+        /// 1950-2000 approx. 50/day; 2000-present approx. 150/day. Rates derived from IISE and
+        /// IPBES data. Taxonomic breakdowns use fixed proportions from the Catalogue of Life
+        /// and IUCN: Insects/Invertebrates approx. 55% of discoveries and approx. 60% of extinctions,
+        /// Plants approx. 15% of discoveries, Vertebrates approx. 2% of both.
+        /// </para>
+        /// <para>
+        /// <b>Side effect:</b> reads <see cref="AppResources"/> for all output strings
+        /// so result language follows <c>AppResources.Culture</c>.
+        /// </para>
+        /// </summary>
+        /// <param name="baseDate">The user-selected origin date (e.g., birthday).</param>
+        /// <param name="now">Optional override for current time; used by unit tests for determinism.</param>
+        /// <returns>
+        /// A <see cref="VibrantNatureResult"/> with formatted discovery and extinction counts
+        /// and raw numeric fields for all taxonomic sub-statistics.
+        /// </returns>
+        [AIContext("CoreCalculation")]
+        [AIContext("ExternalDataModel")]
+        public VibrantNatureResult CalculateVibrantNature(DateTime baseDate, DateTime? now = null)
+        {
+            DateTime today       = now ?? DateTime.UtcNow;
+            DateTime baseDateUtc = baseDate.ToUniversalTime();
+
+            AeonLog.Debug(LogCat, nameof(CalculateVibrantNature), $"baseDate={baseDate:d}");
+
+            double discoveredSince = Math.Max(0, DiscoveredSpeciesByDate(today) - DiscoveredSpeciesByDate(baseDateUtc));
+            double extinctSince    = Math.Max(0, ExtinctSpeciesByDate(today)    - ExtinctSpeciesByDate(baseDateUtc));
+
+            double insectsDiscovered    = discoveredSince * 0.55;
+            double plantsDiscovered     = discoveredSince * 0.15;
+            double vertebratesDiscovered = discoveredSince * 0.02;
+
+            double insectsExtinct    = extinctSince * 0.60;
+            double vertebratesExtinct = extinctSince * 0.02;
+
+            string discovered          = ((long)discoveredSince).ToString("N0");
+            string extinct             = ((long)extinctSince).ToString("N0");
+            string insectsDiscStr      = ((long)insectsDiscovered).ToString("N0");
+            string plantsDiscStr       = ((long)plantsDiscovered).ToString("N0");
+            string vertebratesDiscStr  = ((long)vertebratesDiscovered).ToString("N0");
+            string insectsExtStr       = ((long)insectsExtinct).ToString("N0");
+            string vertebratesExtStr   = ((long)vertebratesExtinct).ToString("N0");
+
+            string briefText = AppResources.Ticker_VibrantNatureBrief
+                .Replace("{discovered}", discovered)
+                .Replace("{extinct}",    extinct);
+
+            string fullText = AppResources.Ticker_VibrantNatureFull
+                .Replace("{discovered}",           discovered)
+                .Replace("{extinct}",              extinct)
+                .Replace("{insects_discovered}",   insectsDiscStr)
+                .Replace("{plants_discovered}",    plantsDiscStr)
+                .Replace("{vertebrates_discovered}", vertebratesDiscStr)
+                .Replace("{insects_extinct}",      insectsExtStr)
+                .Replace("{vertebrates_extinct}",  vertebratesExtStr);
+
+            return new VibrantNatureResult
+            {
+                DiscoveredSince       = discoveredSince,
+                ExtinctSince          = extinctSince,
+                InsectsDiscovered     = insectsDiscovered,
+                PlantsDiscovered      = plantsDiscovered,
+                VertebratesDiscovered = vertebratesDiscovered,
+                InsectsExtinct        = insectsExtinct,
+                VertebratesExtinct    = vertebratesExtinct,
+                BriefText             = briefText,
+                FullText              = fullText
+            };
+        }
+
+        /// <summary>
+        /// Cumulative count of species described by science from 1900-01-01 up to
+        /// <paramref name="date"/>, using a 3-epoch piecewise linear daily-rate model.
+        /// Rates: 1900-1950 approx. 27.4/day; 1950-2000 approx. 41.1/day; 2000-present approx. 49.3/day.
+        /// </summary>
+        /// <param name="date">UTC date at which to evaluate the cumulative count.</param>
+        /// <returns>Cumulative species described up to <paramref name="date"/>.</returns>
+        private static double DiscoveredSpeciesByDate(DateTime date)
+        {
+            double days = (date - new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds / 86400.0;
+            if (days < 18262)
+                return days * 27.4;
+            if (days < 36525)
+                return (18262 * 27.4) + ((days - 18262) * 41.1);
+            return (18262 * 27.4) + (18263 * 41.1) + ((days - 36525) * 49.3);
+        }
+
+        /// <summary>
+        /// Cumulative count of species estimated to have gone extinct globally from 1900-01-01
+        /// up to <paramref name="date"/>, using a 3-epoch piecewise linear daily-rate model.
+        /// Rates: 1900-1950 approx. 10/day; 1950-2000 approx. 50/day; 2000-present approx. 150/day.
+        /// </summary>
+        /// <param name="date">UTC date at which to evaluate the cumulative count.</param>
+        /// <returns>Cumulative species lost to extinction up to <paramref name="date"/>.</returns>
+        private static double ExtinctSpeciesByDate(DateTime date)
+        {
+            double days = (date - new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds / 86400.0;
+            if (days < 18262)
+                return days * 10.0;
+            if (days < 36525)
+                return (18262 * 10.0) + ((days - 18262) * 50.0);
+            return (18262 * 10.0) + (18263 * 50.0) + ((days - 36525) * 150.0);
+        }
+
+        #endregion
+
         #region Tease Text
 
         /// <summary>

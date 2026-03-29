@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-03-28
+> **Last updated:** 2026-03-29
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -225,6 +225,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | 16 | Life Log | Mirror | Static | Yes |
 | 17 | Space Wait | Cosmos | **LIVE** | No |
 | 18 | Vibrant Humanity | Mirror | **LIVE** | No |
+| 19 | Vibrant Nature | Eco Echoes | Static | Yes |
 
 ### User-Configurable Settings (persisted via `Preferences`)
 
@@ -292,7 +293,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
 | `TickerData.cs` | Edit freely | `DataTransferObject` | Two-property DTO (`BriefText`, `FullText`) implementing `INotifyPropertyChanged`. All 13 typed result subclasses (see `TickerResults.cs`) inherit from this class. Live tickers mutate `BriefText`/`FullText` in-place every second via property setters so bindings update without replacing the object reference. |
-| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 13 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`, `YourBreathResult`, `VibrantCosmosResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum, `CellularRefreshResult`, `GlobalCrowdResult`, `LifeLogResult`, and `VibrantHumanityResult`. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. |
+| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 13 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`, `YourBreathResult`, `VibrantCosmosResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum, `CellularRefreshResult`, `GlobalCrowdResult`, `LifeLogResult`, `VibrantHumanityResult`, and `VibrantNatureResult`. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. |
 | `TickerCardModel.cs` | Edit freely | `DataTransferObject` | Structural metadata for a ticker card: `Title`, `IconGlyph`, `IsLive`, `IsExpanded`, `HasRefresh`. Not yet wired to a `CollectionView` - reserved for a future refactor that replaces individually-templated XAML blocks. |
 | `SubsectionState.cs` | Edit freely | - | Snapshot of a collapsible section: `Title` (used as key) and `IsExpanded`. Defined but not yet actively used for persistence - available for future state-save/restore logic. |
 
@@ -492,6 +493,7 @@ ow\. Covers correct km expansion formula (elapsed seconds * 3,300,000), metric b
 | `TypedResultFieldTests.cs` | Edit freely | Tests that each CalculationService method correctly populates the raw numeric fields of its typed result subclass - not covered by the existing string-assertion tests. Uses injected now for deterministic results. Covers CountdownResult decomposition, LifeOdometerResult formulas, AlienAnniversariesResult planet-year formulas, GalacticCommuteResult km calculation, PhotonPathResult phase and speed-of-light check, HumanBirthRankResult rank ordering, PersonalYearResult range, GlobalExhaleResult flags, TimeJubileesResult coherence. |
 | `Aeonpulse.Tests/CalculateSpaceWaitTests.cs` | Edit freely | Tests for `CalculateSpaceWait` with injected `now`.
 | `Aeonpulse.Tests/CalculateVibrantHumanityTests.cs` | Edit freely | Tests for `CalculateVibrantHumanity` with injected `now`. Covers births and deaths between base date and now, sub-statistic ratios (twins 2.4%, heart 27%, cancer 18%), zero elapsed time, very old base dates, N0 formatting, token replacement, and consistency with the shared `HumanBirthRankbyDate`/`HumanPopulationByDate` helpers. 16 tests total. | Covers happy path, countdown always less than Mercury period, Mercury birthday countdown formula, zero elapsed time, very old base dates, English ordinal suffix (1st/2nd/3rd/th/11th/21st), BriefText/FullText content, and typed result field round-trip. 14 tests total. |
+| `Aeonpulse.Tests/CalculateVibrantNatureTests.cs` | Edit freely | Tests for `CalculateVibrantNature` with injected `now`. Covers species discovery and extinction counts, piecewise epoch boundaries (pre-1950, post-2000), zero elapsed time, very old base dates, N0 formatting, taxonomic sub-statistic proportions (insects 55%/60%, plants 15%, vertebrates 2%), proportional growth, and typed result field round-trip. 19 tests total. |
 | `README.md` | Edit freely | High-level project README. Human-facing. Contains a project structure overview and migration notes from the original React implementation. |
 | `IMPLEMENTATION_GUIDE.md` | Edit freely | Original React-to-MAUI migration guide. Contains early extension recipes and build commands. Some content is superseded by `Agents.md`. |
 
@@ -1054,6 +1056,7 @@ a map to navigate without reading every XAML file.
 | `Views/MainPage.xaml` | ~970 | Cellular Refresh ticker card header
 | `Views/MainPage.xaml` | ~1070 | Space Wait ticker card header `Grid` - 3-column `[planet emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.SpaceWait` (live-updated every second). | `Grid` - 3-column `[DNA emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.CellularRefresh` (live-updated every second). |
 | `Views/MainPage.xaml` | ~1170 | Vibrant Humanity ticker card header `Grid` - 3-column `[globe emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.VibrantHumanity` (live-updated every second). |
+| `Views/MainPage.xaml` | ~1400 | Vibrant Nature ticker card header `Grid` - 3-column `[butterfly emoji|title|info+refresh+expand buttons]`, bound to `MainViewModel.VibrantNature` (static, re-calculates on refresh). |
 | `Views/MainPage.xaml` | ~710 | Vibrant Cosmos ticker card header `Grid` - 3-column `[sparkles emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.VibrantCosmos` (live-updated every 200 ms). |
 | `Views/MainPage.xaml` | 243 | Title + LIVE badge `HorizontalStackLayout` - side-by-side layout reason |
 | `Views/SettingsPopup.xaml` | 9 | Full-screen overlay `Grid` - Layer 0/1 z-order explanation |
@@ -1445,7 +1448,7 @@ AIContext:   (none - state orchestrator)
 
 **Owns:**
 - All 15 typed ticker result instances (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, `VibrantCosmosResult`, `LifeLogResult`, etc. - all subclasses of `TickerData`)
-- All section/card `bool` expanded states (20 total, including `VibrantCosmosExpanded`, `LifeLogExpanded`, `SpaceWaitExpanded`, `VibrantHumanityExpanded`)
+- All section/card `bool` expanded states (21 total, including `VibrantCosmosExpanded`, `LifeLogExpanded`, `SpaceWaitExpanded`, `VibrantHumanityExpanded`, `VibrantNatureExpanded`)
 - All user settings state
 - The 1-second live-update timer and the 200 ms `_vibrantCosmosTimer` (dedicated to Vibrant Cosmos)
 - All `ICommand` instances
@@ -1512,6 +1515,7 @@ AIContext:   CoreCalculationEngine
 | `CalculateLifeLog` | `CoreCalculation` | Static | `baseDateName`, `baseDateValue`, optional `rand` for brief-text randomisation |
 | `CalculateSpaceWait` | `LiveTicker` | LIVE (1s) | *(none beyond `baseDate`)* |
 | `CalculateVibrantHumanity` | `LiveTicker`, `ExternalDataModel` | LIVE (1s) | `baseDateName`, `baseDateValue` |
+| `CalculateVibrantNature` | `CoreCalculation`, `ExternalDataModel` | Static | *(none beyond `baseDate`)* |
 | `GetRandomTeaseText` | `UIPresentation` | LIVE (1s) | `CountdownResult`, `LifeOdometerResult`, `GalacticCommuteResult`, `GlobalExhaleResult`, `baseDateName`, `baseDate` (`DateTime`, formatted with `"d"` inside) - returns 1 of 5 random tease strings |
 
 **Owns:**

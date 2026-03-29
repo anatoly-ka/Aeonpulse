@@ -3720,5 +3720,35 @@ namespace Aeonpulse.Resources {
                 return ResourceManager.GetString("Info_VibrantHumanitySource", resourceCulture);
             }
         }
+        public static string Ticker_VibrantNatureTitle {
+            get {
+                return ResourceManager.GetString("Ticker_VibrantNatureTitle", resourceCulture);
+            }
+        }
+        public static string Ticker_VibrantNatureBrief {
+            get {
+                return ResourceManager.GetString("Ticker_VibrantNatureBrief", resourceCulture);
+            }
+        }
+        public static string Ticker_VibrantNatureFull {
+            get {
+                return ResourceManager.GetString("Ticker_VibrantNatureFull", resourceCulture);
+            }
+        }
+        public static string Info_VibrantNatureTitle {
+            get {
+                return ResourceManager.GetString("Info_VibrantNatureTitle", resourceCulture);
+            }
+        }
+        public static string Info_VibrantNatureMethod {
+            get {
+                return ResourceManager.GetString("Info_VibrantNatureMethod", resourceCulture);
+            }
+        }
+        public static string Info_VibrantNatureSource {
+            get {
+                return ResourceManager.GetString("Info_VibrantNatureSource", resourceCulture);
+            }
+        }
     }
 }
