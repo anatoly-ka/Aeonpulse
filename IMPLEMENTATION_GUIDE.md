@@ -117,6 +117,40 @@ The core C# calculation must be: ...
 Please follow the Section 7.2 of Agents.md recipe exactly, including:
 - Both .resx files (AppResources.resx and AppResources.ru.resx); please follow the Section 9.5 of Agents.md.
 - LocalizedResources.cs
+- Models/TickerResults.cs (new typed result subclass)
+- CalculationService.cs (new Calculate* method)
+- MainViewModel.cs
+- MainPage.xaml and MainPage.xaml.cs
+- A test in Aeonpulse.Tests
+- Agents.md; please follow the Section 9.11 of Agents.md.
+
+Run the build and all tests before finishing.
+```
+
+**Example - Vibrant Nature static ticker (Eco Echoes section):**
+```
+[META] Vibrant Nature ticker
+Please read Agents.md fully before making any changes.
+It is the authoritative navigation guide for this codebase.
+Please don't start any change before completing a full read of this prompt and plan of every affected location.
+
+Add a new ticker card called "Vibrant Nature" in the Eco Echoes section, following guidelines in the Section 7.2 of Agents.md.
+It should show: estimated number of new biological species described by science, and species driven to extinction globally, since the user's base date. Also show taxonomic breakdowns: insects/invertebrates, plants, and vertebrates.
+Ticker Details & Content:
+- UNICODE Symbol: 🦋 (U+1F98B)
+- Brief Text Template: "<b>{discovered}</b> discovered → <b>{extinct}</b> extinct"
+- Full Text Template: multi-line HTML with bullet breakdowns per taxonomic group for both discoveries and extinctions
+- Methodology: 3-epoch piecewise linear daily-rate model anchored to 1900-01-01 UTC. Discovery rates: 1900-1950 ~27.4/day; 1950-2000 ~41.1/day; 2000-present ~49.3/day. Extinction rates: 1900-1950 ~10/day; 1950-2000 ~50/day; 2000-present ~150/day.
+- Taxonomic proportions: insects/invertebrates ~55% of discoveries and ~60% of extinctions; plants ~15% of discoveries; vertebrates ~2% of both.
+- Credit/Source: IISE (International Institute for Species Exploration), Catalogue of Life, UN IPBES.
+Update type: Static
+Has refresh button: Yes
+The core C# calculation must be: a DiscoveredSpeciesByDate(DateTime) helper and an ExtinctSpeciesByDate(DateTime) helper, each using the 3-epoch piecewise model; CalculateVibrantNature subtracts base-date values from current values and applies the taxonomic proportions.
+
+Please follow the Section 7.2 of Agents.md recipe exactly, including:
+- Both .resx files (AppResources.resx and AppResources.ru.resx); please follow the Section 9.5 of Agents.md.
+- LocalizedResources.cs
+- Models/TickerResults.cs (new typed result subclass)
 - CalculationService.cs (new Calculate* method)
 - MainViewModel.cs
 - MainPage.xaml and MainPage.xaml.cs
@@ -269,7 +303,7 @@ Current category tokens:
 |-------|-----------------|
 | `BOOT` | App startup, preferences restore (`App.xaml.cs`) |
 | `VM` | `MainViewModel` - settings changes, date saves, timer health |
-| `CALC` | `CalculationService` - all 10 ticker method entries and phase transitions |
+| `CALC` | `CalculationService` - all 19 ticker method entries and phase transitions |
 
 ### Diagnosing a bug with AI
 
@@ -491,13 +525,13 @@ signtool sign /fd SHA256 /a /f your_cert.pfx /p your_password ^
 
 ## 7. Running Tests
 
-The test suite covers all 10 ticker calculation methods. Tests are in `Aeonpulse.Tests/` and target plain `net9.0` - no MAUI dependency, runs on any CI machine.
+The test suite covers all 19 ticker calculation methods. Tests are in `Aeonpulse.Tests/` and target plain `net9.0` - no MAUI dependency, runs on any CI machine.
 
 ```
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
 ```
 
-Expected output: **66 tests, 0 failures**.
+Expected output: **286 tests, 0 failures**.
 
 ### When to run tests
 
@@ -525,9 +559,9 @@ Run dotnet test after adding the tests.
 
 1. Review the diff with `git diff HEAD` before committing.
 2. Check that `Agents.md` was updated if any structural change was made (AI should do this automatically, but verify).
-3. Run `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` - 66 tests, 0 failures.
+3. Run `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` - 286 tests, 0 failures.
 4. Run `dotnet build Aeonpulse.csproj -f net9.0-windows10.0.19041.0 --no-incremental` and confirm only the four known warning codes appear (`CS0618`, `CS8767`, `CS0414`, `XC0022`).
-5. Commit with a descriptive message. AI-only commits include the signature trailer: `AI: GitHub Copilot (gpt-4o)`.
+5. Commit with a descriptive message. AI-only commits include the signature trailer: `AI: GitHub Copilot (claude-sonnet-4-5)`.
 
 ### When you edit `.resx` files manually
 
