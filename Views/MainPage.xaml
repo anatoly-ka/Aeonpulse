@@ -211,11 +211,12 @@
                                         </HorizontalStackLayout>
                                     </Grid>
 
-                                    <!-- Binding: MainViewModel.TimeJubilees.BriefText - always visible -->
+                                    <!-- Binding: MainViewModel.TimeJubilees.BriefText - hidden when expanded -->
                                     <Label Text="{Binding TimeJubilees.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding TimeJubileesExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.TimeJubilees.FullText - visible when expanded -->
                                     <Label Text="{Binding TimeJubilees.FullText}"
                                            TextType="Html"
@@ -277,11 +278,12 @@
                                                          Command="{Binding ToggleCountdownCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.Countdown.BriefText - always visible, updates every second -->
+                                    <!-- Binding: MainViewModel.Countdown.BriefText - hidden when expanded, updates every second -->
                                     <Label Text="{Binding Countdown.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding CountdownExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.Countdown.FullText - visible when expanded -->
                                     <Label Text="{Binding Countdown.FullText}"
                                            TextType="Html"
@@ -340,11 +342,12 @@
                                                          Command="{Binding ToggleLifeOdometerCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.LifeOdometer.BriefText - updates every second -->
+                                    <!-- Binding: MainViewModel.LifeOdometer.BriefText - hidden when expanded, updates every second -->
                                     <Label Text="{Binding LifeOdometer.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding LifeOdometerExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.LifeOdometer.FullText - visible when expanded -->
                                     <Label Text="{Binding LifeOdometer.FullText}"
                                            TextType="Html"
@@ -404,11 +407,12 @@
                                         </HorizontalStackLayout>
                                     </Grid>
 
-                                    <!-- Binding: MainViewModel.CellularRefresh.BriefText - always visible -->
+                                    <!-- Binding: MainViewModel.CellularRefresh.BriefText - hidden when expanded -->
                                     <Label Text="{Binding CellularRefresh.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding CellularRefreshExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.CellularRefresh.FullText - visible when expanded -->
                                     <Label Text="{Binding CellularRefresh.FullText}"
                                            TextType="Html"
@@ -493,11 +497,12 @@
                                                          Command="{Binding ToggleAlienAnniversariesCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.AlienAnniversaries.BriefText -->
+                                    <!-- Binding: MainViewModel.AlienAnniversaries.BriefText - hidden when expanded -->
                                     <Label Text="{Binding AlienAnniversaries.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding AlienAnniversariesExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.AlienAnniversaries.FullText -->
                                     <Label Text="{Binding AlienAnniversaries.FullText}"
                                            TextType="Html"
@@ -566,11 +571,12 @@
                                         </HorizontalStackLayout>
                                     </Grid>
 
-                                    <!-- Binding: MainViewModel.SpaceWait.BriefText - always visible, HTML-formatted -->
+                                    <!-- Binding: MainViewModel.SpaceWait.BriefText - hidden when expanded, HTML-formatted -->
                                     <Label Text="{Binding SpaceWait.BriefText}"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
-                                           TextType="Html" />
+                                           TextType="Html"
+                                           IsVisible="{Binding SpaceWaitExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.SpaceWait.FullText - visible when expanded, HTML-formatted -->
                                     <Label Text="{Binding SpaceWait.FullText}"
                                            TextColor="{DynamicResource TextGray}"
@@ -628,11 +634,12 @@
                                                          Command="{Binding ToggleGalacticCommuteCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.GalacticCommute.BriefText - updates every second -->
+                                    <!-- Binding: MainViewModel.GalacticCommute.BriefText - hidden when expanded, updates every second -->
                                     <Label Text="{Binding GalacticCommute.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding GalacticCommuteExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.GalacticCommute.FullText -->
                                     <Label Text="{Binding GalacticCommute.FullText}"
                                            TextType="Html"
@@ -689,11 +696,12 @@
                                                          Command="{Binding TogglePhotonPathCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.PhotonPath.BriefText - updates every second -->
+                                    <!-- Binding: MainViewModel.PhotonPath.BriefText - hidden when expanded, updates every second -->
                                     <Label Text="{Binding PhotonPath.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding PhotonPathExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.PhotonPath.FullText - visible when expanded -->
                                     <Label Text="{Binding PhotonPath.FullText}"
                                            TextType="Html"
@@ -758,11 +766,12 @@
                                         </HorizontalStackLayout>
                                     </Grid>
 
-                                    <!-- Binding: MainViewModel.CosmicStretch.BriefText - updates every second -->
+                                    <!-- Binding: MainViewModel.CosmicStretch.BriefText - hidden when expanded, updates every second -->
                                     <Label Text="{Binding CosmicStretch.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding CosmicStretchExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.CosmicStretch.FullText - visible when expanded -->
                                     <Label Text="{Binding CosmicStretch.FullText}"
                                            TextType="Html"
@@ -833,11 +842,12 @@
                                         </HorizontalStackLayout>
                                     </Grid>
 
-                                    <!-- Binding: MainViewModel.VibrantCosmos.BriefText - updates every 200 ms -->
+                                    <!-- Binding: MainViewModel.VibrantCosmos.BriefText - hidden when expanded, updates every 200 ms -->
                                     <Label Text="{Binding VibrantCosmos.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding VibrantCosmosExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.VibrantCosmos.FullText - visible when expanded -->
                                     <Label Text="{Binding VibrantCosmos.FullText}"
                                            TextType="Html"
@@ -914,11 +924,12 @@
                                                          Command="{Binding ToggleHumanBirthRankCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.HumanBirthRank.BriefText -->
+                                    <!-- Binding: MainViewModel.HumanBirthRank.BriefText - hidden when expanded -->
                                     <Label Text="{Binding HumanBirthRank.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding HumanBirthRankExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.HumanBirthRank.FullText -->
                                     <Label Text="{Binding HumanBirthRank.FullText}"
                                            TextType="Html"
@@ -964,11 +975,12 @@
                                                          Command="{Binding ToggleBirthRuneCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.BirthRune.BriefText -->
+                                    <!-- Binding: MainViewModel.BirthRune.BriefText - hidden when expanded -->
                                     <Label Text="{Binding BirthRune.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding BirthRuneExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.BirthRune.FullText -->
                                     <Label Text="{Binding BirthRune.FullText}"
                                            TextType="Html"
@@ -1014,11 +1026,12 @@
                                                          Command="{Binding TogglePersonalYearCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.PersonalYear.BriefText -->
+                                    <!-- Binding: MainViewModel.PersonalYear.BriefText - hidden when expanded -->
                                     <Label Text="{Binding PersonalYear.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding PersonalYearExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.PersonalYear.FullText -->
                                     <Label Text="{Binding PersonalYear.FullText}"
                                            TextType="Html"
@@ -1084,11 +1097,12 @@
                                                          Command="{Binding ToggleGlobalCrowdCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.GlobalCrowd.BriefText - always visible; HTML formatted -->
+                                    <!-- Binding: MainViewModel.GlobalCrowd.BriefText - hidden when expanded; HTML formatted -->
                                     <Label Text="{Binding GlobalCrowd.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding GlobalCrowdExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.GlobalCrowd.FullText - visible when expanded; HTML formatted -->
                                     <Label Text="{Binding GlobalCrowd.FullText}"
                                            TextType="Html"
@@ -1147,11 +1161,12 @@
                                                          Command="{Binding ToggleLifeLogCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.LifeLog.BriefText - always visible; HTML formatted -->
+                                    <!-- Binding: MainViewModel.LifeLog.BriefText - hidden when expanded; HTML formatted -->
                                     <Label Text="{Binding LifeLog.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding LifeLogExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.LifeLog.FullText - visible when expanded; HTML formatted -->
                                     <Label Text="{Binding LifeLog.FullText}"
                                            TextType="Html"
@@ -1215,11 +1230,12 @@
                                                          Command="{Binding ToggleVibrantHumanityCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.VibrantHumanity.BriefText - always visible; HTML formatted -->
+                                    <!-- Binding: MainViewModel.VibrantHumanity.BriefText - hidden when expanded; HTML formatted -->
                                     <Label Text="{Binding VibrantHumanity.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding VibrantHumanityExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.VibrantHumanity.FullText - visible when expanded; HTML formatted -->
                                     <Label Text="{Binding VibrantHumanity.FullText}"
                                            TextType="Html"
@@ -1300,11 +1316,12 @@
                                                          Command="{Binding ToggleGlobalExhaleCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.GlobalExhale.BriefText -->
+                                    <!-- Binding: MainViewModel.GlobalExhale.BriefText - hidden when expanded -->
                                     <Label Text="{Binding GlobalExhale.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding GlobalExhaleExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.GlobalExhale.FullText -->
                                     <Label Text="{Binding GlobalExhale.FullText}"
                                            TextType="Html"
@@ -1372,11 +1389,12 @@
                                         </HorizontalStackLayout>
                                     </Grid>
 
-                                    <!-- Binding: MainViewModel.YourBreath.BriefText - always visible -->
+                                    <!-- Binding: MainViewModel.YourBreath.BriefText - hidden when expanded -->
                                     <Label Text="{Binding YourBreath.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding YourBreathExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.YourBreath.FullText - visible when expanded -->
                                     <Label Text="{Binding YourBreath.FullText}"
                                            TextType="Html"
@@ -1436,11 +1454,12 @@
                                         </HorizontalStackLayout>
                                     </Grid>
 
-                                    <!-- Binding: MainViewModel.VibrantNature.BriefText - always visible -->
+                                    <!-- Binding: MainViewModel.VibrantNature.BriefText - hidden when expanded -->
                                     <Label Text="{Binding VibrantNature.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}" />
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding VibrantNatureExpanded, Converter={StaticResource InverseBool}}" />
                                     <!-- Binding: MainViewModel.VibrantNature.FullText - visible when expanded -->
                                     <Label Text="{Binding VibrantNature.FullText}"
                                            TextType="Html"

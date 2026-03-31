@@ -202,7 +202,7 @@ MainPage (always present)
 
 ### Ticker Cards (11 total)
 
-Each ticker card has a `BriefText` (always visible) and a `FullText` (shown when expanded).
+Each ticker card has a `BriefText` (shown when collapsed) and a `FullText` (shown when expanded). The two are mutually exclusive: `BriefText` binds `IsVisible` to `{Binding XxxExpanded, Converter={StaticResource InverseBool}}`; `FullText` binds `IsVisible` to `{Binding XxxExpanded}`.
 LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | # | Ticker | Section | Update | Has Refresh Button |
