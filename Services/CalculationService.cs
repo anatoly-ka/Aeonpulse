@@ -526,7 +526,7 @@ namespace Aeonpulse.Services
             {
                 Heartbeats = heartbeats,
                 Breaths    = breaths,
-                IllustrationSource = "heartbeat.svg",
+                IllustrationSource = "heartbeat.png",
                 BriefText = AppResources.Ticker_LifeOdometerBrief
                     .Replace("{heartbeats:N0}", heartbeats.ToString("N0"))
                     .Replace("{breaths:N0}", breaths.ToString("N0")),

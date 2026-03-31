@@ -356,13 +356,13 @@
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding LifeOdometerExpanded}" />
                                     <!-- AI: Illustration shown in the expanded Life Odometer card.
-                                         Source binds to LifeOdometerResult.IllustrationSource (heartbeat.svg).
-                                         IsVisible double-gated: LifeOdometerExpanded keeps it in the expanded
-                                         area only; LifeOdometer.HasIllustration hides it when no asset is set,
-                                         allowing future tickers to reuse this pattern without displaying a
-                                         broken image. Both conditions must be true for the image to show. -->
+                                         Source binds to LifeOdometerResult.IllustrationSource (heartbeat.png).
+                                         IsVisible is gated on LifeOdometerExpanded so the image only appears
+                                         in the expanded view. HasIllustration on the result prevents a broken
+                                         Image element if IllustrationSource is empty (future-proofing for
+                                         tickers that carry no illustration). -->
                                     <Image Source="{Binding LifeOdometer.IllustrationSource}"
-                                           IsVisible="{Binding LifeOdometer.HasIllustration}"
+                                           IsVisible="{Binding LifeOdometerExpanded}"
                                            IsAnimationPlaying="True"
                                            HeightRequest="120"
                                            Aspect="AspectFit"
