@@ -457,6 +457,19 @@ namespace Aeonpulse.ViewModels
             set { _teaseText = value; OnPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Opacity for all LIVE badge labels. Alternates between 1.0 and 0.4
+        /// on every 1-second timer tick to produce a gentle pulsing effect.
+        /// Bound in XAML as <c>Opacity="{Binding LiveBadgeOpacity}"</c> on every
+        /// live badge Label - no colour keys required, works across all themes.
+        /// </summary>
+        private double _liveBadgeOpacity = 1.0;
+        public double LiveBadgeOpacity
+        {
+            get => _liveBadgeOpacity;
+            set { _liveBadgeOpacity = value; OnPropertyChanged(); }
+        }
+
         #endregion
 
         #region Commands
@@ -664,6 +677,9 @@ namespace Aeonpulse.ViewModels
                 BaseDateName,
                 BaseDate
             );
+
+            // Pulse all LIVE badge labels by toggling opacity on every tick
+            LiveBadgeOpacity = LiveBadgeOpacity < 0.7 ? 1.0 : 0.4;
         }
 
         public void UpdateVibrantCosmos()

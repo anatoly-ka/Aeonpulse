@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-03-29
+> **Last updated:** 2026-06-13
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -314,7 +314,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 19 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, `VibrantCosmosResult`, etc. - see `TickerResults.cs`); 4 section `bool XxxExpanded` properties; 13 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `UpdateStaticCalculations()` recalculates 8 tickers; `UpdateLiveCalculations()` recalculates 6 tickers + `TeaseText`; `UpdateVibrantCosmos()` is called every 200 ms by a dedicated `_vibrantCosmosTimer`. |
+| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 19 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, `VibrantCosmosResult`, etc. - see `TickerResults.cs`); 4 section `bool XxxExpanded` properties; 13 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `double LiveBadgeOpacity` (alternates 1.0/0.4 on every 1-second timer tick - drives all LIVE badge pulsing via `Opacity` binding); `UpdateStaticCalculations()` recalculates 8 tickers; `UpdateLiveCalculations()` recalculates 6 tickers + `TeaseText` + toggles `LiveBadgeOpacity`; `UpdateVibrantCosmos()` is called every 200 ms by a dedicated `_vibrantCosmosTimer`. |
 | `LocalizedResources.cs` | Edit freely | - | Singleton (`Instance`). A thin passthrough wrapper: every property is `=> AppResources.SomeKey`. Bound in XAML as `{Binding Loc.PropertyName}`. `Invalidate()` fires `PropertyChanged(string.Empty)` which causes every bound property to re-read from `AppResources` with the newly-set culture. When adding a new localised string: add the `AppResources` key, then add the passthrough property here. |
 
 ---
@@ -652,6 +652,7 @@ TIMER (every 1 second, thread-pool thread)
                     --> CalculateSpaceWait()       --> SpaceWait.BriefText/FullText
                     --> CalculateVibrantHumanity() --> VibrantHumanity.BriefText/FullText
                     --> GetRandomTeaseText()       --> TeaseText
+                    --> LiveBadgeOpacity toggle    --> all LIVE badge Label opacities repaint
                             each setter fires PropertyChanged
                                 --> {Binding Xxx.BriefText} Labels repaint
 ```
