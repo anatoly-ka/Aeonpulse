@@ -245,8 +245,8 @@
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <!-- AI: Title + LIVE badge side-by-side in a HorizontalStackLayout.
-                                             Badge Opacity binds to MainViewModel.LiveBadgeOpacity (pulses 1.0/0.4
-                                             on every 1-second timer tick via UpdateLiveCalculations). -->
+                                             Badge Labels carry x:Name="LiveBadgeXxx" so MainPage.xaml.cs can
+                                             drive a continuous InOutSine breathing animation via Animation.Commit. -->
                                         <HorizontalStackLayout Grid.Column="1"
                                                                Spacing="8"
                                                                VerticalOptions="Center">
@@ -256,11 +256,11 @@
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
                                             <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
-                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                            <Label x:Name="LiveBadgeCountdown"
+                                                   Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
-                                                   Opacity="{Binding LiveBadgeOpacity}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -319,11 +319,11 @@
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
                                             <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
-                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                            <Label x:Name="LiveBadgeLifeOdometer"
+                                                   Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
-                                                   Opacity="{Binding LiveBadgeOpacity}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -543,11 +543,11 @@
                                                    FontAttributes="Bold"
                                                    VerticalOptions="Center" />
                                             <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
-                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                            <Label x:Name="LiveBadgeSpaceWait"
+                                                   Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
-                                                   Opacity="{Binding LiveBadgeOpacity}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -609,11 +609,11 @@
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
                                             <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
-                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                            <Label x:Name="LiveBadgeGalacticCommute"
+                                                   Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
-                                                   Opacity="{Binding LiveBadgeOpacity}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -670,11 +670,11 @@
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
                                             <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
-                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                            <Label x:Name="LiveBadgePhotonPath"
+                                                   Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
-                                                   Opacity="{Binding LiveBadgeOpacity}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -736,11 +736,11 @@
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
                                             <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
-                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                            <Label x:Name="LiveBadgeCosmicStretch"
+                                                   Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
-                                                   Opacity="{Binding LiveBadgeOpacity}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -811,11 +811,11 @@
                                                    FontAttributes="Bold"
                                                    VerticalOptions="Center" />
                                             <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised badge label) -->
-                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                            <Label x:Name="LiveBadgeVibrantCosmos"
+                                                   Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
-                                                   Opacity="{Binding LiveBadgeOpacity}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -1052,8 +1052,8 @@
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <!-- AI: Title + LIVE badge side-by-side in a HorizontalStackLayout.
-                                             Badge Opacity binds to MainViewModel.LiveBadgeOpacity (pulses 1.0/0.4
-                                             on every 1-second timer tick via UpdateLiveCalculations). -->
+                                             Badge Labels carry x:Name="LiveBadgeXxx" so MainPage.xaml.cs can
+                                             drive a continuous InOutSine breathing animation via Animation.Commit. -->
                                         <HorizontalStackLayout Grid.Column="1"
                                                                Spacing="8"
                                                                VerticalOptions="Center">
@@ -1063,11 +1063,11 @@
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold" />
                                             <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
-                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                            <Label x:Name="LiveBadgeGlobalCrowd"
+                                                   Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
-                                                   Opacity="{Binding LiveBadgeOpacity}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -1193,11 +1193,11 @@
                                                    FontAttributes="Bold"
                                                    VerticalOptions="Center" />
                                             <!-- Binding: MainViewModel.Loc.Badge_LIVE -->
-                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                            <Label x:Name="LiveBadgeVibrantHumanity"
+                                                   Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
-                                                   Opacity="{Binding LiveBadgeOpacity}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
@@ -1338,8 +1338,8 @@
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
                                         <!-- AI: Title + LIVE badge side-by-side in a HorizontalStackLayout.
-                                             Badge Opacity binds to MainViewModel.LiveBadgeOpacity (pulses 1.0/0.4
-                                             on every 1-second timer tick via UpdateLiveCalculations). -->
+                                             Badge Labels carry x:Name="LiveBadgeXxx" so MainPage.xaml.cs can
+                                             drive a continuous InOutSine breathing animation via Animation.Commit. -->
                                         <HorizontalStackLayout Grid.Column="1"
                                                                Spacing="8"
                                                                VerticalOptions="Center">
@@ -1350,11 +1350,11 @@
                                                    FontAttributes="Bold"
                                                    VerticalOptions="Center" />
                                             <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised badge label) -->
-                                            <Label Text="{Binding Loc.Badge_LIVE}"
+                                            <Label x:Name="LiveBadgeYourBreath"
+                                                   Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource NeonGreen}"
                                                    BackgroundColor="{DynamicResource NeonGreenDark}"
-                                                   Opacity="{Binding LiveBadgeOpacity}"
                                                    Padding="4,2"
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>

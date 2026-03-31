@@ -381,5 +381,77 @@ namespace Aeonpulse.Views
                 AppResources.Info_VibrantNatureTitle,
                 AppResources.Info_MethodTitle, AppResources.Info_VibrantNatureMethod,
                 AppResources.Info_SourceTitle, AppResources.Info_VibrantNatureSource);
+
+        // --- LIVE badge breathing animation ----------------------------------
+
+        private const string LiveBadgeAnimationName = "LiveBadgeBreathing";
+
+        /// <summary>
+        /// Starts (or restarts) the continuous breathing animation on all 10 LIVE badge
+        /// labels. Uses the MAUI <see cref="Animation"/> class directly so the effect is
+        /// driven by the UI compositor, not by the 1-second ticker timer.
+        ///
+        /// <para>
+        /// <b>Design note:</b> all 10 badge labels are set in a single Animation callback
+        /// so they stay perfectly in phase. The parent animation is committed against
+        /// <c>this</c> page as the <c>IAnimatable</c> owner, with
+        /// <c>repeat: () => true</c> for seamless looping. AbortAnimation is called
+        /// first to prevent duplicate animations if <c>OnAppearing</c> fires more than once
+        /// (e.g., after a modal is dismissed and this page re-surfaces).
+        /// </para>
+        /// <para>
+        /// <b>Layout stability:</b> only <c>Opacity</c> is animated (1.0 to 0.4 and back).
+        /// No size or position property is touched, so neighbouring elements never shift.
+        /// </para>
+        /// </summary>
+        private void StartLiveBadgeAnimation()
+        {
+            this.AbortAnimation(LiveBadgeAnimationName);
+
+            var allBadges = new[]
+            {
+                LiveBadgeCountdown,
+                LiveBadgeLifeOdometer,
+                LiveBadgeSpaceWait,
+                LiveBadgeGalacticCommute,
+                LiveBadgePhotonPath,
+                LiveBadgeCosmicStretch,
+                LiveBadgeVibrantCosmos,
+                LiveBadgeGlobalCrowd,
+                LiveBadgeVibrantHumanity,
+                LiveBadgeYourBreath,
+            };
+
+            var parent = new Animation();
+
+            // Fade out: 1.0 -> 0.4 (first half of the 2500 ms cycle)
+            var fadeOut = new Animation(
+                v => { foreach (var b in allBadges) b.Opacity = v; },
+                start: 1.0, end: 0.4, easing: Easing.SinInOut);
+
+            // Fade in: 0.4 -> 1.0 (second half of the 2500 ms cycle)
+            var fadeIn = new Animation(
+                v => { foreach (var b in allBadges) b.Opacity = v; },
+                start: 0.4, end: 1.0, easing: Easing.SinInOut);
+
+            parent.Add(0.0, 0.5, fadeOut);
+            parent.Add(0.5, 1.0, fadeIn);
+
+            parent.Commit(this, LiveBadgeAnimationName, length: 2500, repeat: () => true);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            StartLiveBadgeAnimation();
+        }
+
+        /// <inheritdoc/>
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            this.AbortAnimation(LiveBadgeAnimationName);
+        }
     }
 }
