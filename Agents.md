@@ -293,7 +293,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
 | `TickerData.cs` | Edit freely | `DataTransferObject` | Two-property DTO (`BriefText`, `FullText`) implementing `INotifyPropertyChanged`. All 13 typed result subclasses (see `TickerResults.cs`) inherit from this class. Live tickers mutate `BriefText`/`FullText` in-place every second via property setters so bindings update without replacing the object reference. |
-| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 13 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`, `YourBreathResult`, `VibrantCosmosResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum, `CellularRefreshResult`, `GlobalCrowdResult`, `LifeLogResult`, `VibrantHumanityResult`, and `VibrantNatureResult`. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. |
+| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 13 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`, `YourBreathResult`, `VibrantCosmosResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum, `CellularRefreshResult`, `GlobalCrowdResult`, `LifeLogResult`, `VibrantHumanityResult`, and `VibrantNatureResult`. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. `LifeOdometerResult` carries two extra init-only properties: `IllustrationSource` (filename of an optional inline image shown in the expanded view) and `HasIllustration` (computed bool, drives `IsVisible` on the `Image` element in `MainPage.xaml`). |
 | `TickerCardModel.cs` | Edit freely | `DataTransferObject` | Structural metadata for a ticker card: `Title`, `IconGlyph`, `IsLive`, `IsExpanded`, `HasRefresh`. Not yet wired to a `CollectionView` - reserved for a future refactor that replaces individually-templated XAML blocks. |
 | `SubsectionState.cs` | Edit freely | - | Snapshot of a collapsible section: `Title` (used as key) and `IsExpanded`. Defined but not yet actively used for persistence - available for future state-save/restore logic. |
 
@@ -390,6 +390,7 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 | `settings.png` | `MainMenuPopup` menu item | Settings menu item icon |
 | `profiles.png` | `MainMenuPopup` menu item | Change Date menu item icon |
 | `exit.png` | `MainMenuPopup` menu item | Exit menu item icon |
+| `heartbeat.svg` | Life Odometer expanded card `Image` | Inline illustration shown inside the expanded Life Odometer card; `IsAnimationPlaying=True` so a GIF can be substituted without code changes. |
 | `calendar.png`, `menu.png`, `picture.png`, `send.png`, `share.png`, `tease.png`, `text.png` | Unused / reserved | Available for future features |
 
 #### Other Resources
@@ -1060,6 +1061,7 @@ a map to navigate without reading every XAML file.
 | `Views/MainPage.xaml` | ~1400 | Vibrant Nature ticker card header `Grid` - 3-column `[butterfly emoji|title|info+refresh+expand buttons]`, bound to `MainViewModel.VibrantNature` (static, re-calculates on refresh). |
 | `Views/MainPage.xaml` | ~710 | Vibrant Cosmos ticker card header `Grid` - 3-column `[sparkles emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.VibrantCosmos` (live-updated every 200 ms). |
 | `Views/MainPage.xaml` | 243 | Title + LIVE badge `HorizontalStackLayout` - badge labels carry `x:Name="LiveBadgeXxx"` for code-behind animation |
+| `Views/MainPage.xaml` | ~358 | Life Odometer illustration `Image` - `Source` bound to `LifeOdometerResult.IllustrationSource`; `IsVisible` bound to `LifeOdometer.HasIllustration`; `IsAnimationPlaying=True` for GIF support. |
 | `Views/SettingsPopup.xaml` | 9 | Full-screen overlay `Grid` - Layer 0/1 z-order explanation |
 | `Views/SettingsPopup.xaml` | 25 | `Frame` panel - floats over backdrop, `DynamicResource` theme note |
 | `Views/SettingsPopup.xaml` | 38 | 3-row inner `Grid` - `[Title+Divider|Settings|CloseButton]` row assignments |

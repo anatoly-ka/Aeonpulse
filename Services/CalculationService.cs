@@ -526,6 +526,7 @@ namespace Aeonpulse.Services
             {
                 Heartbeats = heartbeats,
                 Breaths    = breaths,
+                IllustrationSource = "heartbeat.svg",
                 BriefText = AppResources.Ticker_LifeOdometerBrief
                     .Replace("{heartbeats:N0}", heartbeats.ToString("N0"))
                     .Replace("{breaths:N0}", breaths.ToString("N0")),
@@ -1368,7 +1369,7 @@ namespace Aeonpulse.Services
         /// <b>Scale choice:</b> the result is formatted in <b>million km</b> (dividing by
         /// 1,000,000). At 3.3 million km/s the display increments by 3 every second, which
         /// is the minimum change visible to the eye in a live ticker. Billion km would
-        /// increment by 0.003 per second and never visibly change; raw km would overflow
+        /// increment by 0.003/s and never visibly change; raw km would overflow
         /// any mobile screen. The <c>fullDistance</c> parenthetical is therefore omitted.
         /// </para>
         /// <para>
@@ -1724,7 +1725,7 @@ namespace Aeonpulse.Services
         /// </summary>
         /// <param name="baseDate">The user-selected origin date.</param>
         /// <param name="baseDateName">Human-readable label for display in output strings.</param>
-        /// <param name="baseDateValue">ISO-8601 string of the base date for output formatting.</param>
+        /// <param name="baseDateValue">ISO-8601 string for the base date for output formatting.</param>
         /// <param name="rand">Optional <see cref="Random"/> instance for deterministic testing of brief-text activity selection.</param>
         /// <param name="now">Optional <see cref="DateTime"/> override for deterministic testing.</param>
         /// <returns>

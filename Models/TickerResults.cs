@@ -62,6 +62,18 @@ namespace Aeonpulse.Models
 
         /// <summary>Total estimated breaths since the base date (16 /min average).</summary>
         public long Breaths { get; init; }
+
+        /// <summary>
+        /// Optional filename of an illustration shown inside the expanded card view.
+        /// Empty string means no illustration. Resolved as a MAUI image asset (e.g. "heartbeat.svg").
+        /// </summary>
+        public string IllustrationSource { get; init; } = string.Empty;
+
+        /// <summary>
+        /// Returns <c>true</c> when <see cref="IllustrationSource"/> is non-empty,
+        /// driving the <c>IsVisible</c> binding on the illustration <c>Image</c> element.
+        /// </summary>
+        public bool HasIllustration => !string.IsNullOrWhiteSpace(IllustrationSource);
     }
 
     /// <summary>

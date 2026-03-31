@@ -355,6 +355,20 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding LifeOdometerExpanded}" />
+                                    <!-- AI: Illustration shown in the expanded Life Odometer card.
+                                         Source binds to LifeOdometerResult.IllustrationSource (heartbeat.svg).
+                                         IsVisible double-gated: LifeOdometerExpanded keeps it in the expanded
+                                         area only; LifeOdometer.HasIllustration hides it when no asset is set,
+                                         allowing future tickers to reuse this pattern without displaying a
+                                         broken image. Both conditions must be true for the image to show. -->
+                                    <Image Source="{Binding LifeOdometer.IllustrationSource}"
+                                           IsVisible="{Binding LifeOdometer.HasIllustration}"
+                                           IsAnimationPlaying="True"
+                                           HeightRequest="120"
+                                           Aspect="AspectFit"
+                                           HorizontalOptions="Center"
+                                           Margin="0,8,0,0" />
+
                                 </VerticalStackLayout>
                             </Border>
 
@@ -527,7 +541,7 @@
                                 <VerticalStackLayout Spacing="8">
 
                                     <!-- AI: Ticker card header - 3-column layout:
-                                         [Col0: planet emoji | Col1: title + LIVE badge HorizontalStackLayout | Col2: info + expand buttons].
+                                         [Col0: planet emoji | Col1: title + LIVE badge | Col2: info + expand buttons].
                                          Bound to MainViewModel.SpaceWait (live-updated every second). -->
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <!-- Emoji: &#x1FA90; (U+1FA90 ringed planet) -->
@@ -1197,7 +1211,7 @@
                                                FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
-                                        <!-- AI: Title + LIVE badge side-by-side. -->
+                                        <!-- AI: Title + LIVE badge side-by-side in a HorizontalStackLayout. -->
                                         <!-- Binding: MainViewModel.Loc.Ticker_VibrantHumanityTitle (live-localised) -->
                                         <HorizontalStackLayout Grid.Column="1"
                                                                Spacing="6"
