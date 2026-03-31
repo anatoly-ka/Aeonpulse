@@ -70,6 +70,16 @@ namespace Aeonpulse
         private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<WinUIButton, LoadedHandlerBox>
             _pendingLoadedHandlers = new();
 
+        // Per-WinUIButton: the tint params to retry on LayoutUpdated if ApplyTemplate fails.
+        private sealed class PendingButtonTint
+        {
+            public string File = "";
+            public Color? Tint;
+            public EventHandler<object>? LayoutHandler;
+        }
+        private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<WinUIButton, PendingButtonTint>
+            _pendingButtonTints = new();
+
         /// <summary>
         /// Resolves the source filename from the MAUI <c>Image</c> handler's
         /// <c>VirtualView</c>, loads it from the output directory, applies a
@@ -132,6 +142,16 @@ namespace Aeonpulse
         /// to force template inflation on demand, and it succeeds synchronously even
         /// for collapsed elements.
         /// </para>
+        /// <para>
+        /// <b>LayoutUpdated fallback:</b> in rare cases (buttons in sections that are
+        /// <c>Visibility.Collapsed</c> at app startup before any layout pass runs),
+        /// <c>ApplyTemplate()</c> succeeds but <c>FindDescendantImage</c> returns null
+        /// because WinUI has not yet inflated the template children into the visual tree.
+        /// In this case we store the desired tint and subscribe to <c>LayoutUpdated</c>,
+        /// which fires on every layout pass including the first time the section becomes
+        /// visible. The handler retries <c>ApplyTemplate</c> + <c>FindDescendantImage</c>,
+        /// calls <c>AttachAndTint</c> when the inner Image is found, then unsubscribes.
+        /// </para>
         /// </summary>
         private static void ApplyTintToButton(WinUIButton button, string file, Color? tint)
         {
@@ -142,6 +162,14 @@ namespace Aeonpulse
             {
                 button.Loaded -= existingBox.Handler;
                 existingBox.Handler = null;
+            }
+
+            // Cancel any existing LayoutUpdated fallback before registering a new one.
+            if (_pendingButtonTints.TryGetValue(button, out var existing) &&
+                existing.LayoutHandler is not null)
+            {
+                button.LayoutUpdated -= existing.LayoutHandler;
+                existing.LayoutHandler = null;
             }
 
             // ApplyTemplate() synchronously inflates the WinUI Button ControlTemplate
@@ -160,10 +188,32 @@ namespace Aeonpulse
                 return;
             }
 
-            // ApplyTemplate() should always succeed for a WinUI Button. Reaching here
-            // means an unexpected template structure - log and bail silently.
-            System.Diagnostics.Debug.WriteLine(
-                $"[TintHelper] ApplyTintToButton: inner Image not found after ApplyTemplate() for file='{file}'");
+            // ApplyTemplate() did not yet produce a visual tree (can happen for buttons in
+            // sections that are Visibility.Collapsed at startup before any layout pass).
+            // Store the desired tint params and subscribe to LayoutUpdated so we retry
+            // on the first layout pass when the section becomes visible.
+            var pending = _pendingButtonTints.GetOrCreateValue(button);
+            pending.File = file;
+            pending.Tint = tint;
+
+            EventHandler<object> layoutHandler = null!;
+            layoutHandler = (s, e) =>
+            {
+                if (s is not WinUIButton btn) return;
+                btn.ApplyTemplate();
+                var img = FindDescendantImage(btn);
+                if (img is null) return;  // not yet visible - wait for next layout pass
+
+                // Inner Image found - apply tint and stop watching.
+                btn.LayoutUpdated -= layoutHandler;
+                if (_pendingButtonTints.TryGetValue(btn, out var pt))
+                {
+                    pt.LayoutHandler = null;
+                    AttachAndTint(img, pt.File, pt.Tint);
+                }
+            };
+            pending.LayoutHandler = layoutHandler;
+            button.LayoutUpdated += layoutHandler;
         }
 
         /// <summary>
