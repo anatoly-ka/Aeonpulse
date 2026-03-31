@@ -100,7 +100,7 @@
 | **9.10** | Persistence | `Preferences` only, 4 persisted keys, read-before-`InitializeComponent` rule. |
 | **9.11** | `Agents.md` Maintenance | When and what to update, change-type table, date update rule. |
 | **9.12** | Quick Violation Checklist | 20-item YES/NO checklist. Run before every commit. |
-| **9.13** | Commit Signature | AI agent signature trailer format, ``+ manual changes`` rule. |
+| **9.13** | Commit Signature | AI agent signature trailer format, ``+ manual changes`` rule, mandatory date verification before commit. |
 
 ---
 
@@ -4275,6 +4275,11 @@ the change violates a guardrail and must be corrected first.
 - **Use `AI: GitHub Copilot (<model>)` as the exact format.** Replace
   `<model>` with the specific model identifier reported by the agent at the
   time of the commit (e.g. `gpt-4o`, `claude-sonnet-4-5`).
+
+- **Verify the current date by running `Get-Date -Format "yyyy-MM-dd"` before
+  every commit** that touches the `> Last updated:` line in `Agents.md`. Copy
+  the command output verbatim. Never type a date from memory - incorrect dates
+  have been committed this way before.
 
 #### DO NOT
 
