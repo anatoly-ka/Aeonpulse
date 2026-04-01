@@ -224,6 +224,18 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding TimeJubileesExpanded}" />
+                                    <!-- AI: Illustration image for the expanded TimeJubilees card.
+                                         Source binds to TimeJubileesResult.IllustrationSource (img_timejubilees.png).
+                                         IsVisible is gated on TimeJubileesExpanded so the image only appears
+                                         in the expanded view. HasIllustration on the result prevents a broken
+                                         Image element if IllustrationSource is empty (future-proofing for
+                                         tickers that may not always have an illustration). -->
+                                    <Image Source="{Binding TimeJubilees.IllustrationSource}"
+                                           IsVisible="{Binding TimeJubileesExpanded}"
+                                           HeightRequest="100"
+                                           Aspect="AspectFit"
+                                           HorizontalOptions="Center"
+                                           Margin="0,8,0,0" />
                                 </VerticalStackLayout>
                             </Border>
 
@@ -291,6 +303,21 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding CountdownExpanded}" />
+                                    <!-- AI: Split-flap illustration for the expanded Countdown card.
+                                         Source is a XAML literal ("anim_countdown.gif"), NOT a binding.
+                                         Using a literal prevents MAUI's ImageHandler from restarting the
+                                         GIF decoder every second when the Countdown live-ticker replaces
+                                         its CountdownResult object (which would reset animation to frame 0).
+                                         IsAnimationPlaying=True is respected by MAUI's built-in GIF decoder
+                                         (ParseGIFBitmapHeaderAsync) on all platforms including Windows.
+                                         IsVisible stays data-bound so expand/collapse still works. -->
+                                    <Image Source="anim_countdown.gif"
+                                           IsVisible="{Binding CountdownExpanded}"
+                                           IsAnimationPlaying="True"
+                                           HeightRequest="100"
+                                           Aspect="AspectFit"
+                                           HorizontalOptions="Center"
+                                           Margin="0,8,0,0" />
                                 </VerticalStackLayout>
                             </Border>
 
@@ -355,20 +382,20 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding LifeOdometerExpanded}" />
-                                    <!-- AI: Illustration shown in the expanded Life Odometer card.
-                                         Source binds to LifeOdometerResult.IllustrationSource (heartbeat.png).
+                                    <!-- AI: Illustration image for the expanded LifeOdometer card.
+                                         Source is a XAML literal ("heartbeat.png"), NOT a binding.
+                                         Using a literal prevents the image from flickering every second
+                                         when the LifeOdometer live-ticker rebuilds its result object,
+                                         which would otherwise cause MAUI to reload the source on each tick.
                                          IsVisible is gated on LifeOdometerExpanded so the image only appears
-                                         in the expanded view. HasIllustration on the result prevents a broken
-                                         Image element if IllustrationSource is empty (future-proofing for
-                                         tickers that carry no illustration). -->
-                                    <Image Source="{Binding LifeOdometer.IllustrationSource}"
+                                         in the expanded view. -->
+                                    <Image Source="heartbeat.png"
                                            IsVisible="{Binding LifeOdometerExpanded}"
                                            IsAnimationPlaying="True"
                                            HeightRequest="120"
                                            Aspect="AspectFit"
                                            HorizontalOptions="Center"
                                            Margin="0,8,0,0" />
-
                                 </VerticalStackLayout>
                             </Border>
 
@@ -598,6 +625,20 @@
                                            TextType="Html"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding SpaceWaitExpanded}" />
+                                    <!-- AI: Split-flap illustration for the expanded SpaceWait card.
+                                         Source is a XAML literal (not a binding) because SpaceWait is a
+                                         live ticker rebuilt every second; a binding would restart MAUI's
+                                         GIF decoder to frame 0 on each tick. Uses the Predator font variant
+                                         (anim_spacewait.gif) to distinguish it visually from the Countdown
+                                         card (anim_countdown.gif / Courier New font).
+                                         IsVisible gated on SpaceWaitExpanded. -->
+                                    <Image Source="anim_spacewait.gif"
+                                           IsVisible="{Binding SpaceWaitExpanded}"
+                                           IsAnimationPlaying="True"
+                                           HeightRequest="100"
+                                           Aspect="AspectFit"
+                                           HorizontalOptions="Center"
+                                           Margin="0,8,0,0" />
 
                                 </VerticalStackLayout>
                             </Border>
@@ -772,7 +813,7 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
                                                          Clicked="OnCosmicStretchInfoClicked" />
-                                            <!-- Expand/collapse: toggles CosmicStretchExpanded -->
+                                            <!-- Expand/collapses: toggles CosmicStretchExpanded -->
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding CosmicStretchExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -1074,21 +1115,21 @@
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <!-- Emoji: &#x1F465; (busts in silhouette - U+1F465) -->
                                         <Label Grid.Column="0"
-                                               Text="&#x1F465;"
+                                               Text="👥"
                                                FontSize="{DynamicResource FontSizeTitle}"
                                                VerticalOptions="Center"
                                                Margin="0,0,8,0" />
-                                        <!-- AI: Title + LIVE badge side-by-side in a HorizontalStackLayout.
-                                             Badge Labels carry x:Name="LiveBadgeXxx" so MainPage.xaml.cs can
-                                             drive a continuous InOutSine breathing animation via Animation.Commit. -->
+                                        <!-- AI: Title + LIVE badge side-by-side in a HorizontalStackLayout
+                                             so the badge sits flush to the right of the title text. -->
+                                        <!-- Binding: MainViewModel.Loc.Ticker_GlobalCrowdTitle (live-localised) -->
                                         <HorizontalStackLayout Grid.Column="1"
-                                                               Spacing="8"
+                                                               Spacing="6"
                                                                VerticalOptions="Center">
-                                            <!-- Binding: MainViewModel.Loc.Ticker_GlobalCrowdTitle (live-localised) -->
                                             <Label Text="{Binding Loc.Ticker_GlobalCrowdTitle}"
                                                    Style="{StaticResource BaseLabel}"
                                                    TextColor="{DynamicResource CyberPurple}"
-                                                   FontAttributes="Bold" />
+                                                   FontAttributes="Bold"
+                                                   VerticalOptions="Center" />
                                             <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
                                             <Label x:Name="LiveBadgeGlobalCrowd"
                                                    Text="{Binding Loc.Badge_LIVE}"
@@ -1099,7 +1140,7 @@
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <!-- Info: opens DeepDivePopup with methodology and sources -->
+                                            <!-- Info: opens DeepDivePopup with methodology + sources -->
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
@@ -1111,13 +1152,13 @@
                                                          Command="{Binding ToggleGlobalCrowdCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.GlobalCrowd.BriefText - hidden when expanded; HTML formatted -->
+                                    <!-- Binding: MainViewModel.GlobalCrowd.BriefText - hidden when expanded, updates every second -->
                                     <Label Text="{Binding GlobalCrowd.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            IsVisible="{Binding GlobalCrowdExpanded, Converter={StaticResource InverseBool}}" />
-                                    <!-- Binding: MainViewModel.GlobalCrowd.FullText - visible when expanded; HTML formatted -->
+                                    <!-- Binding: MainViewModel.GlobalCrowd.FullText - visible when expanded -->
                                     <Label Text="{Binding GlobalCrowd.FullText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
@@ -1244,13 +1285,13 @@
                                                          Command="{Binding ToggleVibrantHumanityCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.VibrantHumanity.BriefText - hidden when expanded; HTML formatted -->
+                                    <!-- Binding: MainViewModel.VibrantHumanity.BriefText - hidden when expanded, HTML formatted -->
                                     <Label Text="{Binding VibrantHumanity.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            IsVisible="{Binding VibrantHumanityExpanded, Converter={StaticResource InverseBool}}" />
-                                    <!-- Binding: MainViewModel.VibrantHumanity.FullText - visible when expanded; HTML formatted -->
+                                    <!-- Binding: MainViewModel.VibrantHumanity.FullText - visible when expanded, HTML formatted -->
                                     <Label Text="{Binding VibrantHumanity.FullText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"

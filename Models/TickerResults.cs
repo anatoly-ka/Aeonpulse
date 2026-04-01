@@ -21,6 +21,18 @@ namespace Aeonpulse.Models
 
         /// <summary>Whole days remaining until the jubilee date.</summary>
         public long DaysUntil { get; init; }
+
+        /// <summary>
+        /// Optional filename of an illustration shown inside the expanded card view.
+        /// Empty string means no illustration. Resolved as a MAUI image asset.
+        /// </summary>
+        public string IllustrationSource { get; init; } = string.Empty;
+
+        /// <summary>
+        /// Returns <c>true</c> when <see cref="IllustrationSource"/> is non-empty,
+        /// driving the <c>IsVisible</c> binding on the illustration <c>Image</c> element.
+        /// </summary>
+        public bool HasIllustration => !string.IsNullOrWhiteSpace(IllustrationSource);
     }
 
     /// <summary>
@@ -47,6 +59,18 @@ namespace Aeonpulse.Models
 
         /// <summary>The upcoming anniversary date being counted down to.</summary>
         public DateTime AnniversaryDate { get; init; }
+
+        /// <summary>
+        /// Optional filename of an illustration shown inside the expanded card view.
+        /// Empty string means no illustration. Resolved as a MAUI image asset.
+        /// </summary>
+        public string IllustrationSource { get; init; } = string.Empty;
+
+        /// <summary>
+        /// Returns <c>true</c> when <see cref="IllustrationSource"/> is non-empty,
+        /// driving the <c>IsVisible</c> binding on the illustration <c>Image</c> element.
+        /// </summary>
+        public bool HasIllustration => !string.IsNullOrWhiteSpace(IllustrationSource);
     }
 
     /// <summary>

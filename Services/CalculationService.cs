@@ -380,6 +380,7 @@ namespace Aeonpulse.Services
                 JubileeUnit  = nearestJubileeUnit,
                 JubileeDate  = nearestJubileeDate,
                 DaysUntil    = daysTillNearestJubilee,
+                IllustrationSource = "img_timejubilees.png",
                 BriefText = AppResources.Ticker_TimeJubileesBrief
                     .Replace("{nextJubilee}", nextJubilee)
                     .Replace("{nearestJubileeDate:d}", nearestJubileeDate.ToString("d")),
@@ -479,6 +480,7 @@ namespace Aeonpulse.Services
                 Minutes         = mins,
                 Secs            = secs,
                 AnniversaryDate = nearest,
+                IllustrationSource = "anim_countdown.gif",
                 BriefText       = countdown,
                 FullText        = countdownFull
             };
@@ -857,8 +859,8 @@ namespace Aeonpulse.Services
                 StarName   = starName,
                 StarLy     = starLy,
                 UseMetric  = useMetric,
-                BriefText  = bText,
-                FullText   = fText
+                BriefText = bText,
+                FullText = fText
             };
         }
 
@@ -1646,7 +1648,7 @@ namespace Aeonpulse.Services
         /// </summary>
         /// <param name="baseDate">The user-selected origin date (e.g., birthday).</param>
         /// <param name="baseDateName">Human-readable label for display in the full text.</param>
-        /// <param name="baseDateValue">ISO-8601 string of the base date for formatted output.</param>
+        /// <param name="baseDateValue">ISO-8601 string for the base date for formatted output.</param>
         /// <param name="now">Optional override for current time; used by unit tests for determinism.</param>
         /// <returns>
         /// A <see cref="VibrantHumanityResult"/> with formatted birth and death counts
@@ -1873,7 +1875,7 @@ namespace Aeonpulse.Services
         /// </para>
         /// </summary>
         /// <param name="baseDate">The user-selected origin date (UTC).</param>
-        /// <param name="now">Optional override for the current time; used in tests for determinism.</param>
+        /// <param name="now">Optional override for the current time; used by unit tests for determinism.</param>
         /// <returns>
         /// A <see cref="SpaceWaitResult"/> with brief and full countdown descriptions, the next
         /// planet name, the ordinal age, and the raw <see cref="TimeSpan"/> countdown.
@@ -2003,6 +2005,7 @@ namespace Aeonpulse.Services
         }
 
         #endregion
+
         #region Vibrant Nature
 
         /// <summary>
@@ -2105,6 +2108,11 @@ namespace Aeonpulse.Services
         /// Cumulative count of species estimated to have gone extinct globally from 1900-01-01
         /// up to <paramref name="date"/>, using a 3-epoch piecewise linear daily-rate model.
         /// Rates: 1900-1950 approx. 10/day; 1950-2000 approx. 50/day; 2000-present approx. 150/day.
+        /// </para>
+        /// <para>
+        /// All epoch anchors use UTC midnight to prevent local timezone shifts from
+        /// causing population jumps at midnight.
+        /// </para>
         /// </summary>
         /// <param name="date">UTC date at which to evaluate the cumulative count.</param>
         /// <returns>Cumulative species lost to extinction up to <paramref name="date"/>.</returns>

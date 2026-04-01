@@ -68,6 +68,17 @@
 		<None Remove="Aeonpulse.Tests\**" />
 		<Content Remove="Aeonpulse.Tests\**" />
 		<EmbeddedResource Remove="Aeonpulse.Tests\**" />
+		<!-- Exclude the obj\ tree so any generator projects placed there
+		     during asset generation are never compiled as part of this project. -->
+		<Compile Remove="obj\**" />
+		<None Remove="obj\**" />
+		<Content Remove="obj\**" />
+		<EmbeddedResource Remove="obj\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Include="obj\gifgen3\probe.cs" />
+	  <Compile Include="obj\gifgen3\tmp_gen.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -119,6 +130,14 @@
 	  <MauiXaml Update="Views\TeasePopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="obj\gifgen2\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="obj\patch_agents_resizetizer.ps1" />
 	</ItemGroup>
 
 </Project>

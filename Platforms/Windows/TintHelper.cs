@@ -106,6 +106,21 @@ namespace Aeonpulse
         }
 
         /// <summary>
+        /// No-op on Windows: MAUI's built-in GIF decoder (<c>ParseGIFBitmapHeaderAsync</c>
+        /// in <c>Microsoft.Maui.Controls.dll</c>) implements its own frame-by-frame
+        /// <see cref="WriteableBitmap"/> renderer driven by a timer, producing native
+        /// animated GIF playback on Windows without any platform-side intervention.
+        /// The static PNG swap introduced in the previous session was incorrect — it
+        /// intercepted the <c>"Source"</c> mapper key and replaced the GIF with a frozen
+        /// PNG before MAUI's decoder could run, which is why the GIF appeared static.
+        /// Removing the swap lets MAUI's decoder run normally.
+        /// </summary>
+        static partial void ApplyGifToStaticPngMapper()
+        {
+            // Intentionally empty. MAUI handles GIF animation on Windows natively.
+        }
+
+        /// <summary>
         /// Walks the WinUI visual tree of the <c>Button</c> backing
         /// <c>ImageButton</c> to find the inner <c>Image</c> child, then
         /// applies the Win2D tint pipeline and subscribes to <c>ImageOpened</c>

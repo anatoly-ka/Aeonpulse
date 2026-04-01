@@ -89,6 +89,12 @@ namespace Aeonpulse
                             if (handler is Microsoft.Maui.Handlers.ImageButtonHandler imageButtonHandler)
                                 ApplyImageButtonTint(imageButtonHandler, tint);
                         });
+
+                    // Platform hook for any GIF-related mapper setup. Currently a no-op on
+                    // all platforms: MAUI's built-in GIF decoder (ParseGIFBitmapHeaderAsync)
+                    // handles animated GIF playback on Windows natively via frame-by-frame
+                    // WriteableBitmap rendering. No platform intervention is needed or wanted.
+                    ApplyGifToStaticPngMapper();
                 });
 
 #if DEBUG
@@ -121,5 +127,13 @@ namespace Aeonpulse
         /// </param>
         static partial void ApplyImageButtonTint(
             Microsoft.Maui.Handlers.ImageButtonHandler handler, Microsoft.Maui.Graphics.Color? tint);
+
+        /// <summary>
+        /// Platform partial: hook point for any GIF-animation setup needed per platform.
+        /// On Windows this is a no-op: MAUI's built-in <c>ParseGIFBitmapHeaderAsync</c>
+        /// decoder in <c>Microsoft.Maui.Controls</c> animates GIFs natively on all
+        /// platforms including Windows, so no platform-side intervention is required.
+        /// </summary>
+        static partial void ApplyGifToStaticPngMapper();
     }
 }
