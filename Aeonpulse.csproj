@@ -77,11 +77,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Include="obj\gifgen3\probe.cs" />
-	  <Compile Include="obj\gifgen3\tmp_gen.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
@@ -130,14 +125,6 @@
 	  <MauiXaml Update="Views\TeasePopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="obj\gifgen2\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="obj\patch_agents_resizetizer.ps1" />
 	</ItemGroup>
 
 </Project>
