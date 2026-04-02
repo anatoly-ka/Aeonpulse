@@ -28,6 +28,9 @@
     <Color x:Key="TextGray">#B0B0B0</Color>           <!-- HC-Dark: #FFFFFF  avg=176 | HC-Light: #000000 -->
     <Color x:Key="CardBackground">#1A1F3A</Color>     <!-- HC-Dark: #000000  avg=28  | HC-Light: #FFFFFF -->
     <Color x:Key="CardDark">#121628</Color>           <!-- HC-Dark: #000000  avg=19  | HC-Light: #FFFFFF -->
+    <Color x:Key="JubileeAccent">#FFD700</Color>      <!-- HC-Dark: #FFFFFF  avg=180 | HC-Light: #000000 -->
+    <Color x:Key="Gray300">#ADADAD</Color>
+    <Color x:Key="Gray600">#6E6E6E</Color>
 
     <!-- Opacity values - never overridden by ThemeService; use StaticResource is safe -->
     <x:Double x:Key="Opacity90">0.9</x:Double>

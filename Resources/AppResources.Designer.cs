@@ -3162,7 +3162,32 @@ namespace Aeonpulse.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Next milestone: &lt;b&gt;{nextJubilee}&lt;/b&gt; on &lt;b&gt;{nearestJubileeDate:d}&lt;/b&gt;.
         /// </summary>
-        public static string Ticker_TimeJubileesBrief {
+        public static string Ticker_TimeJubilees_Today {
+            get {
+                return ResourceManager.GetString("Ticker_TimeJubilees_Today", resourceCulture);
+            }
+        }
+                public static string Ticker_TimeJubilees_LastJubilee {
+            get {
+                return ResourceManager.GetString("Ticker_TimeJubilees_LastJubilee", resourceCulture);
+            }
+        }
+        public static string Ticker_TimeJubilees_NextJubilee {
+            get {
+                return ResourceManager.GetString("Ticker_TimeJubilees_NextJubilee", resourceCulture);
+            }
+        }
+        public static string Ticker_TimeJubilees_DaysPassed {
+            get {
+                return ResourceManager.GetString("Ticker_TimeJubilees_DaysPassed", resourceCulture);
+            }
+        }
+        public static string Ticker_TimeJubilees_DaysLeft {
+            get {
+                return ResourceManager.GetString("Ticker_TimeJubilees_DaysLeft", resourceCulture);
+            }
+        }
+                public static string Ticker_TimeJubileesBrief {
             get {
                 return ResourceManager.GetString("Ticker_TimeJubileesBrief", resourceCulture);
             }

@@ -28,6 +28,11 @@ namespace Aeonpulse.ViewModels
 
         // -- Ticker titles ---------------------------------------------------
         public string Ticker_TimeJubileesTitle         => AppResources.Ticker_TimeJubileesTitle;
+        public string Ticker_TimeJubilees_LastJubilee  => AppResources.Ticker_TimeJubilees_LastJubilee;
+        public string Ticker_TimeJubilees_NextJubilee  => AppResources.Ticker_TimeJubilees_NextJubilee;
+        public string Ticker_TimeJubilees_DaysPassed   => AppResources.Ticker_TimeJubilees_DaysPassed;
+        public string Ticker_TimeJubilees_DaysLeft     => AppResources.Ticker_TimeJubilees_DaysLeft;
+        public string Ticker_TimeJubilees_Today        => AppResources.Ticker_TimeJubilees_Today;
         public string Ticker_CountdownTitle            => AppResources.Ticker_CountdownTitle;
         public string Ticker_LifeOdometerTitle         => AppResources.Ticker_LifeOdometerTitle;
         public string Ticker_AlienAnniversariesTitle   => AppResources.Ticker_AlienAnniversariesTitle;

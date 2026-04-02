@@ -32,6 +32,7 @@ namespace Aeonpulse.Services
             { "TextGray",        Color.FromArgb("#B0B0B0") },
             { "CardBackground",  Color.FromArgb("#1A1F3A") },
             { "CardDark",        Color.FromArgb("#121628") },
+            { "JubileeAccent",   Color.FromArgb("#FFD700") },  // Gold
         };
 
         // --- High Contrast Dark palette ----------------------------------------
@@ -51,6 +52,7 @@ namespace Aeonpulse.Services
             { "TextGray",        Colors.White   },   // avg=176
             { "CardBackground",  Colors.Black   },   // avg=28
             { "CardDark",        Colors.Black   },   // avg=19
+            { "JubileeAccent",   Colors.White   },   // Gold avg=180 > 128
         };
 
         // --- High Contrast Light palette ----------------------------------------
@@ -69,6 +71,7 @@ namespace Aeonpulse.Services
             { "TextGray",        Colors.Black   },
             { "CardBackground",  Colors.White   },
             { "CardDark",        Colors.White   },
+            { "JubileeAccent",   Colors.Black   },   // inverse of HC-Dark White
         };
 
         // --- Active scheme -------------------------------------------------------

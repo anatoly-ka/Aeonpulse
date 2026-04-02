@@ -112,6 +112,65 @@ namespace Aeonpulse.Services
         }
 
         /// <summary>
+        /// Finds the largest "jubilee" milestone that is strictly less than or equal to
+        /// <paramref name="current"/>, using the same four jubilee families as
+        /// <see cref="FindNearestJubilee"/>.
+        ///
+        /// <para>
+        /// Used by <see cref="CalculateTimeJubilees"/> to identify the last milestone
+        /// the user has already passed, anchoring the left end of the timeline graphic.
+        /// </para>
+        /// </summary>
+        /// <param name="current">The elapsed count since the base date.</param>
+        /// <returns>The largest jubilee value less than or equal to <paramref name="current"/>, or 0 when none exists.</returns>
+        [AIContext("JubileeSelectionAlgorithm")]
+        internal static long FindPreviousJubilee(long current)
+        {
+            if (current <= 0)
+                return 0;
+
+            long best = 0;
+            int numDigits = current.ToString().Length;
+
+            for (int mag = 1; mag <= numDigits + 1; mag++)
+            {
+                long scale = (long)System.Math.Pow(10, mag - 1);
+                long pow10 = scale * 10;
+
+                // Power-of-10 candidates
+                if (pow10 <= current && pow10 > best)
+                    best = pow10;
+                if (scale <= current && scale > best)
+                    best = scale;
+
+                // Minor multiples of scale
+                for (long mult = 2; mult <= 9; mult++)
+                {
+                    long candidate = mult * scale;
+                    if (candidate <= current && candidate > best)
+                        best = candidate;
+                }
+
+                // Quarter fractions of the next power of 10
+                long p10 = (long)System.Math.Pow(10, mag);
+                long q1 = p10 / 4, q2 = p10 / 2, q3 = 3 * p10 / 4;
+                if (q1 > 0 && q1 <= current && q1 > best) best = q1;
+                if (q2 > 0 && q2 <= current && q2 > best) best = q2;
+                if (q3 > 0 && q3 <= current && q3 > best) best = q3;
+
+                // Repeating-digit candidates (1, 11, 111, ...; 2, 22, ...)
+                for (int digit = 1; digit <= 9; digit++)
+                {
+                    string repeated = new string((char)('0' + digit), mag);
+                    if (long.TryParse(repeated, out long niceVal) && niceVal <= current && niceVal > best)
+                        best = niceVal;
+                }
+            }
+
+            return best;
+        }
+
+        /// <summary>
         /// Repeatedly sums the decimal digits of <paramref name="num"/> until the result
         /// is a single digit (1–9). This is the standard numerology "digital root" operation.
         /// </summary>
@@ -225,10 +284,42 @@ namespace Aeonpulse.Services
         #region Time Jubilees
 
         /// <summary>
-        /// Calculates the next upcoming time jubilee milestone across seven time units
-        /// (years, months, weeks, days, hours, minutes, seconds) relative to
-        /// <paramref name="baseDate"/>, then returns the one that arrives soonest.
+        /// Calculates the nearest time jubilee milestone by building a comprehensive
+        /// flat list of all candidate milestone <see cref="DateTime"/> values across
+        /// three milestone families (Classical Years, Power-of-Ten Days/Hours, Patterned
+        /// Numerals for Days/Hours), sorting them chronologically, then selecting the
+        /// single date strictly before <paramref name="now"/> (Last Jubilee) and the
+        /// single date strictly after (Next Jubilee).
         ///
+        /// <para>
+        /// <b>Algorithm:</b>
+        /// <list type="number">
+        ///   <item><description>
+        ///     Build candidate list: Classical Year milestones (5, 10, 15, 20, 25, 30,
+        ///     40, 50, 60, 70, 75, 80, 90, 100, 110, 120, 125, 150, 175, 200 years);
+        ///     Power-of-Ten Days (100, 1000, 5000, 10000, ...); Repeating-digit Days
+        ///     (1111, 2222, ..., 11111, 22222, ...); Power-of-Ten Hours (1000, 10000,
+        ///     100000, 500000, 1000000); Repeating-digit Hours (11111, 22222, ...,
+        ///     111111, 222222, ...).
+        ///   </description></item>
+        ///   <item><description>
+        ///     Convert every candidate count to an absolute <see cref="DateTime"/> using
+        ///     the appropriate <c>baseDate.AddXxx</c> call. Guard against
+        ///     <see cref="ArgumentOutOfRangeException"/> for very large values.
+        ///   </description></item>
+        ///   <item><description>
+        ///     Sort the resulting <c>(date, name)</c> list chronologically.
+        ///   </description></item>
+        ///   <item><description>
+        ///     Scan forward to find the last date strictly before <paramref name="now"/>
+        ///     and the first date strictly after <paramref name="now"/>.
+        ///   </description></item>
+        ///   <item><description>
+        ///     Compute <c>ProgressFraction</c> and clamp to <c>[0.05, 0.95]</c> so the
+        ///     Today dot never visually overlaps the endpoint dots.
+        ///   </description></item>
+        /// </list>
+        /// </para>
         /// <para>
         /// <b>Side effect:</b> reads <see cref="AppResources"/> for every unit label,
         /// so output language follows <c>AppResources.Culture</c>.
@@ -238,149 +329,174 @@ namespace Aeonpulse.Services
         /// <param name="baseDateName">Human-readable label for <paramref name="baseDate"/> (e.g., "My Birthday").</param>
         /// <param name="baseDateValue">ISO-8601 string representation of <paramref name="baseDate"/>, used in formatted output.</param>
         /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
-        /// <returns>A <see cref="TickerData"/> with brief and full descriptions of the nearest jubilee.</returns>
+        /// <returns>A <see cref="TimeJubileesResult"/> with brief and full descriptions of the nearest jubilee.</returns>
         [AIContext("CoreCalculation")]
         public TimeJubileesResult CalculateTimeJubilees(DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
         {
             DateTime now_ = now ?? DateTime.Now;
-            int bYear = baseDate.Year;
+            int bYear  = baseDate.Year;
             int bMonth = baseDate.Month;
-            int bDay = baseDate.Day;
-            int nYear = now_.Year;
+            int bDay   = baseDate.Day;
 
-            long passedDays = (long)(now_ - baseDate).TotalDays;
-            long passedYears = (long)(passedDays / 365.24219);
-            long passedMonths = passedYears * 12 + (now_.Month - baseDate.Month);
-            long passedWeeks = passedDays / 7;
-            long passedHours = passedDays * 24;
-            long passedMinutes = passedHours * 60;
-            long passedSeconds = passedMinutes * 60;
-            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"baseDate={baseDate:d} passedDays={passedDays}");
+            double totalDays    = (now_ - baseDate).TotalDays;
+            double totalHours   = (now_ - baseDate).TotalHours;
+            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"baseDate={baseDate:d} totalDays={totalDays:F1}");
 
-            // Find next jubilee
+            // Build the comprehensive candidate list: (absolute DateTime, display name).
+            var candidates = new System.Collections.Generic.List<(DateTime Date, string Name)>();
 
-            long daysTillNearestJubilee = long.MaxValue;
-            DateTime nearestJubileeDate = now_;
-            long nearestJubileeValue = long.MaxValue;
-            string nearestJubileeUnit = "";
-
-            // Years
-            long nearestJubileeYears = FindNearestJubilee(passedYears);
-            DateTime nearestJubileeYearsDate = new DateTime(bYear + (int)nearestJubileeYears, bMonth, bDay);
-            long daysToYearsJubilee = (long)(nearestJubileeYearsDate - now_).TotalDays;
-            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Years jubilee={nearestJubileeYears} daysUntil={daysToYearsJubilee}", "UNIT_SCAN");
-            if (daysToYearsJubilee > 0 && daysToYearsJubilee < daysTillNearestJubilee)
+            // --- Classical Year milestones -------------------------------------------
+            int[] classicalYears = { 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 75, 80, 90,
+                                     100, 110, 120, 125, 150, 175, 200 };
+            foreach (int y in classicalYears)
             {
-                nearestJubileeDate = nearestJubileeYearsDate;
-                daysTillNearestJubilee = daysToYearsJubilee;
-                nearestJubileeValue = nearestJubileeYears;
-                nearestJubileeUnit = AppResources.Unit_Years;
+                try
+                {
+                    var d = new DateTime(bYear + y, bMonth, bDay,
+                                        baseDate.Hour, baseDate.Minute, baseDate.Second);
+                    candidates.Add((d, $"{y:N0} {AppResources.Unit_Years}"));
+                    AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees),
+                        $"candidate year={y} date={d:d}", "UNIT_SCAN");
+                }
+                catch (ArgumentOutOfRangeException) { /* skip invalid calendar dates */ }
             }
 
-            // Months
-            long nearestJubileeMonths = FindNearestJubilee(passedMonths);
-            DateTime nearestJubileeMonthsDate = baseDate.AddMonths((int)nearestJubileeMonths);
-            long daysToMonthsJubilee = (long)(nearestJubileeMonthsDate - now_).TotalDays;
-            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Months jubilee={nearestJubileeMonths} daysUntil={daysToMonthsJubilee}", "UNIT_SCAN");
-            if (daysToMonthsJubilee > 0 && daysToMonthsJubilee < daysTillNearestJubilee)
+            // --- Power-of-Ten Day milestones -----------------------------------------
+            long[] powDays = { 100, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000,
+                                8000, 9000, 10000, 20000, 25000, 30000, 50000, 100000 };
+            foreach (long d in powDays)
             {
-                nearestJubileeDate = nearestJubileeMonthsDate;
-                daysTillNearestJubilee = daysToMonthsJubilee;
-                nearestJubileeValue = nearestJubileeMonths;
-                nearestJubileeUnit = AppResources.Unit_Months;
+                try
+                {
+                    var dt = baseDate.AddDays(d);
+                    candidates.Add((dt, $"{d:N0} {AppResources.Unit_Days}"));
+                    AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees),
+                        $"candidate days={d} date={dt:d}", "UNIT_SCAN");
+                }
+                catch (ArgumentOutOfRangeException) { }
             }
 
-            // Weeks
-            long nearestJubileeWeeks = FindNearestJubilee(passedWeeks);
-            DateTime nearestJubileeWeeksDate = baseDate.AddDays(nearestJubileeWeeks * 7);
-            long daysToWeeksJubilee = (long)(nearestJubileeWeeksDate - now_).TotalDays;
-            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Weeks jubilee={nearestJubileeWeeks} daysUntil={daysToWeeksJubilee}", "UNIT_SCAN");
-            if (daysToWeeksJubilee > 0 && daysToWeeksJubilee < daysTillNearestJubilee)
+            // --- Repeating-digit Day milestones (1111, 2222 ... 9999, 11111 ... 99999) ---
+            for (int digits = 4; digits <= 5; digits++)
             {
-                nearestJubileeDate = nearestJubileeWeeksDate;
-                daysTillNearestJubilee = daysToWeeksJubilee;
-                nearestJubileeValue = nearestJubileeWeeks;
-                nearestJubileeUnit = AppResources.Unit_Weeks;
+                for (int digit = 1; digit <= 9; digit++)
+                {
+                    string rep = new string((char)('0' + digit), digits);
+                    if (long.TryParse(rep, out long repVal))
+                    {
+                        try
+                        {
+                            var dt = baseDate.AddDays(repVal);
+                            candidates.Add((dt, $"{repVal:N0} {AppResources.Unit_Days}"));
+                            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees),
+                                $"candidate repdays={repVal} date={dt:d}", "UNIT_SCAN");
+                        }
+                        catch (ArgumentOutOfRangeException) { }
+                    }
+                }
             }
 
-            // Days
-            long nearestJubileeDays = FindNearestJubilee(passedDays);
-            DateTime nearestJubileeDaysDate = baseDate.AddDays(nearestJubileeDays);
-            long daysToDaysJubilee = (long)(nearestJubileeDaysDate - now_).TotalDays;
-            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Days jubilee={nearestJubileeDays} daysUntil={daysToDaysJubilee}", "UNIT_SCAN");
-            if (daysToDaysJubilee > 0 && daysToDaysJubilee < daysTillNearestJubilee)
+            // --- Power-of-Ten Hour milestones ----------------------------------------
+            long[] powHours = { 1000, 5000, 10000, 50000, 100000, 500000, 1000000 };
+            foreach (long h in powHours)
             {
-                nearestJubileeDate = nearestJubileeDaysDate;
-                daysTillNearestJubilee = daysToDaysJubilee;
-                nearestJubileeValue = nearestJubileeDays;
-                nearestJubileeUnit = AppResources.Unit_Days;
+                try
+                {
+                    var dt = baseDate.AddHours(h);
+                    candidates.Add((dt, $"{h:N0} {AppResources.Unit_Hours}"));
+                    AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees),
+                        $"candidate hours={h} date={dt:d}", "UNIT_SCAN");
+                }
+                catch (ArgumentOutOfRangeException) { }
             }
 
-            // Hours
-            long nearestJubileeHours = FindNearestJubilee(passedHours);
-            DateTime nearestJubileeHoursDate = baseDate.AddHours(nearestJubileeHours);
-            long daysToHoursJubilee = (long)(nearestJubileeHoursDate - now_).TotalDays;
-            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Hours jubilee={nearestJubileeHours} daysUntil={daysToHoursJubilee}", "UNIT_SCAN");
-            if (daysToHoursJubilee > 0 && daysToHoursJubilee < daysTillNearestJubilee)
+            // --- Repeating-digit Hour milestones (11111, 22222 ... 99999, 111111 ...) ---
+            for (int digits = 5; digits <= 6; digits++)
             {
-                nearestJubileeDate = nearestJubileeHoursDate;
-                daysTillNearestJubilee = daysToHoursJubilee;
-                nearestJubileeValue = nearestJubileeHours;
-                nearestJubileeUnit = AppResources.Unit_Hours;
+                for (int digit = 1; digit <= 9; digit++)
+                {
+                    string rep = new string((char)('0' + digit), digits);
+                    if (long.TryParse(rep, out long repVal))
+                    {
+                        try
+                        {
+                            var dt = baseDate.AddHours(repVal);
+                            candidates.Add((dt, $"{repVal:N0} {AppResources.Unit_Hours}"));
+                            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees),
+                                $"candidate rephours={repVal} date={dt:d}", "UNIT_SCAN");
+                        }
+                        catch (ArgumentOutOfRangeException) { }
+                    }
+                }
             }
 
-            // Minutes - guarded: large base dates can overflow DateTime.MaxValue
-            long nearestJubileeMinutes = FindNearestJubilee(passedMinutes);
-            DateTime nearestJubileeMinutesDate;
-            long daysToMinutesJubilee = long.MaxValue;
-            try
-            {
-                nearestJubileeMinutesDate = baseDate.AddMinutes(nearestJubileeMinutes);
-                daysToMinutesJubilee = (long)(nearestJubileeMinutesDate - now_).TotalDays;
-            }
-            catch (ArgumentOutOfRangeException)
-                { nearestJubileeMinutesDate = DateTime.MaxValue; }
+            // Remove exact duplicates on date, sort chronologically.
+            candidates.Sort((a, b) => a.Date.CompareTo(b.Date));
 
-            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Minutes jubilee={nearestJubileeMinutes} daysUntil={daysToMinutesJubilee}", "UNIT_SCAN");
-            if (daysToMinutesJubilee > 0 && daysToMinutesJubilee < daysTillNearestJubilee)
-            {
-                nearestJubileeDate = nearestJubileeMinutesDate;
-                daysTillNearestJubilee = daysToMinutesJubilee;
-                nearestJubileeValue = nearestJubileeMinutes;
-                nearestJubileeUnit = AppResources.Unit_Minutes;
-            }
+            // Find Last (strictly before now_) and Next (strictly after now_).
+            (DateTime Date, string Name) lastEntry  = (baseDate, $"0 {AppResources.Unit_Years}");
+            (DateTime Date, string Name) nextEntry  = (DateTime.MaxValue, string.Empty);
+            bool foundLast = false;
+            bool foundNext = false;
 
-            // Seconds - guarded: large base dates can overflow DateTime.MaxValue
-            long nearestJubileeSeconds = FindNearestJubilee(passedSeconds);
-            DateTime nearestJubileeSecondsDate;
-            long daysToSecondsJubilee = long.MaxValue;
-            try
+            foreach (var (date, name) in candidates)
             {
-                nearestJubileeSecondsDate = baseDate.AddSeconds(nearestJubileeSeconds);
-                daysToSecondsJubilee = (long)(nearestJubileeSecondsDate - now_).TotalDays;
-            }
-            catch (ArgumentOutOfRangeException)
-                { nearestJubileeSecondsDate = DateTime.MaxValue; }
-
-            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit=Seconds jubilee={nearestJubileeSeconds} daysUntil={daysToSecondsJubilee}", "UNIT_SCAN");
-            if (daysToSecondsJubilee > 0 && daysToSecondsJubilee < daysTillNearestJubilee)
-            {
-                nearestJubileeDate = nearestJubileeSecondsDate;
-                daysTillNearestJubilee = daysToSecondsJubilee;
-                nearestJubileeValue = nearestJubileeSeconds;
-                nearestJubileeUnit = AppResources.Unit_Seconds;
+                if (date < now_)
+                {
+                    lastEntry = (date, name);
+                    foundLast = true;
+                }
+                else if (date > now_ && !foundNext)
+                {
+                    nextEntry = (date, name);
+                    foundNext = true;
+                    break;
+                }
             }
 
-            string nextJubilee = $"{nearestJubileeValue:N0} {nearestJubileeUnit}";
-            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees), $"unit={nearestJubileeUnit} jubilee={nearestJubileeValue} daysUntil={daysTillNearestJubilee}", "WINNER");
+            // Fallback: if no future milestone found use the last candidate.
+            if (!foundNext && candidates.Count > 0)
+                nextEntry = candidates[candidates.Count - 1];
+
+            string lastJubileeName = lastEntry.Name;
+            string nextJubileeName = nextEntry.Name;
+            DateTime lastJubileeDate = lastEntry.Date;
+            DateTime nearestJubileeDate = nextEntry.Date;
+
+            int daysSinceLast = foundLast
+                ? Math.Max(0, (int)(now_ - lastJubileeDate).TotalDays)
+                : (int)Math.Max(0, totalDays);
+            long daysTillNext = foundNext
+                ? Math.Max(0, (long)(nearestJubileeDate - now_).TotalDays)
+                : 0L;
+
+            int totalSpan = daysSinceLast + (int)daysTillNext;
+            double progressFraction = totalSpan > 0
+                ? Math.Clamp((double)daysSinceLast / totalSpan, 0.05, 0.95)
+                : 0.5;
+
+            // Derive a jubilee value and unit from the winning next entry name
+            // (needed for BriefText and FullText token replacement).
+            string nextJubilee = nextJubileeName;
+
+            AeonLog.Debug(LogCat, nameof(CalculateTimeJubilees),
+                $"last={lastJubileeName} next={nextJubileeName} daysSinceLast={daysSinceLast} daysTillNext={daysTillNext} progress={progressFraction:F3}", "WINNER");
 
             return new TimeJubileesResult
             {
-                JubileeValue = nearestJubileeValue,
-                JubileeUnit  = nearestJubileeUnit,
-                JubileeDate  = nearestJubileeDate,
-                DaysUntil    = daysTillNearestJubilee,
-                IllustrationSource = "img_timejubilees.png",
+                JubileeValue        = daysTillNext,
+                JubileeUnit         = string.Empty,
+                JubileeDate         = nearestJubileeDate,
+                DaysUntil           = daysTillNext,
+                IllustrationSource  = "img_timejubilees.png",
+                LastJubileeValue    = daysSinceLast,
+                LastJubileeUnit     = string.Empty,
+                LastJubileeDate     = lastJubileeDate,
+                LastJubileeName     = lastJubileeName,
+                NextJubileeName     = nextJubileeName,
+                DaysSinceLast       = daysSinceLast,
+                DaysTillNext        = (int)daysTillNext,
+                ProgressFraction    = progressFraction,
                 BriefText = AppResources.Ticker_TimeJubileesBrief
                     .Replace("{nextJubilee}", nextJubilee)
                     .Replace("{nearestJubileeDate:d}", nearestJubileeDate.ToString("d")),

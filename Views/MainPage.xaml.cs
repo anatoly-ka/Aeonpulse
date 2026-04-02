@@ -1,4 +1,4 @@
-﻿using Aeonpulse.Attributes;
+using Aeonpulse.Attributes;
 using Aeonpulse.ViewModels;
 using Aeonpulse.Resources;
 
@@ -70,7 +70,56 @@ namespace Aeonpulse.Views
                 // popup lifecycle handler; the onDismissed callback carries the
                 // ticker-specific recalculation supplied by the ViewModel.
                 vm.RefreshRequested += OnTickerRefreshRequested;
+
+                // Reposition TodayDot whenever the TimeJubilees result is replaced
+                // (base-date change or manual refresh). Apply initial position now.
+                vm.PropertyChanged += OnViewModelPropertyChanged;
+                ApplyTodayDotPosition(vm.TimeJubilees?.ProgressFraction ?? 0.5);
             }
+        }
+
+        private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MainViewModel.TimeJubilees)
+             && sender is MainViewModel vm)
+            {
+                ApplyTodayDotPosition(vm.TimeJubilees?.ProgressFraction ?? 0.5);
+            }
+        }
+
+        /// <summary>
+        /// Positions <see cref="TodayDot"/> along the timeline by setting
+        /// <c>AbsoluteLayout.LayoutBounds</c> Y to <paramref name="fraction"/>.
+        ///
+        /// <para>
+        /// <b>Why imperative:</b> <c>AbsoluteLayout.LayoutBounds</c> is a string-typed
+        /// attached property whose four comma-separated components cannot be individually
+        /// data-bound in XAML. This method is the only correct way to position a child
+        /// element at a proportional Y coordinate derived from a ViewModel value at runtime.
+        /// </para>
+        /// </summary>
+        /// <param name="fraction">
+        /// Clamped progress fraction [0.05, 0.95] from
+        /// <see cref="Models.TimeJubileesResult.ProgressFraction"/>.
+        /// </param>
+        private void ApplyTodayDotPosition(double fraction)
+        {
+            // fraction is in [0.05, 0.95] (clamped by the ViewModel), representing
+            // today's logical position between Last and Next jubilee.
+            // The endpoint dots sit at Y=0.05 (Last) and Y=0.95 (Next) in the
+            // AbsoluteLayout's PositionProportional coordinate space.
+            // We must remap fraction into that same [0.05, 0.95] visual span so the
+            // Today dot travels the full distance between the two endpoint dots:
+            //   visualY = 0.05 + fraction * (0.95 - 0.05) = 0.05 + fraction * 0.90
+            // Without this remap, fraction=0.076 would place the dot at Y=0.076,
+            // only 2.6% below the Last dot at Y=0.05 instead of 7.6% of the span.
+            const double dotTop    = 0.05;
+            const double dotBottom = 0.95;
+            double visualY = dotTop + fraction * (dotBottom - dotTop);
+
+            AbsoluteLayout.SetLayoutBounds(TodayDot, new Rect(0.5, visualY, 14, 14));
+            AbsoluteLayout.SetLayoutFlags(TodayDot,
+                Microsoft.Maui.Layouts.AbsoluteLayoutFlags.PositionProportional);
         }
 
         /// <summary>

@@ -454,7 +454,9 @@ namespace Aeonpulse.Tests
 
             var result = _svc.CalculateTimeJubilees(baseDate, "T", "1990-01-01", now);
 
-            Assert.NotEmpty(result.JubileeUnit);
+            // JubileeUnit is intentionally empty in the flat-list algorithm; the unit
+            // is embedded in NextJubileeName (e.g., "50 years" or "10,000 days").
+            Assert.NotEmpty(result.NextJubileeName);
         }
 
         [Fact]

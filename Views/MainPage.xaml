@@ -224,18 +224,145 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding TimeJubileesExpanded}" />
-                                    <!-- AI: Illustration image for the expanded TimeJubilees card.
-                                         Source binds to TimeJubileesResult.IllustrationSource (img_timejubilees.png).
-                                         IsVisible is gated on TimeJubileesExpanded so the image only appears
-                                         in the expanded view. HasIllustration on the result prevents a broken
-                                         Image element if IllustrationSource is empty (future-proofing for
-                                         tickers that may not always have an illustration). -->
-                                    <Image Source="{Binding TimeJubilees.IllustrationSource}"
-                                           IsVisible="{Binding TimeJubileesExpanded}"
-                                           HeightRequest="100"
-                                           Aspect="AspectFit"
-                                           HorizontalOptions="Center"
-                                           Margin="0,8,0,0" />
+                                    <!-- AI: Time Jubilees timeline graphic - visible only when TimeJubileesExpanded=true.
+                                         Col 0: AbsoluteLayout with a 2 px vertical line + 3 proportional dots (Last, Today, Next).
+                                         Col 1: 3-row Grid with milestone labels and days-context VerticalStackLayout.
+                                         ProgressFraction [0.05,0.95] is clamped by the ViewModel so the Today dot
+                                         never overlaps the endpoint dots. IsMoreRoomAtBottom drives label placement:
+                                         true (ProgressFraction < 0.5) shows days info below Today; false shows it above.
+                                         All colors use DynamicResource so ThemeService scheme swaps apply instantly.
+                                         Binding sources: TimeJubilees.LastJubileeName, TimeJubilees.NextJubileeName,
+                                         TimeJubilees.DaysSinceLast, TimeJubilees.DaysTillNext,
+                                         TimeJubilees.IsMoreRoomAtBottom. -->
+                                    <Grid Margin="10,20,10,10"
+                                          HeightRequest="220"
+                                          IsVisible="{Binding TimeJubileesExpanded}"
+                                          ColumnDefinitions="40, *">
+
+                                        <!-- Col 0: AbsoluteLayout containing 2 px vertical line + 3 proportional dots -->
+                                        <AbsoluteLayout Grid.Column="0"
+                                                        HorizontalOptions="Center"
+                                                        WidthRequest="20">
+
+                                            <!-- Vertical timeline line: 2 px wide (absolute), 90% of layout height.    -->
+                                            <!-- XProportional, YProportional centre the line; HeightProportional spans  -->
+                                            <!-- 90%. Width is NOT proportional so it stays at 2 device pixels.          -->
+                                            <BoxView AbsoluteLayout.LayoutBounds="0.5, 0.5, 2, 0.9"
+                                                     AbsoluteLayout.LayoutFlags="XProportional, YProportional, HeightProportional"
+                                                     Color="{DynamicResource TextGray}" />
+
+                                            <!-- Last Jubilee solid dot at top (5%) -->
+                                            <Ellipse AbsoluteLayout.LayoutBounds="0.5, 0.05, 14, 14"
+                                                     AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                     Fill="{DynamicResource TextWhite}" />
+
+                                            <!-- Today gold ring dot - Y position set imperatively from ProgressFraction -->
+                                            <!-- in MainPage.xaml.cs because AbsoluteLayout.LayoutBounds cannot bind.    -->
+                                            <!-- the text column uses IsMoreRoomAtBottom to convey today's position.     -->
+                                            <Ellipse x:Name="TodayDot"
+                                                     AbsoluteLayout.LayoutBounds="0.5, 0.5, 14, 14"
+                                                     AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                     Fill="Transparent"
+                                                     Stroke="{DynamicResource JubileeAccent}"
+                                                     StrokeThickness="3" />
+
+                                            <!-- Next Jubilee solid dot at bottom (95%) -->
+                                            <Ellipse AbsoluteLayout.LayoutBounds="0.5, 0.95, 14, 14"
+                                                     AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                     Fill="{DynamicResource JubileeAccent}" />
+                                        </AbsoluteLayout>
+
+                                        <!-- Col 1: 3-row Grid for milestone labels and days-context text -->
+                                        <Grid Grid.Column="1"
+                                              RowDefinitions="Auto, *, Auto">
+
+                                            <!-- Row 0: Last Jubilee label (top anchor) -->
+                                            <!-- Binding: MainViewModel.TimeJubilees.LastJubileeName -->
+                                            <Label Grid.Row="0"
+                                                   Margin="15,5,0,0"
+                                                   VerticalOptions="Start"
+                                                   Text="{Binding TimeJubilees.LastJubileeName}"
+                                                   FontAttributes="Bold"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   TextColor="{DynamicResource TextWhite}" />
+
+                                            <!-- Row 1: Today context block - label order shifts via IsMoreRoomAtBottom -->
+                                            <!-- Days-above/Today/Days-below pattern prevents overlap with endpoint dots. -->
+                                            <VerticalStackLayout Grid.Row="1"
+                                                                 Margin="15,0,0,0"
+                                                                 VerticalOptions="Center"
+                                                                 Spacing="4">
+
+                                                <!-- Days context ABOVE Today - shown when ProgressFraction >= 0.5 -->
+                                                <!-- Binding: IsMoreRoomAtBottom=false means Today is in the lower half -->
+                                                <Label FontSize="{DynamicResource FontSizeSmall}"
+                                                       TextColor="{DynamicResource TextGray}"
+                                                       IsVisible="{Binding TimeJubilees.IsMoreRoomAtBottom, Converter={StaticResource InverseBool}}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <!-- Binding: MainViewModel.TimeJubilees.DaysSinceLast -->
+                                                            <Span Text="{Binding TimeJubilees.DaysSinceLast, StringFormat='{0:N0}'}" />
+                                                            <Span Text="{Binding Loc.Ticker_TimeJubilees_DaysPassed}" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                                <Label FontSize="{DynamicResource FontSizeSmall}"
+                                                       TextColor="{DynamicResource TextGray}"
+                                                       IsVisible="{Binding TimeJubilees.IsMoreRoomAtBottom, Converter={StaticResource InverseBool}}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <!-- Binding: MainViewModel.TimeJubilees.DaysTillNext -->
+                                                            <Span Text="{Binding TimeJubilees.DaysTillNext, StringFormat='{0:N0}'}" />
+                                                            <Span Text="{Binding Loc.Ticker_TimeJubilees_DaysLeft}" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+
+                                                <!-- Today label - always visible -->
+                                                <!-- Binding: MainViewModel.Loc.Ticker_TimeJubilees_Today (live-localised) -->
+                                                <Label Text="{Binding Loc.Ticker_TimeJubilees_Today}"
+                                                       FontAttributes="Bold"
+                                                       FontSize="{DynamicResource FontSizeSmall}"
+                                                       TextColor="{DynamicResource JubileeAccent}" />
+
+                                                <!-- Days context BELOW Today - shown when ProgressFraction < 0.5 -->
+                                                <!-- Binding: IsMoreRoomAtBottom=true means Today is in the upper half -->
+                                                <Label FontSize="{DynamicResource FontSizeSmall}"
+                                                       TextColor="{DynamicResource TextGray}"
+                                                       IsVisible="{Binding TimeJubilees.IsMoreRoomAtBottom}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <!-- Binding: MainViewModel.TimeJubilees.DaysSinceLast -->
+                                                            <Span Text="{Binding TimeJubilees.DaysSinceLast, StringFormat='{0:N0}'}" />
+                                                            <Span Text="{Binding Loc.Ticker_TimeJubilees_DaysPassed}" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                                <Label FontSize="{DynamicResource FontSizeSmall}"
+                                                       TextColor="{DynamicResource TextGray}"
+                                                       IsVisible="{Binding TimeJubilees.IsMoreRoomAtBottom}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <!-- Binding: MainViewModel.TimeJubilees.DaysTillNext -->
+                                                            <Span Text="{Binding TimeJubilees.DaysTillNext, StringFormat='{0:N0}'}" />
+                                                            <Span Text="{Binding Loc.Ticker_TimeJubilees_DaysLeft}" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </VerticalStackLayout>
+
+                                            <!-- Row 2: Next Jubilee label (bottom anchor) -->
+                                            <!-- Binding: MainViewModel.TimeJubilees.NextJubileeName -->
+                                            <Label Grid.Row="2"
+                                                   Margin="15,0,0,5"
+                                                   VerticalOptions="End"
+                                                   Text="{Binding TimeJubilees.NextJubileeName}"
+                                                   FontAttributes="Bold"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   TextColor="{DynamicResource JubileeAccent}" />
+                                        </Grid>
+
+                                    </Grid>
                                 </VerticalStackLayout>
                             </Border>
 
@@ -1272,7 +1399,7 @@
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
                                         <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <!-- Info: opens DeepDivePopup with methodology and sources -->
+                                            <!-- Info: opens DeepDivePopup with methodology + sources -->
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"

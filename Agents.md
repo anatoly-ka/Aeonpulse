@@ -1,6 +1,6 @@
-﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
+# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-04-02
+> **Last updated:** 2026-04-03
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -293,7 +293,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
 | `TickerData.cs` | Edit freely | `DataTransferObject` | Two-property DTO (`BriefText`, `FullText`) implementing `INotifyPropertyChanged`. All 13 typed result subclasses (see `TickerResults.cs`) inherit from this class. Live tickers mutate `BriefText`/`FullText` in-place every second via property setters so bindings update without replacing the object reference. |
-| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 13 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`, `YourBreathResult`, `VibrantCosmosResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum, `CellularRefreshResult`, `GlobalCrowdResult`, `LifeLogResult`, `VibrantHumanityResult`, and `VibrantNatureResult`. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. `LifeOdometerResult` carries two extra init-only properties: `IllustrationSource` (filename of an optional inline image shown in the expanded view) and `HasIllustration` (computed bool, drives `IsVisible` on the `Image` element in `MainPage.xaml`). |
+| `TickerResults.cs` | Edit freely | `DataTransferObject` | Defines the 13 typed result subclasses (`TimeJubileesResult`, `CountdownResult`, `LifeOdometerResult`, `AlienAnniversariesResult`, `GalacticCommuteResult`, `PhotonPathResult`, `CosmicStretchResult`, `HumanBirthRankResult`, `BirthRuneResult`, `PersonalYearResult`, `GlobalExhaleResult`, `YourBreathResult`, `VibrantCosmosResult`) each extending `TickerData` with raw computed fields. Also defines the `PhotonPhase` enum, `CellularRefreshResult`, `GlobalCrowdResult`, `LifeLogResult`, `VibrantHumanityResult`, and `VibrantNatureResult`. Linked into `Aeonpulse.Tests` via `<Compile Link=...>`. `LifeOdometerResult` carries two extra init-only properties: `IllustrationSource` (filename of an optional inline image shown in the expanded view) and `HasIllustration` (computed bool, drives `IsVisible` on the `Image` element in `MainPage.xaml`). `TimeJubileesResult` carries `LastJubileeValue`, `LastJubileeUnit`, `LastJubileeDate`, `LastJubileeName`, `NextJubileeName`, `DaysSinceLast`, `DaysTillNext`, `ProgressFraction`, and computed `IsMoreRoomAtBottom` - all used to drive the dynamic timeline graphic in the expanded card view. |
 | `TickerCardModel.cs` | Edit freely | `DataTransferObject` | Structural metadata for a ticker card: `Title`, `IconGlyph`, `IsLive`, `IsExpanded`, `HasRefresh`. Not yet wired to a `CollectionView` - reserved for a future refactor that replaces individually-templated XAML blocks. |
 | `SubsectionState.cs` | Edit freely | - | Snapshot of a collapsible section: `Title` (used as key) and `IsExpanded`. Defined but not yet actively used for persistence - available for future state-save/restore logic. |
 
@@ -304,7 +304,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
 | ``AeonLog.cs`` | Edit freely | ``DiagnosticsGateway`` | Static logging gateway. Zero MAUI dependencies; also linked into ``Aeonpulse.Tests``. Wired by ``AeonLog.Initialise(ILoggerFactory)`` called from ``MauiProgram`` after ``builder.Build()``. Three ``[Conditional("DEBUG")]`` methods: ``Debug(cat, sub, msg, block?)``, ``Info(cat, sub, msg)``, ``Warn(cat, sub, msg)``. Falls back to ``NullLogger.Instance`` before initialisation. See Section 8.1 for message-format convention and ``[BLOCK]`` tag rules. |
-| `CalculationService.cs` | Edit freely | `CoreCalculationEngine` | The single domain-logic class. Stateless - reads `DateTime.Now` internally so every call produces a fresh result. All 11 ticker methods return typed subclasses of `TickerData` (see `TickerResults.cs`). `FindNearestJubilee`, `ReduceToSingleDigit`, and `GetRandomTeaseText` live here. All output strings are pulled from `AppResources` at call time, so output automatically reflects the active locale. Thread-safe; called from both the UI thread and the 1-second timer (via `MainThread.BeginInvokeOnMainThread`). All 11 public `Calculate*` methods accept an optional `DateTime? now = null` parameter for deterministic testing - production callers omit it and get `DateTime.Now`. `FindNearestJubilee` and `ReduceToSingleDigit` are `internal static` and accessible to `Aeonpulse.Tests` via `InternalsVisibleTo`. |
+| `CalculationService.cs` | Edit freely | `CoreCalculationEngine` | The single domain-logic class. Stateless - reads `DateTime.Now` internally so every call produces a fresh result. All 11 ticker methods return typed subclasses of `TickerData` (see `TickerResults.cs`). `FindNearestJubilee`, `FindPreviousJubilee`, `ReduceToSingleDigit`, and `GetRandomTeaseText` live here. All output strings are pulled from `AppResources` at call time, so output automatically reflects the active locale. Thread-safe; called from both the UI thread and the 1-second timer (via `MainThread.BeginInvokeOnMainThread`). All 11 public `Calculate*` methods accept an optional `DateTime? now = null` parameter for deterministic testing - production callers omit it and get `DateTime.Now`. `FindNearestJubilee` and `ReduceToSingleDigit` are `internal static` and | `Views/MainPage.xaml` | ~227 | Time Jubilees timeline - 2-column `Grid` (col 0: `AbsoluteLayout` with `BoxView` line and 3 `Ellipse` dots using `DynamicResource` colors; col 1: 3-row `Grid` with Last/Today/Next labels and `VerticalStackLayout` days-context that shifts above/below Today via `IsMoreRoomAtBottom`). All colors use `DynamicResource`. `IsVisible` gated on `TimeJubileesExpanded`. |
 | `ThemeService.cs` | Edit freely | - | Singleton (`Instance`). Stores three `Dictionary<string, Color>` palettes: `_defaultColors` (DefaultDark), `_highContrastDarkColors`, `_highContrastLightColors`. `ApplyScheme(string)` iterates the chosen palette and writes each key directly into `Application.Current.Resources`, causing all `DynamicResource` bindings to repaint immediately. To add a new colour scheme: add a new palette dict and a new `const string` identifier, then add a case to the switch in `ApplyScheme`. |
 | `FontSizeService.cs` | Edit freely | - | Singleton (`Instance`). Same pattern as `ThemeService` but for five font-size keys (`FontSizeSmall` through `FontSizeTitle`). `ApplyPreset(string)` mutates the resource dict. Three presets: `Small`, `Normal`, `Large`. |
 
@@ -947,7 +947,7 @@ genuinely novel and not covered by any existing role.
 | `CoreCalculationEngine` | The top-level stateless calculation service class. | `CalculationService` (class) |
 | `CoreCalculation` | A specific ticker calculation that runs once on demand (not live). | `CalculateTimeJubilees`, `CalculateAlienAnniversaries`, `CalculateHumanBirthRank`, `CalculateBirthRune`, `CalculatePersonalYear`, `CalculateGlobalExhale` |
 | `LiveTicker` | A calculation called every second by the 1-second timer. | `CalculateCountdown`, `CalculateLifeOdometer`, `CalculateGalacticCommute`, `CalculatePhotonPath`, `CalculateCosmicStretch` |
-| `JubileeSelectionAlgorithm` | The private helper that finds the next round-number milestone. | `FindNearestJubilee` |
+| `JubileeSelectionAlgorithm` | Helpers that find the next or previous round-number milestone. | `FindNearestJubilee`, `FindPreviousJubilee` |
 | `StarCatalogueLookup` | Method that contains and queries the inline 57-star distance catalogue. | `CalculatePhotonPath` (second attribute) |
 | `ExternalDataModel` | Method whose constants derive from a named external scientific dataset. | `CalculateHumanBirthRank` (PRB data), `CalculateGlobalExhale` (Global Carbon Budget 2025) |
 | `UIPresentation` | User-facing text assembly with no domain logic. | `GetRandomTeaseText` |
@@ -1066,6 +1066,7 @@ a map to navigate without reading every XAML file.
 | `Views/MainPage.xaml` | ~1400 | Vibrant Nature ticker card header `Grid` - 3-column `[butterfly emoji|title|info+refresh+expand buttons]`, bound to `MainViewModel.VibrantNature` (static, re-calculates on refresh). |
 | `Views/MainPage.xaml` | ~710 | Vibrant Cosmos ticker card header `Grid` - 3-column `[sparkles emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.VibrantCosmos` (live-updated every 200 ms). |
 | `Views/MainPage.xaml` | 243 | Title + LIVE badge `HorizontalStackLayout` - badge labels carry `x:Name="LiveBadgeXxx"` for code-behind animation |
+| `Views/MainPage.xaml` | ~227 | Time Jubilees timeline `Grid` - 5-row/2-col layout with `BoxView` timeline line, `Ellipse` dots, `Label` milestone names, and two `VerticalStackLayout` blocks that shift above/below `Today` based on `TimeJubilees.IsMoreRoomAtBottom`. All colors use `DynamicResource` (no `AppThemeBinding`/`StaticResource`). `IsVisible` gated on `TimeJubileesExpanded`. |
 | `Views/MainPage.xaml` | ~358 | Life Odometer illustration `Image` - `Source` bound to `LifeOdometerResult.IllustrationSource`; `IsVisible` bound to `LifeOdometer.HasIllustration`; `IsAnimationPlaying=True` for GIF support. |
 | `Views/SettingsPopup.xaml` | 9 | Full-screen overlay `Grid` - Layer 0/1 z-order explanation |
 | `Views/SettingsPopup.xaml` | 25 | `Frame` panel - floats over backdrop, `DynamicResource` theme note |
@@ -1533,6 +1534,7 @@ AIContext:   CoreCalculationEngine
 - 9 personal-year interpretations (via `AppResources`)
 - PRB birth-rank piecewise model constants
 - Global Carbon Budget polynomial regression constants
+- `FindPreviousJubilee(long current)` helper - finds largest jubilee milestone <= current elapsed count, used to anchor the last jubilee in the timeline graphic
 
 **Calls:**
 - `AppResources.*` - all output string keys, read at call time
@@ -1563,7 +1565,7 @@ AIContext:   (none - localisation hub)
 - Singleton (`static readonly Instance`). Every XAML `{Binding Loc.Xxx}` expression resolves through this instance.
 - Every property is a simple passthrough getter: `public string MyKey => AppResources.MyKey;`
 - `Invalidate()` fires `PropertyChanged(string.Empty)` which causes MAUI's binding engine to re-read **every** property on this object simultaneously - the mechanism that makes language switching instant without page reload.
-- Contains passthrough properties for all 365 string keys in `AppResources.resx`, grouped by: AppName/Badge, Timeline, Sections (4), Ticker titles (11), Settings, ChangeDate, MainMenu, DeepDive/Info (30), Units (metric + imperial), Stars (57), Runes (24), PersonalYear interpretations (9), Tease, Refreshing.
+- Contains passthrough properties for all 370 string keys in `AppResources.resx`, grouped by: AppName/Badge, Timeline, Sections (4), Ticker titles (11), Settings, ChangeDate, MainMenu, DeepDive/Info (30), Units (metric + imperial), Stars (57), Runes (24), PersonalYear interpretations (9), Tease, Refreshing.
 
 **Owns:**
 - The `Invalidate()` mass-rebind mechanism
@@ -1594,7 +1596,7 @@ AIContext:   (none - string repository)
 ```
 
 **Responsibilities:**
-- The **single source of truth for all user-visible strings**. 365 string keys total.
+- The **single source of truth for all user-visible strings**. 370 string keys total.
 - Organised into named groups by prefix (see key prefix table below).
 - `AppResources.Culture` is set globally by `MainViewModel.ApplyLanguage()`. The .NET resource system automatically selects `AppResources.ru.resx` when the culture is `ru`.
 - `AppResources.Designer.cs` provides the strongly-typed `AppResources.SomeKey` accessor used throughout `CalculationService` and `LocalizedResources`.

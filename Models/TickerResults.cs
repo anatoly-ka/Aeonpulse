@@ -33,6 +33,45 @@ namespace Aeonpulse.Models
         /// driving the <c>IsVisible</c> binding on the illustration <c>Image</c> element.
         /// </summary>
         public bool HasIllustration => !string.IsNullOrWhiteSpace(IllustrationSource);
+
+        /// <summary>Numeric value of the most recently passed jubilee (e.g. 10000).</summary>
+        public long LastJubileeValue { get; init; }
+
+        /// <summary>Localised unit label of the last jubilee (e.g. "days", "months").</summary>
+        public string LastJubileeUnit { get; init; } = string.Empty;
+
+        /// <summary>Calendar date on which the last jubilee fell.</summary>
+        public DateTime LastJubileeDate { get; init; }
+
+        /// <summary>
+        /// Formatted display name for the last jubilee, e.g. "10,000 Days".
+        /// Used as the label on the timeline graphic.
+        /// </summary>
+        public string LastJubileeName { get; init; } = string.Empty;
+
+        /// <summary>
+        /// Formatted display name for the next jubilee, e.g. "11,111 Days".
+        /// Used as the label on the timeline graphic.
+        /// </summary>
+        public string NextJubileeName { get; init; } = string.Empty;
+
+        /// <summary>Whole days elapsed since the last jubilee.</summary>
+        public int DaysSinceLast { get; init; }
+
+        /// <summary>Whole days remaining until the next jubilee.</summary>
+        public int DaysTillNext { get; init; }
+
+        /// <summary>
+        /// Fractional position of today between the last and next jubilee (0.0 = at last, 1.0 = at next).
+        /// </summary>
+        public double ProgressFraction { get; init; }
+
+        /// <summary>
+        /// <c>true</c> when <see cref="ProgressFraction"/> is less than 0.5, meaning today is
+        /// closer to the last jubilee. Drives the layout shift in the timeline graphic to
+        /// display the days-passed/days-remaining label below "Today" to avoid text overlap.
+        /// </summary>
+        public bool IsMoreRoomAtBottom => ProgressFraction < 0.5;
     }
 
     /// <summary>
