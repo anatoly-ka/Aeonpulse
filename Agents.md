@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-04-04
+> **Last updated:** 2026-04-05
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -390,7 +390,8 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 | `settings.png` | `MainMenuPopup` menu item | Settings menu item icon |
 | `profiles.png` | `MainMenuPopup` menu item | Change Date menu item icon |
 | `exit.png` | `MainMenuPopup` menu item | Exit menu item icon |
-| `heartbeat.png` | Life Odometer expanded card `Image` | ECG waveform illustration shown in the expanded Life Odometer card. PNG replaces the original SVG (MAUI resizetizer does not rasterise SVG on Windows). |
+| `heartbeat.png` | Superseded - no longer referenced in XAML | ECG waveform PNG illustration. Retained in `Resources/Images/` as a fallback asset. Replaced by `anim_ecg_pulse.gif` for animated playback. |
+| `anim_ecg_pulse.gif` | Life Odometer expanded card `Image` | Minimalist animated ECG heartbeat pulse trace shown in the expanded Life Odometer card. `IsAnimationPlaying=True` drives looping playback. Source is a XAML literal (not a binding) to prevent MAUI GIF decoder restart on each 1-second timer tick. Drawn below the `FullText` label as a sibling in the `VerticalStackLayout` (same flat pattern as `anim_countdown.gif`). **Replace placeholder file with a permissively-licensed GIF before release.** |
 | `img_timejubilees.png` | Time Jubilees expanded card `Image` | Golden mechanical watch-gears illustration shown in the expanded Time Jubilees card. |
 | `anim_countdown.gif` | Countdown expanded card `Image` | Animated split-flap (Solari) digit counter shown in the expanded Countdown card; `IsAnimationPlaying=True` drives animation. Source is a XAML literal (not a binding) to prevent MAUI GIF decoder restart on each 1-second timer tick. |
 | `img_countdown_static.png` | Countdown Windows static fallback | First-frame static PNG exported alongside `anim_countdown.gif`. Reserved for future Windows-specific fallback use. |
@@ -1068,7 +1069,7 @@ a map to navigate without reading every XAML file.
 | `Views/MainPage.xaml` | 243 | Title + LIVE badge `HorizontalStackLayout` - badge labels carry `x:Name="LiveBadgeXxx"` for code-behind animation |
 | `Views/MainPage.xaml` | ~227 | Time Jubilees timeline `Grid` - 5-row/2-col layout with `BoxView` timeline line, `Ellipse` dots, `Label` milestone names, and two `VerticalStackLayout` blocks that shift above/below `Today` based on `TimeJubilees.IsMoreRoomAtBottom`. All colors use `DynamicResource` (no `AppThemeBinding`/`StaticResource`). `IsVisible` gated on `TimeJubileesExpanded`. |
 | `Views/MainPage.xaml` | ~681 | Alien Anniversaries orrery `Grid` containing a 300x300 `AbsoluteLayout` (x:Name="OrreryCanvas"). Contains 5 orbit-ring `Ellipse` elements (r=30/55/80/110/143), gold sun `Ellipse` (r=10), 2px gold `Line` Today indicator at 12 o clock, Today `Label`, 5 planet symbol `Label`s (x:Name="OrreryXxxSymbol"), and 5 name/years `Label`s (x:Name="OrreryXxxLabel"). Planet positions set imperatively via `ApplyOrreryPositions` in code-behind. All colors use `DynamicResource`. `IsVisible` gated on `AlienAnniversariesExpanded`. Binding source: `MainViewModel.AlienAnniversaries` (AlienAnniversariesResult). |
-| `Views/MainPage.xaml` | ~358 | Life Odometer illustration `Image` - `Source` bound to `LifeOdometerResult.IllustrationSource`; `IsVisible` bound to `LifeOdometer.HasIllustration`; `IsAnimationPlaying=True` for GIF support. |
+| `Views/MainPage.xaml` | ~511 | Life Odometer ECG animation `Image` - `Source` is a XAML literal (`anim_ecg_pulse.gif`, not a binding) to prevent GIF decoder restart on each 1-second timer tick; `IsAnimationPlaying=True`; `IsVisible` and `FullText` `Label` are sibling children of the `VerticalStackLayout`, GIF drawn below the text (same flat pattern as Countdown). |
 | `Views/SettingsPopup.xaml` | 9 | Full-screen overlay `Grid` - Layer 0/1 z-order explanation |
 | `Views/SettingsPopup.xaml` | 25 | `Frame` panel - floats over backdrop, `DynamicResource` theme note |
 | `Views/SettingsPopup.xaml` | 38 | 3-row inner `Grid` - `[Title+Divider|Settings|CloseButton]` row assignments |

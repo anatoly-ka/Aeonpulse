@@ -496,7 +496,7 @@
                                                          Command="{Binding ToggleLifeOdometerCommand}" />
                                         </HorizontalStackLayout>
                                     </Grid>
-                                    <!-- Binding: MainViewModel.LifeOdometer.BriefText - hidden when expanded, updates every second -->
+                                    <!-- Binding: MainViewModel.LifeOdometer.BriefText - hidden when expanded -->
                                     <Label Text="{Binding LifeOdometer.BriefText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"
@@ -509,17 +509,18 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding LifeOdometerExpanded}" />
-                                    <!-- AI: Illustration image for the expanded LifeOdometer card.
-                                         Source is a XAML literal ("heartbeat.png"), NOT a binding.
-                                         Using a literal prevents the image from flickering every second
-                                         when the LifeOdometer live-ticker rebuilds its result object,
-                                         which would otherwise cause MAUI to reload the source on each tick.
-                                         IsVisible is gated on LifeOdometerExpanded so the image only appears
-                                         in the expanded view. -->
-                                    <Image Source="heartbeat.png"
+                                    <!-- AI: ECG pulse animation for the expanded Life Odometer card.
+                                         Source is a XAML literal ("anim_ecg_pulse.gif"), NOT a binding.
+                                         Using a literal prevents MAUI's ImageHandler from restarting the
+                                         GIF decoder every second when the LifeOdometer live-ticker rebuilds
+                                         its result object (which would reset animation to frame 0).
+                                         IsAnimationPlaying=True is respected by MAUI's built-in GIF decoder
+                                         on all platforms including Windows.
+                                         IsVisible stays data-bound so expand/collapse still works. -->
+                                    <Image Source="anim_ecg_pulse.gif"
                                            IsVisible="{Binding LifeOdometerExpanded}"
                                            IsAnimationPlaying="True"
-                                           HeightRequest="120"
+                                           HeightRequest="80"
                                            Aspect="AspectFit"
                                            HorizontalOptions="Center"
                                            Margin="0,8,0,0" />
