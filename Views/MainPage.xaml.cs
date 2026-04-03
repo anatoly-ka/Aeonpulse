@@ -1,4 +1,4 @@
-using Aeonpulse.Attributes;
+﻿using Aeonpulse.Attributes;
 using Aeonpulse.ViewModels;
 using Aeonpulse.Resources;
 
@@ -66,25 +66,31 @@ namespace Aeonpulse.Views
 
             if (BindingContext is MainViewModel vm)
             {
-                // Each ticker's RefreshRequested event is routed through the same
-                // popup lifecycle handler; the onDismissed callback carries the
-                // ticker-specific recalculation supplied by the ViewModel.
                 vm.RefreshRequested += OnTickerRefreshRequested;
 
                 // Reposition TodayDot whenever the TimeJubilees result is replaced
                 // (base-date change or manual refresh). Apply initial position now.
                 vm.PropertyChanged += OnViewModelPropertyChanged;
                 ApplyTodayDotPosition(vm.TimeJubilees?.ProgressFraction ?? 0.5);
+                ApplyOrreryPositions(vm.AlienAnniversaries);
+                ApplyOrreryBaseDate(vm.BaseDateName, vm.BaseDateDisplay);
             }
         }
 
         private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(MainViewModel.TimeJubilees)
-             && sender is MainViewModel vm)
-            {
+            if (sender is not MainViewModel vm)
+                return;
+
+            if (e.PropertyName == nameof(MainViewModel.TimeJubilees))
                 ApplyTodayDotPosition(vm.TimeJubilees?.ProgressFraction ?? 0.5);
-            }
+
+            if (e.PropertyName == nameof(MainViewModel.AlienAnniversaries))
+                ApplyOrreryPositions(vm.AlienAnniversaries);
+
+            if (e.PropertyName == nameof(MainViewModel.BaseDateName)
+             || e.PropertyName == nameof(MainViewModel.BaseDateDisplay))
+                ApplyOrreryBaseDate(vm.BaseDateName, vm.BaseDateDisplay);
         }
 
         /// <summary>
@@ -104,15 +110,6 @@ namespace Aeonpulse.Views
         /// </param>
         private void ApplyTodayDotPosition(double fraction)
         {
-            // fraction is in [0.05, 0.95] (clamped by the ViewModel), representing
-            // today's logical position between Last and Next jubilee.
-            // The endpoint dots sit at Y=0.05 (Last) and Y=0.95 (Next) in the
-            // AbsoluteLayout's PositionProportional coordinate space.
-            // We must remap fraction into that same [0.05, 0.95] visual span so the
-            // Today dot travels the full distance between the two endpoint dots:
-            //   visualY = 0.05 + fraction * (0.95 - 0.05) = 0.05 + fraction * 0.90
-            // Without this remap, fraction=0.076 would place the dot at Y=0.076,
-            // only 2.6% below the Last dot at Y=0.05 instead of 7.6% of the span.
             const double dotTop    = 0.05;
             const double dotBottom = 0.95;
             double visualY = dotTop + fraction * (dotBottom - dotTop);
@@ -120,6 +117,97 @@ namespace Aeonpulse.Views
             AbsoluteLayout.SetLayoutBounds(TodayDot, new Rect(0.5, visualY, 14, 14));
             AbsoluteLayout.SetLayoutFlags(TodayDot,
                 Microsoft.Maui.Layouts.AbsoluteLayoutFlags.PositionProportional);
+        }
+
+        /// <summary>
+        /// Positions all five planet symbols and their name/years labels on the orrery canvas.
+        ///
+        /// <para>
+        /// <b>Why imperative:</b> <c>AbsoluteLayout.LayoutBounds</c> is a string-typed
+        /// attached property whose four components cannot be individually data-bound in XAML.
+        /// This method computes screen-space X/Y coordinates from each planet's orbital
+        /// fraction using Sin/Cos, then pushes them to the named label elements directly.
+        /// </para>
+        /// <para>
+        /// <b>Coordinate system:</b> the orrery canvas is 300x300 device units. Center is (150,150).
+        /// Fraction 0.0 = 12 o'clock (angle = -90 deg = 270 deg), clockwise.
+        /// angle_deg = fraction * 360 - 90;  X = cx + r * cos(angle_rad);  Y = cy + r * sin(angle_rad).
+        /// </para>
+        /// </summary>
+        /// <param name="result">The latest <see cref="Models.AlienAnniversariesResult"/>; may be null on startup.</param>
+        private void ApplyOrreryPositions(Models.AlienAnniversariesResult? result)
+        {
+            if (result is null)
+                return;
+
+            const double cx         = 150;
+            const double cy         = 150;
+            const double symbolW    = 18; // square bounding box - centres glyph exactly on orbit point
+            const double symbolH    = 18;
+            const double labelW     = 100; // "Mercury 252.00" at FontSize=13 needs ~98px; 80 caused truncation
+            const double labelH     = 20; // font-13 needs ~20 px height to avoid clipping
+            const double labelGap   = 6;  // pixels between symbol edge and label centre
+            const double toRad      = Math.PI / 180.0;
+
+            // Orbit radii matching the XAML Ellipse sizes: 30, 55, 80, 110, 143
+            (Label sym, Label lbl, double r, double fraction, string name, double years)[] planets =
+            {
+                (OrreryMercurySymbol, OrreryMercuryLabel,  30,  result.MercuryFraction, "Mercury", result.MercuryYears),
+                (OrreryVenusSymbol,   OrreryVenusLabel,    55,  result.VenusFraction,   "Venus",   result.VenusYears),
+                (OrreryEarthSymbol,   OrreryEarthLabel,    80,  result.EarthFraction,   "Earth",   result.EarthYears),
+                (OrreryMarsSymbol,    OrreryMarsLabel,     110, result.MarsFraction,    "Mars",    result.MarsYears),
+                (OrreryJupiterSymbol, OrreryJupiterLabel,  143, result.JupiterFraction, "Jupiter", result.JupiterYears),
+            };
+
+            foreach (var (sym, lbl, r, fraction, name, years) in planets)
+            {
+                // Map fraction [0,1) -> angle: 0.0=top(12 o'clock), clockwise
+                double angleDeg = fraction * 360.0 - 90.0;
+                double angleRad = angleDeg * toRad;
+                double px = cx + r * Math.Cos(angleRad);
+                double py = cy + r * Math.Sin(angleRad);
+
+                // Symbol: square box centred exactly on the orbit point (px, py).
+                // Using equal W and H ensures the glyph anchor is at the geometric
+                // centre of the box, which is placed precisely on the orbit circle.
+                AbsoluteLayout.SetLayoutBounds(sym, new Rect(px - symbolW / 2, py - symbolH / 2, symbolW, symbolH));
+                AbsoluteLayout.SetLayoutFlags(sym, Microsoft.Maui.Layouts.AbsoluteLayoutFlags.None);
+
+                // Label: placed outward along the radial direction from the symbol edge.
+                double labelDist = r + symbolH / 2 + labelGap;
+                double lx = cx + labelDist * Math.Cos(angleRad) - labelW / 2;
+                double ly = cy + labelDist * Math.Sin(angleRad) - labelH / 2;
+
+                // Clamp to canvas bounds so labels near the edges do not clip.
+                lx = Math.Clamp(lx, 0, 300 - labelW);
+                ly = Math.Clamp(ly, 0, 300 - labelH);
+
+                lbl.Text = $"{name} {years:F2}";
+                AbsoluteLayout.SetLayoutBounds(lbl, new Rect(lx, ly, labelW, labelH));
+                AbsoluteLayout.SetLayoutFlags(lbl, Microsoft.Maui.Layouts.AbsoluteLayoutFlags.None);
+            }
+        }
+
+        /// <summary>
+        /// Updates the base-date name and value labels flanking the 12-o'clock Today line
+        /// on the orrery canvas. Called on construction and whenever
+        /// <see cref="MainViewModel.BaseDateName"/> or <see cref="MainViewModel.BaseDateDisplay"/>
+        /// changes (i.e. on every <c>SaveDate</c>).
+        ///
+        /// <para>
+        /// <b>Why imperative:</b> the two label elements live inside the same
+        /// <c>AbsoluteLayout</c> as the planet symbols; their text content cannot be
+        /// data-bound because the labels are children of a canvas whose coordinate system
+        /// is managed entirely from code-behind. Populating them here keeps all orrery
+        /// state mutations in one place.
+        /// </para>
+        /// </summary>
+        /// <param name="name">The user's base-date label (e.g. "My Birthday").</param>
+        /// <param name="display">The culture-formatted base date string (e.g. "7/24/1965").</param>
+        private void ApplyOrreryBaseDate(string name, string display)
+        {
+            OrreryBaseDateNameLabel.Text  = name;
+            OrreryBaseDateValueLabel.Text = display;
         }
 
         /// <summary>

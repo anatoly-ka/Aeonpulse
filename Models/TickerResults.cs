@@ -142,15 +142,41 @@ namespace Aeonpulse.Models
     /// <summary>
     /// Typed result for <c>CalculationService.CalculateAlienAnniversaries</c>.
     /// Carries equivalent planetary ages in Mars and Venus years.
+    /// Extended with all five inner/outer planet years and orbital fractions
+    /// to drive the orrery visualization in the expanded card view.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class AlienAnniversariesResult : TickerData
     {
-        /// <summary>Age in Martian years (1 Mars year = 686.98 Earth days).</summary>
-        public double MarsYears { get; init; }
+        /// <summary>Age in Mercurian years (1 Mercury year = 87.97 Earth days).</summary>
+        public double MercuryYears { get; init; }
+
+        /// <summary>Fractional orbital progress of Mercury (0.0 = 12 o'clock, clockwise).</summary>
+        public double MercuryFraction { get; init; }
 
         /// <summary>Age in Venusian years (1 Venus year = 224.7 Earth days).</summary>
         public double VenusYears { get; init; }
+
+        /// <summary>Fractional orbital progress of Venus (0.0 = 12 o'clock, clockwise).</summary>
+        public double VenusFraction { get; init; }
+
+        /// <summary>Age in Earth years (1 Earth year = 365.25 Earth days).</summary>
+        public double EarthYears { get; init; }
+
+        /// <summary>Fractional orbital progress of Earth (0.0 = 12 o'clock, clockwise).</summary>
+        public double EarthFraction { get; init; }
+
+        /// <summary>Age in Martian years (1 Mars year = 686.98 Earth days).</summary>
+        public double MarsYears { get; init; }
+
+        /// <summary>Fractional orbital progress of Mars (0.0 = 12 o'clock, clockwise).</summary>
+        public double MarsFraction { get; init; }
+
+        /// <summary>Age in Jovian years (1 Jupiter year = 4332.59 Earth days).</summary>
+        public double JupiterYears { get; init; }
+
+        /// <summary>Fractional orbital progress of Jupiter (0.0 = 12 o'clock, clockwise).</summary>
+        public double JupiterFraction { get; init; }
     }
 
     /// <summary>

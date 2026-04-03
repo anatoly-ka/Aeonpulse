@@ -662,33 +662,57 @@ namespace Aeonpulse.Services
 
         /// <summary>
         /// Converts the elapsed Earth days since <paramref name="baseDate"/> into
-        /// equivalent years on Mars (686.98 Earth days/year) and Venus (224.7 Earth days/year),
+        /// equivalent years on Mercury, Venus, Earth, Mars, and Jupiter,
         /// giving users a playful cross-planetary perspective on their age.
+        /// Also computes a fractional orbital progress [0.0, 1.0) for each planet
+        /// (0.0 = 12 o'clock / just completed a full orbit, clockwise) used to drive
+        /// the orrery visualization in the expanded card view.
         ///
         /// <para>
-        /// Planetary year lengths are fixed constants based on orbital periods;
-        /// they do not account for leap-year variations.
+        /// Planetary year lengths are fixed constants based on orbital periods (NASA
+        /// Goddard Planetary Fact Sheet); they do not account for leap-year variations.
         /// </para>
         /// </summary>
         /// <param name="baseDate">The origin date (typically a birthday).</param>
         /// <param name="baseDateName">Human-readable label for display in the full text.</param>
         /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
         /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
-        /// <returns>A <see cref="TickerData"/> with Mars and Venus age figures.</returns>
+        /// <returns>A <see cref="AlienAnniversariesResult"/> with all five planet year figures and orbital fractions.</returns>
         [AIContext("CoreCalculation")]
         public AlienAnniversariesResult CalculateAlienAnniversaries(DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
         {
             DateTime now_ = now ?? DateTime.Now;
-            long earthDays = (long)(now_ - baseDate).TotalDays;
-            AeonLog.Debug(LogCat, nameof(CalculateAlienAnniversaries), $"baseDate={baseDate:d} earthDays={earthDays}");
+            double earthDays = (now_ - baseDate).TotalDays;
+            AeonLog.Debug(LogCat, nameof(CalculateAlienAnniversaries), $"baseDate={baseDate:d} earthDays={earthDays:F2}");
 
-            double marsYears  = earthDays / 686.98;
-            double venusYears = earthDays / 224.7;
+            const double mercuryPeriod = 87.97;
+            const double venusPeriod   = 224.70;
+            const double earthPeriod   = 365.25;
+            const double marsPeriod    = 686.98;
+            const double jupiterPeriod = 4332.59;
+
+            double mercuryYears  = earthDays / mercuryPeriod;
+            double venusYears    = earthDays / venusPeriod;
+            double earthYears    = earthDays / earthPeriod;
+            double marsYears     = earthDays / marsPeriod;
+            double jupiterYears  = earthDays / jupiterPeriod;
+
+            // Fractional orbital progress: the decimal part of the total years elapsed.
+            // 0.0 = start of a new orbit (12 o'clock), 0.25 = 3 o'clock, 0.5 = 6 o'clock, 0.75 = 9 o'clock.
+            static double Fraction(double years) => years - Math.Floor(years);
 
             return new AlienAnniversariesResult
             {
-                MarsYears  = marsYears,
-                VenusYears = venusYears,
+                MercuryYears    = mercuryYears,
+                MercuryFraction = Fraction(mercuryYears),
+                VenusYears      = venusYears,
+                VenusFraction   = Fraction(venusYears),
+                EarthYears      = earthYears,
+                EarthFraction   = Fraction(earthYears),
+                MarsYears       = marsYears,
+                MarsFraction    = Fraction(marsYears),
+                JupiterYears    = jupiterYears,
+                JupiterFraction = Fraction(jupiterYears),
                 BriefText = AppResources.Ticker_AlienAnniversariesBrief
                     .Replace("{marsYears:F2}", marsYears.ToString("F2"))
                     .Replace("{venusYears:F2}", venusYears.ToString("F2")),
@@ -2224,7 +2248,6 @@ namespace Aeonpulse.Services
         /// Cumulative count of species estimated to have gone extinct globally from 1900-01-01
         /// up to <paramref name="date"/>, using a 3-epoch piecewise linear daily-rate model.
         /// Rates: 1900-1950 approx. 10/day; 1950-2000 approx. 50/day; 2000-present approx. 150/day.
-        /// </para>
         /// <para>
         /// All epoch anchors use UTC midnight to prevent local timezone shifts from
         /// causing population jumps at midnight.

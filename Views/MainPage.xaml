@@ -678,6 +678,214 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding AlienAnniversariesExpanded}" />
+                                    <!-- AI: Orrery visualization - visible only when AlienAnniversariesExpanded=true.
+                                         A 300x300 AbsoluteLayout: Sun (gold Ellipse), 5 orbit rings (grey strokes),
+                                         a gold Today line at 12 o'clock, a Today label, 5 planet symbol Labels and
+                                         5 planet name/years Labels. Planet positions are set imperatively via
+                                         ApplyOrreryPositions in MainPage.xaml.cs because AbsoluteLayout.LayoutBounds
+                                         cannot be data-bound. Orbit radii: Mercury=30, Venus=55, Earth=80, Mars=110,
+                                         Jupiter=143. All colors use DynamicResource for ThemeService compatibility.
+                                         Binding source: MainViewModel.AlienAnniversaries (AlienAnniversariesResult). -->
+                                    <Grid IsVisible="{Binding AlienAnniversariesExpanded}"
+                                          HorizontalOptions="Center"
+                                          Margin="0,8,0,0">
+                                        <AbsoluteLayout x:Name="OrreryCanvas"
+                                                        WidthRequest="300"
+                                                        HeightRequest="300"
+                                                        HorizontalOptions="Center">
+                                            <!-- Orbit: Mercury r=30 (X=120,Y=120,W=60,H=60) -->
+                                            <Ellipse AbsoluteLayout.LayoutBounds="120, 120, 60, 60"
+                                                     AbsoluteLayout.LayoutFlags="None"
+                                                     Fill="Transparent"
+                                                     Stroke="{DynamicResource TextGray}"
+                                                     StrokeThickness="1"
+                                                     Opacity="0.5" />
+                                            <!-- Orbit: Venus r=55 (X=95,Y=95,W=110,H=110) -->
+                                            <Ellipse AbsoluteLayout.LayoutBounds="95, 95, 110, 110"
+                                                     AbsoluteLayout.LayoutFlags="None"
+                                                     Fill="Transparent"
+                                                     Stroke="{DynamicResource TextGray}"
+                                                     StrokeThickness="1"
+                                                     Opacity="0.5" />
+                                            <!-- Orbit: Earth r=80 (X=70,Y=70,W=160,H=160) -->
+                                            <Ellipse AbsoluteLayout.LayoutBounds="70, 70, 160, 160"
+                                                     AbsoluteLayout.LayoutFlags="None"
+                                                     Fill="Transparent"
+                                                     Stroke="{DynamicResource TextGray}"
+                                                     StrokeThickness="1"
+                                                     Opacity="0.5" />
+                                            <!-- Orbit: Mars r=110 (X=40,Y=40,W=220,H=220) -->
+                                            <Ellipse AbsoluteLayout.LayoutBounds="40, 40, 220, 220"
+                                                     AbsoluteLayout.LayoutFlags="None"
+                                                     Fill="Transparent"
+                                                     Stroke="{DynamicResource TextGray}"
+                                                     StrokeThickness="1"
+                                                     Opacity="0.5" />
+                                            <!-- Orbit: Jupiter r=143 (X=7,Y=7,W=286,H=286) -->
+                                            <Ellipse AbsoluteLayout.LayoutBounds="7, 7, 286, 286"
+                                                     AbsoluteLayout.LayoutFlags="None"
+                                                     Fill="Transparent"
+                                                     Stroke="{DynamicResource TextGray}"
+                                                     StrokeThickness="1"
+                                                     Opacity="0.5" />
+                                            <!-- Direction arrows: one per orbit at 6-o'clock (bottom tangent).
+                                                 Clockwise orbital motion at 6-o'clock travels leftward, so the
+                                                 arrow points left (U+25C4). Static positions - no code-behind needed. -->
+                                            <!-- Mercury orbit arrow: r=30, bottom=(150,180) -->
+                                            <Label AbsoluteLayout.LayoutBounds="136, 173, 14, 14"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   Text="&#x25C4;"
+                                                   FontSize="9"
+                                                   TextColor="{DynamicResource TextGray}"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"
+                                                   Opacity="0.7" />
+                                            <!-- Venus orbit arrow: r=55, bottom=(150,205) -->
+                                            <Label AbsoluteLayout.LayoutBounds="136, 198, 14, 14"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   Text="&#x25C4;"
+                                                   FontSize="9"
+                                                   TextColor="{DynamicResource TextGray}"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"
+                                                   Opacity="0.7" />
+                                            <!-- Earth orbit arrow: r=80, bottom=(150,230) -->
+                                            <Label AbsoluteLayout.LayoutBounds="136, 223, 14, 14"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   Text="&#x25C4;"
+                                                   FontSize="9"
+                                                   TextColor="{DynamicResource TextGray}"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"
+                                                   Opacity="0.7" />
+                                            <!-- Mars orbit arrow: r=110, bottom=(150,260) -->
+                                            <Label AbsoluteLayout.LayoutBounds="136, 253, 14, 14"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   Text="&#x25C4;"
+                                                   FontSize="9"
+                                                   TextColor="{DynamicResource TextGray}"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"
+                                                   Opacity="0.7" />
+                                            <!-- Jupiter orbit arrow: r=143, bottom=(150,293) -->
+                                            <Label AbsoluteLayout.LayoutBounds="136, 286, 14, 14"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   Text="&#x25C4;"
+                                                   FontSize="9"
+                                                   TextColor="{DynamicResource TextGray}"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"
+                                                   Opacity="0.7" />
+                                            <!-- Today line: center(150,150) to top(150,7), 2px gold -->
+                                            <Line X1="150" Y1="150" X2="150" Y2="7"
+                                                  AbsoluteLayout.LayoutBounds="0, 0, 300, 300"
+                                                  AbsoluteLayout.LayoutFlags="None"
+                                                  Stroke="{DynamicResource JubileeAccent}"
+                                                  StrokeThickness="2" />
+                                            <!-- Sun: gold filled circle r=10 at center (X=140,Y=140,W=20,H=20) -->
+                                            <Ellipse AbsoluteLayout.LayoutBounds="140, 140, 20, 20"
+                                                     AbsoluteLayout.LayoutFlags="None"
+                                                     Fill="{DynamicResource JubileeAccent}" />
+                                            <!-- Base date name label - left of the 12-o'clock line, right-aligned.
+                                                 Text and position set imperatively by ApplyOrreryPositions. -->
+                                            <Label x:Name="OrreryBaseDateNameLabel"
+                                                   AbsoluteLayout.LayoutBounds="8, 0, 140, 18"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   FontSize="12"
+                                                   TextColor="{DynamicResource JubileeAccent}"
+                                                   HorizontalTextAlignment="End"
+                                                   FontAttributes="Bold" />
+                                            <!-- Base date value label - right of the 12-o'clock line, left-aligned.
+                                                 Text and position set imperatively by ApplyOrreryPositions. -->
+                                            <Label x:Name="OrreryBaseDateValueLabel"
+                                                   AbsoluteLayout.LayoutBounds="152, 0, 140, 18"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   FontSize="12"
+                                                   TextColor="{DynamicResource JubileeAccent}"
+                                                   HorizontalTextAlignment="Start"
+                                                   FontAttributes="Bold" />
+                                            <!-- Mercury symbol U+263F - positioned by ApplyOrreryPositions -->
+                                            <Label x:Name="OrreryMercurySymbol"
+                                                   AbsoluteLayout.LayoutBounds="141, 141, 18, 18"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   Text="&#x263F;"
+                                                   FontSize="15"
+                                                   TextColor="{DynamicResource TextWhite}"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center" />
+                                            <!-- Venus symbol U+2640 - positioned by ApplyOrreryPositions -->
+                                            <Label x:Name="OrreryVenusSymbol"
+                                                   AbsoluteLayout.LayoutBounds="141, 141, 18, 18"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   Text="&#x2640;"
+                                                   FontSize="15"
+                                                   TextColor="{DynamicResource TextWhite}"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center" />
+                                            <!-- Earth symbol U+2641 - positioned by ApplyOrreryPositions -->
+                                            <Label x:Name="OrreryEarthSymbol"
+                                                   AbsoluteLayout.LayoutBounds="141, 141, 18, 18"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   Text="&#x2641;"
+                                                   FontSize="15"
+                                                   TextColor="{DynamicResource TextWhite}"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center" />
+                                            <!-- Mars symbol U+2642 - positioned by ApplyOrreryPositions -->
+                                            <Label x:Name="OrreryMarsSymbol"
+                                                   AbsoluteLayout.LayoutBounds="141, 141, 18, 18"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   Text="&#x2642;"
+                                                   FontSize="15"
+                                                   TextColor="{DynamicResource TextWhite}"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center" />
+                                            <!-- Jupiter symbol U+2643 - positioned by ApplyOrreryPositions -->
+                                            <Label x:Name="OrreryJupiterSymbol"
+                                                   AbsoluteLayout.LayoutBounds="141, 141, 18, 18"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   Text="&#x2643;"
+                                                   FontSize="15"
+                                                   TextColor="{DynamicResource TextWhite}"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center" />
+                                            <!-- Mercury name/years label - positioned by ApplyOrreryPositions -->
+                                            <Label x:Name="OrreryMercuryLabel"
+                                                   AbsoluteLayout.LayoutBounds="0, 0, 100, 20"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   FontSize="13"
+                                                   TextColor="{DynamicResource TextGray}"
+                                                   HorizontalTextAlignment="Center" />
+                                            <!-- Venus name/years label - positioned by ApplyOrreryPositions -->
+                                            <Label x:Name="OrreryVenusLabel"
+                                                   AbsoluteLayout.LayoutBounds="0, 0, 100, 20"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   FontSize="13"
+                                                   TextColor="{DynamicResource TextGray}"
+                                                   HorizontalTextAlignment="Center" />
+                                            <!-- Earth name/years label - positioned by ApplyOrreryPositions -->
+                                            <Label x:Name="OrreryEarthLabel"
+                                                   AbsoluteLayout.LayoutBounds="0, 0, 100, 20"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   FontSize="13"
+                                                   TextColor="{DynamicResource TextGray}"
+                                                   HorizontalTextAlignment="Center" />
+                                            <!-- Mars name/years label - positioned by ApplyOrreryPositions -->
+                                            <Label x:Name="OrreryMarsLabel"
+                                                   AbsoluteLayout.LayoutBounds="0, 0, 100, 20"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   FontSize="13"
+                                                   TextColor="{DynamicResource TextGray}"
+                                                   HorizontalTextAlignment="Center" />
+                                            <!-- Jupiter name/years label - positioned by ApplyOrreryPositions -->
+                                            <Label x:Name="OrreryJupiterLabel"
+                                                   AbsoluteLayout.LayoutBounds="0, 0, 100, 20"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   FontSize="13"
+                                                   TextColor="{DynamicResource TextGray}"
+                                                   HorizontalTextAlignment="Center" />
+                                        </AbsoluteLayout>
+                                    </Grid>
                                 </VerticalStackLayout>
                             </Border>
 

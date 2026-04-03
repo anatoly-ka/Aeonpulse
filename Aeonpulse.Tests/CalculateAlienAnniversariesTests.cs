@@ -6,7 +6,7 @@ namespace Aeonpulse.Tests
     /// <summary>
     /// Unit tests for <see cref="CalculationService.CalculateAlienAnniversaries"/>.
     ///
-    /// Constants: Mars year = 686.98 Earth days, Venus year = 224.7 Earth days.
+    /// Orbital periods (Earth days): Mercury=87.97, Venus=224.70, Earth=365.25, Mars=686.98, Jupiter=4332.59.
     /// </summary>
     public class CalculateAlienAnniversariesTests
     {
@@ -64,6 +64,128 @@ namespace Aeonpulse.Tests
 
             Assert.NotNull(result);
             Assert.NotNull(result.BriefText);
+        }
+
+        // --- New five-planet year fields ---
+
+        [Fact]
+        public void MercuryYears_MatchFormula()
+        {
+            var baseDate = new DateTime(2000, 1, 1);
+            var now = baseDate.AddDays(365.0);
+            double expected = 365.0 / 87.97;
+
+            var result = _svc.CalculateAlienAnniversaries(baseDate, "T", "2000-01-01", now);
+
+            Assert.Equal(expected, result.MercuryYears, precision: 10);
+        }
+
+        [Fact]
+        public void EarthYears_MatchFormula()
+        {
+            var baseDate = new DateTime(2000, 1, 1);
+            var now = baseDate.AddDays(365.25);
+            double expected = 365.25 / 365.25;
+
+            var result = _svc.CalculateAlienAnniversaries(baseDate, "T", "2000-01-01", now);
+
+            Assert.Equal(expected, result.EarthYears, precision: 10);
+        }
+
+        [Fact]
+        public void JupiterYears_MatchFormula()
+        {
+            var baseDate = new DateTime(2000, 1, 1);
+            var now = baseDate.AddDays(4332.59);
+            double expected = 4332.59 / 4332.59;
+
+            var result = _svc.CalculateAlienAnniversaries(baseDate, "T", "2000-01-01", now);
+
+            Assert.Equal(expected, result.JupiterYears, precision: 10);
+        }
+
+        [Fact]
+        public void PlanetYears_OrderedCorrectly_MercuryGreatestVenusNext()
+        {
+            // For a fixed elapsed time, Mercury years > Venus years > Earth years > Mars years > Jupiter years.
+            var baseDate = new DateTime(1990, 1, 1);
+            var now = baseDate.AddDays(10000);
+
+            var r = _svc.CalculateAlienAnniversaries(baseDate, "T", "1990-01-01", now);
+
+            Assert.True(r.MercuryYears > r.VenusYears);
+            Assert.True(r.VenusYears  > r.EarthYears);
+            Assert.True(r.EarthYears  > r.MarsYears);
+            Assert.True(r.MarsYears   > r.JupiterYears);
+        }
+
+        // --- Fractional progress tests ---
+
+        [Fact]
+        public void MercuryFraction_AfterExactlyOnePeriod_IsZeroOrOne()
+        {
+            var baseDate = new DateTime(2000, 1, 1);
+            var now = baseDate.AddDays(87.97);
+
+            var result = _svc.CalculateAlienAnniversaries(baseDate, "T", "2000-01-01", now);
+
+            // Due to floating-point arithmetic, MercuryYears may be 1.0 - epsilon,
+            // giving fraction ~0.9999 rather than exactly 0.0. Both values represent
+            // a complete orbit, so check the fraction is within 1e-5 of 0.0 or 1.0.
+            double f = result.MercuryFraction;
+            bool nearZeroOrOne = f < 1e-5 || f > (1.0 - 1e-5);
+            Assert.True(nearZeroOrOne, $"Expected fraction near 0 or 1, got {f}");
+        }
+
+        [Fact]
+        public void MarsFraction_AfterHalfOrbit_IsApproximatelyHalf()
+        {
+            var baseDate = new DateTime(2000, 1, 1);
+            var now = baseDate.AddDays(686.98 * 0.5);
+
+            var result = _svc.CalculateAlienAnniversaries(baseDate, "T", "2000-01-01", now);
+
+            Assert.Equal(0.5, result.MarsFraction, precision: 6);
+        }
+
+        [Fact]
+        public void AllFractions_AreInZeroToOneRange()
+        {
+            var baseDate = new DateTime(1985, 6, 15);
+            var now = baseDate.AddDays(14000);
+
+            var r = _svc.CalculateAlienAnniversaries(baseDate, "T", "1985-06-15", now);
+
+            Assert.InRange(r.MercuryFraction,  0.0, 1.0);
+            Assert.InRange(r.VenusFraction,    0.0, 1.0);
+            Assert.InRange(r.EarthFraction,    0.0, 1.0);
+            Assert.InRange(r.MarsFraction,     0.0, 1.0);
+            Assert.InRange(r.JupiterFraction,  0.0, 1.0);
+        }
+
+        [Fact]
+        public void ZeroElapsedTime_AllFractionsAreZero()
+        {
+            var baseDate = new DateTime(2000, 1, 1);
+
+            var r = _svc.CalculateAlienAnniversaries(baseDate, "T", "2000-01-01", baseDate);
+
+            Assert.Equal(0.0, r.MercuryFraction,  precision: 10);
+            Assert.Equal(0.0, r.VenusFraction,    precision: 10);
+            Assert.Equal(0.0, r.EarthFraction,    precision: 10);
+            Assert.Equal(0.0, r.MarsFraction,     precision: 10);
+            Assert.Equal(0.0, r.JupiterFraction,  precision: 10);
+        }
+
+        [Fact]
+        public void VenusFraction_AfterOneAndQuarterOrbits_IsApproximatelyQuarter()
+        {
+            var baseDate = new DateTime(2000, 1, 1);
+            var now = baseDate.AddDays(224.70 * 1.25);
+
+            var r = _svc.CalculateAlienAnniversaries(baseDate, "T", "2000-01-01", now);
+
+            Assert.Equal(0.25, r.VenusFraction, precision: 6);
         }
     }
 }
