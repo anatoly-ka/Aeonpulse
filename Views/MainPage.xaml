@@ -822,11 +822,11 @@
                                                    TextColor="{DynamicResource TextWhite}"
                                                    HorizontalTextAlignment="Center"
                                                    VerticalTextAlignment="Center" />
-                                            <!-- Earth symbol U+2641 - positioned by ApplyOrreryPositions -->
+                                            <!-- Earth symbol U+1F728 - positioned by ApplyOrreryPositions -->
                                             <Label x:Name="OrreryEarthSymbol"
                                                    AbsoluteLayout.LayoutBounds="141, 141, 18, 18"
                                                    AbsoluteLayout.LayoutFlags="None"
-                                                   Text="&#x2641;"
+                                                   Text="&#x1F728;"
                                                    FontSize="15"
                                                    TextColor="{DynamicResource TextWhite}"
                                                    HorizontalTextAlignment="Center"

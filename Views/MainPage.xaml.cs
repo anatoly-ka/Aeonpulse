@@ -140,45 +140,56 @@ namespace Aeonpulse.Views
             if (result is null)
                 return;
 
-            const double cx         = 150;
-            const double cy         = 150;
-            const double symbolW    = 18; // square bounding box - centres glyph exactly on orbit point
-            const double symbolH    = 18;
-            const double labelW     = 100; // "Mercury 252.00" at FontSize=13 needs ~98px; 80 caused truncation
-            const double labelH     = 20; // font-13 needs ~20 px height to avoid clipping
-            const double labelGap   = 6;  // pixels between symbol edge and label centre
-            const double toRad      = Math.PI / 180.0;
+            const double cx      = 150;
+            const double cy      = 150;
+            const double symbolW = 18;
+            const double symbolH = 18;
+            const double labelW  = 100;
+            const double labelH  = 20;
+            const double gap     = 1; // px between symbol edge and nearest label edge
+            const double toRad   = Math.PI / 180.0;
 
-            // Orbit radii matching the XAML Ellipse sizes: 30, 55, 80, 110, 143
-            (Label sym, Label lbl, double r, double fraction, string name, double years)[] planets =
+            // Orbit radii matching the XAML Ellipse sizes: 30, 55, 80, 110, 143.
+            // isJupiter flag controls the inverted above/below rule for the outermost orbit.
+            (Label sym, Label lbl, double r, double fraction, string name, double years, bool isJupiter)[] planets =
             {
-                (OrreryMercurySymbol, OrreryMercuryLabel,  30,  result.MercuryFraction, "Mercury", result.MercuryYears),
-                (OrreryVenusSymbol,   OrreryVenusLabel,    55,  result.VenusFraction,   "Venus",   result.VenusYears),
-                (OrreryEarthSymbol,   OrreryEarthLabel,    80,  result.EarthFraction,   "Earth",   result.EarthYears),
-                (OrreryMarsSymbol,    OrreryMarsLabel,     110, result.MarsFraction,    "Mars",    result.MarsYears),
-                (OrreryJupiterSymbol, OrreryJupiterLabel,  143, result.JupiterFraction, "Jupiter", result.JupiterYears),
+                (OrreryMercurySymbol, OrreryMercuryLabel,  30,  result.MercuryFraction, "Mercury", result.MercuryYears, false),
+                (OrreryVenusSymbol,   OrreryVenusLabel,    55,  result.VenusFraction,   "Venus",   result.VenusYears,   false),
+                (OrreryEarthSymbol,   OrreryEarthLabel,    80,  result.EarthFraction,   "Earth",   result.EarthYears,   false),
+                (OrreryMarsSymbol,    OrreryMarsLabel,     110, result.MarsFraction,    "Mars",    result.MarsYears,    false),
+                (OrreryJupiterSymbol, OrreryJupiterLabel,  143, result.JupiterFraction, "Jupiter", result.JupiterYears, true),
             };
 
-            foreach (var (sym, lbl, r, fraction, name, years) in planets)
+            foreach (var (sym, lbl, r, fraction, name, years, isJupiter) in planets)
             {
-                // Map fraction [0,1) -> angle: 0.0=top(12 o'clock), clockwise
+                // Map fraction [0,1) -> angle: 0.0 = 12 o'clock, clockwise.
                 double angleDeg = fraction * 360.0 - 90.0;
                 double angleRad = angleDeg * toRad;
                 double px = cx + r * Math.Cos(angleRad);
                 double py = cy + r * Math.Sin(angleRad);
 
                 // Symbol: square box centred exactly on the orbit point (px, py).
-                // Using equal W and H ensures the glyph anchor is at the geometric
-                // centre of the box, which is placed precisely on the orbit circle.
                 AbsoluteLayout.SetLayoutBounds(sym, new Rect(px - symbolW / 2, py - symbolH / 2, symbolW, symbolH));
                 AbsoluteLayout.SetLayoutFlags(sym, Microsoft.Maui.Layouts.AbsoluteLayoutFlags.None);
 
-                // Label: placed outward along the radial direction from the symbol edge.
-                double labelDist = r + symbolH / 2 + labelGap;
-                double lx = cx + labelDist * Math.Cos(angleRad) - labelW / 2;
-                double ly = cy + labelDist * Math.Sin(angleRad) - labelH / 2;
+                // Label placement: purely vertical, no radial direction.
+                // "Upper half" = symbol centre is above the canvas centre (py < cy).
+                //
+                // Mercury/Venus/Earth/Mars: upper half -> label ABOVE symbol
+                //                           lower half -> label BELOW symbol
+                // Jupiter (largest orbit):  upper half -> label BELOW symbol
+                //                           lower half -> label ABOVE symbol
+                bool inUpperHalf = py < cy;
+                bool placeAbove  = isJupiter ? !inUpperHalf : inUpperHalf;
 
-                // Clamp to canvas bounds so labels near the edges do not clip.
+                double ly = placeAbove
+                    ? py - symbolH / 2.0 - gap - labelH   // gap above symbol top
+                    : py + symbolH / 2.0 + gap;            // gap below symbol bottom
+
+                // Horizontally centre the label over the planet symbol.
+                double lx = px - labelW / 2.0;
+
+                // Clamp to canvas bounds so labels never render outside the 300x300 area.
                 lx = Math.Clamp(lx, 0, 300 - labelW);
                 ly = Math.Clamp(ly, 0, 300 - labelH);
 
