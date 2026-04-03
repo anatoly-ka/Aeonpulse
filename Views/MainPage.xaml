@@ -589,6 +589,21 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding CellularRefreshExpanded}" />
+                                    <!-- AI: Mitosis animation for the expanded Cellular Refresh card.
+                                         Source is a XAML literal ("anim_mitosis.gif"), NOT a binding.
+                                         Using a literal prevents MAUI's ImageHandler from restarting the
+                                         GIF decoder on each timer tick or result-object replacement,
+                                         which would reset animation to frame 0.
+                                         IsAnimationPlaying=True is respected by MAUI's built-in GIF decoder
+                                         on all platforms including Windows.
+                                         IsVisible stays data-bound so expand/collapse still works. -->
+                                    <Image Source="anim_mitosis.gif"
+                                           IsVisible="{Binding CellularRefreshExpanded}"
+                                           IsAnimationPlaying="True"
+                                           HeightRequest="100"
+                                           Aspect="AspectFit"
+                                           HorizontalOptions="Center"
+                                           Margin="0,8,0,0" />
 
                                 </VerticalStackLayout>
                             </Border>
@@ -1321,7 +1336,7 @@
                                            TextColor="{DynamicResource TextGray}"
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            IsVisible="{Binding HumanBirthRankExpanded, Converter={StaticResource InverseBool}}" />
-                                    <!-- Binding: MainViewModel.HumanBirthRank.FullText -->
+                                    <!-- Binding: MainViewModel.HumanBirthRank.FullText - visible when expanded -->
                                     <Label Text="{Binding HumanBirthRank.FullText}"
                                            TextType="Html"
                                            TextColor="{DynamicResource TextGray}"

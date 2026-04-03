@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-04-05
+> **Last updated:** 2026-04-04
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -395,6 +395,7 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 | `img_timejubilees.png` | Time Jubilees expanded card `Image` | Golden mechanical watch-gears illustration shown in the expanded Time Jubilees card. |
 | `anim_countdown.gif` | Countdown expanded card `Image` | Animated split-flap (Solari) digit counter shown in the expanded Countdown card; `IsAnimationPlaying=True` drives animation. Source is a XAML literal (not a binding) to prevent MAUI GIF decoder restart on each 1-second timer tick. |
 | `img_countdown_static.png` | Countdown Windows static fallback | First-frame static PNG exported alongside `anim_countdown.gif`. Reserved for future Windows-specific fallback use. |
+| `anim_mitosis.gif` | Cellular Refresh expanded card `Image` | Animated cell-division (mitosis) loop shown in the expanded Cellular Refresh card. `IsAnimationPlaying=True` drives looping playback. Source is a XAML literal (not a binding) to prevent MAUI GIF decoder restart on each timer tick. `IsVisible` bound to `CellularRefreshExpanded`. Drawn below the `FullText` label as a sibling in the `VerticalStackLayout` (same flat pattern as `anim_countdown.gif`). |
 | `anim_spacewait.gif` | Space Wait expanded card `Image` | Animated split-flap digit counter shown in the expanded Space Wait card; same layout as `anim_countdown.gif` but uses the Predator TTF Bold 58px font for digit glyphs. `IsAnimationPlaying=True` drives animation. Source is a XAML literal (not a binding) to prevent GIF decoder restart on each 1-second timer tick. |
 | `img_spacewait_static.png` | Space Wait Windows static fallback | First-frame static PNG exported alongside `anim_spacewait.gif`. Reserved for future Windows-specific fallback use. |
 | `calendar.png`, `menu.png`, `picture.png`, `send.png`, `share.png`, `tease.png`, `text.png` | Unused / reserved | Available for future features |
@@ -1070,6 +1071,7 @@ a map to navigate without reading every XAML file.
 | `Views/MainPage.xaml` | ~227 | Time Jubilees timeline `Grid` - 5-row/2-col layout with `BoxView` timeline line, `Ellipse` dots, `Label` milestone names, and two `VerticalStackLayout` blocks that shift above/below `Today` based on `TimeJubilees.IsMoreRoomAtBottom`. All colors use `DynamicResource` (no `AppThemeBinding`/`StaticResource`). `IsVisible` gated on `TimeJubileesExpanded`. |
 | `Views/MainPage.xaml` | ~681 | Alien Anniversaries orrery `Grid` containing a 300x300 `AbsoluteLayout` (x:Name="OrreryCanvas"). Contains 5 orbit-ring `Ellipse` elements (r=30/55/80/110/143), gold sun `Ellipse` (r=10), 2px gold `Line` Today indicator at 12 o clock, Today `Label`, 5 planet symbol `Label`s (x:Name="OrreryXxxSymbol"), and 5 name/years `Label`s (x:Name="OrreryXxxLabel"). Planet positions set imperatively via `ApplyOrreryPositions` in code-behind. All colors use `DynamicResource`. `IsVisible` gated on `AlienAnniversariesExpanded`. Binding source: `MainViewModel.AlienAnniversaries` (AlienAnniversariesResult). |
 | `Views/MainPage.xaml` | ~511 | Life Odometer ECG animation `Image` - `Source` is a XAML literal (`anim_ecg_pulse.gif`, not a binding) to prevent GIF decoder restart on each 1-second timer tick; `IsAnimationPlaying=True`; `IsVisible` and `FullText` `Label` are sibling children of the `VerticalStackLayout`, GIF drawn below the text (same flat pattern as Countdown). |
+| `Views/MainPage.xaml` | ~591 | Cellular Refresh mitosis animation `Image` - `Source` is a XAML literal (`anim_mitosis.gif`, not a binding) to prevent MAUI GIF decoder restart on each timer tick or result-object replacement; `IsAnimationPlaying=True`; `IsVisible` bound to `CellularRefreshExpanded`; drawn below the `FullText` label as a sibling in the `VerticalStackLayout` (same flat pattern as Countdown and Life Odometer). |
 | `Views/SettingsPopup.xaml` | 9 | Full-screen overlay `Grid` - Layer 0/1 z-order explanation |
 | `Views/SettingsPopup.xaml` | 25 | `Frame` panel - floats over backdrop, `DynamicResource` theme note |
 | `Views/SettingsPopup.xaml` | 38 | 3-row inner `Grid` - `[Title+Divider|Settings|CloseButton]` row assignments |
