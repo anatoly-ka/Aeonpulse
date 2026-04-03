@@ -732,7 +732,7 @@
                                                  Clockwise orbital motion at 6-o'clock travels leftward, so the
                                                  arrow points left (U+25C4). Static positions - no code-behind needed. -->
                                             <!-- Mercury orbit arrow: r=30, bottom=(150,180) -->
-                                            <Label AbsoluteLayout.LayoutBounds="136, 173, 14, 14"
+                                            <Label AbsoluteLayout.LayoutBounds="141, 172, 14, 14"
                                                    AbsoluteLayout.LayoutFlags="None"
                                                    Text="&#x25C4;"
                                                    FontSize="9"
@@ -741,7 +741,7 @@
                                                    VerticalTextAlignment="Center"
                                                    Opacity="0.7" />
                                             <!-- Venus orbit arrow: r=55, bottom=(150,205) -->
-                                            <Label AbsoluteLayout.LayoutBounds="136, 198, 14, 14"
+                                            <Label AbsoluteLayout.LayoutBounds="141, 197, 14, 14"
                                                    AbsoluteLayout.LayoutFlags="None"
                                                    Text="&#x25C4;"
                                                    FontSize="9"
@@ -750,7 +750,7 @@
                                                    VerticalTextAlignment="Center"
                                                    Opacity="0.7" />
                                             <!-- Earth orbit arrow: r=80, bottom=(150,230) -->
-                                            <Label AbsoluteLayout.LayoutBounds="136, 223, 14, 14"
+                                            <Label AbsoluteLayout.LayoutBounds="141, 222, 14, 14"
                                                    AbsoluteLayout.LayoutFlags="None"
                                                    Text="&#x25C4;"
                                                    FontSize="9"
@@ -759,7 +759,7 @@
                                                    VerticalTextAlignment="Center"
                                                    Opacity="0.7" />
                                             <!-- Mars orbit arrow: r=110, bottom=(150,260) -->
-                                            <Label AbsoluteLayout.LayoutBounds="136, 253, 14, 14"
+                                            <Label AbsoluteLayout.LayoutBounds="141, 252, 14, 14"
                                                    AbsoluteLayout.LayoutFlags="None"
                                                    Text="&#x25C4;"
                                                    FontSize="9"
@@ -768,7 +768,7 @@
                                                    VerticalTextAlignment="Center"
                                                    Opacity="0.7" />
                                             <!-- Jupiter orbit arrow: r=143, bottom=(150,293) -->
-                                            <Label AbsoluteLayout.LayoutBounds="136, 286, 14, 14"
+                                            <Label AbsoluteLayout.LayoutBounds="141, 285, 14, 14"
                                                    AbsoluteLayout.LayoutFlags="None"
                                                    Text="&#x25C4;"
                                                    FontSize="9"
