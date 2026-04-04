@@ -99,6 +99,7 @@ namespace Aeonpulse.Views
                 ApplyPhotonTrackPosition(vm.PhotonPath?.ProgressFraction ?? 0d);
                 ApplyBirthRankChart(vm);
                 ApplyWyrdWeb(vm);
+                ApplyEnneagram(vm);
             }
 
             // Re-apply the dotted fill Line endpoint after the first layout pass,
@@ -143,6 +144,11 @@ namespace Aeonpulse.Views
                 e.PropertyName == nameof(MainViewModel.ColorScheme)       ||
                 e.PropertyName == nameof(MainViewModel.DisplayLanguage))
                 ApplyWyrdWeb(vm);
+
+            if (e.PropertyName == nameof(MainViewModel.PersonalYearExpanded) ||
+                e.PropertyName == nameof(MainViewModel.PersonalYear)         ||
+                e.PropertyName == nameof(MainViewModel.ColorScheme))
+                ApplyEnneagram(vm);
         }
 
         /// <summary>
@@ -790,6 +796,23 @@ namespace Aeonpulse.Views
             // Redraw canvas.
             WyrdWebView.Drawable = new WyrdWebDrawable(_wyrdCatalogue, _wyrdSelectedIndex);
             WyrdWebView.Invalidate();
+        }
+
+        /// <summary>
+        /// Sets <see cref="EnneagramView"/>.Drawable to a fresh <see cref="EnneagramDrawable"/>
+        /// and calls <c>Invalidate()</c>. Called when <c>PersonalYearExpanded</c>,
+        /// <c>PersonalYear</c>, or <c>ColorScheme</c> changes, and from the constructor.
+        ///
+        /// <para>
+        /// <b>Why imperative:</b> <c>GraphicsView.Drawable</c> is not data-bindable.
+        /// The drawable is recreated on every relevant property change so it always
+        /// reflects the current personal year number and active colour scheme.
+        /// </para>
+        /// </summary>
+        private void ApplyEnneagram(MainViewModel vm)
+        {
+            EnneagramView.Drawable = new EnneagramDrawable(vm.PersonalYear?.PersonalYearNumber ?? 1);
+            EnneagramView.Invalidate();
         }
 
         /// <summary>

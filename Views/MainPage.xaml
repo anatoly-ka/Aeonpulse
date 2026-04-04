@@ -1651,6 +1651,17 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding PersonalYearExpanded}" />
+                                    <!-- AI: Pythagorean Enneagram visualization for Personal Year expanded view.
+                                         EnneagramView: GraphicsView 250x250, Drawable set imperatively from
+                                         MainPage.xaml.cs via ApplyEnneagram(), called from constructor and
+                                         OnViewModelPropertyChanged on PersonalYearExpanded, PersonalYear, ColorScheme.
+                                         IsVisible gated on PersonalYearExpanded so it only renders when expanded. -->
+                                    <GraphicsView x:Name="EnneagramView"
+                                                  HeightRequest="250"
+                                                  WidthRequest="250"
+                                                  HorizontalOptions="Center"
+                                                  IsVisible="{Binding PersonalYearExpanded}"
+                                                  BackgroundColor="{DynamicResource CardDark}" />
                                 </VerticalStackLayout>
                             </Border>
 
