@@ -100,6 +100,7 @@ namespace Aeonpulse.Views
                 ApplyBirthRankChart(vm);
                 ApplyWyrdWeb(vm);
                 ApplyEnneagram(vm);
+                ApplyPopulationChart(vm);
             }
 
             // Re-apply the dotted fill Line endpoint after the first layout pass,
@@ -149,6 +150,11 @@ namespace Aeonpulse.Views
                 e.PropertyName == nameof(MainViewModel.PersonalYear)         ||
                 e.PropertyName == nameof(MainViewModel.ColorScheme))
                 ApplyEnneagram(vm);
+
+            if (e.PropertyName == nameof(MainViewModel.GlobalCrowdExpanded) ||
+                e.PropertyName == nameof(MainViewModel.GlobalCrowd)         ||
+                e.PropertyName == nameof(MainViewModel.ColorScheme))
+                ApplyPopulationChart(vm);
         }
 
         /// <summary>
@@ -813,6 +819,101 @@ namespace Aeonpulse.Views
         {
             EnneagramView.Drawable = new EnneagramDrawable(vm.PersonalYear?.PersonalYearNumber ?? 1);
             EnneagramView.Invalidate();
+        }
+
+        // Tracks the drawable instance so the interaction handlers can update ScrubX without
+        // rebuilding the entire chart on every touch event.
+        private PopulationChartDrawable? _populationChartDrawable;
+
+        /// <summary>
+        /// Creates a fresh <see cref="PopulationChartDrawable"/> from the current
+        /// <see cref="GlobalCrowdResult"/>, assigns it to <see cref="PopulationChartView"/>
+        /// and invalidates. Called on <c>GlobalCrowdExpanded</c>, <c>GlobalCrowd</c>,
+        /// and <c>ColorScheme</c> changes and from the constructor.
+        /// </summary>
+        private void ApplyPopulationChart(MainViewModel vm)
+        {
+            var result = vm.GlobalCrowd;
+            if (result == null) return;
+
+            double basePopBillions    = result.BasePopulation    / 1_000_000_000.0;
+            double currentPopBillions = result.CurrentPopulation / 1_000_000_000.0;
+
+            _populationChartDrawable = new PopulationChartDrawable
+            {
+                BaseYear           = result.BaseYear,
+                BasePopBillions    = basePopBillions,
+                CurrentYear        = result.CurrentYear,
+                CurrentPopBillions = currentPopBillions,
+                ScrubX             = -1f,
+            };
+
+            // Initialise hover labels to current year/population.
+            result.HoverYear       = result.CurrentYear;
+            result.HoverPopulation = currentPopBillions;
+
+            PopulationChartView.Drawable = _populationChartDrawable;
+            PopulationChartView.Invalidate();
+        }
+
+        /// <summary>
+        /// Handles <c>StartInteraction</c> and <c>DragInteraction</c> on
+        /// <see cref="PopulationChartView"/>. Updates the scrubber X position,
+        /// reverse-interpolates year and population from the touch X coordinate,
+        /// and writes to <c>GlobalCrowd.HoverYear</c>/<c>HoverPopulation</c>
+        /// so the bound labels update in real time.
+        /// </summary>
+        private void OnPopulationChartInteraction(object sender, TouchEventArgs e)
+        {
+            if (_populationChartDrawable == null) return;
+            if (e.Touches == null || e.Touches.Length == 0) return;
+            if (BindingContext is not MainViewModel vm || vm.GlobalCrowd == null) return;
+
+            float touchX = e.Touches[0].X;
+            float chartW = (float)PopulationChartView.Width;
+            if (chartW <= 0) return;
+
+            // Clamp to the drawable's chart area (matches PadLeft / PadRight in drawable).
+            float chartLeft  = 36f;
+            float chartRight = chartW - 10f;
+            float clampedX   = Math.Clamp(touchX, chartLeft, chartRight);
+
+            _populationChartDrawable.ScrubX = clampedX;
+
+            // Reverse-map X pixel -> year -> population.
+            double scrubYear = 1950.0 + (clampedX - chartLeft) / (chartRight - chartLeft) * (2050.0 - 1950.0);
+            double scrubPop  = PopulationChartDrawable.InterpolatePopulation(scrubYear);
+
+            vm.GlobalCrowd.HoverYear       = scrubYear;
+            vm.GlobalCrowd.HoverPopulation = scrubPop;
+
+            PopulationChartView.Invalidate();
+        }
+
+        /// <summary>
+        /// Handles <c>EndInteraction</c> on <see cref="PopulationChartView"/>.
+        /// Snaps the scrubber back to the current year so the display returns
+        /// to the default state when the user lifts their finger.
+        /// </summary>
+        private void OnPopulationChartEndInteraction(object sender, TouchEventArgs e)
+        {
+            if (_populationChartDrawable == null) return;
+            if (BindingContext is not MainViewModel vm || vm.GlobalCrowd == null) return;
+
+            float chartW    = (float)PopulationChartView.Width;
+            float chartLeft = 36f;
+            float chartRight = chartW - 10f;
+
+            double currentYear   = vm.GlobalCrowd.CurrentYear;
+            double currentPopBil = vm.GlobalCrowd.CurrentPopulation / 1_000_000_000.0;
+
+            float snappedX = chartLeft + (float)((currentYear - 1950.0) / (2050.0 - 1950.0)) * (chartRight - chartLeft);
+            _populationChartDrawable.ScrubX = -1f;
+
+            vm.GlobalCrowd.HoverYear       = currentYear;
+            vm.GlobalCrowd.HoverPopulation = currentPopBil;
+
+            PopulationChartView.Invalidate();
         }
 
         /// <summary>

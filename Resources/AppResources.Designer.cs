@@ -3781,5 +3781,15 @@ namespace Aeonpulse.Resources {
                 return ResourceManager.GetString("Info_VibrantNatureSource", resourceCulture);
             }
         }
+        public static string Chart_GlobalCrowd_Year_Prefix {
+            get {
+                return ResourceManager.GetString("Chart_GlobalCrowd_Year_Prefix", resourceCulture);
+            }
+        }
+        public static string Chart_GlobalCrowd_Pop_Prefix {
+            get {
+                return ResourceManager.GetString("Chart_GlobalCrowd_Pop_Prefix", resourceCulture);
+            }
+        }
     }
 }

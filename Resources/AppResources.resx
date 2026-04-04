@@ -1701,7 +1701,16 @@
     <value>Seven billion. Eight billion. Each headline number obscures the relentless, second-by-second churn underneath: roughly &lt;b&gt;4.4 babies born and 2.0 people dying every second&lt;/b&gt;, yielding a net gain of approximately &lt;b&gt;2.35 humans per second&lt;/b&gt; - or about 74 million more people each year.&lt;br/&gt;&lt;br/&gt;This ticker models population growth using a &lt;b&gt;3-epoch linear approximation&lt;/b&gt; calibrated against the today's approximation data:&lt;br/&gt;&amp;bull; &lt;b&gt;Pre-1950:&lt;/b&gt; global population rose from roughly 1.6 billion (1900) to 2.5 billion (1950), averaging about 18 million net additions per year&lt;br/&gt;&amp;bull; &lt;b&gt;1950-2000:&lt;/b&gt; the demographic explosion driven by post-war medicine and the Green Revolution; net additions peaked at roughly 90 million/year in the late 1980s&lt;br/&gt;&amp;bull; &lt;b&gt;2000-present:&lt;/b&gt; growth continues but decelerates as fertility rates fall in developing regions; current net additions are approximately 80 million/year and declining&lt;br/&gt;&lt;br/&gt;The model distributes the annual net change uniformly across seconds within each epoch.&lt;br/&gt;&lt;br/&gt;The result: a live estimate of how many more people share the planet with you compared to when your timeline began.</value>
   </data>
 
-  <data name="Info_GlobalCrowdSource" xml:space="preserve">
+    <data name="Chart_GlobalCrowd_Year_Prefix" xml:space="preserve">
+    <value>Year: </value>
+    <comment>Population chart year label prefix (value appended as {0:F0}).</comment>
+  </data>
+  <data name="Chart_GlobalCrowd_Pop_Prefix" xml:space="preserve">
+    <value>Population: </value>
+    <comment>Population chart population label prefix (value appended as ~{0:F2}B).</comment>
+  </data>
+
+<data name="Info_GlobalCrowdSource" xml:space="preserve">
     <value>World population statistics and projections courtesy of the United Nations, Department of Economic and Social Affairs, Population Division (2024 Revision). Historical estimates by Human Mortality Database (2025 revision) and the Population Reference Bureau (2024).</value>
   </data>
   <data name="Ticker_LifeLogTitle" xml:space="preserve">

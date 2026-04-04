@@ -1806,6 +1806,10 @@ namespace Aeonpulse.Services
             {
                 BasePopulation    = basePopulation,
                 CurrentPopulation = currentPopulation,
+                BaseYear          = baseDate.Year,
+                CurrentYear       = now_.Year,
+                HoverYear         = now_.Year,
+                HoverPopulation   = currentPopulation / 1_000_000_000.0,
                 BriefText         = briefText,
                 FullText          = fullText
             };

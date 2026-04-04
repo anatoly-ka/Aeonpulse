@@ -1700,7 +1700,16 @@
   <data name="Info_GlobalCrowdMethod" xml:space="preserve">
     <value>Семь миллиардов... Восемь миллиардов... Каждая такая цифра в заголовке скрывает под собой беспрестанный ежесекундный кругооборот: примерно &lt;b&gt;4,4 ребёнка рождается и 2,0 человека умирает каждую секунду&lt;/b&gt;, что даёт чистый прирост около &lt;b&gt;2,35 человека в секунду&lt;/b&gt; - или примерно 74 миллионов человек в год.&lt;br/&gt;&lt;br/&gt;Этот счётчик моделирует рост населения с помощью &lt;b&gt;трёхэпоховой линейной аппроксимации&lt;/b&gt;:&lt;br/&gt;&amp;bull; &lt;b&gt;До 1950 года:&lt;/b&gt; население выросло примерно с 1,6 млрд (1900) до 2,5 млрд (1950), в среднем около 18 млн чистого прироста в год&lt;br/&gt;&amp;bull; &lt;b&gt;1950-2000:&lt;/b&gt; демографический взрыв, вызванный послевоенной медициной и «Зелёной революцией»; пик чистого прироста - около 90 млн/год в конце 1980-х&lt;br/&gt;&amp;bull; &lt;b&gt;2000 - н.в.:&lt;/b&gt; рост продолжается, но замедляется по мере снижения рождаемости; текущий чистый прирост - около 80 млн/год&lt;br/&gt;&lt;br/&gt;Модель равномерно распределяет годовое чистое изменение по секундам внутри каждой эпохи.&lt;br/&gt;&lt;br/&gt;Результат: наглядная оценка того, насколько больше людей делит нашу планету с Вами по сравнению с моментом указанной базовой даты.</value>
   </data>
-  <data name="Info_GlobalCrowdSource" xml:space="preserve">
+    <data name="Chart_GlobalCrowd_Year_Prefix" xml:space="preserve">
+    <value>&#x413;&#x43E;&#x434;: </value>
+    <comment>Population chart year label prefix.</comment>
+  </data>
+  <data name="Chart_GlobalCrowd_Pop_Prefix" xml:space="preserve">
+    <value>&#x41D;&#x430;&#x441;&#x435;&#x43B;&#x435;&#x43D;&#x438;&#x435;: </value>
+    <comment>Population chart population label prefix.</comment>
+  </data>
+
+<data name="Info_GlobalCrowdSource" xml:space="preserve">
     <value>Мировые статистические данные и прогнозы численности населения взяты из Population Division (2024 Revision), предоставленном Департаментом по экономическим и социальным вопросам ООН. Исторические оценки взяты из баз данных Human Mortality Database (2025 revision) и Population Reference Bureau (2024).</value>
   </data>
   <data name="Ticker_LifeLogTitle" xml:space="preserve">

@@ -483,6 +483,36 @@ namespace Aeonpulse.Models
 
         /// <summary>Estimated current global population at calculation time.</summary>
         public double CurrentPopulation { get; init; }
+
+        /// <summary>Calendar year of the user's base date (e.g. 1985).</summary>
+        public int BaseYear { get; init; }
+
+        /// <summary>Calendar year at calculation time.</summary>
+        public int CurrentYear { get; init; }
+
+        /// <summary>
+        /// Year currently highlighted by the chart scrubber (1-9999).
+        /// Updated by <c>OnPopulationChartInteraction</c> in MainPage.xaml.cs;
+        /// initialised to <see cref="CurrentYear"/> by ApplyPopulationChart.
+        /// Fires <c>PropertyChanged</c> via <c>TickerData</c> base.
+        /// </summary>
+        private double _hoverYear;
+        public double HoverYear
+        {
+            get => _hoverYear;
+            set { _hoverYear = value; OnPropertyChanged(); }
+        }
+
+        /// <summary>
+        /// Population (in billions) at <see cref="HoverYear"/>.
+        /// Updated alongside <see cref="HoverYear"/> by the scrubber interaction.
+        /// </summary>
+        private double _hoverPopulation;
+        public double HoverPopulation
+        {
+            get => _hoverPopulation;
+            set { _hoverPopulation = value; OnPropertyChanged(); }
+        }
     }
 
     /// <summary>

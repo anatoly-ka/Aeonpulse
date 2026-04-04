@@ -142,18 +142,8 @@ namespace Aeonpulse.ViewModels
         public string Info_GlobalCrowdTitle            => AppResources.Info_GlobalCrowdTitle;
         public string Info_GlobalCrowdMethod           => AppResources.Info_GlobalCrowdMethod;
         public string Info_GlobalCrowdSource           => AppResources.Info_GlobalCrowdSource;
-        public string Info_LifeLogTitle                => AppResources.Info_LifeLogTitle;
-        public string Info_LifeLogMethod               => AppResources.Info_LifeLogMethod;
-        public string Info_LifeLogSource               => AppResources.Info_LifeLogSource;
-        public string Info_SpaceWaitTitle             => AppResources.Info_SpaceWaitTitle;
-        public string Info_SpaceWaitMethod            => AppResources.Info_SpaceWaitMethod;
-        public string Info_SpaceWaitSource            => AppResources.Info_SpaceWaitSource;
-        public string Info_VibrantHumanityTitle       => AppResources.Info_VibrantHumanityTitle;
-        public string Info_VibrantHumanityMethod      => AppResources.Info_VibrantHumanityMethod;
-        public string Info_VibrantHumanitySource      => AppResources.Info_VibrantHumanitySource;
-        public string Info_VibrantNatureTitle          => AppResources.Info_VibrantNatureTitle;
-        public string Info_VibrantNatureMethod         => AppResources.Info_VibrantNatureMethod;
-        public string Info_VibrantNatureSource         => AppResources.Info_VibrantNatureSource;
+        public string Chart_GlobalCrowd_Year_Prefix    => AppResources.Chart_GlobalCrowd_Year_Prefix;
+        public string Chart_GlobalCrowd_Pop_Prefix     => AppResources.Chart_GlobalCrowd_Pop_Prefix;
 
         // -- Tease ------------------------------------------------------------
         public string Tease_Title          => AppResources.Tease_Title;

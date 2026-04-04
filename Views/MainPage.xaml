@@ -1733,6 +1733,48 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding GlobalCrowdExpanded}" />
+                                    <!-- AI: Population growth chart for Global Crowd expanded view.
+                                         Hover labels bound to GlobalCrowd.HoverYear / HoverPopulation (live-updating).
+                                         PopulationChartView Drawable set imperatively by ApplyPopulationChart().
+                                         Interaction events routed to OnPopulationChartInteraction /
+                                         OnPopulationChartEndInteraction in MainPage.xaml.cs. -->
+                                    <VerticalStackLayout Spacing="6"
+                                                         Margin="0,10,0,0"
+                                                         IsVisible="{Binding GlobalCrowdExpanded}">
+                                        <!-- AI: Hover year - prefix from Loc, value from GlobalCrowd.HoverYear -->
+                                        <Label FontAttributes="Bold"
+                                               FontSize="{DynamicResource FontSizeMedium}"
+                                               TextColor="{DynamicResource TextDim}"
+                                               HorizontalTextAlignment="Center"
+                                               HorizontalOptions="Center">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding Loc.Chart_GlobalCrowd_Year_Prefix}" />
+                                                    <Span Text="{Binding GlobalCrowd.HoverYear, StringFormat='{0:F0}'}"
+                                                          FontAttributes="Bold" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        <!-- AI: Hover population - prefix from Loc, value from GlobalCrowd.HoverPopulation -->
+                                        <Label FontSize="{DynamicResource FontSizeSmall}"
+                                               TextColor="{DynamicResource TextGray}"
+                                               HorizontalTextAlignment="Center"
+                                               HorizontalOptions="Center">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding Loc.Chart_GlobalCrowd_Pop_Prefix}" />
+                                                    <Span Text="{Binding GlobalCrowd.HoverPopulation, StringFormat='~{0:F2}B'}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        <GraphicsView x:Name="PopulationChartView"
+                                                      HeightRequest="180"
+                                                      HorizontalOptions="FillAndExpand"
+                                                      BackgroundColor="{DynamicResource CardDark}"
+                                                      StartInteraction="OnPopulationChartInteraction"
+                                                      DragInteraction="OnPopulationChartInteraction"
+                                                      EndInteraction="OnPopulationChartEndInteraction" />
+                                    </VerticalStackLayout>
                                 </VerticalStackLayout>
                             </Border>
 
