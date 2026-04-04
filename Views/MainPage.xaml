@@ -1389,6 +1389,28 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding VibrantCosmosExpanded}" />
+                                    <!-- AI: Ambient Sparks particle canvas for the Vibrant Cosmos expanded view.
+                                         An AbsoluteLayout used as a 2D canvas for programmatic Label-based particles.
+                                         Star-birth sparks (U+2736, six-pointed black star) and supernova particles
+                                         (U+2739 twelve-pointed star swapping to U+1F4A5 collision emoji) are spawned
+                                         by SpawnAmbientSparks() in MainPage.xaml.cs via a CancellationTokenSource loop.
+                                         The loop is started in OnAppearing (or when VibrantCosmosExpanded turns true)
+                                         and cancelled in OnDisappearing (or when the card collapses) to prevent
+                                         background animation on a hidden element.
+                                         HeightRequest=120 gives a fixed-height canvas. ClipToBounds=True prevents
+                                         particles near the right or bottom edge from overflowing the card.
+                                         Particle Labels are added/removed dynamically via CosmosCanvas.Children -
+                                         each is removed immediately after its fade-out completes to free memory.
+                                         No business logic: all values are presentational constants in code-behind.
+                                         IsVisible bound to VibrantCosmosExpanded so the element is collapsed
+                                         (and the animation loop stopped) when the card is collapsed. -->
+                                    <AbsoluteLayout x:Name="CosmosCanvas"
+                                                    IsVisible="{Binding VibrantCosmosExpanded}"
+                                                    HeightRequest="120"
+                                                    HorizontalOptions="FillAndExpand"
+                                                    BackgroundColor="{DynamicResource SpaceDarker}"
+                                                    IsClippedToBounds="True"
+                                                    Margin="0,8,0,0" />
 
                                 </VerticalStackLayout>
                             </Border>

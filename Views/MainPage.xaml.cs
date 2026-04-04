@@ -59,6 +59,17 @@ namespace Aeonpulse.Views
         // when the Line element's rendered width becomes available after the first layout pass.
         private double _photonTrackFraction;
 
+        // Ambient Sparks animation state.
+        // _sparksCts is replaced on each Start call and cancelled on each Stop call.
+        // _rng is shared across all spawn calls (not thread-local - always accessed on UI thread).
+        // _sparksRunning prevents double-start when OnAppearing and PropertyChanged both fire.
+        // _liveStars tracks all star-birth Labels currently visible on CosmosCanvas so that
+        // a supernova can hijack one. Accessed under lock(_liveStars) from the UI thread.
+        private CancellationTokenSource? _sparksCts;
+        private readonly Random _rng = new Random();
+        private bool _sparksRunning;
+        private readonly List<Label> _liveStars = new List<Label>();
+
         /// <summary>
         /// Constructs the page and subscribes to the ViewModel's
         /// <see cref="MainViewModel.RefreshRequested"/> event, wiring the
@@ -104,6 +115,14 @@ namespace Aeonpulse.Views
 
             if (e.PropertyName == nameof(MainViewModel.PhotonPath))
                 ApplyPhotonTrackPosition(vm.PhotonPath?.ProgressFraction ?? 0d);
+
+            if (e.PropertyName == nameof(MainViewModel.VibrantCosmosExpanded))
+            {
+                if (vm.VibrantCosmosExpanded)
+                    StartAmbientSparks();
+                else
+                    StopAmbientSparks();
+            }
         }
 
         /// <summary>
@@ -608,6 +627,217 @@ namespace Aeonpulse.Views
         /// No size or position property is touched, so neighbouring elements never shift.
         /// </para>
         /// </summary>
+        /// <summary>
+        /// Starts the Ambient Sparks loop on <see cref="CosmosCanvas"/> if not already running.
+        /// Creates a fresh <see cref="CancellationTokenSource"/> and fires
+        /// <see cref="SpawnAmbientSparks"/> as a detached <c>Task</c> on the UI thread.
+        ///
+        /// <para>
+        /// <b>Design note:</b> presentational-only animation with no domain logic.
+        /// Guard flag <c>_sparksRunning</c> prevents double-start when both
+        /// <c>OnAppearing</c> and <c>PropertyChanged(VibrantCosmosExpanded)</c> fire.
+        /// </para>
+        /// </summary>
+        private void StartAmbientSparks()
+        {
+            if (_sparksRunning) return;
+            _sparksRunning = true;
+            _sparksCts?.Cancel();
+            _sparksCts = new CancellationTokenSource();
+            var token = _sparksCts.Token;
+            // Fire-and-forget: detached Task, cancelled via CTS. All UI ops are on
+            // the main thread already (this method is only ever called from UI thread
+            // event handlers and OnAppearing which run on the main thread).
+            _ = SpawnAmbientSparks(token);
+        }
+
+        /// <summary>
+        /// Cancels the running Ambient Sparks loop and resets the guard flag.
+        /// Existing in-flight particle animations complete naturally but no new
+        /// particles are spawned. Called from <c>OnDisappearing</c> and when
+        /// <c>VibrantCosmosExpanded</c> becomes <c>false</c>.
+        /// </summary>
+        private void StopAmbientSparks()
+        {
+            _sparksRunning = false;
+            _sparksCts?.Cancel();
+            _sparksCts = null;
+        }
+
+        /// <summary>
+        /// The inner spawner loop: fires a new particle every 200-600 ms until
+        /// <paramref name="token"/> is cancelled. Each particle runs its own independent
+        /// lifecycle <c>Task</c> so multiple stars are visible simultaneously.
+        ///
+        /// <para>
+        /// <b>Spawn ratio:</b> 90% star-birth (U+2736), 10% supernova. When a supernova
+        /// fires, it hijacks a randomly chosen live star <c>Label</c> from
+        /// <c>_liveStars</c> (if any exist) instead of spawning at a new position.
+        /// The hijacked star skips its dwell/fade-out and immediately plays the
+        /// supernova sequence: U+2739 swell, U+1F4A5 flash, then dissipate.
+        /// </para>
+        /// <para>
+        /// <b>Colour:</b> both U+2736 and U+2739 use the current value of the
+        /// <c>JubileeAccent</c> resource key (same gold/white/black as the Photon Path
+        /// Sun dot and the orrery Sun) read at spawn time, so the colour follows the
+        /// active colour scheme.
+        /// </para>
+        /// <para>
+        /// <b>Memory management:</b> star-birth labels are tracked in <c>_liveStars</c>
+        /// while alive and removed from both the list and <c>CosmosCanvas.Children</c>
+        /// when their lifecycle ends. Supernova labels are removed on dissipation.
+        /// </para>
+        /// </summary>
+        /// <param name="token">Cancellation token; the loop exits cleanly when cancelled.</param>
+        private async Task SpawnAmbientSparks(CancellationToken token)
+        {
+            // Glyph constants - not in comments per ASCII-only rule.
+            const string StarBirth     = "\u2736";       // six-pointed black star - text-only glyph, TextColor applies correctly (U+2734 has Emoji_Presentation and ignores TextColor)
+            const string SupernovaGrow = "\u2739";       // twelve-pointed black star
+            const string SupernovaBoom = "\U0001F4A5";   // collision symbol emoji
+
+            while (!token.IsCancellationRequested)
+            {
+                int delayMs = _rng.Next(200, 601);
+                try { await Task.Delay(delayMs, token); }
+                catch (TaskCanceledException) { return; }
+                if (token.IsCancellationRequested) return;
+
+                // Read JubileeAccent from the live resource dictionary so the colour
+                // follows the active colour scheme (gold/white/black per ThemeService).
+                var resources = Application.Current?.Resources;
+                var accentColor = (resources != null && resources.TryGetValue("JubileeAccent", out var raw) && raw is Microsoft.Maui.Graphics.Color c)
+                    ? c
+                    : Microsoft.Maui.Graphics.Color.FromArgb("#FFD700");
+
+                bool isSupernova = _rng.NextDouble() < 0.10;
+
+                if (isSupernova)
+                {
+                    // Supernova: hijack a live star if one exists, otherwise skip this tick.
+                    Label? victim = null;
+                    lock (_liveStars)
+                    {
+                        if (_liveStars.Count > 0)
+                        {
+                            int idx = _rng.Next(_liveStars.Count);
+                            victim = _liveStars[idx];
+                            _liveStars.RemoveAt(idx);
+                        }
+                    }
+                    if (victim != null)
+                        _ = RunSupernovaOnLabel(victim, SupernovaGrow, SupernovaBoom, accentColor, token);
+                    // If no live stars yet, silently skip this supernova tick.
+                }
+                else
+                {
+                    // Star birth: spawn at a random proportional position.
+                    double xFrac = _rng.NextDouble();
+                    double yFrac = _rng.NextDouble();
+                    int dwellMs  = _rng.Next(1000, 10001);
+
+                    var star = new Label
+                    {
+                        Text             = StarBirth,
+                        FontSize         = 14,
+                        TextColor        = accentColor,
+                        Opacity          = 0,
+                        InputTransparent = true,
+                    };
+
+                    AbsoluteLayout.SetLayoutBounds(star, new Rect(xFrac, yFrac, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
+                    AbsoluteLayout.SetLayoutFlags(star, Microsoft.Maui.Layouts.AbsoluteLayoutFlags.PositionProportional);
+                    CosmosCanvas.Children.Add(star);
+                    lock (_liveStars) { _liveStars.Add(star); }
+
+                    _ = RunStarLifecycle(star, dwellMs, token);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Runs the full lifecycle of a single star-birth particle: fade in, dwell for
+        /// <paramref name="dwellMs"/> milliseconds, then fade out and remove.
+        /// If the label has already been removed from <c>_liveStars</c> by a supernova
+        /// hijack, this task still holds a reference to the label; the supernova task
+        /// owns the label at that point and will remove it from the canvas.
+        /// The <c>_liveStars</c> lock ensures only one task acts on a given label.
+        /// </summary>
+        private async Task RunStarLifecycle(Label star, int dwellMs, CancellationToken token)
+        {
+            // Fade in.
+            await star.FadeTo(0.7, 800, Easing.SinIn);
+
+            // Dwell - random 1-10 s. Check whether we were hijacked before sleeping.
+            bool stillAlive;
+            lock (_liveStars) { stillAlive = _liveStars.Contains(star); }
+            if (!stillAlive) return; // supernova hijack already took this label
+
+            try { await Task.Delay(dwellMs, token); }
+            catch (TaskCanceledException)
+            {
+                CosmosCanvas.Children.Remove(star);
+                return;
+            }
+
+            // Re-check after dwell: supernova may have hijacked us during the dwell.
+            lock (_liveStars)
+            {
+                if (!_liveStars.Remove(star))
+                    return; // hijacked - supernova task owns the label now
+            }
+
+            // Fade out.
+            if (!token.IsCancellationRequested)
+                await star.FadeTo(0, 700, Easing.SinOut);
+            CosmosCanvas.Children.Remove(star);
+        }
+
+        /// <summary>
+        /// Runs the supernova sequence on a hijacked star <see cref="Label"/>:
+        /// swaps glyph to U+2739, swells with scale-up + fade to near-full opacity,
+        /// then swaps to U+1F4A5 for a brief flash, then dissipates (scale down + fade
+        /// out). Removes the label from <c>CosmosCanvas.Children</c> when done.
+        /// </summary>
+        private async Task RunSupernovaOnLabel(Label victim, string supernovaGrow, string supernovaBoom,
+                                               Microsoft.Maui.Graphics.Color accentColor, CancellationToken token)
+        {
+            // Swap to supernova glyph immediately - no fade-out of the star first.
+            victim.Text      = supernovaGrow;
+            victim.FontSize  = 20;
+            victim.TextColor = accentColor;
+            victim.Scale     = 0.6;
+
+            // Phase 1: swell.
+            var fadeIn  = victim.FadeTo(0.95, 600, Easing.CubicIn);
+            var scaleUp = victim.ScaleTo(1.7, 800, Easing.CubicOut);
+            await Task.WhenAll(fadeIn, scaleUp);
+
+            if (token.IsCancellationRequested)
+            {
+                CosmosCanvas.Children.Remove(victim);
+                return;
+            }
+
+            // Phase 2: collision flash - swap glyph, hold briefly.
+            victim.Text     = supernovaBoom;
+            victim.FontSize = 26;
+            victim.Scale    = 1.0;
+            try { await Task.Delay(200, token); }
+            catch (TaskCanceledException)
+            {
+                CosmosCanvas.Children.Remove(victim);
+                return;
+            }
+
+            // Phase 3: dissipate.
+            var fadeOut   = victim.FadeTo(0, 500, Easing.CubicOut);
+            var scaleDown = victim.ScaleTo(0.3, 500, Easing.CubicIn);
+            await Task.WhenAll(fadeOut, scaleDown);
+
+            CosmosCanvas.Children.Remove(victim);
+        }
+
         private void StartLiveBadgeAnimation()
         {
             this.AbortAnimation(LiveBadgeAnimationName);
@@ -649,6 +879,8 @@ namespace Aeonpulse.Views
         {
             base.OnAppearing();
             StartLiveBadgeAnimation();
+            if (BindingContext is MainViewModel vm2 && vm2.VibrantCosmosExpanded)
+                StartAmbientSparks();
         }
 
         /// <inheritdoc/>
@@ -656,6 +888,7 @@ namespace Aeonpulse.Views
         {
             base.OnDisappearing();
             this.AbortAnimation(LiveBadgeAnimationName);
+            StopAmbientSparks();
         }
     }
 }
