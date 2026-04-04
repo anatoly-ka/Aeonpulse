@@ -34,8 +34,8 @@ public static class FutharkCatalogue
 {
     // U+16A0=Fehu   U+16A2=Uruz   U+16A6=Thurisaz U+16A8=Ansuz  U+16B1=Raidho
     // U+16B2=Kenaz  U+16B7=Gebo   U+16B9=Wunjo    U+16BB=Hagalaz U+16BE=Nauthiz
-    // U+16C1=Isa    U+16BC=Jera   U+16BD=Eihwaz   U+16C8=Perthro U+16C9=Algiz
-    // U+16CA=Sowilo U+16CF=Tiwaz  U+16D2=Berkano  U+16D6=Ehwaz  U+16D7=Mannaz
+    // U+16C1=Isa    U+16C3=Jera   U+16C7=Eihwaz   U+16C8=Perthro U+16C9=Algiz
+    // U+16CB=Sowilo U+16CF=Tiwaz  U+16D2=Berkano  U+16D6=Ehwaz  U+16D7=Mannaz
     // U+16DA=Laguz  U+16DD=Ingwaz U+16DF=Othala   U+16DE=Dagaz
     private static readonly (string Symbol, (int A, int B)[] Segs)[] _static =
     {
