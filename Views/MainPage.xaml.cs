@@ -101,6 +101,7 @@ namespace Aeonpulse.Views
                 ApplyWyrdWeb(vm);
                 ApplyEnneagram(vm);
                 ApplyPopulationChart(vm);
+                ApplyLifeLogChart(vm);
             }
 
             // Re-apply the dotted fill Line endpoint after the first layout pass,
@@ -155,6 +156,11 @@ namespace Aeonpulse.Views
                 e.PropertyName == nameof(MainViewModel.GlobalCrowd)         ||
                 e.PropertyName == nameof(MainViewModel.ColorScheme))
                 ApplyPopulationChart(vm);
+
+            if (e.PropertyName == nameof(MainViewModel.LifeLogExpanded) ||
+                e.PropertyName == nameof(MainViewModel.LifeLog)         ||
+                e.PropertyName == nameof(MainViewModel.ColorScheme))
+                ApplyLifeLogChart(vm);
         }
 
         /// <summary>
@@ -914,6 +920,92 @@ namespace Aeonpulse.Views
             vm.GlobalCrowd.HoverPopulation = currentPopBil;
 
             PopulationChartView.Invalidate();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="LifeLogChartDrawable"/> from <c>LifeLog.ActivitySlices</c>,
+        /// assigns it to <see cref="LifeLogChartView"/>, rebuilds the legend rows in
+        /// <see cref="LifeLogLegend"/>, and calls <c>Invalidate()</c>.
+        ///
+        /// <para>
+        /// Called on <c>LifeLogExpanded</c> and <c>LifeLog</c> property changes and
+        /// from the constructor so the chart is always ready before the card opens.
+        /// </para>
+        /// <para>
+        /// <b>Why imperative legend:</b> <see cref="LifeLogSlice"/> is a plain sealed
+        /// class with no INPC; its <c>Color</c> property is a MAUI <see cref="Color"/>
+        /// that cannot bind to <c>BoxView.Color</c> via <c>DynamicResource</c>.
+        /// Building the rows in code gives full control over colours and formatting
+        /// without requiring a custom converter or a ViewModel wrapper.
+        /// </para>
+        /// </summary>
+        private void ApplyLifeLogChart(MainViewModel vm)
+        {
+            var result = vm.LifeLog;
+            if (result?.ActivitySlices == null || result.ActivitySlices.Count == 0)
+                return;
+
+            LifeLogChartView.Drawable = new LifeLogChartDrawable(result.ActivitySlices);
+            LifeLogChartView.Invalidate();
+
+            // Rebuild legend rows - clear and repopulate.
+            LifeLogLegend.Children.Clear();
+            foreach (var slice in result.ActivitySlices)
+            {
+                var swatch = new BoxView
+                {
+                    Color         = Color.FromArgb(slice.ColorHex),
+                    WidthRequest  = 12,
+                    HeightRequest = 12,
+                    CornerRadius  = 6,
+                    VerticalOptions = LayoutOptions.Center,
+                };
+
+                var nameLabel = new Label
+                {
+                    Text           = slice.CategoryName,
+                    FontAttributes = FontAttributes.Bold,
+                    FontSize       = 12,
+                    VerticalOptions = LayoutOptions.Center,
+                };
+                nameLabel.SetDynamicResource(Label.TextColorProperty, "TextDim");
+
+                var todayLabel = new Label
+                {
+                    Text          = $"{slice.YearsToday:F1}y",
+                    FontSize      = 11,
+                    HorizontalTextAlignment = TextAlignment.End,
+                    VerticalOptions = LayoutOptions.Center,
+                };
+                todayLabel.SetDynamicResource(Label.TextColorProperty, "TextGray");
+
+                var forecastLabel = new Label
+                {
+                    Text          = $"+10y: {slice.YearsForecast:F1}y",
+                    FontSize      = 11,
+                    HorizontalTextAlignment = TextAlignment.End,
+                    VerticalOptions = LayoutOptions.Center,
+                };
+                forecastLabel.SetDynamicResource(Label.TextColorProperty, "TextGray");
+
+                var row = new Grid
+                {
+                    ColumnDefinitions = new ColumnDefinitionCollection
+                    {
+                        new ColumnDefinition { Width = new GridLength(18) },
+                        new ColumnDefinition { Width = GridLength.Star },
+                        new ColumnDefinition { Width = GridLength.Auto },
+                        new ColumnDefinition { Width = GridLength.Auto },
+                    },
+                    ColumnSpacing = 8,
+                };
+                row.Add(swatch,        0, 0);
+                row.Add(nameLabel,     1, 0);
+                row.Add(todayLabel,    2, 0);
+                row.Add(forecastLabel, 3, 0);
+
+                LifeLogLegend.Children.Add(row);
+            }
         }
 
         /// <summary>

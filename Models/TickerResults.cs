@@ -522,6 +522,35 @@ namespace Aeonpulse.Models
     /// re-running the full calculation.
     /// </summary>
     [AIContext("DataTransferObject")]
+    /// <summary>
+    /// One activity slice used by both <see cref="LifeLogChartDrawable"/> and the XAML
+    /// legend BindableLayout in the Life Log expanded card.
+    /// </summary>
+    public sealed class LifeLogSlice
+    {
+        /// <summary>Localised activity name (already HTML-entity-decoded).</summary>
+        public string CategoryName { get; init; } = string.Empty;
+
+        /// <summary>Average daily hours for this activity (e.g. 8.8 for sleep).</summary>
+        public double DailyHours { get; init; }
+
+        /// <summary>Fraction of 24 hours (DailyHours / 24). Used for pie sweep angle.</summary>
+        public double DailyProportion { get; init; }
+
+        /// <summary>
+        /// Hex colour string (e.g. "#5B9BD5") for this slice in the chart and legend.
+        /// Resolved to a MAUI <c>Color</c> by the drawable and legend builder at draw time.
+        /// Stored as a plain string so this model class carries no MAUI dependency.
+        /// </summary>
+        public string ColorHex { get; init; } = "#888888";
+
+        /// <summary>Years spent on this activity from baseDate to Today.</summary>
+        public double YearsToday { get; init; }
+
+        /// <summary>Years spent on this activity from baseDate to Today + 10 years.</summary>
+        public double YearsForecast { get; init; }
+    }
+
     public class LifeLogResult : TickerData
     {
         /// <summary>Total elapsed days since the base date used for all activity calculations.</summary>
@@ -531,6 +560,14 @@ namespace Aeonpulse.Models
         /// Dictionary mapping localised activity name to total hours accumulated since the base date.
         /// </summary>
         public Dictionary<string, double> ActivityHours { get; init; } = new();
+
+        /// <summary>
+        /// Ordered list of activity slices used by the two-ring donut chart and its
+        /// legend. Populated by <c>CalculationService.CalculateLifeLog</c>. Carries
+        /// <c>DailyProportion</c>, <c>Color</c>, <c>YearsToday</c>, and
+        /// <c>YearsForecast</c> for each of the 7 ATUS activities.
+        /// </summary>
+        public List<LifeLogSlice> ActivitySlices { get; init; } = new();
 
         /// <summary>Name of the first randomly selected activity shown in the brief view.</summary>
         public string Activity1Name { get; init; } = string.Empty;

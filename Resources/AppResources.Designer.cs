@@ -3791,5 +3791,10 @@ namespace Aeonpulse.Resources {
                 return ResourceManager.GetString("Chart_GlobalCrowd_Pop_Prefix", resourceCulture);
             }
         }
+        public static string LifeLog_Activity_Other {
+            get {
+                return ResourceManager.GetString("LifeLog_Activity_Other", resourceCulture);
+            }
+        }
     }
 }

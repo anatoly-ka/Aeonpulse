@@ -1751,6 +1751,10 @@
   <data name="LifeLog_Activity_PersonalCare" xml:space="preserve">
     <value>Личная гигиена</value>
   </data>
+
+  <data name="LifeLog_Activity_Other" xml:space="preserve">
+    <value>&#x41F;&#x440;&#x43E;&#x447;&#x435;&#x435;</value>
+  </data>
   <data name="Ticker_SpaceWaitTitle" xml:space="preserve">
     <value>Внеземные ожидания</value>
     <comment>MainPage.xaml</comment>

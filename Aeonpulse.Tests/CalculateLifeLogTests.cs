@@ -58,7 +58,7 @@ namespace Aeonpulse.Tests
 
             var result = _svc.CalculateLifeLog(baseDate, "Test", "1980-03-01", now: now);
 
-            Assert.Equal(7, result.ActivityHours.Count);
+            Assert.Equal(8, result.ActivityHours.Count);
         }
 
         // ------------------------------------------------------------------ //

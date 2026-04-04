@@ -1839,6 +1839,23 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding LifeLogExpanded}" />
+                                    <!-- AI: Two-ring donut chart + legend for Life Log expanded view.
+                                         LifeLogChartView Drawable set imperatively by ApplyLifeLogChart()
+                                         in MainPage.xaml.cs. Legend uses BindableLayout over LifeLog.ActivitySlices.
+                                         IsVisible gated on LifeLogExpanded for both views. -->
+                                    <GraphicsView x:Name="LifeLogChartView"
+                                                  HeightRequest="260"
+                                                  WidthRequest="260"
+                                                  HorizontalOptions="Center"
+                                                  IsVisible="{Binding LifeLogExpanded}"
+                                                  BackgroundColor="{DynamicResource CardDark}" />
+                                    <!-- AI: Legend container - rows built imperatively by ApplyLifeLogChart().
+                                         Each row: colour swatch BoxView + CategoryName Label + YearsToday Label
+                                         + YearsForecast Label in a 4-column Grid. -->
+                                    <VerticalStackLayout x:Name="LifeLogLegend"
+                                                         Spacing="6"
+                                                         Margin="4,0"
+                                                         IsVisible="{Binding LifeLogExpanded}" />
                                 </VerticalStackLayout>
                             </Border>
                             <!-- == TICKER: VIBRANT HUMANITY =========================

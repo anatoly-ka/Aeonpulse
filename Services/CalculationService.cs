@@ -2020,6 +2020,7 @@ namespace Aeonpulse.Services
                 { AppResources.LifeLog_Activity_EatingDrinking,    1.2 },
                 { AppResources.LifeLog_Activity_Commuting,         1.1 },
                 { AppResources.LifeLog_Activity_PersonalCare,      0.8 },
+                { AppResources.LifeLog_Activity_Other,             1.5 },
             };
 
             double totalDays = (now_ - baseDate).TotalDays;
@@ -2058,10 +2059,46 @@ namespace Aeonpulse.Services
                 .Replace("{baseDate:d}",         baseDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture))
                 .Replace("{all_activities_list}", activityLines.ToString());
 
+            // Build activity slices for the two-ring donut chart.
+            // Colours are fixed data-palette values (not theme keys) chosen for
+            // visual distinction on both dark and light backgrounds.
+            double elapsedYearsToday    = totalDays / 365.25;
+            double elapsedYearsForecast = elapsedYearsToday + 10.0;
+
+            var sliceColors = new[]
+            {
+                "#5B9BD5", // Sleeping         - steel blue
+                "#ED7D31", // Leisure          - orange
+                "#A5A5A5", // Working          - gray
+                "#FFC000", // Household        - amber
+                "#70AD47", // Eating/Drinking  - green
+                "#FF6B6B", // Commuting        - coral
+                "#B07FD4", // Personal Care    - lavender
+                "#78909C", // Other            - blue-grey
+            };
+
+            var activitySlices = new List<LifeLogSlice>();
+            int colorIdx = 0;
+            foreach (var kvp in dailyAverages)
+            {
+                double proportion = kvp.Value / 24.0;
+                activitySlices.Add(new LifeLogSlice
+                {
+                    CategoryName    = kvp.Key,
+                    DailyHours      = kvp.Value,
+                    DailyProportion = proportion,
+                    ColorHex        = sliceColors[colorIdx % sliceColors.Length],
+                    YearsToday      = proportion * elapsedYearsToday,
+                    YearsForecast   = proportion * elapsedYearsForecast,
+                });
+                colorIdx++;
+            }
+
             return new LifeLogResult
             {
                 TotalDays      = totalDays,
                 ActivityHours  = calculatedActivities,
+                ActivitySlices = activitySlices,
                 Activity1Name  = activity1Name,
                 Activity1Hours = activity1Hours,
                 Activity2Name  = activity2Name,
