@@ -750,7 +750,7 @@
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_CosmicStretchSource" xml:space="preserve">
-    <value>Hubble E. "A relation between distance and radial velocity among extra-galactic nebulae" from Proceedings of the National Academy of Sciences 15 (3) 1929.&lt;br&gt;"The International Astronomical Union recommends that the law should now be known as the Hubble-Lemaitre law, to pay tribute to the Belgian priest and astronomer Georges Lemaitre, who derived the speed-distance relationship two years earlier than did US astronomer Edwin Hubble." from Nature 563 (7729) 2018.</value>
+    <value>Hubble E. "A relation between distance and radial velocity among extra-galactic nebulae" from Proceedings of the National Academy of Sciences 15 (3) 1929.&lt;br&gt;"The International Astronomical Union recommends that the law should now be known as the Hubble-Lemaitre law, to pay tribute to the Belgian priest and astronomer Georges Lemaitre, who derived the speed-distance relationship two years earlier than did US astronomer Edwin Hubble." from Nature 563 (7729) 2018. Animation cortesy An Atlas of The Universe, author Richard Powell.</value>
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Ticker_HumanBirthRankTitle" xml:space="preserve">

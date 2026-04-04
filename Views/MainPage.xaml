@@ -1296,6 +1296,23 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding CosmicStretchExpanded}" />
+                                    <!-- AI: Cosmic Stretch universe-expansion animation for the expanded card.
+                                         Source is a XAML literal ("anim_cosmic_stretch.gif"), NOT a binding.
+                                         Using a literal prevents MAUI's ImageHandler from restarting the
+                                         GIF decoder every second when the CosmicStretch live-ticker replaces
+                                         its CosmicStretchResult object (which would reset animation to frame 0).
+                                         IsAnimationPlaying=True is respected by MAUI's built-in GIF decoder
+                                         on all platforms including Windows.
+                                         IsVisible stays data-bound so expand/collapse still works.
+                                         Drawn below the FullText label as a sibling in the VerticalStackLayout
+                                         (same flat pattern as anim_countdown.gif). -->
+                                    <Image Source="anim_cosmic_stretch.gif"
+                                           IsVisible="{Binding CosmicStretchExpanded}"
+                                           IsAnimationPlaying="True"
+                                           HeightRequest="100"
+                                           Aspect="AspectFit"
+                                           HorizontalOptions="Center"
+                                           Margin="0,8,0,0" />
 
                                 </VerticalStackLayout>
                             </Border>
