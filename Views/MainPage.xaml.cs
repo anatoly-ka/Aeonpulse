@@ -55,6 +55,10 @@ namespace Aeonpulse.Views
         private bool _isVibrantHumanityDeepDiveOpen;
         private bool _isVibrantNatureDeepDiveOpen;
 
+        // Stores the last photon track fraction so it can be re-applied on SizeChanged
+        // when the Line element's rendered width becomes available after the first layout pass.
+        private double _photonTrackFraction;
+
         /// <summary>
         /// Constructs the page and subscribes to the ViewModel's
         /// <see cref="MainViewModel.RefreshRequested"/> event, wiring the
@@ -74,7 +78,13 @@ namespace Aeonpulse.Views
                 ApplyTodayDotPosition(vm.TimeJubilees?.ProgressFraction ?? 0.5);
                 ApplyOrreryPositions(vm.AlienAnniversaries);
                 ApplyOrreryBaseDate(vm.BaseDateName, vm.BaseDateDisplay);
+                ApplyPhotonTrackPosition(vm.PhotonPath?.ProgressFraction ?? 0d);
             }
+
+            // Re-apply the dotted fill Line endpoint after the first layout pass,
+            // because PhotonTrackFill.Width is not available until the element is measured.
+            PhotonTrackFill.SizeChanged += (_, _) =>
+                ApplyPhotonTrackPosition(_photonTrackFraction);
         }
 
         private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -91,6 +101,9 @@ namespace Aeonpulse.Views
             if (e.PropertyName == nameof(MainViewModel.BaseDateName)
              || e.PropertyName == nameof(MainViewModel.BaseDateDisplay))
                 ApplyOrreryBaseDate(vm.BaseDateName, vm.BaseDateDisplay);
+
+            if (e.PropertyName == nameof(MainViewModel.PhotonPath))
+                ApplyPhotonTrackPosition(vm.PhotonPath?.ProgressFraction ?? 0d);
         }
 
         /// <summary>
@@ -116,6 +129,49 @@ namespace Aeonpulse.Views
 
             AbsoluteLayout.SetLayoutBounds(TodayDot, new Rect(0.5, visualY, 14, 14));
             AbsoluteLayout.SetLayoutFlags(TodayDot,
+                Microsoft.Maui.Layouts.AbsoluteLayoutFlags.PositionProportional);
+        }
+
+        /// <summary>
+        /// Positions <see cref="PhotonShipMarker"/> and resizes <see cref="PhotonTrackFill"/>
+        /// along the horizontal Photon Path track by setting <c>AbsoluteLayout.LayoutBounds</c>
+        /// on both named elements.
+        ///
+        /// <para>
+        /// <b>Why imperative:</b> <c>AbsoluteLayout.LayoutBounds</c> is a four-component string
+        /// attached property whose individual components cannot be data-bound from XAML.
+        /// The ship marker X and the fill track width must both reflect
+        /// <see cref="Models.PhotonPathResult.ProgressFraction"/> at runtime.
+        /// </para>
+        /// <para>
+        /// <b>Track geometry:</b> X=0.0 is the Sun; X=1.0 is the next star.
+        /// The fill <see cref="Microsoft.Maui.Controls.Shapes.Line"/> spans the full track
+        /// width via <c>WidthProportional</c> with height=2 so the layout engine allocates
+        /// render space. <c>X2 = fraction * Width</c> sets the dotted stroke endpoint.
+        /// The ship <see cref="Ellipse"/> uses <c>PositionProportional</c> so its X value
+        /// maps directly to the fraction.
+        /// </para>
+        /// </summary>
+        /// <param name="fraction">
+        /// Progress fraction [0.0, 1.0] from <see cref="Models.PhotonPathResult.ProgressFraction"/>.
+        /// </param>
+        private void ApplyPhotonTrackPosition(double fraction)
+        {
+            double clamped = Math.Clamp(fraction, 0d, 1d);
+            _photonTrackFraction = clamped;
+
+            // Fill track: the Line fills the AbsoluteLayout (SizeProportional).
+            // X1=0 is the Sun; X2 = fraction * rendered width gives the dotted fill endpoint.
+            // If the element has not yet been measured (Width <= 0), the SizeChanged handler
+            // will re-apply once the first layout pass completes.
+            double trackWidth = PhotonTrackFill.Width;
+            if (trackWidth > 0)
+                PhotonTrackFill.X2 = clamped * trackWidth;
+
+            // Ship marker: X = fraction (proportional), Y = 0.5 (centred), 16x16 absolute.
+            AbsoluteLayout.SetLayoutBounds(PhotonShipMarker,
+                new Rect(clamped, 0.5, 16, 16));
+            AbsoluteLayout.SetLayoutFlags(PhotonShipMarker,
                 Microsoft.Maui.Layouts.AbsoluteLayoutFlags.PositionProportional);
         }
 

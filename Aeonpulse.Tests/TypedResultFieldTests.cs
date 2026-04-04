@@ -286,6 +286,73 @@ namespace Aeonpulse.Tests
             Assert.Equal(metric.KmTraveled, imperial.KmTraveled, precision: 0);
         }
 
+        [Fact]
+        public void CalculatePhotonPath_Interstellar_NextStarIsProximaCentauri()
+        {
+            // Travel 2 light-years (~2 years elapsed) puts the photon in interstellar space
+            // (between the Oort Cloud boundary 1.5 LY and Proxima Centauri at 4.246 LY).
+            double twoLySeconds = 2.0 * 9_460_730_472_580.8 / 299_792.458;
+            var baseDate = new DateTime(2000, 1, 1, 0, 0, 0);
+            var now      = baseDate.AddSeconds(twoLySeconds);
+
+            var result = _svc.CalculatePhotonPath(baseDate, "2000-01-01", useMetric: true, now);
+
+            Assert.Equal(PhotonPhase.Interstellar, result.Phase);
+            Assert.False(string.IsNullOrEmpty(result.NextStarName));
+            Assert.Equal(4.246, result.NextStarDistance, precision: 2);
+            Assert.True(result.ProgressFraction > 0d && result.ProgressFraction < 1d);
+            Assert.True(result.DistanceLeft > 0d);
+            Assert.False(string.IsNullOrEmpty(result.NextStopText));
+        }
+
+        [Fact]
+        public void CalculatePhotonPath_ProgressFraction_IsClamped()
+        {
+            // A very old base date (200 years) puts the photon way past the last star.
+            // ProgressFraction should always be in [0, 1].
+            var baseDate = new DateTime(1800, 1, 1);
+            var now      = new DateTime(2026, 1, 1);
+
+            var result = _svc.CalculatePhotonPath(baseDate, "1800-01-01", useMetric: true, now);
+
+            Assert.True(result.ProgressFraction >= 0d);
+            Assert.True(result.ProgressFraction <= 1d);
+        }
+
+        [Fact]
+        public void CalculatePhotonPath_SolarSystem_NextStarIsProximaCentauri()
+        {
+            // A very recent base date - photon still in Solar System. Next star is Proxima.
+            var baseDate = new DateTime(2026, 1, 1, 0, 0, 0);
+            var now      = baseDate.AddSeconds(100);
+
+            var result = _svc.CalculatePhotonPath(baseDate, "2026-01-01", useMetric: true, now);
+
+            Assert.Equal(PhotonPhase.SolarSystem, result.Phase);
+            Assert.Equal(4.246, result.NextStarDistance, precision: 2);
+            Assert.True(result.ProgressFraction >= 0d && result.ProgressFraction <= 1d);
+        }
+
+        [Fact]
+        public void CalculatePhotonPath_HalfwayToProxima_ProgressFractionNearHalf()
+        {
+            // Position photon at exactly halfway to Proxima Centauri (2.123 light-years).
+            // Proxima is at 4.246 ly; halfway = 2.123 ly.
+            // Time to travel 2.123 ly = 2.123 * 9460730472580.8 / 299792.458 seconds.
+            double halfwayLy   = 4.246 / 2.0;
+            double kmPerLy     = 9_460_730_472_580.8;
+            double kmPerSecond = 299_792.458;
+            double secondsNeeded = halfwayLy * kmPerLy / kmPerSecond;
+            var baseDate = new DateTime(2000, 1, 1, 0, 0, 0);
+            var now      = baseDate.AddSeconds(secondsNeeded);
+
+            var result = _svc.CalculatePhotonPath(baseDate, "2000-01-01", useMetric: true, now);
+
+            // Should be Interstellar phase with ProgressFraction close to 0.5
+            Assert.Equal(PhotonPhase.Interstellar, result.Phase);
+            Assert.InRange(result.ProgressFraction, 0.48, 0.52);
+        }
+
         // ---------------------------------------------------------------
         // HumanBirthRankResult - raw field values
         // ---------------------------------------------------------------

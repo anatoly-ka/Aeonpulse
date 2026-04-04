@@ -990,17 +990,70 @@ namespace Aeonpulse.Services
                 }
             }
 
-            AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"phase={phase} starName={starName ?? "null"} ly={lightYears:F4}", "RESULT");
+            // Compute proportional track fields: find the next star ahead of current position.
+            // For pre-PastStar phases the next target is always Proxima Centauri (stars[0], 4.246 ly).
+            // In PastStar phase the next target is the first star whose Ly > lightYears.
+            string nextStarName = string.Empty;
+            double nextStarDistance = 0d;
+            double totalDistancePassed = lightYears;
+            double originLy = 0d;  // distance of the last-passed milestone (Sun = 0, or last star Ly)
+
+            if (phase == PhotonPhase.Interstellar || phase == PhotonPhase.OortCloud
+             || phase == PhotonPhase.Heliopause   || phase == PhotonPhase.SolarSystem)
+            {
+                // Next target is always Proxima Centauri
+                nextStarName     = stars[0].Name;
+                nextStarDistance = stars[0].Ly;
+                originLy         = 0d;
+            }
+            else if (phase == PhotonPhase.PastStar)
+            {
+                // Find the next star ahead
+                originLy = starLy;  // last passed star is the origin
+                for (int si = 0; si < stars.Length; si++)
+                {
+                    if (lightYears < stars[si].Ly)
+                    {
+                        nextStarName     = stars[si].Name;
+                        nextStarDistance = stars[si].Ly;
+                        break;
+                    }
+                }
+                // If past the last catalogued star, keep empty/zero (no next target)
+            }
+
+            double progressFraction = 0d;
+            double distanceLeft = 0d;
+            string nextStopText = string.Empty;
+
+            if (nextStarDistance > 0d)
+            {
+                double span = nextStarDistance - originLy;
+                double traveled = lightYears - originLy;
+                progressFraction = span > 0d ? Math.Clamp(traveled / span, 0d, 1d) : 0d;
+                distanceLeft     = Math.Max(0d, nextStarDistance - lightYears);
+                nextStopText = AppResources.Ticker_PhotonPathNextStop
+                    .Replace("{nextStarName}", nextStarName)
+                    .Replace("{distanceLeft}", distanceLeft.ToString("F3"));
+            }
+
+            AeonLog.Debug(LogCat, nameof(CalculatePhotonPath), $"phase={phase} starName={starName ?? "null"} ly={lightYears:F4} nextStar={nextStarName} progress={progressFraction:F3}", "RESULT");
             return new PhotonPathResult
             {
-                KmTraveled = kmTraveled,
-                LightYears = lightYears,
-                Phase      = phase,
-                StarName   = starName,
-                StarLy     = starLy,
-                UseMetric  = useMetric,
-                BriefText = bText,
-                FullText = fText
+                KmTraveled           = kmTraveled,
+                LightYears           = lightYears,
+                Phase                = phase,
+                StarName             = starName,
+                StarLy               = starLy,
+                UseMetric            = useMetric,
+                BriefText            = bText,
+                FullText             = fText,
+                NextStarName         = nextStarName,
+                NextStarDistance     = nextStarDistance,
+                TotalDistancePassed  = lightYears,
+                DistanceLeft         = distanceLeft,
+                ProgressFraction     = progressFraction,
+                NextStopText         = nextStopText
             };
         }
 

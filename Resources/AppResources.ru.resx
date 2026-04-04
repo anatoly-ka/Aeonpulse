@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -511,6 +511,10 @@
   </data>
   <data name="Ticker_PhotonPathStar_FullTemplate" xml:space="preserve">
     <value>Если бы звездолет стартовал со скоростью света {baseDate:d}, он бы преодолел &lt;b&gt;{distance}&lt;/b&gt; (&lt;b&gt;{fullDistance}&lt;/b&gt;) и уже достиг бы &lt;b&gt;{star.Name}&lt;/b&gt;, расположенной в &lt;b&gt;{star.Ly}&lt;/b&gt; световых лет от нас - {star.Info}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_PhotonPathNextStop" xml:space="preserve">
+    <value>Следующая остановка: {nextStarName} через {distanceLeft} световых лет.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Star_ProximaCentauri_Info" xml:space="preserve">

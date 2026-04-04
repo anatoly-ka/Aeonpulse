@@ -1130,6 +1130,102 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding PhotonPathExpanded}" />
+
+                                    <!-- AI: Photon Path proportional track - visible only when expanded and NextStarName is set.
+                                         Row 0: Next stop label (NextStopText from PhotonPathResult, live-localised via result field).
+                                         Row 1: AbsoluteLayout horizontal track with:
+                                           - Full grey track bar (100% width, 2 px tall),
+                                           - Gold filled track bar from Sun to ship (width set imperatively, x:Name PhotonTrackFill),
+                                           - Gold Sun dot at left edge,
+                                           - White ring star dot at right edge,
+                                           - Ship marker ellipse at proportional X (x:Name PhotonShipMarker, set imperatively).
+                                         Row 2: Labels "Sun" and NextStarName at endpoints.
+                                         All colours use DynamicResource. Ship X position set imperatively in MainPage.xaml.cs
+                                         because AbsoluteLayout.LayoutBounds cannot be individually data-bound.
+                                         Binding sources: PhotonPath.NextStopText, PhotonPath.NextStarName,
+                                         PhotonPath.ProgressFraction (read in code-behind). -->
+                                    <Grid Margin="10,16,10,8"
+                                          RowDefinitions="Auto, 40, Auto"
+                                          ColumnDefinitions="*"
+                                          IsVisible="{Binding PhotonPathExpanded}">
+
+                                        <!-- Row 0: Next stop sentence -->
+                                        <!-- Binding: MainViewModel.PhotonPath.NextStopText -->
+                                        <Label Grid.Row="0"
+                                               HorizontalOptions="Center"
+                                               TextColor="{DynamicResource TextGray}"
+                                               FontSize="{DynamicResource FontSizeSmall}"
+                                               Text="{Binding PhotonPath.NextStopText}" />
+
+                                        <!-- Row 1: Horizontal proportional track -->
+                                        <AbsoluteLayout Grid.Row="1"
+                                                        HorizontalOptions="FillAndExpand"
+                                                        HeightRequest="40">
+
+                                            <!-- Full track background (grey) - 100% width, 2 px tall, vertically centred -->
+                                            <BoxView AbsoluteLayout.LayoutBounds="0, 0.5, 1, 2"
+                                                     AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional"
+                                                     Color="{DynamicResource TextGray}" />
+
+                                            <!-- Filled track from Sun to ship - drawn as a dotted Line.
+                                                 X2 is set imperatively from ProgressFraction in MainPage.xaml.cs
+                                                 because the endpoint must be proportional to the AbsoluteLayout width.
+                                                 StrokeDashArray "4,4" produces equal dot and gap lengths.
+                                                 LayoutBounds: X=0 (absolute left), Y=19 (centres a 2px stroke in 40px
+                                                 height: (40-2)/2=19), Width=1 WidthProportional (full track width),
+                                                 Height=2 absolute (equals StrokeThickness so layout allocates render
+                                                 space and SizeChanged fires). Y1=Y2=0 draws on the element top edge
+                                                 which maps to the vertical centre of the AbsoluteLayout. -->
+                                            <Line x:Name="PhotonTrackFill"
+                                                  AbsoluteLayout.LayoutBounds="0, 19, 1, 2"
+                                                  AbsoluteLayout.LayoutFlags="WidthProportional"
+                                                  X1="0" Y1="0" X2="0" Y2="0"
+                                                  Stroke="{DynamicResource JubileeAccent}"
+                                                  StrokeThickness="2"
+                                                  StrokeDashArray="4,4"
+                                                  StrokeLineCap="Round" />
+
+                                            <!-- Sun dot at left edge (0%) - same gold as the orrery Sun (JubileeAccent) -->
+                                            <Ellipse AbsoluteLayout.LayoutBounds="0, 0.5, 12, 12"
+                                                     AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                     Fill="{DynamicResource JubileeAccent}" />
+
+                                            <!-- Star endpoint dot at right edge (100%) - filled same colour as Stroke -->
+                                            <Ellipse AbsoluteLayout.LayoutBounds="1, 0.5, 12, 12"
+                                                     AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                     Stroke="{DynamicResource CyberCyan}"
+                                                     StrokeThickness="2"
+                                                     Fill="{DynamicResource CyberCyan}" />
+
+                                            <!-- Ship marker ellipse - X position set imperatively from ProgressFraction -->
+                                            <!-- Cannot bind LayoutBounds directly; position is set in MainPage.xaml.cs -->
+                                            <Ellipse x:Name="PhotonShipMarker"
+                                                     AbsoluteLayout.LayoutBounds="0, 0.5, 16, 16"
+                                                     AbsoluteLayout.LayoutFlags="PositionProportional"
+                                                     Fill="{DynamicResource SpaceDarker}"
+                                                     Stroke="{DynamicResource CyberCyan}"
+                                                     StrokeThickness="3" />
+
+                                        </AbsoluteLayout>
+
+                                        <!-- Row 2: Sun / star name labels -->
+                                        <Grid Grid.Row="2"
+                                              ColumnDefinitions="Auto, *, Auto">
+                                            <Label Grid.Column="0"
+                                                   Text="Sun"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{DynamicResource JubileeAccent}" />
+                                            <!-- Binding: MainViewModel.PhotonPath.NextStarName -->
+                                            <Label Grid.Column="2"
+                                                   Text="{Binding PhotonPath.NextStarName}"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{DynamicResource CyberCyan}" />
+                                        </Grid>
+
+                                    </Grid>
+
                                 </VerticalStackLayout>
                             </Border>
 
@@ -1496,7 +1592,7 @@
                                                    TextColor="{DynamicResource CyberPurple}"
                                                    FontAttributes="Bold"
                                                    VerticalOptions="Center" />
-                                            <!-- Binding: MainViewModel.Loc.Badge_LIVE (live-localised) -->
+                                            <!-- Binding: MainViewModel.Loc.Badge_LIVE -->
                                             <Label x:Name="LiveBadgeGlobalCrowd"
                                                    Text="{Binding Loc.Badge_LIVE}"
                                                    FontSize="{DynamicResource FontSizeSmall}"

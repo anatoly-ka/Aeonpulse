@@ -246,6 +246,45 @@ namespace Aeonpulse.Models
 
         /// <summary><c>true</c> when the result was computed in metric units.</summary>
         public bool UseMetric { get; init; }
+
+        /// <summary>
+        /// Localised name of the next star destination used for the proportional track.
+        /// In the Interstellar phase this is Proxima Centauri; in the PastStar phase
+        /// this is the next catalogued star ahead of the current position.
+        /// Empty string when no meaningful next-star target can be determined.
+        /// </summary>
+        public string NextStarName { get; init; } = string.Empty;
+
+        /// <summary>
+        /// Distance from the Sun to <see cref="NextStarName"/> in light-years.
+        /// This is the 100% end-point of the proportional track.
+        /// </summary>
+        public double NextStarDistance { get; init; }
+
+        /// <summary>
+        /// Total distance travelled from the Sun in light-years.
+        /// This is the current position on the proportional track.
+        /// </summary>
+        public double TotalDistancePassed { get; init; }
+
+        /// <summary>
+        /// Remaining distance to <see cref="NextStarName"/> in light-years
+        /// (<c>NextStarDistance - TotalDistancePassed</c>).
+        /// </summary>
+        public double DistanceLeft { get; init; }
+
+        /// <summary>
+        /// Fractional progress toward <see cref="NextStarName"/> clamped to [0.0, 1.0].
+        /// Used to position the ship marker on the proportional track.
+        /// </summary>
+        public double ProgressFraction { get; init; }
+
+        /// <summary>
+        /// Fully-formatted localised "Next stop: {star} in {distance} light-years." sentence.
+        /// Computed by <c>CalculationService</c> at call time so it reflects the active locale.
+        /// Empty when no meaningful next-star context is available (pre-Interstellar phases).
+        /// </summary>
+        public string NextStopText { get; init; } = string.Empty;
     }
 
     /// <summary>

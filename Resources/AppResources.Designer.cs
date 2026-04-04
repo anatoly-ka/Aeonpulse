@@ -3153,6 +3153,12 @@ namespace Aeonpulse.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Photon Path.
         /// </summary>
+        public static string Ticker_PhotonPathNextStop {
+            get {
+                return ResourceManager.GetString("Ticker_PhotonPathNextStop", resourceCulture);
+            }
+        }
+
         public static string Ticker_PhotonPathTitle {
             get {
                 return ResourceManager.GetString("Ticker_PhotonPathTitle", resourceCulture);
