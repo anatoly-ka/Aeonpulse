@@ -466,7 +466,7 @@
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_GalacticCommuteSource" xml:space="preserve">
-    <value>Data courtesy of the NASA Jet Propulsion Laboratory (JPL) Horizons On-Line Ephemeris System.</value>
+    <value>Data courtesy of the NASA Jet Propulsion Laboratory (JPL) Horizons On-Line Ephemeris System. Animation cortesy of European Space Agency - ESA.</value>
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Ticker_PhotonPathTitle" xml:space="preserve">
