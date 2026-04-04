@@ -70,6 +70,13 @@ namespace Aeonpulse.Views
         private bool _sparksRunning;
         private readonly List<Label> _liveStars = new List<Label>();
 
+        // Web of Wyrd Explorer state (Birth Rune expanded view).
+        // _wyrdCatalogue is rebuilt on each ApplyWyrdWeb call so locale changes
+        // are reflected. _wyrdSelectedIndex tracks the current selection; it is
+        // reset to the user's birth rune whenever the card opens.
+        private IReadOnlyList<Models.FutharkRune>? _wyrdCatalogue;
+        private int _wyrdSelectedIndex;
+
         /// <summary>
         /// Constructs the page and subscribes to the ViewModel's
         /// <see cref="MainViewModel.RefreshRequested"/> event, wiring the
@@ -91,6 +98,7 @@ namespace Aeonpulse.Views
                 ApplyOrreryBaseDate(vm.BaseDateName, vm.BaseDateDisplay);
                 ApplyPhotonTrackPosition(vm.PhotonPath?.ProgressFraction ?? 0d);
                 ApplyBirthRankChart(vm);
+                ApplyWyrdWeb(vm);
             }
 
             // Re-apply the dotted fill Line endpoint after the first layout pass,
@@ -129,6 +137,12 @@ namespace Aeonpulse.Views
                 e.PropertyName == nameof(MainViewModel.HumanBirthRank)         ||
                 e.PropertyName == nameof(MainViewModel.ColorScheme))
                 ApplyBirthRankChart(vm);
+
+            if (e.PropertyName == nameof(MainViewModel.BirthRuneExpanded) ||
+                e.PropertyName == nameof(MainViewModel.BirthRune)         ||
+                e.PropertyName == nameof(MainViewModel.ColorScheme)       ||
+                e.PropertyName == nameof(MainViewModel.DisplayLanguage))
+                ApplyWyrdWeb(vm);
         }
 
         /// <summary>
@@ -653,6 +667,129 @@ namespace Aeonpulse.Views
             }
             BirthRankChart.Drawable = new BirthRankChartDrawable(result);
             BirthRankChart.Invalidate();
+        }
+
+        /// <summary>
+        /// Rebuilds the Web of Wyrd Explorer: populates <see cref="WyrdRuneGrid"/> with
+        /// 24 rune tap-targets, sets <see cref="WyrdWebView"/> Drawable, and updates the
+        /// description labels. Called when <c>BirthRuneExpanded</c>, <c>BirthRune</c>, or
+        /// <c>ColorScheme</c> changes, and from the constructor for initial state.
+        ///
+        /// <para>
+        /// <b>Why imperative:</b> <c>GraphicsView.Drawable</c> is not data-bindable.
+        /// The rune grid is built from <c>FutharkCatalogue.Build()</c> so locale changes
+        /// are reflected immediately when the card reopens.
+        /// </para>
+        /// <para>
+        /// <b>Selection initialisation:</b> when the card first opens (previous catalogue
+        /// is null or BirthRune changed) the selected rune is reset to the user's actual
+        /// birth rune so the matrix defaults to the correct highlight.
+        /// </para>
+        /// </summary>
+        private void ApplyWyrdWeb(MainViewModel vm)
+        {
+            var result = vm.BirthRune;
+            if (result == null) return;
+
+            // Rebuild the catalogue so localised strings are current.
+            var catalogue = Models.FutharkCatalogue.Build();
+            bool isNewResult = _wyrdCatalogue == null
+                            || result.RuneName != (vm.BirthRune?.RuneName ?? string.Empty);
+
+            // On first open or rune change, reset selection to the user's birth rune.
+            if (isNewResult)
+                _wyrdSelectedIndex = Models.FutharkCatalogue.IndexOf(catalogue, result.RuneName);
+
+            _wyrdCatalogue = catalogue;
+
+            // Rebuild the 24-button rune grid (always, to reflect locale + selection highlight).
+            WyrdRuneGrid.Children.Clear();
+            for (int i = 0; i < catalogue.Count; i++)
+            {
+                int capturedIndex = i;
+                var rune = catalogue[i];
+                bool isSelected = (i == _wyrdSelectedIndex);
+
+                var label = new Label
+                {
+                    // TextType.Html forces the platform HTML renderer which has
+                    // full Unicode font-fallback chains; Elder Futhark glyphs
+                    // (U+16A0-U+16FF) are not covered by OpenSans or most system
+                    // UI fonts but ARE available via HTML fallback on all platforms.
+                    Text             = $"<span style='font-size:16px'>{rune.Symbol}</span>",
+                    TextType         = TextType.Html,
+                    HorizontalTextAlignment = TextAlignment.Center,
+                    VerticalTextAlignment   = TextAlignment.Center,
+                };
+
+                var border = new Border
+                {
+                    WidthRequest      = 38,
+                    HeightRequest     = 38,
+                    StrokeShape       = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = 6 },
+                    StrokeThickness   = isSelected ? 2 : 1,
+                    Padding           = new Thickness(2),
+                    Margin            = new Thickness(3),
+                    Content           = label,
+                };
+                // Colours set via DynamicResource lookup at runtime so they theme-switch.
+                border.SetDynamicResource(Border.BackgroundColorProperty, "CardDark");
+                border.SetDynamicResource(Border.StrokeProperty,
+                    isSelected ? "JubileeAccent" : "TextGray");
+                label.SetDynamicResource(Label.TextColorProperty,
+                    isSelected ? "JubileeAccent" : "TextDim");
+
+                var tap = new TapGestureRecognizer();
+                tap.Tapped += (_, _) => OnWyrdRuneTapped(capturedIndex);
+                border.GestureRecognizers.Add(tap);
+
+                WyrdRuneGrid.Add(border);
+            }
+
+            // Update description labels.
+            var sel = catalogue[_wyrdSelectedIndex];
+            WyrdRuneName.Text    = sel.Name;
+            WyrdRuneMeaning.Text = sel.Brief;
+
+            // Set GraphicsView drawable and trigger redraw.
+            WyrdWebView.Drawable = new WyrdWebDrawable(catalogue, _wyrdSelectedIndex);
+            WyrdWebView.Invalidate();
+        }
+
+        /// <summary>
+        /// Handles a tap on one of the 24 rune buttons in the Web of Wyrd Explorer.
+        /// Updates the selected rune index, refreshes button highlight states,
+        /// updates the description labels, and triggers a canvas redraw.
+        /// No ViewModel mutation - selection is pure UI state.
+        /// </summary>
+        /// <param name="runeIndex">0-based index into the current <c>_wyrdCatalogue</c>.</param>
+        private void OnWyrdRuneTapped(int runeIndex)
+        {
+            if (_wyrdCatalogue == null || runeIndex < 0 || runeIndex >= _wyrdCatalogue.Count)
+                return;
+
+            _wyrdSelectedIndex = runeIndex;
+
+            // Re-apply highlight states on all grid children.
+            var children = WyrdRuneGrid.Children;
+            for (int i = 0; i < children.Count; i++)
+            {
+                if (children[i] is not Border b) continue;
+                bool sel = (i == _wyrdSelectedIndex);
+                b.StrokeThickness = sel ? 2 : 1;
+                b.SetDynamicResource(Border.StrokeProperty, sel ? "JubileeAccent" : "TextGray");
+                if (b.Content is Label lbl)
+                    lbl.SetDynamicResource(Label.TextColorProperty, sel ? "JubileeAccent" : "TextDim");
+            }
+
+            // Update description.
+            var rune = _wyrdCatalogue[_wyrdSelectedIndex];
+            WyrdRuneName.Text    = rune.Name;
+            WyrdRuneMeaning.Text = rune.Brief;
+
+            // Redraw canvas.
+            WyrdWebView.Drawable = new WyrdWebDrawable(_wyrdCatalogue, _wyrdSelectedIndex);
+            WyrdWebView.Invalidate();
         }
 
         /// <summary>

@@ -1562,6 +1562,44 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding BirthRuneExpanded}" />
+                                    <!-- AI: Web of Wyrd Explorer - Birth Rune expanded view.
+                                         All elements are IsVisible-gated on BirthRuneExpanded.
+                                         WyrdWebView: GraphicsView 200x200, Drawable set imperatively from
+                                         MainPage.xaml.cs via ApplyWyrdWeb() when BirthRuneExpanded or
+                                         BirthRune changes; also re-applied on ColorScheme change.
+                                         WyrdRuneName / WyrdRuneMeaning: description labels updated
+                                         imperatively by ApplyWyrdWeb() and OnWyrdRuneTapped().
+                                         WyrdRuneGrid: FlexLayout of 24 Border+Label rune buttons,
+                                         each with TapGestureRecognizer calling OnWyrdRuneTapped;
+                                         selected rune highlighted via stroke color set in code-behind.
+                                         No new ViewModel properties: selection state is UI-only. -->
+                                    <VerticalStackLayout Spacing="12"
+                                                         Margin="0,16,0,0"
+                                                         IsVisible="{Binding BirthRuneExpanded}">
+                                        <GraphicsView x:Name="WyrdWebView"
+                                                      HeightRequest="300"
+                                                      WidthRequest="150"
+                                                      HorizontalOptions="Center"
+                                                      BackgroundColor="{DynamicResource CardDark}" />
+                                        <Label x:Name="WyrdRuneName"
+                                               FontAttributes="Bold"
+                                               FontSize="{DynamicResource FontSizeLarge}"
+                                               TextColor="{DynamicResource TextDim}"
+                                               HorizontalTextAlignment="Center"
+                                               HorizontalOptions="Center" />
+                                        <Label x:Name="WyrdRuneMeaning"
+                                               FontSize="{DynamicResource FontSizeMedium}"
+                                               TextColor="{DynamicResource TextGray}"
+                                               HorizontalTextAlignment="Center"
+                                               HorizontalOptions="Center"
+                                               LineBreakMode="WordWrap"
+                                               Margin="0,0,0,4" />
+                                        <FlexLayout x:Name="WyrdRuneGrid"
+                                                    Wrap="Wrap"
+                                                    JustifyContent="Center"
+                                                    AlignItems="Center">
+                                        </FlexLayout>
+                                    </VerticalStackLayout>
                                 </VerticalStackLayout>
                             </Border>
 
