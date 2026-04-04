@@ -1825,6 +1825,27 @@
     <value>Мировые статистические данные и прогнозы численности населения взяты из Population Division (2024 Revision), предоставленном Департаментом по экономическим и социальным вопросам ООН. Исторические оценки взяты из баз данных Human Mortality Database (2025 revision) и Population Reference Bureau (2024). Дополнительные статистики (доля близнецы и причины смерти) рассчитаны по фиксированным глобальным коэффициентам ВОЗ.</value>
     <comment>DeepDivePopup sources (ru)</comment>
   </data>
+  <data name="Chart_VibrantHumanity_Arrivals" xml:space="preserve">
+    <value>&#x41F;&#x440;&#x438;&#x431;&#x44B;&#x442;&#x438;&#x435; (&#x420;&#x43E;&#x436;&#x434;&#x435;&#x43D;&#x438;&#x44F;)</value>
+  </data>
+  <data name="Chart_VibrantHumanity_Departures" xml:space="preserve">
+    <value>&#x423;&#x431;&#x44B;&#x442;&#x438;&#x435; (&#x421;&#x43C;&#x435;&#x440;&#x442;&#x438;)</value>
+  </data>
+  <data name="Chart_VibrantHumanity_Singletons" xml:space="preserve">
+    <value>&#x41E;&#x434;&#x438;&#x43D;&#x43E;&#x447;&#x43A;&#x438;</value>
+  </data>
+  <data name="Chart_VibrantHumanity_Twins" xml:space="preserve">
+    <value>&#x411;&#x43B;&#x438;&#x437;&#x43D;&#x435;&#x446;&#x44B;</value>
+  </data>
+  <data name="Chart_VibrantHumanity_Heart" xml:space="preserve">
+    <value>&#x421;&#x435;&#x440;&#x434;&#x446;&#x435; / &#x418;&#x43D;&#x441;&#x443;&#x43B;&#x44C;&#x442;</value>
+  </data>
+  <data name="Chart_VibrantHumanity_Cancer" xml:space="preserve">
+    <value>&#x41E;&#x43D;&#x43A;&#x43E;&#x43B;&#x43E;&#x433;&#x438;&#x44F;</value>
+  </data>
+  <data name="Chart_VibrantHumanity_Other" xml:space="preserve">
+    <value>&#x418;&#x43D;&#x44B;&#x435; &#x43F;&#x440;&#x438;&#x447;&#x438;&#x43D;&#x44B;</value>
+  </data>
 
   <data name="Ticker_VibrantNatureTitle" xml:space="preserve">
     <value>Живая Природа</value>

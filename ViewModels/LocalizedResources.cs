@@ -144,6 +144,13 @@ namespace Aeonpulse.ViewModels
         public string Info_GlobalCrowdSource           => AppResources.Info_GlobalCrowdSource;
         public string Chart_GlobalCrowd_Year_Prefix    => AppResources.Chart_GlobalCrowd_Year_Prefix;
         public string Chart_GlobalCrowd_Pop_Prefix     => AppResources.Chart_GlobalCrowd_Pop_Prefix;
+        public string Chart_VibrantHumanity_Arrivals   => AppResources.Chart_VibrantHumanity_Arrivals;
+        public string Chart_VibrantHumanity_Departures => AppResources.Chart_VibrantHumanity_Departures;
+        public string Chart_VibrantHumanity_Singletons => AppResources.Chart_VibrantHumanity_Singletons;
+        public string Chart_VibrantHumanity_Twins      => AppResources.Chart_VibrantHumanity_Twins;
+        public string Chart_VibrantHumanity_Heart      => AppResources.Chart_VibrantHumanity_Heart;
+        public string Chart_VibrantHumanity_Cancer     => AppResources.Chart_VibrantHumanity_Cancer;
+        public string Chart_VibrantHumanity_Other      => AppResources.Chart_VibrantHumanity_Other;
 
         // -- Tease ------------------------------------------------------------
         public string Tease_Title          => AppResources.Tease_Title;

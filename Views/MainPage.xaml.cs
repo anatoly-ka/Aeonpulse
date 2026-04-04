@@ -102,6 +102,7 @@ namespace Aeonpulse.Views
                 ApplyEnneagram(vm);
                 ApplyPopulationChart(vm);
                 ApplyLifeLogChart(vm);
+                ApplyVibrantHumanityBars(vm);
             }
 
             // Re-apply the dotted fill Line endpoint after the first layout pass,
@@ -161,6 +162,11 @@ namespace Aeonpulse.Views
                 e.PropertyName == nameof(MainViewModel.LifeLog)         ||
                 e.PropertyName == nameof(MainViewModel.ColorScheme))
                 ApplyLifeLogChart(vm);
+
+            if (e.PropertyName == nameof(MainViewModel.VibrantHumanityExpanded) ||
+                e.PropertyName == nameof(MainViewModel.VibrantHumanity)         ||
+                e.PropertyName == nameof(MainViewModel.DisplayLanguage))
+                ApplyVibrantHumanityBars(vm);
         }
 
         /// <summary>
@@ -1006,6 +1012,209 @@ namespace Aeonpulse.Views
 
                 LifeLogLegend.Children.Add(row);
             }
+        }
+
+        /// <summary>
+        /// Builds the two proportional balance bars (Arrivals / Departures) inside
+        /// <see cref="VibrantHumanityBarsContainer"/> from the current
+        /// <see cref="VibrantHumanityResult"/> raw counts.
+        ///
+        /// <para>
+        /// <b>Layout strategy:</b> the Arrivals bar always fills the full container width
+        /// (<c>HorizontalOptions=Fill</c>). The Departures bar width is set in the
+        /// <c>SizeChanged</c> handler on the container to
+        /// <c>containerWidth * (deaths / births)</c>, making it physically shorter when
+        /// population is growing. Each bar is a <c>Grid</c> whose column widths are
+        /// proportional <c>GridLength.Star</c> values derived from the raw counts, so
+        /// the coloured segments fill the bar precisely.
+        /// </para>
+        /// <para>
+        /// <b>MinimumWidthRequest = 2</b> is applied to every segment column's
+        /// <c>BoxView</c> to prevent the Twins sliver (~2.4% of births) from
+        /// collapsing to zero and causing a layout exception.
+        /// </para>
+        /// </summary>
+        private void ApplyVibrantHumanityBars(MainViewModel vm)
+        {
+            var result = vm.VibrantHumanity;
+            VibrantHumanityBarsContainer.Children.Clear();
+
+            if (result == null || result.BornBetweenDates <= 0) return;
+
+            double births      = result.BornBetweenDates;
+            double deaths      = result.DiedBetweenDates;
+            double twins       = result.TwinsBorn * 2;           // TwinsBorn = pairs; each pair = 2 births
+            double singletons  = births - twins;
+            double heart       = result.HeartDeaths;
+            double cancer      = result.CancerDeaths;
+            double otherDeaths = Math.Max(0, deaths - heart - cancer);
+
+            // Clamp twins sliver to at least a visible minimum proportion.
+            double twinsStarVal      = Math.Max(twins / births, 0.001);
+            double singletonsStarVal = 1.0 - twinsStarVal;
+
+            double heartStarVal  = deaths > 0 ? heart       / deaths : 0.333;
+            double cancerStarVal = deaths > 0 ? cancer      / deaths : 0.333;
+            double otherStarVal  = deaths > 0 ? otherDeaths / deaths : 0.334;
+
+            // Bar segment and swatch colours are pinned to DefaultDark palette values
+            // so they remain visually consistent across all colour schemes.
+            // Text colours are handled separately via SetDynamicResource.
+            Color colSingletons = Color.FromArgb("#50FA7B"); // NeonGreen DefaultDark
+            Color colTwins      = Color.FromArgb("#FFD700"); // JubileeAccent DefaultDark
+            Color colHeart      = Color.FromArgb("#FF79C6"); // CyberPink DefaultDark
+            Color colCancer     = Color.FromArgb("#BD93F9"); // CyberPurple DefaultDark
+            Color colOther      = Color.FromArgb("#B0B0B0"); // TextGray DefaultDark
+
+            // --- Arrivals bar ---
+            var arrivalsLabel = new Label
+            {
+                Text           = AppResources.Chart_VibrantHumanity_Arrivals,
+                FontAttributes = FontAttributes.Bold,
+                FontSize       = 13,
+            };
+            arrivalsLabel.SetDynamicResource(Label.TextColorProperty, "TextDim");
+
+            var arrivalsBar = BuildBar(new[]
+            {
+                (singletonsStarVal, colSingletons),
+                (twinsStarVal,      colTwins),
+            });
+            arrivalsBar.HorizontalOptions = LayoutOptions.Fill;
+
+            var arrivalsLegend = BuildLegend(new[]
+            {
+                (colSingletons, AppResources.Chart_VibrantHumanity_Singletons, $"{singletons:N0}"),
+                (colTwins,      AppResources.Chart_VibrantHumanity_Twins,      $"{twins:N0}"),
+            }, Colors.Transparent);
+
+            var arrivalsStack = new VerticalStackLayout { Spacing = 5 };
+            arrivalsStack.Children.Add(arrivalsLabel);
+            arrivalsStack.Children.Add(arrivalsBar);
+            arrivalsStack.Children.Add(arrivalsLegend);
+
+            // --- Departures bar ---
+            var departuresLabel = new Label
+            {
+                Text           = AppResources.Chart_VibrantHumanity_Departures,
+                FontAttributes = FontAttributes.Bold,
+                FontSize       = 13,
+            };
+            departuresLabel.SetDynamicResource(Label.TextColorProperty, "TextDim");
+
+            var departuresBar = BuildBar(new[]
+            {
+                (heartStarVal,  colHeart),
+                (cancerStarVal, colCancer),
+                (otherStarVal,  colOther),
+            });
+            // Width is set proportionally in the SizeChanged handler below.
+            departuresBar.HorizontalOptions = LayoutOptions.Start;
+            departuresBar.MinimumWidthRequest = 4;
+
+            var departuresLegend = BuildLegend(new[]
+            {
+                (colHeart,  AppResources.Chart_VibrantHumanity_Heart,  $"{heart:N0}"),
+                (colCancer, AppResources.Chart_VibrantHumanity_Cancer, $"{cancer:N0}"),
+                (colOther,  AppResources.Chart_VibrantHumanity_Other,  $"{otherDeaths:N0}"),
+            }, Colors.Transparent);
+
+            var departuresStack = new VerticalStackLayout { Spacing = 5 };
+            departuresStack.Children.Add(departuresLabel);
+            departuresStack.Children.Add(departuresBar);
+            departuresStack.Children.Add(departuresLegend);
+
+            VibrantHumanityBarsContainer.Children.Add(arrivalsStack);
+            VibrantHumanityBarsContainer.Children.Add(departuresStack);
+
+            // Scale Departures bar width proportionally once the container is measured.
+            double ratio = births > 0 ? Math.Min(deaths / births, 1.0) : 1.0;
+            void UpdateDeparturesWidth(object? s, EventArgs e)
+            {
+                double w = VibrantHumanityBarsContainer.Width;
+                if (w > 0)
+                    departuresBar.WidthRequest = w * ratio;
+            }
+            VibrantHumanityBarsContainer.SizeChanged += UpdateDeparturesWidth;
+            // Also apply immediately if the container already has a measured width.
+            if (VibrantHumanityBarsContainer.Width > 0)
+                departuresBar.WidthRequest = VibrantHumanityBarsContainer.Width * ratio;
+        }
+
+        /// <summary>
+        /// Builds a single horizontal stacked bar as a rounded <see cref="Border"/>
+        /// containing a <see cref="Grid"/> whose columns are proportional star widths.
+        /// </summary>
+        private static Border BuildBar((double StarVal, Color Color)[] segments)
+        {
+            var grid = new Grid { HeightRequest = 22 };
+            foreach (var seg in segments)
+            {
+                grid.ColumnDefinitions.Add(new ColumnDefinition
+                {
+                    Width = new GridLength(Math.Max(seg.StarVal, 0.001), GridUnitType.Star),
+                });
+            }
+            for (int i = 0; i < segments.Length; i++)
+            {
+                var bv = new BoxView
+                {
+                    Color               = segments[i].Color,
+                    MinimumWidthRequest = 2,
+                };
+                Grid.SetColumn(bv, i);
+                grid.Children.Add(bv);
+            }
+            return new Border
+            {
+                StrokeThickness = 0,
+                StrokeShape     = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = 6 },
+                Content         = grid,
+
+            };
+        }
+
+        /// <summary>
+        /// Builds a compact horizontal legend row from (colour, label, count) tuples.
+        /// </summary>
+        private static FlexLayout BuildLegend((Color Color, string Label, string Count)[] items, Color textColor)
+        {
+            var flex = new FlexLayout { Wrap = Microsoft.Maui.Layouts.FlexWrap.Wrap, JustifyContent = Microsoft.Maui.Layouts.FlexJustify.Start };
+            foreach (var item in items)
+            {
+                var swatch = new BoxView
+                {
+                    Color           = item.Color,
+                    WidthRequest    = 10,
+                    HeightRequest   = 10,
+                    CornerRadius    = 5,
+                    VerticalOptions = LayoutOptions.Center,
+                };
+                var lbl = new Label
+                {
+                    Text            = $"{item.Label}: {item.Count}",
+                    FontSize        = 11,
+                    VerticalOptions = LayoutOptions.Center,
+                };
+                lbl.SetDynamicResource(Label.TextColorProperty, "TextGray");
+                var entry = new HorizontalStackLayout
+                {
+                    Spacing = 5,
+                    Margin  = new Thickness(0, 0, 12, 2),
+                };
+                entry.Children.Add(swatch);
+                entry.Children.Add(lbl);
+                flex.Children.Add(entry);
+            }
+            return flex;
+        }
+
+        /// <summary>Reads a named colour from the application resource dictionary at call time.</summary>
+        private static Color GetDynColor(string key, Color fallback)
+        {
+            if (Application.Current?.Resources.TryGetValue(key, out var raw) == true && raw is Color c)
+                return c;
+            return fallback;
         }
 
         /// <summary>

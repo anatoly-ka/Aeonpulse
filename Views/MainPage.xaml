@@ -1925,6 +1925,16 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding VibrantHumanityExpanded}" />
+                                    <!-- AI: Proportional balance bars for Vibrant Humanity expanded view.
+                                         Arrivals bar (births) fills full width; Departures bar (deaths) is
+                                         proportionally shorter. Both bars and their legends are built
+                                         imperatively by ApplyVibrantHumanityBars() in MainPage.xaml.cs.
+                                         SizeChanged on VibrantHumanityBarsContainer drives the width update.
+                                         IsVisible gated on VibrantHumanityExpanded. -->
+                                    <VerticalStackLayout x:Name="VibrantHumanityBarsContainer"
+                                                         Spacing="16"
+                                                         Margin="0,10,0,0"
+                                                         IsVisible="{Binding VibrantHumanityExpanded}" />
                                 </VerticalStackLayout>
                             </Border>
                         </VerticalStackLayout>

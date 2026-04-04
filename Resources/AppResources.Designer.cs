@@ -3796,5 +3796,40 @@ namespace Aeonpulse.Resources {
                 return ResourceManager.GetString("LifeLog_Activity_Other", resourceCulture);
             }
         }
+        public static string Chart_VibrantHumanity_Arrivals {
+            get {
+                return ResourceManager.GetString("Chart_VibrantHumanity_Arrivals", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantHumanity_Departures {
+            get {
+                return ResourceManager.GetString("Chart_VibrantHumanity_Departures", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantHumanity_Singletons {
+            get {
+                return ResourceManager.GetString("Chart_VibrantHumanity_Singletons", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantHumanity_Twins {
+            get {
+                return ResourceManager.GetString("Chart_VibrantHumanity_Twins", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantHumanity_Heart {
+            get {
+                return ResourceManager.GetString("Chart_VibrantHumanity_Heart", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantHumanity_Cancer {
+            get {
+                return ResourceManager.GetString("Chart_VibrantHumanity_Cancer", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantHumanity_Other {
+            get {
+                return ResourceManager.GetString("Chart_VibrantHumanity_Other", resourceCulture);
+            }
+        }
     }
 }
