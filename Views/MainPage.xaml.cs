@@ -90,6 +90,7 @@ namespace Aeonpulse.Views
                 ApplyOrreryPositions(vm.AlienAnniversaries);
                 ApplyOrreryBaseDate(vm.BaseDateName, vm.BaseDateDisplay);
                 ApplyPhotonTrackPosition(vm.PhotonPath?.ProgressFraction ?? 0d);
+                ApplyBirthRankChart(vm);
             }
 
             // Re-apply the dotted fill Line endpoint after the first layout pass,
@@ -123,6 +124,11 @@ namespace Aeonpulse.Views
                 else
                     StopAmbientSparks();
             }
+
+            if (e.PropertyName == nameof(MainViewModel.HumanBirthRankExpanded) ||
+                e.PropertyName == nameof(MainViewModel.HumanBirthRank)         ||
+                e.PropertyName == nameof(MainViewModel.ColorScheme))
+                ApplyBirthRankChart(vm);
         }
 
         /// <summary>
@@ -627,6 +633,28 @@ namespace Aeonpulse.Views
         /// No size or position property is touched, so neighbouring elements never shift.
         /// </para>
         /// </summary>
+        /// <summary>
+        /// Sets a fresh <see cref="BirthRankChartDrawable"/> on the <see cref="BirthRankChart"/>
+        /// <c>GraphicsView</c> and triggers a redraw whenever the card expands or the result changes.
+        ///
+        /// <para>
+        /// <b>Why imperative:</b> <c>GraphicsView.Drawable</c> is not data-bindable from XAML.
+        /// The drawable is a strongly-typed object constructed here from the typed result.
+        /// This method is called from <c>OnViewModelPropertyChanged</c> and the constructor.
+        /// </para>
+        /// </summary>
+        private void ApplyBirthRankChart(MainViewModel vm)
+        {
+            var result = vm.HumanBirthRank;
+            if (result == null || result.IsPreTwentiethCentury || result.ChartPoints.Count == 0)
+            {
+                BirthRankChart.Drawable = null;
+                return;
+            }
+            BirthRankChart.Drawable = new BirthRankChartDrawable(result);
+            BirthRankChart.Invalidate();
+        }
+
         /// <summary>
         /// Starts the Ambient Sparks loop on <see cref="CosmosCanvas"/> if not already running.
         /// Creates a fresh <see cref="CancellationTokenSource"/> and fires

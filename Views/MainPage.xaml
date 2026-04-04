@@ -1493,6 +1493,24 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding HumanBirthRankExpanded}" />
+                                    <!-- AI: Human Birth Rank history curve - logarithmic-scale line graph of
+                                         cumulative human births from 190,000 BC to 2050 AD.
+                                         The Drawable (BirthRankChartDrawable) is set imperatively in
+                                         MainPage.xaml.cs via ApplyBirthRankChart(), called from
+                                         OnViewModelPropertyChanged when HumanBirthRankExpanded changes and
+                                         when HumanBirthRank result is refreshed.
+                                         X-axis: log10 "years ago" scale (oldest=left, newest=right).
+                                         Y-axis: cumulative births, linear 0..MaxBorn.
+                                         A "You" marker dot (JubileeAccent gold) marks the user rank position.
+                                         Axis labels "190k BC" and "Today" drawn by the Drawable.
+                                         IsVisible bound to HumanBirthRankExpanded so the graph is hidden
+                                         when the card is collapsed. Hidden for pre-1900 dates via converter. -->
+                                    <GraphicsView x:Name="BirthRankChart"
+                                                  IsVisible="{Binding HumanBirthRankExpanded}"
+                                                  HeightRequest="200"
+                                                  HorizontalOptions="FillAndExpand"
+                                                  Margin="0,8,0,0"
+                                                  BackgroundColor="{DynamicResource SpaceDarker}" />
                                 </VerticalStackLayout>
                             </Border>
 

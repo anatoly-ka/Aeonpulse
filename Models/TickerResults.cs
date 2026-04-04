@@ -1,4 +1,4 @@
-using Aeonpulse.Attributes;
+﻿using Aeonpulse.Attributes;
 
 namespace Aeonpulse.Models
 {
@@ -303,6 +303,26 @@ namespace Aeonpulse.Models
 
         /// <summary><c>true</c> when the base date is before 1900-01-01.</summary>
         public bool IsPreTwentiethCentury { get; init; }
+
+        /// <summary>
+        /// Raw historical data points for the birth-history curve.
+        /// Each point is a (Year, EverBorn) pair where Year is AD
+        /// (negative = BC) and EverBorn is the cumulative count.
+        /// The drawable maps these to canvas coordinates at draw time
+        /// using the linear X range [-5000, 2050] and Y range [0, 125e9].
+        /// Populated by <c>CalculationService.BirthRankChartPoints()</c>.
+        /// Empty for pre-1900 base dates.
+        /// </summary>
+        public IReadOnlyList<(double Year, double EverBorn)> ChartPoints { get; init; }
+            = System.Array.Empty<(double, double)>();
+
+        /// <summary>
+        /// Interpolated birth year of the user, derived by finding which two
+        /// historical data points bracket <c>EstimatedRank</c> and linearly
+        /// interpolating. Used by the drawable to position the marker dot.
+        /// <see cref="double.NaN"/> when rank is 0 or pre-1900.
+        /// </summary>
+        public double MarkerYear { get; init; } = double.NaN;
     }
 
     /// <summary>

@@ -279,6 +279,76 @@ namespace Aeonpulse.Services
         public double TotalDeathsByDate(DateTime date)
             => HumanBirthRankbyDate(date) - HumanPopulationByDate(date);
 
+        /// <summary>
+        /// Returns the raw historical (Year, EverBorn) data points for the
+        /// cumulative-births history polyline, plus the interpolated birth year
+        /// for the user marker.
+        ///
+        /// <para>
+        /// Raw year/EverBorn values are returned so the drawable can apply any
+        /// axis mapping (currently linear X in [-5000, 2050], linear Y in
+        /// [0, 125,000,000,000]) without re-computing from proportional values.
+        /// </para>
+        /// <para>
+        /// <b>Marker year</b> is found by linearly interpolating between the two
+        /// bracketing historical data points that straddle
+        /// <paramref name="estimatedRank"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="estimatedRank">User estimated birth rank from the piecewise model.</param>
+        /// <returns>
+        /// Tuple of: the raw data point list (Year AD, EverBorn) and the
+        /// interpolated <c>MarkerYear</c> (AD). MarkerYear is NaN when rank is 0.
+        /// </returns>
+        internal static (IReadOnlyList<(double Year, double EverBorn)> Points, double MarkerYear)
+            BirthRankChartPoints(double estimatedRank)
+        {
+            // Historical data: (Year AD, cumulative humans ever born).
+            // Source: PRB "How Many People Have Ever Lived on Earth?" (2024 revision).
+            // Negative years = BC. Same dataset as CalculateHumanBirthRank comment block.
+            var data = new (double Year, double EverBorn)[]
+            {
+                (-190000,            0),
+                ( -50000,  7_856_100_002),
+                (  -8000,  8_993_889_771),
+                (      1, 55_019_222_125),
+                (   1200, 81_610_565_125),
+                (   1650, 94_392_567_578),
+                (   1750, 97_564_499_091),
+                (   1850, 101_610_739_100),
+                (   1900, 104_510_976_956),
+                (   1950, 107_901_175_171),
+                (   2000, 113_966_170_055),
+                (   2010, 115_330_173_460),
+                (   2022, 117_020_448_575),
+                (   2035, 118_779_027_464),
+                (   2050, 120_847_437_072),
+            };
+
+            if (estimatedRank <= 0)
+                return (data, double.NaN);
+
+            // Find bracketing data points for marker year interpolation.
+            double markerYear = double.NaN;
+            for (int i = 1; i < data.Length; i++)
+            {
+                if (estimatedRank <= data[i].EverBorn)
+                {
+                    double span = data[i].EverBorn - data[i - 1].EverBorn;
+                    double t = span > 0
+                        ? (estimatedRank - data[i - 1].EverBorn) / span
+                        : 0;
+                    markerYear = data[i - 1].Year + t * (data[i].Year - data[i - 1].Year);
+                    break;
+                }
+            }
+            // If rank exceeds all data points, clamp to the last point year.
+            if (double.IsNaN(markerYear))
+                markerYear = data[data.Length - 1].Year;
+
+            return (data, markerYear);
+        }
+
         #endregion
 
         #region Time Jubilees
@@ -1129,11 +1199,14 @@ namespace Aeonpulse.Services
 
             // Use the shared piecewise model for consistent results with CalculateVibrantHumanity
             double estimatedRank = HumanBirthRankbyDate(baseDate.ToUniversalTime());
+            var (chartPoints, markerYear) = BirthRankChartPoints(estimatedRank);
 
             return new HumanBirthRankResult
             {
                 IsPreTwentiethCentury = false,
                 EstimatedRank = estimatedRank,
+                ChartPoints   = chartPoints,
+                MarkerYear    = markerYear,
                 BriefText = AppResources.Ticker_HumanBirthRankPostXX_Brief
                     .Replace("{estimatedRank:N0}", estimatedRank.ToString("N0")),
                 FullText = AppResources.Ticker_HumanBirthRankPostXX_Full
