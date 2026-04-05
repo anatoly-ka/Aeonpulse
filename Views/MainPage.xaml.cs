@@ -1,4 +1,4 @@
-﻿using Aeonpulse.Attributes;
+using Aeonpulse.Attributes;
 using Aeonpulse.ViewModels;
 using Aeonpulse.Resources;
 
@@ -103,6 +103,7 @@ namespace Aeonpulse.Views
                 ApplyPopulationChart(vm);
                 ApplyLifeLogChart(vm);
                 ApplyVibrantHumanityBars(vm);
+                ApplyCarbonBudgetChart(vm);
             }
 
             // Re-apply the dotted fill Line endpoint after the first layout pass,
@@ -167,6 +168,12 @@ namespace Aeonpulse.Views
                 e.PropertyName == nameof(MainViewModel.VibrantHumanity)         ||
                 e.PropertyName == nameof(MainViewModel.DisplayLanguage))
                 ApplyVibrantHumanityBars(vm);
+
+            if (e.PropertyName == nameof(MainViewModel.GlobalExhaleExpanded) ||
+                e.PropertyName == nameof(MainViewModel.GlobalExhale)         ||
+                e.PropertyName == nameof(MainViewModel.ColorScheme)          ||
+                e.PropertyName == nameof(MainViewModel.DisplayLanguage))
+                ApplyCarbonBudgetChart(vm);
         }
 
         /// <summary>
@@ -1012,6 +1019,57 @@ namespace Aeonpulse.Views
 
                 LifeLogLegend.Children.Add(row);
             }
+        }
+
+        /// <summary>
+        /// Populates the carbon budget chart elements inside
+        /// <see cref="CarbonBudgetChartContainer"/>: sets localized text on the title
+        /// and depletion labels, assigns a fresh <see cref="CarbonBudgetChartDrawable"/>
+        /// to <see cref="CarbonBudgetChartView"/>, and sets theme-aware colours on
+        /// the axis labels via <c>SetDynamicResource</c>.
+        ///
+        /// <para>Called on <c>GlobalExhaleExpanded</c>, <c>GlobalExhale</c>, and
+        /// <c>DisplayLanguage</c> changes and from the constructor.
+        /// Hidden when the result is pre-1900 or the depletion year is unavailable.</para>
+        /// </summary>
+        private void ApplyCarbonBudgetChart(MainViewModel vm)
+        {
+            var result = vm.GlobalExhale;
+            bool show = result != null && !result.IsPreTwentiethCentury && result.DepletionYear > 0;
+            CarbonBudgetChartContainer.IsVisible = show && vm.GlobalExhaleExpanded;
+            if (!show) return;
+
+            // Title label.
+            CarbonBudgetTitleLabel.Text = AppResources.Chart_GlobalExhale_BudgetTitle;
+            CarbonBudgetTitleLabel.SetDynamicResource(Label.TextColorProperty, "TextDim");
+
+            // Depletion label.
+            int depYear = (int)Math.Round(result!.DepletionYear);
+            CarbonBudgetDepletionLabel.Text = string.Format(
+                AppResources.Chart_GlobalExhale_Depletion, depYear);
+            CarbonBudgetDepletionLabel.SetDynamicResource(Label.TextColorProperty, "CyberPink");
+
+            // Axis labels.
+            CarbonChartLabelBase.Text = vm.BaseDateName;
+            CarbonChartLabelBase.SetDynamicResource(Label.TextColorProperty, "TextGray");
+            CarbonChartLabelToday.Text = AppResources.Chart_GlobalExhale_Today;
+            CarbonChartLabelToday.SetDynamicResource(Label.TextColorProperty, "CyberCyan");
+            CarbonChartLabelLimit.Text = AppResources.Chart_GlobalExhale_Limit;
+            CarbonChartLabelLimit.SetDynamicResource(Label.TextColorProperty, "CyberPink");
+
+            // Chart drawable.
+            double todayYear = DateTime.Now.Year + DateTime.Now.DayOfYear / 365.25;
+            CarbonBudgetChartView.Drawable = new CarbonBudgetChartDrawable
+            {
+                ChartStartYear = result.ChartStartYear,
+                DepletionYear  = result.DepletionYear,
+                TotalBudgetGt  = result.TotalBudgetGt,
+                BaseDateCumGt  = result.BaseDateCumCO2Gt,
+                TodayCumGt     = result.TodayCumCO2Gt,
+                BaseYear       = vm.BaseDate.Year + vm.BaseDate.DayOfYear / 365.25,
+                TodayYear      = todayYear,
+            };
+            CarbonBudgetChartView.Invalidate();
         }
 
         /// <summary>

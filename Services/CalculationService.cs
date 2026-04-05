@@ -1462,12 +1462,51 @@ namespace Aeonpulse.Services
             totalCO2 = totalCO2Now - totalCO2Base;
             amount = useMetric ? $"{totalCO2:F2} {AppResources.UnitMetric_BTonnes}" : $"{(totalCO2 * 0.984252):F2} {AppResources.UnitImperial_BTons}";
 
+            // Carbon budget chart data.
+            // Pre-1900 constant included so all cumulative figures share the same epoch.
+            const double PreIndustrialGt = 11.77;
+
+            // Polynomial integral: cumulative Gt emitted from 1900 up to offset x (years since 1900).
+            // F(x) = 0.0008/3 * x^3 - 0.0122/2 * x^2 + 0.6859 * x
+            static double CumFromPoly(double x) =>
+                0.0008 / 3.0 * x * x * x - 0.0122 / 2.0 * x * x + 0.6859 * x;
+
+            double baseDateCumGt = PreIndustrialGt + CumFromPoly(x1);
+            double todayCumGt    = PreIndustrialGt + CumFromPoly(x2);
+
+            // IPCC 1.5-degree total budget: historical total to end of 2019 + 400 Gt remaining.
+            // F(120) ~ 547 Gt  =>  11.77 + 547 + 400 = ~959 Gt total ceiling.
+            double budgetGt = PreIndustrialGt + CumFromPoly(120.0) + 400.0;
+
+            // Depletion year: solve PreIndustrialGt + CumFromPoly(xd) = budgetGt for xd.
+            // Rearranges to: CumFromPoly(xd) = budgetGt - PreIndustrialGt.
+            // Use binary search (bracketed in [x2, 1000] years from 1900).
+            double depletionYear = 0.0;
+            double targetGt = budgetGt - PreIndustrialGt;
+            if (todayCumGt < budgetGt)
+            {
+                double lo = x2, hi = 1000.0;
+                for (int iter = 0; iter < 60; iter++)
+                {
+                    double mid = (lo + hi) * 0.5;
+                    if (CumFromPoly(mid) < targetGt) lo = mid; else hi = mid;
+                }
+                depletionYear = 1900.0 + (lo + hi) * 0.5;
+            }
+
+            double chartStartYear = Math.Max(1900.0, baseDate.Year - 10.0);
+
             return new GlobalExhaleResult
             {
                 IsPreTwentiethCentury   = false,
                 TotalCO2BillionTonnes   = totalCO2,
                 FormattedAmount         = amount,
                 UseMetric               = useMetric,
+                BaseDateCumCO2Gt        = baseDateCumGt,
+                TodayCumCO2Gt           = todayCumGt,
+                TotalBudgetGt           = budgetGt,
+                DepletionYear           = depletionYear,
+                ChartStartYear          = chartStartYear,
                 BriefText = AppResources.Ticker_GlobalExhalePostXX_Brief
                     .Replace("{amount}", amount),
                 FullText = AppResources.Ticker_GlobalExhalePostXX_Full

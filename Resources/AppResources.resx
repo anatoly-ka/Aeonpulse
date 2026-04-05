@@ -1285,6 +1285,26 @@
     <value>Emissions data courtesy of the Global Carbon Project (GCP) and the Global Carbon Budget (GCB) of University of Exeter's Global Systems Institute.</value>
     <comment>MainPage.xaml.cs</comment>
   </data>
+  <data name="Chart_GlobalExhale_BudgetTitle" xml:space="preserve">
+    <value>1.5&#xB0;C Carbon Budget</value>
+    <comment>Title label above the carbon budget chart.</comment>
+  </data>
+  <data name="Chart_GlobalExhale_Depletion" xml:space="preserve">
+    <value>Budget exhausted: {0}</value>
+    <comment>Depletion year label. {0} = year string.</comment>
+  </data>
+  <data name="Chart_GlobalExhale_BaseDate" xml:space="preserve">
+    <value>Base date</value>
+    <comment>X-axis left label.</comment>
+  </data>
+  <data name="Chart_GlobalExhale_Today" xml:space="preserve">
+    <value>Today</value>
+    <comment>X-axis centre label.</comment>
+  </data>
+  <data name="Chart_GlobalExhale_Limit" xml:space="preserve">
+    <value>1.5&#xB0;C limit</value>
+    <comment>X-axis right label and dashed line label.</comment>
+  </data>
   <data name="Tease_Countdown" xml:space="preserve">
     <value>Only {days} days {hrs}h : {mins}m until next anniversary! Time is flying, and I'm counting every second. Find your next big milestone.</value>
     <comment>CalculationService.cs</comment>

@@ -3831,5 +3831,30 @@ namespace Aeonpulse.Resources {
                 return ResourceManager.GetString("Chart_VibrantHumanity_Other", resourceCulture);
             }
         }
+        public static string Chart_GlobalExhale_BudgetTitle {
+            get {
+                return ResourceManager.GetString("Chart_GlobalExhale_BudgetTitle", resourceCulture);
+            }
+        }
+        public static string Chart_GlobalExhale_Depletion {
+            get {
+                return ResourceManager.GetString("Chart_GlobalExhale_Depletion", resourceCulture);
+            }
+        }
+        public static string Chart_GlobalExhale_BaseDate {
+            get {
+                return ResourceManager.GetString("Chart_GlobalExhale_BaseDate", resourceCulture);
+            }
+        }
+        public static string Chart_GlobalExhale_Today {
+            get {
+                return ResourceManager.GetString("Chart_GlobalExhale_Today", resourceCulture);
+            }
+        }
+        public static string Chart_GlobalExhale_Limit {
+            get {
+                return ResourceManager.GetString("Chart_GlobalExhale_Limit", resourceCulture);
+            }
+        }
     }
 }

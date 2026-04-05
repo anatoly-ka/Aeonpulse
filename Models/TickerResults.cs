@@ -388,6 +388,42 @@ namespace Aeonpulse.Models
 
         /// <summary><c>true</c> when the base date is before 1900-01-01.</summary>
         public bool IsPreTwentiethCentury { get; init; }
+
+        /// <summary>
+        /// Cumulative CO2 (Gt) from the model epoch up to and including <c>baseDate</c>,
+        /// including the pre-1900 constant (11.77 Gt). Used as the left Y anchor on the chart.
+        /// Zero for pre-1900 base dates.
+        /// </summary>
+        public double BaseDateCumCO2Gt { get; init; }
+
+        /// <summary>
+        /// Cumulative CO2 (Gt) from the model epoch up to today,
+        /// including the pre-1900 constant (11.77 Gt).
+        /// Zero for pre-1900 base dates.
+        /// </summary>
+        public double TodayCumCO2Gt { get; init; }
+
+        /// <summary>
+        /// Total IPCC 1.5-degree cumulative carbon budget (Gt) used as the horizontal
+        /// limit line. Equals pre-1900 constant + cumulative polynomial to 2020 + 400 Gt
+        /// IPCC remaining budget from Jan 2020 (~959 Gt total). Constant across instances.
+        /// Zero for pre-1900 base dates.
+        /// </summary>
+        public double TotalBudgetGt { get; init; }
+
+        /// <summary>
+        /// Fractional calendar year (e.g. 2042.7) when cumulative CO2 is projected to
+        /// reach <see cref="TotalBudgetGt"/> under the current emission model.
+        /// Zero for pre-1900 base dates or when already exceeded.
+        /// </summary>
+        public double DepletionYear { get; init; }
+
+        /// <summary>
+        /// Left edge of the chart X axis as a fractional year.
+        /// = max(1900, baseYear - 10), so the chart always shows some historical context.
+        /// Zero for pre-1900 base dates.
+        /// </summary>
+        public double ChartStartYear { get; init; }
     }
 
     /// <summary>
