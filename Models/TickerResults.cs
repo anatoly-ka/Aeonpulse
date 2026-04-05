@@ -466,6 +466,18 @@ namespace Aeonpulse.Models
 
         /// <summary><c>true</c> when the result was computed in metric units (CO2 mass display only).</summary>
         public bool UseMetric { get; init; }
+
+        /// <summary>
+        /// Total air volume in cubic metres (AirLiters / 1000).
+        /// Used as the cube volume for the volumetric visualizer.
+        /// </summary>
+        public double AirVolumeCubicMeters { get; init; }
+
+        /// <summary>
+        /// Edge length in metres of a cube whose volume equals <see cref="AirVolumeCubicMeters"/>.
+        /// Formula: cbrt(AirVolumeCubicMeters).
+        /// </summary>
+        public double CubeEdgeMeters { get; init; }
     }
 
     /// <summary>

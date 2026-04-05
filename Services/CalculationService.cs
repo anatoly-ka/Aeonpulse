@@ -1581,14 +1581,20 @@ namespace Aeonpulse.Services
                 .Replace("{air_volume}",   airLiters.ToString("N0"))
                 .Replace("{co2_mass}",     co2Formatted);
 
+            // Volumetric cube: cube edge = cbrt(airLiters / 1000 m3).
+            double airVolumeCubicMeters = airLiters / 1000.0;
+            double cubeEdgeMeters       = Math.Cbrt(airVolumeCubicMeters);
+
             return new YourBreathResult
             {
-                BreathCount = breaths,
-                AirLiters   = airLiters,
-                Co2Kg       = co2Kg,
-                UseMetric   = useMetric,
-                BriefText   = briefText,
-                FullText    = fullText
+                BreathCount           = breaths,
+                AirLiters             = airLiters,
+                Co2Kg                 = co2Kg,
+                UseMetric             = useMetric,
+                AirVolumeCubicMeters  = airVolumeCubicMeters,
+                CubeEdgeMeters        = cubeEdgeMeters,
+                BriefText             = briefText,
+                FullText              = fullText
             };
         }
 

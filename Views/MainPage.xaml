@@ -2137,6 +2137,42 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding YourBreathExpanded}" />
+                                    <!-- AI: Volumetric Cube visualizer for Your Breath expanded view.
+                                         Description label and GraphicsView populated by ApplyVolumeCube() in MainPage.xaml.cs.
+                                         Container IsVisible gated on YourBreathExpanded. -->
+                                    <VerticalStackLayout x:Name="VolumeCubeContainer"
+                                                         Spacing="8"
+                                                         Margin="0,12,0,0"
+                                                         IsVisible="{Binding YourBreathExpanded}">
+                                        <!-- AI: Cube canvas layered with landmark image inside a shared Grid.
+                                             GraphicsView draws the isometric cube; Image shows the landmark
+                                             tinted via ImageTint.Color to match the current theme. -->
+                                        <Grid>
+                                            <GraphicsView x:Name="VolumeCubeView"
+                                                          HeightRequest="250"
+                                                          HorizontalOptions="FillAndExpand"
+                                                          BackgroundColor="{DynamicResource CardDark}" />
+                                            <Image x:Name="LandmarkImage"
+                                                   HeightRequest="80"
+                                                   Aspect="AspectFit"
+                                                   HorizontalOptions="Start"
+                                                   VerticalOptions="End"
+                                                   Margin="8,0,0,4"
+                                                   helpers:ImageTint.Color="{DynamicResource CyberCyan}" />
+                                        </Grid>
+                                        <Grid ColumnDefinitions="*,*"
+                                              Margin="0,2,0,0">
+                                            <Label x:Name="LandmarkLabel"
+                                                   Grid.Column="0"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   HorizontalTextAlignment="Start" />
+                                            <Label x:Name="VolumeCubeDescLabel"
+                                                   Grid.Column="1"
+                                                   FontSize="{DynamicResource FontSizeMedium}"
+                                                   HorizontalTextAlignment="End"
+                                                   LineBreakMode="WordWrap" />
+                                        </Grid>
+                                    </VerticalStackLayout>
 
                                 </VerticalStackLayout>
                             </Border>
@@ -2155,7 +2191,7 @@
                                 <VerticalStackLayout Spacing="8">
 
                                     <!-- AI: Ticker card header - 3-column:
-                                         [Col0: butterfly emoji icon | Col1: title | Col2: action buttons (info, refresh, expand)] -->
+                                         [Col0: butterfly emoji icon | Col1: title + LIVE badge | Col2: action buttons (info, refresh, expand)] -->
                                     <Grid ColumnDefinitions="Auto,*,Auto">
                                         <!-- Emoji: &#x1F98B; (butterfly) -->
                                         <Label Grid.Column="0"

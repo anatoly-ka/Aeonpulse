@@ -466,7 +466,7 @@
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_GalacticCommuteSource" xml:space="preserve">
-    <value>Data courtesy of the NASA Jet Propulsion Laboratory (JPL) Horizons On-Line Ephemeris System. Animation cortesy of European Space Agency - ESA.</value>
+    <value>Data courtesy of the NASA Jet Propulsion Laboratory (JPL) Horizons On-Line Ephemeris System. Animation courtesy of European Space Agency - ESA.</value>
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Ticker_PhotonPathTitle" xml:space="preserve">
@@ -750,7 +750,7 @@
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_CosmicStretchSource" xml:space="preserve">
-    <value>Hubble E. "A relation between distance and radial velocity among extra-galactic nebulae" from Proceedings of the National Academy of Sciences 15 (3) 1929.&lt;br&gt;"The International Astronomical Union recommends that the law should now be known as the Hubble-Lemaitre law, to pay tribute to the Belgian priest and astronomer Georges Lemaitre, who derived the speed-distance relationship two years earlier than did US astronomer Edwin Hubble." from Nature 563 (7729) 2018. Animation cortesy An Atlas of The Universe, author Richard Powell.</value>
+    <value>Hubble E. "A relation between distance and radial velocity among extra-galactic nebulae" from Proceedings of the National Academy of Sciences 15 (3) 1929.&lt;br&gt;"The International Astronomical Union recommends that the law should now be known as the Hubble-Lemaitre law, to pay tribute to the Belgian priest and astronomer Georges Lemaitre, who derived the speed-distance relationship two years earlier than did US astronomer Edwin Hubble." from Nature 563 (7729) 2018. Animation courtesy An Atlas of The Universe, author Richard Powell.</value>
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Ticker_HumanBirthRankTitle" xml:space="preserve">
@@ -1270,8 +1270,88 @@
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_YourBreathSource" xml:space="preserve">
-    <value>Calculation based on the data provided by the National Center for Biotechnology Information (NCBI) of the National Library of Medicine (NIH).</value>
+    <value>Calculation based on the data provided by the National Center for Biotechnology Information (NCBI) of the National Library of Medicine (NIH). Images courtesy of SVG Repo LLC, FreePNGimg, Share Icon, UXWing.</value>
     <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Chart_YourBreath_CubePrefix" xml:space="preserve">
+    <value>You have processed enough air to fill a cube </value>
+    <comment>First span of volumetric cube label. Followed by dimension then suffix.</comment>
+  </data>
+  <data name="Chart_YourBreath_CubeSuffix" xml:space="preserve">
+    <value> on each side.</value>
+    <comment>Last span of volumetric cube label.</comment>
+  </data>
+  <data name="Chart_YourBreath_CubeM" xml:space="preserve">
+    <value>{0:N1} m</value>
+    <comment>Bold dimension span. {0} = CubeEdgeMeters double.</comment>
+  </data>
+  <data name="Chart_YourBreath_CubeFt" xml:space="preserve">
+    <value>{0:N1} ft</value>
+    <comment>Bold dimension span when imperial units active. {0} = edge in feet.</comment>
+  </data>
+  <data name="Chart_YourBreath_LM_Human" xml:space="preserve">
+    <value>Standard human height reference</value>
+    <comment>Landmark comparison label.</comment>
+  </data>
+  <data name="Chart_YourBreath_LM_Bus" xml:space="preserve">
+    <value>London double-decker bus</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Stonehenge" xml:space="preserve">
+    <value>The highest stone at Stonehenge (UK)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Moai" xml:space="preserve">
+    <value>Paro - the highest Moai statue (Easter Island)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Hollywood" xml:space="preserve">
+    <value>The Hollywood Sign on Mount Lee letters (USA)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Parthenon" xml:space="preserve">
+    <value>The Parthenon (Greece)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Itsukushima" xml:space="preserve">
+    <value>Itsukushima Shrine (Japan)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Sphinx" xml:space="preserve">
+    <value>The Great Sphinx of Giza (Egypt)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_WhiteHouse" xml:space="preserve">
+    <value>The White House (USA)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Brandenburg" xml:space="preserve">
+    <value>The Brandenburg Gate (Germany)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Whale" xml:space="preserve">
+    <value>Blue whale length</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Christ" xml:space="preserve">
+    <value>Christ the Redeemer with pedestal (Brazil)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Liberty" xml:space="preserve">
+    <value>The Statue of Liberty from heel to torch (USA)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Colosseum" xml:space="preserve">
+    <value>Colosseum (Rome)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Arc" xml:space="preserve">
+    <value>Arc de Triomphe (Paris)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Ruiguang" xml:space="preserve">
+    <value>Ruiguang Tower (China)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Pisa" xml:space="preserve">
+    <value>Leaning Tower of Pisa (Italy)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Menkaure" xml:space="preserve">
+    <value>The Pyramid of Menkaure (Egypt)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_TowerBridge" xml:space="preserve">
+    <value>Tower Bridge (UK)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_NotreDame" xml:space="preserve">
+    <value>Notre-Dame de Paris (France)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_TajMahal" xml:space="preserve">
+    <value>Taj Mahal (India)</value>
   </data>
   <data name="Info_GlobalExhaleTitle" xml:space="preserve">
     <value>Global Exhale</value>
@@ -1292,10 +1372,6 @@
   <data name="Chart_GlobalExhale_Depletion" xml:space="preserve">
     <value>Budget exhausted: {0}</value>
     <comment>Depletion year label. {0} = year string.</comment>
-  </data>
-  <data name="Chart_GlobalExhale_BaseDate" xml:space="preserve">
-    <value>Base date</value>
-    <comment>X-axis left label.</comment>
   </data>
   <data name="Chart_GlobalExhale_Today" xml:space="preserve">
     <value>Today</value>

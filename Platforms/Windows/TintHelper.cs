@@ -377,22 +377,31 @@ namespace Aeonpulse
         }
 
         /// <summary>
-        /// Extracts the scaled PNG filename (e.g. <c>info.scale-100.png</c>) from a
-        /// MAUI <see cref="IImageSource"/>. Returns <c>null</c> for non-file sources.
+        /// Extracts the resolved PNG filename from a MAUI <see cref="IImageSource"/>.
+        /// For <see cref="FileImageSource"/>: first tries the Resizetizer-scaled name
+        /// (<c>{stem}.scale-100.{ext}</c>); if that file does not exist on disk, falls
+        /// back to the plain filename so <c>MauiAsset</c> files (which are not processed
+        /// by Resizetizer and have no scale suffix) are also found.
+        /// Returns <c>null</c> for non-file sources.
         /// </summary>
         private static string? GetScaledFileName(Microsoft.Maui.IImageSource? source)
         {
             if (source is not FileImageSource fis)
                 return null;
 
-            var plain = fis.File; // e.g. "info.png"
+            var plain = fis.File;
             if (string.IsNullOrEmpty(plain))
                 return null;
 
-            // Resizetizer renames files to {stem}.scale-100.{ext} for Windows.
-            var stem = System.IO.Path.GetFileNameWithoutExtension(plain);
-            var ext  = System.IO.Path.GetExtension(plain);
-            return $"{stem}.scale-100{ext}";
+            // Resizetizer renames MauiImage files to {stem}.scale-100.{ext} on Windows.
+            var stem   = System.IO.Path.GetFileNameWithoutExtension(plain);
+            var ext    = System.IO.Path.GetExtension(plain);
+            var scaled = $"{stem}.scale-100{ext}";
+
+            // MauiAsset files are copied verbatim (no scale suffix). Try scaled first,
+            // then fall back to the plain name so both MauiImage and MauiAsset are handled.
+            var scaledPath = System.IO.Path.Combine(AppContext.BaseDirectory, scaled);
+            return System.IO.File.Exists(scaledPath) ? scaled : plain;
         }
 
         /// <summary>

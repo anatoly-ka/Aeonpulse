@@ -58,6 +58,23 @@ namespace Aeonpulse
                                 ApplyImageTint(imageHandler, tint);
                         });
 
+                    // Also hook the Source mapper for ImageHandler so the tint is re-applied
+                    // immediately after MAUI sets or resets the native image source.
+                    // This covers Image controls whose Source is set programmatically at runtime
+                    // (e.g. LandmarkImage in the Your Breath expanded card): without this hook
+                    // the ColorProperty mapper fires once on the initial XAML DynamicResource
+                    // binding but the new native image loaded on every source change is un-tinted.
+                    Microsoft.Maui.Handlers.ImageHandler.Mapper.AppendToMapping(
+                        "Source",
+                        (handler, view) =>
+                        {
+                            if (view is not BindableObject bindable) return;
+                            var tint = ImageTint.GetColor(bindable);
+                            if (tint is null) return;
+                            if (handler is Microsoft.Maui.Handlers.ImageHandler imageHandler)
+                                ApplyImageTint(imageHandler, tint);
+                        });
+
                     // Same pattern for ImageButton (e.g., toolbar icon buttons).
                     Microsoft.Maui.Handlers.ImageButtonHandler.Mapper.AppendToMapping(
                         nameof(ImageTint.ColorProperty),

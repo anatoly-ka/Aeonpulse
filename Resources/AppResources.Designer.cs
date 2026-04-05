@@ -3856,5 +3856,130 @@ namespace Aeonpulse.Resources {
                 return ResourceManager.GetString("Chart_GlobalExhale_Limit", resourceCulture);
             }
         }
+        public static string Chart_YourBreath_CubePrefix {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_CubePrefix", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_CubeSuffix {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_CubeSuffix", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_CubeM {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_CubeM", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_CubeFt {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_CubeFt", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Human {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Human", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Bus {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Bus", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Stonehenge {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Stonehenge", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Moai {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Moai", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Hollywood {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Hollywood", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Parthenon {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Parthenon", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Itsukushima {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Itsukushima", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Sphinx {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Sphinx", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_WhiteHouse {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_WhiteHouse", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Brandenburg {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Brandenburg", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Whale {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Whale", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Christ {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Christ", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Liberty {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Liberty", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Colosseum {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Colosseum", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Arc {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Arc", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Ruiguang {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Ruiguang", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Pisa {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Pisa", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_Menkaure {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_Menkaure", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_TowerBridge {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_TowerBridge", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_NotreDame {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_NotreDame", resourceCulture);
+            }
+        }
+        public static string Chart_YourBreath_LM_TajMahal {
+            get {
+                return ResourceManager.GetString("Chart_YourBreath_LM_TajMahal", resourceCulture);
+            }
+        }
     }
 }

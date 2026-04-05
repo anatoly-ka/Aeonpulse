@@ -52,7 +52,13 @@
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
 		<!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Include="Resources\Images\*"
+		           Exclude="Resources\Images\0*;Resources\Images\1*;Resources\Images\2*;Resources\Images\3*;Resources\Images\4*;Resources\Images\5*;Resources\Images\6*;Resources\Images\7*" />
+
+		<!-- Landmark comparison images (filenames start with digits - excluded from MauiImage resizetizer,
+		     included as raw assets loaded via FileSystem.OpenAppPackageFileAsync). -->
+		<MauiAsset Include="Resources\Images\0*.png;Resources\Images\1*.png;Resources\Images\2*.png;Resources\Images\3*.png;Resources\Images\4*.png;Resources\Images\5*.png;Resources\Images\6*.png;Resources\Images\7*.png"
+		           LogicalName="%(Filename)%(Extension)" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />

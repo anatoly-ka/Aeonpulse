@@ -726,6 +726,18 @@ namespace Aeonpulse.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        /// <summary>
+        /// Stops both background timers immediately. Must be called before the
+        /// UI visual tree is torn down (e.g. from <c>Window.Destroying</c>) to
+        /// prevent in-flight <see cref="PropertyChanged"/> notifications from
+        /// reaching already-disposed WinRT UI elements.
+        /// </summary>
+        public void StopTimers()
+        {
+            _updateTimer?.Stop();
+            _vibrantCosmosTimer?.Stop();
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -1270,8 +1270,83 @@
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_YourBreathSource" xml:space="preserve">
-    <value>Расчеты основаны на данных, предоставленных National Center for Biotechnology Information (NCBI) от National Library of Medicine (NIH).</value>
+    <value>Расчеты основаны на данных, предоставленных National Center for Biotechnology Information (NCBI) от National Library of Medicine (NIH). Изображения от SVG Repo LLC, FreePNGimg, Share Icon, UXWing.</value>
     <comment>MainPage.xaml.cs</comment>
+  </data>
+  <data name="Chart_YourBreath_CubePrefix" xml:space="preserve">
+    <value>Воздух, который Вы выдохнули, может заполнить куб со сторонами </value>
+  </data>
+  <data name="Chart_YourBreath_CubeSuffix" xml:space="preserve">
+    <value> каждая.</value>
+  </data>
+  <data name="Chart_YourBreath_CubeM" xml:space="preserve">
+    <value>{0:N1} м</value>
+  </data>
+  <data name="Chart_YourBreath_CubeFt" xml:space="preserve">
+    <value>{0:N1} фт</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Human" xml:space="preserve">
+    <value>Средний рост человека</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Bus" xml:space="preserve">
+    <value>Двухэтажный автобус (Лондон)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Stonehenge" xml:space="preserve">
+    <value>Самый высокий камень в Стоунхендже (Великобритания)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Moai" xml:space="preserve">
+    <value>Паро - самая высокая статуя моаи (остров Пасхи)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Hollywood" xml:space="preserve">
+    <value>Буквы знака Hollywood на склоне холма Маунт Ли (США)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Parthenon" xml:space="preserve">
+    <value>Парфенон (Греция)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Itsukushima" xml:space="preserve">
+    <value>Святилище Ицукусима (Япония)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Sphinx" xml:space="preserve">
+    <value>Большой сфинкс в Гизе (Египет)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_WhiteHouse" xml:space="preserve">
+    <value>Белый дом (США)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Brandenburg" xml:space="preserve">
+    <value>Бранденбургские ворота (Германия)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Whale" xml:space="preserve">
+    <value>Длина синего кита</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Christ" xml:space="preserve">
+    <value>Статуя Христа-Искупителя с пьедесталом (Бразилия)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Liberty" xml:space="preserve">
+    <value>Статуя Свободы от основания до вершины факела (США)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Colosseum" xml:space="preserve">
+    <value>Колизей (Рим)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Arc" xml:space="preserve">
+    <value>Триумфальная арка (Париж)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Ruiguang" xml:space="preserve">
+    <value>Башня Руйгуан (Китай)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Pisa" xml:space="preserve">
+    <value>Пизанская башня (Италия)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_Menkaure" xml:space="preserve">
+    <value>Пирамида Микерина (Египет)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_TowerBridge" xml:space="preserve">
+    <value>Тауэрский мост (Великобритания)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_NotreDame" xml:space="preserve">
+    <value>Нотр-Дам де Пари (Франция)</value>
+  </data>
+  <data name="Chart_YourBreath_LM_TajMahal" xml:space="preserve">
+    <value>Тадж Махал (Индия)</value>
   </data>
   <data name="Info_GlobalExhaleTitle" xml:space="preserve">
     <value>Дыхание мира</value>
@@ -1290,9 +1365,6 @@
   </data>
   <data name="Chart_GlobalExhale_Depletion" xml:space="preserve">
     <value>Бюджет будет исчерпан: {0}</value>
-  </data>
-  <data name="Chart_GlobalExhale_BaseDate" xml:space="preserve">
-    <value>&#x41D;&#x430;&#x447;&#x430;&#x43B;&#x44C;&#x43D;&#x430;&#x44F; &#x434;&#x430;&#x442;&#x430;</value>
   </data>
   <data name="Chart_GlobalExhale_Today" xml:space="preserve">
     <value>Сегодня</value>
@@ -1716,15 +1788,14 @@
     <value>Семь миллиардов... Восемь миллиардов... Каждая такая цифра в заголовке скрывает под собой беспрестанный ежесекундный кругооборот: примерно &lt;b&gt;4,4 ребёнка рождается и 2,0 человека умирает каждую секунду&lt;/b&gt;, что даёт чистый прирост около &lt;b&gt;2,35 человека в секунду&lt;/b&gt; - или примерно 74 миллионов человек в год.&lt;br/&gt;&lt;br/&gt;Этот счётчик моделирует рост населения с помощью &lt;b&gt;трёхэпоховой линейной аппроксимации&lt;/b&gt;:&lt;br/&gt;&amp;bull; &lt;b&gt;До 1950 года:&lt;/b&gt; население выросло примерно с 1,6 млрд (1900) до 2,5 млрд (1950), в среднем около 18 млн чистого прироста в год&lt;br/&gt;&amp;bull; &lt;b&gt;1950-2000:&lt;/b&gt; демографический взрыв, вызванный послевоенной медициной и «Зелёной революцией»; пик чистого прироста - около 90 млн/год в конце 1980-х&lt;br/&gt;&amp;bull; &lt;b&gt;2000 - н.в.:&lt;/b&gt; рост продолжается, но замедляется по мере снижения рождаемости; текущий чистый прирост - около 80 млн/год&lt;br/&gt;&lt;br/&gt;Модель равномерно распределяет годовое чистое изменение по секундам внутри каждой эпохи.&lt;br/&gt;&lt;br/&gt;Результат: наглядная оценка того, насколько больше людей делит нашу планету с Вами по сравнению с моментом указанной базовой даты.</value>
   </data>
     <data name="Chart_GlobalCrowd_Year_Prefix" xml:space="preserve">
-    <value>&#x413;&#x43E;&#x434;: </value>
+    <value>Год: </value>
     <comment>Population chart year label prefix.</comment>
   </data>
   <data name="Chart_GlobalCrowd_Pop_Prefix" xml:space="preserve">
-    <value>&#x41D;&#x430;&#x441;&#x435;&#x43B;&#x435;&#x43D;&#x438;&#x435;: </value>
+    <value>Население: </value>
     <comment>Population chart population label prefix.</comment>
   </data>
-
-<data name="Info_GlobalCrowdSource" xml:space="preserve">
+  <data name="Info_GlobalCrowdSource" xml:space="preserve">
     <value>Мировые статистические данные и прогнозы численности населения взяты из Population Division (2024 Revision), предоставленном Департаментом по экономическим и социальным вопросам ООН. Исторические оценки взяты из баз данных Human Mortality Database (2025 revision) и Population Reference Bureau (2024).</value>
   </data>
   <data name="Ticker_LifeLogTitle" xml:space="preserve">
@@ -1766,9 +1837,8 @@
   <data name="LifeLog_Activity_PersonalCare" xml:space="preserve">
     <value>Личная гигиена</value>
   </data>
-
   <data name="LifeLog_Activity_Other" xml:space="preserve">
-    <value>&#x41F;&#x440;&#x43E;&#x447;&#x435;&#x435;</value>
+    <value>Прочее</value>
   </data>
   <data name="Ticker_SpaceWaitTitle" xml:space="preserve">
     <value>Внеземные ожидания</value>
@@ -1841,25 +1911,25 @@
     <comment>DeepDivePopup sources (ru)</comment>
   </data>
   <data name="Chart_VibrantHumanity_Arrivals" xml:space="preserve">
-    <value>&#x41F;&#x440;&#x438;&#x431;&#x44B;&#x442;&#x438;&#x435; (&#x420;&#x43E;&#x436;&#x434;&#x435;&#x43D;&#x438;&#x44F;)</value>
+    <value>Прибытие (Рождения)</value>
   </data>
   <data name="Chart_VibrantHumanity_Departures" xml:space="preserve">
-    <value>&#x423;&#x431;&#x44B;&#x442;&#x438;&#x435; (&#x421;&#x43C;&#x435;&#x440;&#x442;&#x438;)</value>
+    <value>Убытие (Смерти)</value>
   </data>
   <data name="Chart_VibrantHumanity_Singletons" xml:space="preserve">
-    <value>&#x41E;&#x434;&#x438;&#x43D;&#x43E;&#x447;&#x43A;&#x438;</value>
+    <value>Одиночки</value>
   </data>
   <data name="Chart_VibrantHumanity_Twins" xml:space="preserve">
-    <value>&#x411;&#x43B;&#x438;&#x437;&#x43D;&#x435;&#x446;&#x44B;</value>
+    <value>Близнецы</value>
   </data>
   <data name="Chart_VibrantHumanity_Heart" xml:space="preserve">
-    <value>&#x421;&#x435;&#x440;&#x434;&#x446;&#x435; / &#x418;&#x43D;&#x441;&#x443;&#x43B;&#x44C;&#x442;</value>
+    <value>Сердце / Инсульт</value>
   </data>
   <data name="Chart_VibrantHumanity_Cancer" xml:space="preserve">
-    <value>&#x41E;&#x43D;&#x43A;&#x43E;&#x43B;&#x43E;&#x433;&#x438;&#x44F;</value>
+    <value>Онкология</value>
   </data>
   <data name="Chart_VibrantHumanity_Other" xml:space="preserve">
-    <value>&#x418;&#x43D;&#x44B;&#x435; &#x43F;&#x440;&#x438;&#x447;&#x438;&#x43D;&#x44B;</value>
+    <value>Иные причины</value>
   </data>
 
   <data name="Ticker_VibrantNatureTitle" xml:space="preserve">

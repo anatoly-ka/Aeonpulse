@@ -1,4 +1,4 @@
-using Aeonpulse.Attributes;
+﻿using Aeonpulse.Attributes;
 using Aeonpulse.ViewModels;
 using Aeonpulse.Resources;
 
@@ -104,12 +104,18 @@ namespace Aeonpulse.Views
                 ApplyLifeLogChart(vm);
                 ApplyVibrantHumanityBars(vm);
                 ApplyCarbonBudgetChart(vm);
+                _ = ApplyVolumeCubeAsync(vm);
             }
 
             // Re-apply the dotted fill Line endpoint after the first layout pass,
             // because PhotonTrackFill.Width is not available until the element is measured.
             PhotonTrackFill.SizeChanged += (_, _) =>
                 ApplyPhotonTrackPosition(_photonTrackFraction);
+            // Re-apply volume cube after first layout so LastPpm is populated.
+            VolumeCubeView.SizeChanged += (_, _) =>
+            {
+                if (BindingContext is MainViewModel vmSc) _ = ApplyVolumeCubeAsync(vmSc);
+            };
         }
 
         private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -174,6 +180,13 @@ namespace Aeonpulse.Views
                 e.PropertyName == nameof(MainViewModel.ColorScheme)          ||
                 e.PropertyName == nameof(MainViewModel.DisplayLanguage))
                 ApplyCarbonBudgetChart(vm);
+
+            if (e.PropertyName == nameof(MainViewModel.YourBreathExpanded) ||
+                e.PropertyName == nameof(MainViewModel.YourBreath)         ||
+                e.PropertyName == nameof(MainViewModel.ColorScheme)        ||
+                e.PropertyName == nameof(MainViewModel.UseMetric)          ||
+                e.PropertyName == nameof(MainViewModel.DisplayLanguage))
+                _ = ApplyVolumeCubeAsync(vm);
         }
 
         /// <summary>
@@ -1022,6 +1035,115 @@ namespace Aeonpulse.Views
         }
 
         /// <summary>
+        /// Populates the Volumetric Cube visualizer inside <see cref="VolumeCubeContainer"/>.
+        /// Builds a three-part <see cref="FormattedString"/> description label (prefix / bold
+        /// dimension / suffix), creates a fresh <see cref="VolumeCubeDrawable"/>, and calls
+        /// <c>Invalidate()</c> so the isometric cube redraws at the current scale.
+        ///
+        /// <para>Called on <c>YourBreathExpanded</c>, <c>YourBreath</c>,
+        /// <c>ColorScheme</c>, and <c>DisplayLanguage</c> changes and from the constructor.
+        /// The container remains visible whenever <c>YourBreathExpanded</c> is true.</para>
+        /// </summary>
+        /// <summary>Landmark entry: size in metres, image filename, localised description accessor.</summary>
+        private static readonly (double SizeM, string File, Func<string> Desc)[] _landmarks =
+        {
+            (1.7,  "01.7_human.png",              () => AppResources.Chart_YourBreath_LM_Human),
+            (4.4,  "04.4_double-decker-bus.png",  () => AppResources.Chart_YourBreath_LM_Bus),
+            (7.0,  "07_Stonehenge.png",            () => AppResources.Chart_YourBreath_LM_Stonehenge),
+            (10.0, "10_moai-statues.png",          () => AppResources.Chart_YourBreath_LM_Moai),
+            (14.0, "14_hollywood-sign.png",        () => AppResources.Chart_YourBreath_LM_Hollywood),
+            (15.0, "15_parthenon.png",             () => AppResources.Chart_YourBreath_LM_Parthenon),
+            (16.5, "16.5_itsukushima-shrine.png",  () => AppResources.Chart_YourBreath_LM_Itsukushima),
+            (20.0, "20_great-sphinx-of-giza.png",  () => AppResources.Chart_YourBreath_LM_Sphinx),
+            (21.0, "21_white-house.png",           () => AppResources.Chart_YourBreath_LM_WhiteHouse),
+            (26.0, "26_brandenburg-gate.png",      () => AppResources.Chart_YourBreath_LM_Brandenburg),
+            (30.0, "30_blue-whale.png",            () => AppResources.Chart_YourBreath_LM_Whale),
+            (38.0, "38_christ-the-redeemer.png",   () => AppResources.Chart_YourBreath_LM_Christ),
+            (46.0, "46_statue-of-liberty.png",     () => AppResources.Chart_YourBreath_LM_Liberty),
+            (48.0, "48_colosseum.png",             () => AppResources.Chart_YourBreath_LM_Colosseum),
+            (50.0, "50_arc-de-triomphe.png",       () => AppResources.Chart_YourBreath_LM_Arc),
+            (53.0, "53_ruiguang-tower.png",        () => AppResources.Chart_YourBreath_LM_Ruiguang),
+            (56.0, "56_tower-of-pisa.png",         () => AppResources.Chart_YourBreath_LM_Pisa),
+            (61.0, "61_egyptian-pyramids-icon.png",() => AppResources.Chart_YourBreath_LM_Menkaure),
+            (65.0, "65_tower-bridge.png",          () => AppResources.Chart_YourBreath_LM_TowerBridge),
+            (69.0, "69_notre-dame.png",            () => AppResources.Chart_YourBreath_LM_NotreDame),
+            (73.0, "73_taj-mahal.png",             () => AppResources.Chart_YourBreath_LM_TajMahal),
+        };
+
+        private async Task ApplyVolumeCubeAsync(MainViewModel vm)
+        {
+            var result = vm.YourBreath;
+            bool show = vm.YourBreathExpanded;
+            VolumeCubeContainer.IsVisible = show;
+            if (!show || result == null) return;
+
+            double edge = Math.Max(result.CubeEdgeMeters, 0.001);
+            bool useMetric = vm.UseMetric;
+            const double MtoFt = 3.28084;
+
+            // ---- Select landmark: largest whose SizeM < cube edge (fallback to Human). ----
+            var lm = _landmarks[0];
+            foreach (var entry in _landmarks)
+            {
+                if (entry.SizeM < edge) lm = entry;
+                else break;
+            }
+
+            // ---- Cube drawable. ----
+            var drawable = new VolumeCubeDrawable { CubeEdgeMeters = edge };
+            VolumeCubeView.Drawable = drawable;
+            VolumeCubeView.Invalidate();
+
+            // ---- Compute ppm using the same deterministic formula as VolumeCubeDrawable.Draw
+            // so we never depend on Draw() having been called (Invalidate is async on all platforms).
+            float canvasH = (float)(VolumeCubeView.Height > 0 ? VolumeCubeView.Height : 250.0);
+            float ppm = (float)Math.Clamp((canvasH * 0.80) / (edge * 2.0), 3.0, 280.0);
+
+            // ---- Landmark image: height = LandmarkSizeM * ppm. ----
+            double imageH = Math.Max(4.0, lm.SizeM * ppm);
+            // Use FileImageSource so the tint pipeline (MauiProgram "Source" mapper hook)
+            // can resolve the filename via GetScaledFileName. StreamImageSource is opaque
+            // to the tint pipeline and cannot be re-tinted on source or theme changes.
+            LandmarkImage.Source = ImageSource.FromFile(lm.File);
+            LandmarkImage.HeightRequest = imageH;
+            LandmarkImage.Margin = new Thickness(8, 0, 0, 4);
+
+            // ---- Cube description label (right): prefix + bold edge + suffix. ----
+            double displayEdge = useMetric ? edge : edge * MtoFt;
+            string unitFmt     = useMetric ? AppResources.Chart_YourBreath_CubeM
+                                           : AppResources.Chart_YourBreath_CubeFt;
+            var fs      = new FormattedString();
+            var spanPre = new Span { Text = AppResources.Chart_YourBreath_CubePrefix };
+            spanPre.SetDynamicResource(Span.TextColorProperty, "TextGray");
+            var spanNum = new Span
+            {
+                Text           = string.Format(unitFmt, displayEdge),
+                FontAttributes = FontAttributes.Bold,
+            };
+            spanNum.SetDynamicResource(Span.TextColorProperty, "CyberCyan");
+            var spanSuf = new Span { Text = AppResources.Chart_YourBreath_CubeSuffix };
+            spanSuf.SetDynamicResource(Span.TextColorProperty, "TextGray");
+            fs.Spans.Add(spanPre);
+            fs.Spans.Add(spanNum);
+            fs.Spans.Add(spanSuf);
+            VolumeCubeDescLabel.FormattedText = fs;
+
+            // ---- Landmark label (left): "Description: size unit". ----
+            double lmDisplay = useMetric ? lm.SizeM : lm.SizeM * MtoFt;
+            string lmUnit    = useMetric ? AppResources.Chart_YourBreath_CubeM
+                                         : AppResources.Chart_YourBreath_CubeFt;
+            string lmSizeStr = string.Format(lmUnit, lmDisplay);
+            var lmFs      = new FormattedString();
+            var lmSpanDesc = new Span { Text = $"{lm.Desc()}: " };
+            lmSpanDesc.SetDynamicResource(Span.TextColorProperty, "TextGray");
+            var lmSpanSize = new Span { Text = lmSizeStr, FontAttributes = FontAttributes.Bold };
+            lmSpanSize.SetDynamicResource(Span.TextColorProperty, "CyberCyan");
+            lmFs.Spans.Add(lmSpanDesc);
+            lmFs.Spans.Add(lmSpanSize);
+            LandmarkLabel.FormattedText = lmFs;
+        }
+
+        /// <summary>
         /// Populates the carbon budget chart elements inside
         /// <see cref="CarbonBudgetChartContainer"/>: sets localized text on the title
         /// and depletion labels, assigns a fresh <see cref="CarbonBudgetChartDrawable"/>
@@ -1520,6 +1642,20 @@ namespace Aeonpulse.Views
             parent.Add(0.5, 1.0, fadeIn);
 
             parent.Commit(this, LiveBadgeAnimationName, length: 2500, repeat: () => true);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnHandlerChanged()
+        {
+            base.OnHandlerChanged();
+            if (Window is not null)
+                Window.Destroying += OnWindowDestroying;
+        }
+
+        private void OnWindowDestroying(object? sender, EventArgs e)
+        {
+            if (BindingContext is MainViewModel vm)
+                vm.StopTimers();
         }
 
         /// <inheritdoc/>

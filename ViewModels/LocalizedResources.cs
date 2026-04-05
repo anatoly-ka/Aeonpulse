@@ -146,9 +146,33 @@ namespace Aeonpulse.ViewModels
         public string Chart_GlobalCrowd_Pop_Prefix     => AppResources.Chart_GlobalCrowd_Pop_Prefix;
         public string Chart_GlobalExhale_BudgetTitle     => AppResources.Chart_GlobalExhale_BudgetTitle;
         public string Chart_GlobalExhale_Depletion       => AppResources.Chart_GlobalExhale_Depletion;
-        public string Chart_GlobalExhale_BaseDate        => AppResources.Chart_GlobalExhale_BaseDate;
         public string Chart_GlobalExhale_Today           => AppResources.Chart_GlobalExhale_Today;
         public string Chart_GlobalExhale_Limit           => AppResources.Chart_GlobalExhale_Limit;
+        public string Chart_YourBreath_CubePrefix        => AppResources.Chart_YourBreath_CubePrefix;
+        public string Chart_YourBreath_CubeSuffix        => AppResources.Chart_YourBreath_CubeSuffix;
+        public string Chart_YourBreath_CubeM             => AppResources.Chart_YourBreath_CubeM;
+        public string Chart_YourBreath_CubeFt            => AppResources.Chart_YourBreath_CubeFt;
+        public string Chart_YourBreath_LM_Human          => AppResources.Chart_YourBreath_LM_Human;
+        public string Chart_YourBreath_LM_Bus            => AppResources.Chart_YourBreath_LM_Bus;
+        public string Chart_YourBreath_LM_Stonehenge     => AppResources.Chart_YourBreath_LM_Stonehenge;
+        public string Chart_YourBreath_LM_Moai           => AppResources.Chart_YourBreath_LM_Moai;
+        public string Chart_YourBreath_LM_Hollywood      => AppResources.Chart_YourBreath_LM_Hollywood;
+        public string Chart_YourBreath_LM_Parthenon      => AppResources.Chart_YourBreath_LM_Parthenon;
+        public string Chart_YourBreath_LM_Itsukushima    => AppResources.Chart_YourBreath_LM_Itsukushima;
+        public string Chart_YourBreath_LM_Sphinx         => AppResources.Chart_YourBreath_LM_Sphinx;
+        public string Chart_YourBreath_LM_WhiteHouse     => AppResources.Chart_YourBreath_LM_WhiteHouse;
+        public string Chart_YourBreath_LM_Brandenburg    => AppResources.Chart_YourBreath_LM_Brandenburg;
+        public string Chart_YourBreath_LM_Whale          => AppResources.Chart_YourBreath_LM_Whale;
+        public string Chart_YourBreath_LM_Christ         => AppResources.Chart_YourBreath_LM_Christ;
+        public string Chart_YourBreath_LM_Liberty        => AppResources.Chart_YourBreath_LM_Liberty;
+        public string Chart_YourBreath_LM_Colosseum      => AppResources.Chart_YourBreath_LM_Colosseum;
+        public string Chart_YourBreath_LM_Arc            => AppResources.Chart_YourBreath_LM_Arc;
+        public string Chart_YourBreath_LM_Ruiguang       => AppResources.Chart_YourBreath_LM_Ruiguang;
+        public string Chart_YourBreath_LM_Pisa           => AppResources.Chart_YourBreath_LM_Pisa;
+        public string Chart_YourBreath_LM_Menkaure       => AppResources.Chart_YourBreath_LM_Menkaure;
+        public string Chart_YourBreath_LM_TowerBridge    => AppResources.Chart_YourBreath_LM_TowerBridge;
+        public string Chart_YourBreath_LM_NotreDame      => AppResources.Chart_YourBreath_LM_NotreDame;
+        public string Chart_YourBreath_LM_TajMahal       => AppResources.Chart_YourBreath_LM_TajMahal;
 
         // -- Tease ------------------------------------------------------------
         public string Tease_Title          => AppResources.Tease_Title;
