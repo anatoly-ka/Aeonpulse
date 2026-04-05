@@ -1507,7 +1507,6 @@
                                                   IsVisible="{Binding HumanBirthRankExpanded}"
                                                   HeightRequest="200"
                                                   HorizontalOptions="FillAndExpand"
-                                                  Margin="0,8,0,0"
                                                   BackgroundColor="{DynamicResource SpaceDarker}" />
                                 </VerticalStackLayout>
                             </Border>
@@ -2238,6 +2237,50 @@
                                            FontSize="{DynamicResource FontSizeMedium}"
                                            LineBreakMode="WordWrap"
                                            IsVisible="{Binding VibrantNatureExpanded}" />
+
+                                    <!-- AI: Taxonomy Flow (Sankey) chart for VibrantNature expanded view.
+                                         Header grid with Discoveries/Extinctions labels, then a layered Grid
+                                         containing TaxonomyFlowView (IDrawable bezier streams) and the
+                                         taxonomy icon Image centred on top. Both set by ApplyTaxonomyFlow(). -->
+                                    <VerticalStackLayout x:Name="TaxonomyFlowContainer"
+                                                         Spacing="6"
+                                                         Margin="0,12,0,0"
+                                                         IsVisible="{Binding VibrantNatureExpanded}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label x:Name="TaxonomyDiscoveriesLabel"
+                                                   Grid.Column="0"
+                                                   FontAttributes="Bold"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   HorizontalTextAlignment="Start" />
+                                            <Label x:Name="TaxonomyExtinctionsLabel"
+                                                   Grid.Column="1"
+                                                   FontAttributes="Bold"
+                                                   FontSize="{DynamicResource FontSizeSmall}"
+                                                   HorizontalTextAlignment="End" />
+                                        </Grid>
+                                        <Grid HeightRequest="160" HorizontalOptions="FillAndExpand">
+                                            <GraphicsView x:Name="TaxonomyFlowView"
+                                                          HorizontalOptions="FillAndExpand"
+                                                          VerticalOptions="FillAndExpand" />
+                                             <!-- Taxonomy centre node: filled circle over streams, icon over circle.
+                                                  Circle fill = CardDark (scheme-aware Border background).
+                                                  Icon tint = TextWhite (white DefaultDark/HC-Dark, black HC-Light). -->
+                                             <Border x:Name="TaxonomyCircle"
+                                                     WidthRequest="68" HeightRequest="68"
+                                                     HorizontalOptions="Center" VerticalOptions="Center"
+                                                     BackgroundColor="{DynamicResource CardDark}"
+                                                     Stroke="{DynamicResource CyberCyan}"
+                                                     StrokeThickness="2">
+                                                 <Border.StrokeShape>
+                                                     <RoundRectangle CornerRadius="34" />
+                                                 </Border.StrokeShape>
+                                             </Border>
+                                             <Image Source="icon_taxonomy.png"
+                                                    WidthRequest="44" HeightRequest="44"
+                                                    HorizontalOptions="Center" VerticalOptions="Center"
+                                                    helpers:ImageTint.Color="{DynamicResource CyberCyan}" />
+                                        </Grid>
+                                    </VerticalStackLayout>
 
                                 </VerticalStackLayout>
                             </Border>

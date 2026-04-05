@@ -3841,11 +3841,6 @@ namespace Aeonpulse.Resources {
                 return ResourceManager.GetString("Chart_GlobalExhale_Depletion", resourceCulture);
             }
         }
-        public static string Chart_GlobalExhale_BaseDate {
-            get {
-                return ResourceManager.GetString("Chart_GlobalExhale_BaseDate", resourceCulture);
-            }
-        }
         public static string Chart_GlobalExhale_Today {
             get {
                 return ResourceManager.GetString("Chart_GlobalExhale_Today", resourceCulture);
@@ -3979,6 +3974,51 @@ namespace Aeonpulse.Resources {
         public static string Chart_YourBreath_LM_TajMahal {
             get {
                 return ResourceManager.GetString("Chart_YourBreath_LM_TajMahal", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantNature_Discoveries {
+            get {
+                return ResourceManager.GetString("Chart_VibrantNature_Discoveries", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantNature_Extinctions {
+            get {
+                return ResourceManager.GetString("Chart_VibrantNature_Extinctions", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantNature_LabelInsectsIn {
+            get {
+                return ResourceManager.GetString("Chart_VibrantNature_LabelInsectsIn", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantNature_LabelPlantsIn {
+            get {
+                return ResourceManager.GetString("Chart_VibrantNature_LabelPlantsIn", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantNature_LabelVertsIn {
+            get {
+                return ResourceManager.GetString("Chart_VibrantNature_LabelVertsIn", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantNature_LabelOthersIn {
+            get {
+                return ResourceManager.GetString("Chart_VibrantNature_LabelOthersIn", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantNature_LabelInsectsOut {
+            get {
+                return ResourceManager.GetString("Chart_VibrantNature_LabelInsectsOut", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantNature_LabelVertsOut {
+            get {
+                return ResourceManager.GetString("Chart_VibrantNature_LabelVertsOut", resourceCulture);
+            }
+        }
+        public static string Chart_VibrantNature_LabelOthersOut {
+            get {
+                return ResourceManager.GetString("Chart_VibrantNature_LabelOthersOut", resourceCulture);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Aeonpulse.Attributes;
+using Aeonpulse.Models;
 using Aeonpulse.ViewModels;
 using Aeonpulse.Resources;
 
@@ -103,6 +104,7 @@ namespace Aeonpulse.Views
                 ApplyPopulationChart(vm);
                 ApplyLifeLogChart(vm);
                 ApplyVibrantHumanityBars(vm);
+                ApplyTaxonomyFlow(vm);
                 ApplyCarbonBudgetChart(vm);
                 _ = ApplyVolumeCubeAsync(vm);
             }
@@ -174,6 +176,12 @@ namespace Aeonpulse.Views
                 e.PropertyName == nameof(MainViewModel.VibrantHumanity)         ||
                 e.PropertyName == nameof(MainViewModel.DisplayLanguage))
                 ApplyVibrantHumanityBars(vm);
+
+            if (e.PropertyName == nameof(MainViewModel.VibrantNatureExpanded) ||
+                e.PropertyName == nameof(MainViewModel.VibrantNature)         ||
+                e.PropertyName == nameof(MainViewModel.ColorScheme)          ||
+                e.PropertyName == nameof(MainViewModel.DisplayLanguage))
+                ApplyTaxonomyFlow(vm);
 
             if (e.PropertyName == nameof(MainViewModel.GlobalExhaleExpanded) ||
                 e.PropertyName == nameof(MainViewModel.GlobalExhale)         ||
@@ -691,6 +699,62 @@ namespace Aeonpulse.Views
         /// No size or position property is touched, so neighbouring elements never shift.
         /// </para>
         /// </summary>
+        /// <summary>
+        /// Populates the Taxonomy Flow (Sankey-style) diagram inside
+        /// <see cref="TaxonomyFlowContainer"/>. Sets localised header labels,
+        /// creates a fresh <see cref="TaxonomyFlowDrawable"/> from the five
+        /// discovery/extinction counts on <c>VibrantNatureResult</c>, assigns it
+        /// to <see cref="TaxonomyFlowView"/>, and calls <c>Invalidate()</c>.
+        ///
+        /// <para>Called on <c>VibrantNatureExpanded</c>, <c>VibrantNature</c>,
+        /// <c>ColorScheme</c>, and <c>DisplayLanguage</c> changes and from the
+        /// constructor. Hidden when <c>VibrantNatureExpanded</c> is false.</para>
+        /// </summary>
+        private void ApplyTaxonomyFlow(MainViewModel vm)
+        {
+            var result = vm.VibrantNature;
+            bool show = vm.VibrantNatureExpanded;
+            TaxonomyFlowContainer.IsVisible = show;
+            if (!show || result == null) return;
+
+            TaxonomyDiscoveriesLabel.Text = AppResources.Chart_VibrantNature_Discoveries;
+            TaxonomyDiscoveriesLabel.SetDynamicResource(Label.TextColorProperty, "NeonGreen");
+            TaxonomyExtinctionsLabel.Text = AppResources.Chart_VibrantNature_Extinctions;
+            TaxonomyExtinctionsLabel.SetDynamicResource(Label.TextColorProperty, "CyberPink");
+
+            AssignTaxonomyFlowDrawable(result);
+        }
+
+        private void AssignTaxonomyFlowDrawable(VibrantNatureResult result)
+        {
+            // Circle and icon are drawn by XAML Border + Image (TaxonomyCircle / icon_taxonomy.png),
+            // tinted via ImageTint.Color=TextWhite. Only the stream beziers live in the drawable.
+            TaxonomyFlowView.Drawable = new TaxonomyFlowDrawable
+            {
+                TotalDiscovered       = result.DiscoveredSince,
+                TotalExtinct          = result.ExtinctSince,
+                InsectsDiscovered     = result.InsectsDiscovered,
+                PlantsDiscovered      = result.PlantsDiscovered,
+                VertebratesDiscovered = result.VertebratesDiscovered,
+                InsectsExtinct        = result.InsectsExtinct,
+                VertebratesExtinct    = result.VertebratesExtinct,
+                InLabels  = new[]
+                {
+                    AppResources.Chart_VibrantNature_LabelInsectsIn,
+                    AppResources.Chart_VibrantNature_LabelPlantsIn,
+                    AppResources.Chart_VibrantNature_LabelVertsIn,
+                    AppResources.Chart_VibrantNature_LabelOthersIn,
+                },
+                OutLabels = new[]
+                {
+                    AppResources.Chart_VibrantNature_LabelInsectsOut,
+                    AppResources.Chart_VibrantNature_LabelVertsOut,
+                    AppResources.Chart_VibrantNature_LabelOthersOut,
+                },
+            };
+            TaxonomyFlowView.Invalidate();
+        }
+
         /// <summary>
         /// Sets a fresh <see cref="BirthRankChartDrawable"/> on the <see cref="BirthRankChart"/>
         /// <c>GraphicsView</c> and triggers a redraw whenever the card expands or the result changes.

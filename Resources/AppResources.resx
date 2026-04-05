@@ -1963,7 +1963,43 @@
     <comment>DeepDivePopup methodology</comment>
   </data>
   <data name="Info_VibrantNatureSource" xml:space="preserve">
-    <value>Approximations derived from the International Institute for Species Exploration (IISE), the Catalogue of Life taxonomic distribution, and extinction rate estimates from the UN Intergovernmental Science-Policy Platform on Biodiversity and Ecosystem Services (IPBES).</value>
+    <value>Approximations derived from the International Institute for Species Exploration (IISE), the Catalogue of Life taxonomic distribution, and extinction rate estimates from the UN Intergovernmental Science-Policy Platform on Biodiversity and Ecosystem Services (IPBES). Image designed by Freepik.</value>
     <comment>DeepDivePopup sources</comment>
+  </data>
+  <data name="Chart_VibrantNature_Discoveries" xml:space="preserve">
+    <value>Discoveries</value>
+    <comment>Left header label of the Taxonomy Flow Sankey chart in VibrantNature expanded view.</comment>
+  </data>
+  <data name="Chart_VibrantNature_Extinctions" xml:space="preserve">
+    <value>Extinctions</value>
+    <comment>Right header label of the Taxonomy Flow Sankey chart in VibrantNature expanded view.</comment>
+  </data>
+  <data name="Chart_VibrantNature_LabelInsectsIn" xml:space="preserve">
+    <value>Insects/invertebrates</value>
+    <comment>Taxonomy Flow inflow stream label.</comment>
+  </data>
+  <data name="Chart_VibrantNature_LabelPlantsIn" xml:space="preserve">
+    <value>Plants</value>
+    <comment>Taxonomy Flow inflow stream label.</comment>
+  </data>
+  <data name="Chart_VibrantNature_LabelVertsIn" xml:space="preserve">
+    <value>Vertebrates</value>
+    <comment>Taxonomy Flow inflow stream label.</comment>
+  </data>
+  <data name="Chart_VibrantNature_LabelOthersIn" xml:space="preserve">
+    <value>Others</value>
+    <comment>Taxonomy Flow inflow stream label.</comment>
+  </data>
+  <data name="Chart_VibrantNature_LabelInsectsOut" xml:space="preserve">
+    <value>Invertebrates</value>
+    <comment>Taxonomy Flow outflow stream label.</comment>
+  </data>
+  <data name="Chart_VibrantNature_LabelVertsOut" xml:space="preserve">
+    <value>Vertebrates</value>
+    <comment>Taxonomy Flow outflow stream label.</comment>
+  </data>
+  <data name="Chart_VibrantNature_LabelOthersOut" xml:space="preserve">
+    <value>Others</value>
+    <comment>Taxonomy Flow outflow stream label.</comment>
   </data>
 </root>

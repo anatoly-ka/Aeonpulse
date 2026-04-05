@@ -1953,6 +1953,33 @@
     <comment>DeepDivePopup methodology (ru)</comment>
   </data>
   <data name="Info_VibrantNatureSource" xml:space="preserve">
-    <value>Оценки получены на основе данных International Institute for Species Exploration (IISE), таксономических распределений от Catalogue of Life и International Union for Conservation of Nature (IUCN), а также оценок темпов вымирания от Intergovernmental Science-Policy Platform on Biodiversity and Ecosystem Services (IPBES) ООН.</value>
+    <value>Оценки получены на основе данных International Institute for Species Exploration (IISE), таксономических распределений от Catalogue of Life и International Union for Conservation of Nature (IUCN), а также оценок темпов вымирания от Intergovernmental Science-Policy Platform on Biodiversity and Ecosystem Services (IPBES) ООН. Изображение создано в Freepik.</value>
     <comment>DeepDivePopup sources (ru)</comment>
+  </data>
+  <data name="Chart_VibrantNature_Discoveries" xml:space="preserve">
+    <value>Открытия</value>
+  </data>
+  <data name="Chart_VibrantNature_Extinctions" xml:space="preserve">
+    <value>Вымирания</value>
+  </data>
+  <data name="Chart_VibrantNature_LabelInsectsIn" xml:space="preserve">
+    <value>Насекомые/беспозвоночные</value>
+  </data>
+  <data name="Chart_VibrantNature_LabelPlantsIn" xml:space="preserve">
+    <value>Растения</value>
+  </data>
+  <data name="Chart_VibrantNature_LabelVertsIn" xml:space="preserve">
+    <value>Позвоночные</value>
+  </data>
+  <data name="Chart_VibrantNature_LabelOthersIn" xml:space="preserve">
+    <value>Прочее</value>
+  </data>
+  <data name="Chart_VibrantNature_LabelInsectsOut" xml:space="preserve">
+    <value>Беспозвоночные</value>
+  </data>
+  <data name="Chart_VibrantNature_LabelVertsOut" xml:space="preserve">
+    <value>Позвоночные</value>
+  </data>
+  <data name="Chart_VibrantNature_LabelOthersOut" xml:space="preserve">
+    <value>Прочее</value>
   </data></root>
