@@ -89,8 +89,9 @@ The project follows **manual MVVM** - no MVVM toolkit or code generators:
 | Service | `Services/FontSizeService.cs` | Applies font-size preset to `Application.Current.Resources` at runtime |
 | Service | `Services/AeonLog.cs` | Structured debug logging gateway (`[Conditional("DEBUG")]`, zero production overhead) |
 | Model | `Models/TickerResults.cs` | 19 typed result classes, one per ticker, each extending `TickerData` |
-| Resources | `Resources/AppResources.resx` | All user-visible strings (English master, 433 keys) |
+| Resources | `Resources/AppResources.resx` | All user-visible strings (English master, 491 keys) |
 | Resources | `Resources/AppResources.ru.resx` | Russian translations |
+| Drawable | `Views/*Drawable.cs` | 8 `IDrawable` implementations for in-card visualizations (WyrdWeb, BirthRankChart, Enneagram, LifeLogChart, PopulationChart, CarbonBudgetChart, VolumeCube, TaxonomyFlow) |
 
 ### Key Conventions
 
@@ -118,7 +119,7 @@ Aeonpulse/
 │   ├── Windows/                Entry point, TintHelper (Win2D ColorMatrixEffect)
 │   └── Tizen/                  Entry point (disabled by default)
 ├── Resources/
-│   ├── AppResources.resx       English master strings (433 keys)
+│   ├── AppResources.resx       English master strings (491 keys)
 │   ├── AppResources.ru.resx    Russian translations
 │   ├── Images/                 PNG assets compiled into platform asset bundles
 │   └── Styles/
@@ -139,12 +140,20 @@ Aeonpulse/
 │   ├── MainPage.xaml           The application's only persistent page
 │   ├── RefreshingPopup.xaml    3-second refresh spinner overlay
 │   ├── SettingsPopup.xaml      Settings panel (unit system, theme, font, language)
-│   └── TeasePopup.xaml         Single live stat popup with copy-to-clipboard (tap logo/app name)
+│   ├── TeasePopup.xaml         Single live stat popup with copy-to-clipboard (tap logo/app name)
+│   ├── BirthRankChartDrawable.cs   IDrawable - birth history curve for Human Birth Rank expanded view
+│   ├── CarbonBudgetChartDrawable.cs IDrawable - 1.5-degree carbon budget chart for Global Exhale expanded view
+│   ├── EnneagramDrawable.cs    IDrawable - Pythagorean Enneagram for Personal Year expanded view
+│   ├── LifeLogChartDrawable.cs IDrawable - two-ring donut chart for Life Log expanded view
+│   ├── PopulationChartDrawable.cs  IDrawable - interactive population chart for Global Crowd expanded view
+│   ├── TaxonomyFlowDrawable.cs IDrawable - Sankey-style taxonomy flow for Vibrant Nature expanded view
+│   ├── VolumeCubeDrawable.cs   IDrawable - isometric cube visualizer for Your Breath expanded view
+│   └── WyrdWebDrawable.cs      IDrawable - Web of Wyrd rune grid for Birth Rune expanded view
 ├── App.xaml / App.xaml.cs      App bootstrap: applies persisted settings before first frame
 ├── MauiProgram.cs              Host builder, font registration, image tint mapper, AeonLog init
 ├── Aeonpulse.csproj            Multi-targeted project file
 ├── Agents.md                   AI agent navigation guide (authoritative development reference)
-└── Aeonpulse.Tests/            xUnit test project (net9.0, no MAUI dependency, 286 tests)
+└── Aeonpulse.Tests/            xUnit test project (net9.0, no MAUI dependency, 303 tests)
 ```
 
 ---

@@ -54,7 +54,7 @@
 | **5 / Node 4** | `MainViewModel` | Central state hub, all owned symbols, all callers. Extend here for new tickers/sections/settings. |
 | **5 / Node 5** | `CalculationService` | All 11 ticker methods with AIContext and update type. Extend here for new tickers. |
 | **5 / Node 6** | `LocalizedResources` | Live binding bridge, `Invalidate()` mechanism. Extend here for new strings. |
-| **5 / Node 7** | `AppResources.resx` | 365 string keys, prefix group table, template token format. Extend here for new strings/languages. |
+| **5 / Node 7** | `AppResources.resx` | 491 string keys, prefix group table, template token format. Extend here for new strings/languages. |
 | **5 / Node 8** | `ThemeService` + `FontSizeService` | Palette/preset dictionaries, `ApplyScheme`/`ApplyPreset`. Extend here for new schemes/presets. |
 | **5 / Node 9** | `ImageTint` + `TintHelper` | Tint pipeline, per-platform notes. Extend here for new platform tint support. |
 | **5 / Node 10** | Modal Popup Classes | All 5 popups: constructor args, primary action, side effects. Extend here for new popups/settings. |
@@ -1625,7 +1625,7 @@ AIContext:   (none - localisation hub)
 - Singleton (`static readonly Instance`). Every XAML `{Binding Loc.Xxx}` expression resolves through this instance.
 - Every property is a simple passthrough getter: `public string MyKey => AppResources.MyKey;`
 - `Invalidate()` fires `PropertyChanged(string.Empty)` which causes MAUI's binding engine to re-read **every** property on this object simultaneously - the mechanism that makes language switching instant without page reload.
-- Contains passthrough properties for all 370 string keys in `AppResources.resx`, grouped by: AppName/Badge, Timeline, Sections (4), Ticker titles (11), Settings, ChangeDate, MainMenu, DeepDive/Info (30), Units (metric + imperial), Stars (57), Runes (24), PersonalYear interpretations (9), Tease, Refreshing.
+- Contains passthrough properties for all 491 string keys in `AppResources.resx`, grouped by: AppName/Badge, Timeline, Sections (4), Ticker titles (11), Settings, ChangeDate, MainMenu, DeepDive/Info (30), Units (metric + imperial), Stars (57), Runes (24), PersonalYear interpretations (9), Tease, Refreshing.
 
 **Owns:**
 - The `Invalidate()` mass-rebind mechanism
@@ -1656,7 +1656,7 @@ AIContext:   (none - string repository)
 ```
 
 **Responsibilities:**
-- The **single source of truth for all user-visible strings**. 370 string keys total.
+- The **single source of truth for all user-visible strings**. 491 string keys total.
 - Organised into named groups by prefix (see key prefix table below).
 - `AppResources.Culture` is set globally by `MainViewModel.ApplyLanguage()`. The .NET resource system automatically selects `AppResources.ru.resx` when the culture is `ru`.
 - `AppResources.Designer.cs` provides the strongly-typed `AppResources.SomeKey` accessor used throughout `CalculationService` and `LocalizedResources`.
@@ -1698,7 +1698,7 @@ Tokens are replaced explicitly - no `string.Format`, no numbered `{0}` placehold
 **Extend here when:**
 - Adding any new user-visible string: add to this file first, then `AppResources.ru.resx`, then `LocalizedResources.cs`, then XAML binding
 - Adding a new ticker: add `Ticker_XxxTitle`, `Ticker_XxxBrief`, `Ticker_XxxFull`, `Info_XxxTitle`, `Info_XxxMethod`, `Info_XxxSource`
-- Adding a new language: create `AppResources.{culture}.resx` with all 359 keys translated; register in `.csproj`
+- Adding a new language: create `AppResources.{culture}.resx` with all 491 keys translated; register in `.csproj`
 
 ---
 
@@ -1944,7 +1944,7 @@ directly so no TFM-incompatibility issues arise. Run all tests with:
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
 ```
 
-**What can be tested without a device (263 tests in 16 test classes):**
+**What can be tested without a device (303 tests):**
 - `FindNearestJubilee()` / `ReduceToSingleDigit()` (pure algorithms, `internal` + `InternalsVisibleTo`)
 - `CalculateTimeJubilees`, `CalculateCountdown`, `CalculateLifeOdometer`
 - `CalculateAlienAnniversaries`, `CalculateHumanBirthRank`
@@ -4307,7 +4307,7 @@ the change violates a guardrail and must be corrected first.
 | 13 | All new structural XAML elements have `<!-- AI: ... -->` comments? | YES |
 | 14 | `Agents.md` updated for every structural change? | YES |
 | 15 | Build produces only known warning codes (CS0618, CS8767, CS0414, XC0022)? | YES |
-| 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (222+ tests, 0 failures)? | YES |
+| 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (303 tests, 0 failures)? | YES |
 | 17 | All new `AeonLog` calls use `[Conditional("DEBUG")]` via the gateway (not raw `ILogger` or `Debug.WriteLine`)? `[BLOCK]` tag added only for methods with named internal phases? | YES |
 | 18 | Commit message ends with `AI: GitHub Copilot (<model>)` trailer (§9.13)? If the commit includes **any human-authored edits**, does the trailer read `AI: GitHub Copilot (<model>) + manual changes`? | YES |
 | 19 | Was the PRE-EDIT GATE (§9.14.2) evaluated before every `edit_file` call in this session? Was the three-part post-edit verification (presence, uniqueness, no-deletion) run after each one? Were all "Never use `edit_file`" files in the routing table edited via `.ps1` scripts only? | YES |

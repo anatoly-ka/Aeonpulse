@@ -28,6 +28,7 @@ Every session - no exceptions - begin with:
 ```
 Please read Agents.md fully before making any changes.
 It is the authoritative navigation guide for this codebase.
+Please pay a special attention to follow the Sections 9.11 and 9.14 of Agents.md recipes exactly for modifying files.
 ```
 
 This one step prevents the AI from inventing file paths, missing architectural constraints, or duplicating work already documented.
@@ -100,19 +101,14 @@ Please do not commit the changes until the fix is confirmed by me.
 [META] [Ticker Name] ticker
 Please read Agents.md fully before making any changes.
 It is the authoritative navigation guide for this codebase.
+Please pay a special attention to follow the Sections 9.11 and 9.14 of Agents.md recipes exactly for modifying files.
 Please don't start any change before completing a full read of this prompt and plan of every affected location.
 
 Add a new ticker card called "[Ticker Name]" in the [Lab / Cosmos / Mirror / Eco Echoes] section, following guidelines in the Section 7.2 of Agents.md.
 It should show: [describe what the ticker calculates and displays]
 Ticker Details & Content:
 - UNICODE Symbol: [ ] (U+????)
-- Brief Text Template: "..."
-- Full Text Template: "..."
-- Methodology: ...
-- Credit/Source: ...
-Update type: [Static / Live (every second)]
-Has refresh button: [Yes / No]
-The core C# calculation must be: ...
+- Brief Text Template: "ılıb"
 
 Please follow the Section 7.2 of Agents.md recipe exactly, including:
 - Both .resx files (AppResources.resx and AppResources.ru.resx); please follow the Section 9.5 of Agents.md.
@@ -132,6 +128,7 @@ Run the build and all tests before finishing.
 [META] Vibrant Nature ticker
 Please read Agents.md fully before making any changes.
 It is the authoritative navigation guide for this codebase.
+Please pay a special attention to follow the Sections 9.11 and 9.14 of Agents.md recipes exactly for modifying files.
 Please don't start any change before completing a full read of this prompt and plan of every affected location.
 
 Add a new ticker card called "Vibrant Nature" in the Eco Echoes section, following guidelines in the Section 7.2 of Agents.md.
@@ -147,6 +144,15 @@ Update type: Static
 Has refresh button: Yes
 The core C# calculation must be: a DiscoveredSpeciesByDate(DateTime) helper and an ExtinctSpeciesByDate(DateTime) helper, each using the 3-epoch piecewise model; CalculateVibrantNature subtracts base-date values from current values and applies the taxonomic proportions.
 
+Optional graphical part in Full view:
+- Drawable class name: TaxonomyFlowDrawable.cs in Views/
+- GraphicsView dimensions: HeightRequest=160, HorizontalOptions=FillAndExpand
+- Properties the drawable needs from the typed result: TotalDiscovered, TotalExtinct, InsectsDiscovered, PlantsDiscovered, VertebratesDiscovered, InsectsExtinct, VertebratesExtinct (all double); InLabels (string[4]); OutLabels (string[3])
+- Drawing behaviour: Sankey-style stream diagram with four inflow streams (insects, plants, vertebrates, others discovered) and three outflow streams (insects, vertebrates, others extinct); streams drawn as bezier ribbons; widths proportional via MinValue normalisation clamped [4,40]px; stream colours are fixed hex values at 70% alpha; labels drawn above each left/right anchor; OthersDiscovered/OthersExtinct computed internally
+- Scheme-aware colours: label colour uses SpaceDarker discriminator (DefaultDark / HC-Dark / HC-Light)
+- Any interactive elements: none; static diagram
+- Wiring in MainPage.xaml.cs: ApplyTaxonomyFlow() called on VibrantNatureExpanded / VibrantNature / ColorScheme / DisplayLanguage property changes; also called from constructor; sets TaxonomyDiscoveriesLabel and TaxonomyExtinctionsLabel text+colour; calls AssignTaxonomyFlowDrawable which creates TaxonomyFlowDrawable with counts + localised InLabels/OutLabels, then calls Invalidate()
+
 Please follow the Section 7.2 of Agents.md recipe exactly, including:
 - Both .resx files (AppResources.resx and AppResources.ru.resx); please follow the Section 9.5 of Agents.md.
 - LocalizedResources.cs
@@ -154,6 +160,7 @@ Please follow the Section 7.2 of Agents.md recipe exactly, including:
 - CalculationService.cs (new Calculate* method)
 - MainViewModel.cs
 - MainPage.xaml and MainPage.xaml.cs
+- Views/TaxonomyFlowDrawable.cs (IDrawable implementation for the Sankey flow diagram)
 - A test in Aeonpulse.Tests
 - Agents.md; please follow the Section 9.11 of Agents.md.
 
@@ -183,6 +190,7 @@ Please follow Section 7.3 exactly. Run the build before finishing.
 
 ```
 Please read Agents.md first, specifically Sections 7.4 and 6.11 (Adding a New Language).
+Please pay a special attention to follow the Sections 9.11 and 9.14 of Agents.md recipes exactly for modifying files.
 
 Add [language name] ([ISO code, e.g. "de"]) as a new display language.
 I will provide the translated strings separately.
@@ -531,7 +539,7 @@ The test suite covers all 19 ticker calculation methods. Tests are in `Aeonpulse
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
 ```
 
-Expected output: **286 tests, 0 failures**.
+Expected output: **303 tests, 0 failures**.
 
 ### When to run tests
 
@@ -559,7 +567,7 @@ Run dotnet test after adding the tests.
 
 1. Review the diff with `git diff HEAD` before committing.
 2. Check that `Agents.md` was updated if any structural change was made (AI should do this automatically, but verify).
-3. Run `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` - 286 tests, 0 failures.
+3. Run `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` - 303 tests, 0 failures.
 4. Run `dotnet build Aeonpulse.csproj -f net9.0-windows10.0.19041.0 --no-incremental` and confirm only the four known warning codes appear (`CS0618`, `CS8767`, `CS0414`, `XC0022`).
 5. Commit with a descriptive message. AI-only commits include the signature trailer: `AI: GitHub Copilot (claude-sonnet-4-5)`.
 
