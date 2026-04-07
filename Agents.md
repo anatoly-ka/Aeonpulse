@@ -4054,7 +4054,7 @@ they describe what the code already does and must continue to do.
 
   ```xml
   <!-- CORRECT - literal UTF-8 character in an attribute value -->
-  <Label Text="???????" />
+  <Label Text="Закрыть" />
 
   <!-- WRONG - numeric character reference is not human-readable -->
   <Label Text="&#1047;&#1072;&#1082;&#1088;&#1099;&#1090;&#1100;" />
@@ -4352,6 +4352,7 @@ the change violates a guardrail and must be corrected first.
 | 1 | All new colour/font-size XAML bindings use `DynamicResource`? | YES |
 | 2 | All new user-visible strings are in both `.resx` files and `LocalizedResources.cs`? | YES |
 | 2a | All new `.resx` `<value>` strings and XAML attribute values written as literal UTF-8, not `&#xxxx;` or `\uxxxx` escapes? Both `.resx` files have BOM (`0xEF 0xBB 0xBF`)? | YES |
+| 2b | No suspicious `?` placeholders in any localised string (`.resx` `<value>`, XAML attribute, `Agents.md` example)? Compare `?` counts between the English original and each translation - a mismatch signals a silent encoding failure during a `.ps1` write. | YES |
 | 3 | All new `.xaml` files saved as UTF-8 with BOM? | YES |
 | 4 | All comment blocks (XAML and C#) contain only ASCII characters? | YES |
 | 5 | No business logic added to `*.xaml.cs` code-behind? | YES |
@@ -4517,6 +4518,23 @@ Symptoms that indicate a broken session:
 - **Delete helper `.ps1` / `.csx` script files immediately** after their
   single-use purpose is complete using `remove_file`. Do not leave them
   in the repository.
+
+- **When a `.ps1` script must write non-ASCII content to a file, construct
+  non-ASCII strings from explicit Unicode code points** using `[char]0xXXXX` casts
+  instead of typing the literal character into the script body. The `create_file`
+  tool saves script files in ASCII and will silently replace any non-ASCII literal
+  with `?`, which then gets written into the target file as a corruption:
+
+  ```powershell
+  # WRONG - the literal Cyrillic in the script body is saved as ??????? by create_file
+  $text = "???????"
+
+  # CORRECT - construct from code points; immune to create_file ASCII encoding
+  $text = [string]([char]0x0417) + [char]0x0430 + [char]0x043A + [char]0x0440 + [char]0x044B + [char]0x0442 + [char]0x044C
+  ```
+
+  After writing, always verify the target file still passes the `?` character check
+  (see checklist item 2b in Section 9.12) before removing the helper script.
 
 ##### DO NOT
 
