@@ -2906,24 +2906,6 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Till 1900, &lt;b&gt;{amount}&lt;/b&gt; of CO&lt;sub&gt;2&lt;/sub&gt; emitted.
-        /// </summary>
-        public static string Ticker_GlobalExhalePreXX_Brief {
-            get {
-                return ResourceManager.GetString("Ticker_GlobalExhalePreXX_Brief", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The moment when {baseDateName} is before the XX century - till 1900, humanity has released &lt;b&gt;{amount}&lt;/b&gt; of CO&lt;sub&gt;2&lt;/sub&gt; into the atmosphere. Still a tiny amount compared to later times..
-        /// </summary>
-        public static string Ticker_GlobalExhalePreXX_Full {
-            get {
-                return ResourceManager.GetString("Ticker_GlobalExhalePreXX_Full", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Global Exhale.
         /// </summary>
         public static string Ticker_GlobalExhaleTitle {
@@ -2976,24 +2958,6 @@ namespace Aeonpulse.Resources {
         public static string Ticker_HumanBirthRankPostXX_Full {
             get {
                 return ResourceManager.GetString("Ticker_HumanBirthRankPostXX_Full", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to One of the first &lt;b&gt;104,510,976,956&lt;/b&gt; humans.
-        /// </summary>
-        public static string Ticker_HumanBirthRankPreXX_Brief {
-            get {
-                return ResourceManager.GetString("Ticker_HumanBirthRankPreXX_Brief", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The moment when {baseDateName} is before the XX century, the number of humans have ever lived on Earth till 1900 is estimated as &lt;b&gt;104,510,976,956&lt;/b&gt;..
-        /// </summary>
-        public static string Ticker_HumanBirthRankPreXX_Full {
-            get {
-                return ResourceManager.GetString("Ticker_HumanBirthRankPreXX_Full", resourceCulture);
             }
         }
         
@@ -4019,6 +3983,21 @@ namespace Aeonpulse.Resources {
         public static string Chart_VibrantNature_LabelOthersOut {
             get {
                 return ResourceManager.GetString("Chart_VibrantNature_LabelOthersOut", resourceCulture);
+            }
+        }
+        public static string Alert_Title_Aeonpulse {
+            get {
+                return ResourceManager.GetString("Alert_Title_Aeonpulse", resourceCulture);
+            }
+        }
+        public static string Alert_Message_Pre1900 {
+            get {
+                return ResourceManager.GetString("Alert_Message_Pre1900", resourceCulture);
+            }
+        }
+        public static string Alert_Button_Close {
+            get {
+                return ResourceManager.GetString("Alert_Button_Close", resourceCulture);
             }
         }
     }

@@ -1502,7 +1502,7 @@
                                          A "You" marker dot (JubileeAccent gold) marks the user rank position.
                                          Axis labels "190k BC" and "Today" drawn by the Drawable.
                                          IsVisible bound to HumanBirthRankExpanded so the graph is hidden
-                                         when the card is collapsed. Hidden for pre-1900 dates via converter. -->
+                                         when the card is collapsed. -->
                                     <GraphicsView x:Name="BirthRankChart"
                                                   IsVisible="{Binding HumanBirthRankExpanded}"
                                                   HeightRequest="200"

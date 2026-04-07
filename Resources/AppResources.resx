@@ -121,6 +121,18 @@
     <value>I was born</value>
     <comment>MainViewModel.cs</comment>
   </data>
+  <data name="Alert_Title_Aeonpulse" xml:space="preserve">
+    <value>Aeonpulse</value>
+    <comment>ChangeDatePopup.xaml.cs</comment>
+  </data>
+  <data name="Alert_Message_Pre1900" xml:space="preserve">
+    <value>Dates before the 20th century are not supported. There's plenty of interesting stuff in our own time, too!</value>
+    <comment>ChangeDatePopup.xaml.cs</comment>
+  </data>
+  <data name="Alert_Button_Close" xml:space="preserve">
+    <value>Close</value>
+    <comment>ChangeDatePopup.xaml.cs</comment>
+  </data>
   <data name="Timeline_BaseDatePreposition" xml:space="preserve">
     <value>on</value>
     <comment>MainPage.xaml</comment>
@@ -757,14 +769,6 @@
     <value>Human Birth Rank</value>
     <comment>MainPage.xaml</comment>
   </data>
-  <data name="Ticker_HumanBirthRankPreXX_Brief" xml:space="preserve">
-    <value>One of the first &lt;b&gt;104,510,976,956&lt;/b&gt; humans</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Ticker_HumanBirthRankPreXX_Full" xml:space="preserve">
-    <value>The moment when {baseDateName} is before the XX century, the number of humans have ever lived on Earth till 1900 is estimated as &lt;b&gt;104,510,976,956&lt;/b&gt;.</value>
-    <comment>CalculationService.cs</comment>
-  </data>
   <data name="Ticker_HumanBirthRankPostXX_Brief" xml:space="preserve">
     <value>Human #&lt;b&gt;{estimatedRank:N0}&lt;/b&gt; on this date</value>
     <comment>CalculationService.cs</comment>
@@ -1196,14 +1200,6 @@
   <data name="Ticker_GlobalExhaleTitle" xml:space="preserve">
     <value>Global Exhale</value>
     <comment>MainPage.xaml</comment>
-  </data>
-  <data name="Ticker_GlobalExhalePreXX_Brief" xml:space="preserve">
-    <value>Till 1900, &lt;b&gt;{amount}&lt;/b&gt; of CO₂ emitted</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Ticker_GlobalExhalePreXX_Full" xml:space="preserve">
-    <value>The moment when {baseDateName} is before the XX century - till 1900, humanity has released &lt;b&gt;{amount}&lt;/b&gt; of CO₂ into the atmosphere. Still a tiny amount compared to later times.</value>
-    <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePostXX_Brief" xml:space="preserve">
     <value>&lt;b&gt;{amount}&lt;/b&gt; of CO₂ emitted</value>

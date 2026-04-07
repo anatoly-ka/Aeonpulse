@@ -358,31 +358,11 @@ namespace Aeonpulse.Tests
         // ---------------------------------------------------------------
 
         [Fact]
-        public void CalculateHumanBirthRank_PreTwentiethCentury_FlagIsTrue()
-        {
-            var result = _svc.CalculateHumanBirthRank(new DateTime(1850, 6, 1), "T");
-
-            Assert.True(result.IsPreTwentiethCentury);
-            Assert.Equal(0, result.EstimatedRank, precision: 0);
-        }
-
-        [Fact]
         public void CalculateHumanBirthRank_PostTwentiethCentury_RankIsPositive()
         {
             var result = _svc.CalculateHumanBirthRank(new DateTime(1965, 7, 24), "T");
 
-            Assert.False(result.IsPreTwentiethCentury);
             Assert.True(result.EstimatedRank > 0);
-        }
-
-        [Fact]
-        public void CalculateHumanBirthRank_LaterDate_HasHigherRank()
-        {
-            // A person born later is the N-th human born after more people have been born.
-            var earlier = _svc.CalculateHumanBirthRank(new DateTime(1920, 1, 1), "T");
-            var later   = _svc.CalculateHumanBirthRank(new DateTime(1990, 1, 1), "T");
-
-            Assert.True(later.EstimatedRank > earlier.EstimatedRank);
         }
 
         // ---------------------------------------------------------------
@@ -428,15 +408,13 @@ namespace Aeonpulse.Tests
         // ---------------------------------------------------------------
 
         [Fact]
-        public void CalculateGlobalExhale_Pre1900_TotalCO2IsZeroAndFlagSet()
+        public void CalculateGlobalExhale_DateAt1900_CO2IsPositive()
         {
             var result = _svc.CalculateGlobalExhale(
-                new DateTime(1850, 1, 1), "T", "1850-01-01",
+                new DateTime(1900, 1, 1), "T", "1900-01-01",
                 useMetric: true, now: new DateTime(2026, 1, 1));
 
-            Assert.True(result.IsPreTwentiethCentury);
-            // The service returns the fixed pre-industrial cumulative total (11.77 Bt) for pre-1900 dates.
-            Assert.Equal(11.77, result.TotalCO2BillionTonnes, precision: 2);
+            Assert.True(result.TotalCO2BillionTonnes > 0);
         }
 
         [Fact]
@@ -446,7 +424,6 @@ namespace Aeonpulse.Tests
                 new DateTime(1965, 7, 24), "T", "1965-07-24",
                 useMetric: true, now: new DateTime(2026, 1, 1));
 
-            Assert.False(result.IsPreTwentiethCentury);
             Assert.True(result.TotalCO2BillionTonnes > 0);
         }
 

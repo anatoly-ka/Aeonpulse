@@ -169,6 +169,11 @@ namespace Aeonpulse.ViewModels
         // -- Refreshing -------------------------------------------------------
         public string Refreshing_Message => AppResources.Refreshing_Message;
 
+        // -- Alerts -----------------------------------------------------------
+        public string Alert_Title_Aeonpulse  => AppResources.Alert_Title_Aeonpulse;
+        public string Alert_Message_Pre1900  => AppResources.Alert_Message_Pre1900;
+        public string Alert_Button_Close     => AppResources.Alert_Button_Close;
+
         /// <summary>
         /// Fires PropertyChanged("") which causes every bound property on this
         /// instance to re-read its value from AppResources (which now uses the

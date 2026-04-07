@@ -6,7 +6,9 @@ namespace Aeonpulse.Tests
     /// <summary>
     /// Unit tests for <see cref="CalculationService.CalculateHumanBirthRank"/>.
     ///
-    /// Three piecewise linear ranges: before 1900, 1900-1950, 1950-2000, after 2000.
+    /// Three piecewise linear ranges: 1900-1950, 1950-2000, after 2000.
+    /// Dates before 1900 are rejected at the UI layer (ChangeDatePopup) and
+    /// never reach this method.
     /// </summary>
     public class CalculateHumanBirthRankTests
     {
@@ -19,16 +21,7 @@ namespace Aeonpulse.Tests
         }
 
         [Fact]
-        public void DateBefore1900_ReturnsPre20thCenturyMessage()
-        {
-            var result = _svc.CalculateHumanBirthRank(new DateTime(1850, 1, 1), "Test");
-
-            // The pre-XX brief contains the fixed population figure
-            Assert.Contains("104,510,976,956", result.BriefText);
-        }
-
-        [Fact]
-        public void DateExactly1900_01_01_ReturnsPostXXMessage()
+        public void DateExactly1900_01_01_ReturnsRankMessage()
         {
             var result = _svc.CalculateHumanBirthRank(new DateTime(1900, 1, 1), "Test");
 
@@ -58,11 +51,10 @@ namespace Aeonpulse.Tests
         }
 
         [Fact]
-        public void ResultIsNonNullForAnyDate()
+        public void ResultIsNonNullForAnyAllowedDate()
         {
             var dates = new[]
             {
-                new DateTime(1800, 1, 1),
                 new DateTime(1900, 1, 1),
                 new DateTime(1950, 6, 15),
                 new DateTime(2000, 12, 31),

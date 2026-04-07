@@ -6,8 +6,9 @@ namespace Aeonpulse.Tests
     /// <summary>
     /// Unit tests for <see cref="CalculationService.CalculateGlobalExhale"/>.
     ///
-    /// Three branches: before 1900 (constant), 1900-present (polynomial).
-    /// Also validates metric/imperial toggle.
+    /// Validates the 1900-present polynomial model and metric/imperial toggle.
+    /// Dates before 1900 are rejected at the UI layer (ChangeDatePopup) and
+    /// never reach this method.
     /// </summary>
     public class CalculateGlobalExhaleTests
     {
@@ -20,13 +21,14 @@ namespace Aeonpulse.Tests
         }
 
         [Fact]
-        public void DateBefore1900_ReturnsPre1900Message()
+        public void DateExactly1900_BriefTextContainsCO2Amount()
         {
             var result = _svc.CalculateGlobalExhale(
-                new DateTime(1850, 1, 1), "Test", "1850-01-01", useMetric: true,
+                new DateTime(1900, 1, 1), "Test", "1900-01-01", useMetric: true,
                 now: new DateTime(2026, 1, 1));
 
-            Assert.Contains("1900", result.BriefText);
+            Assert.Contains("CO", result.BriefText);
+            Assert.NotEmpty(result.FullText);
         }
 
         [Fact]

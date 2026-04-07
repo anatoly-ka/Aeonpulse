@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-04-06
+> **Last updated:** 2026-04-07
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -54,7 +54,7 @@
 | **5 / Node 4** | `MainViewModel` | Central state hub, all owned symbols, all callers. Extend here for new tickers/sections/settings. |
 | **5 / Node 5** | `CalculationService` | All 11 ticker methods with AIContext and update type. Extend here for new tickers. |
 | **5 / Node 6** | `LocalizedResources` | Live binding bridge, `Invalidate()` mechanism. Extend here for new strings. |
-| **5 / Node 7** | `AppResources.resx` | 491 string keys, prefix group table, template token format. Extend here for new strings/languages. |
+| **5 / Node 7** | `AppResources.resx` | 490 string keys, prefix group table, template token format. Extend here for new strings/languages. |
 | **5 / Node 8** | `ThemeService` + `FontSizeService` | Palette/preset dictionaries, `ApplyScheme`/`ApplyPreset`. Extend here for new schemes/presets. |
 | **5 / Node 9** | `ImageTint` + `TintHelper` | Tint pipeline, per-platform notes. Extend here for new platform tint support. |
 | **5 / Node 10** | Modal Popup Classes | All 5 popups: constructor args, primary action, side effects. Extend here for new popups/settings. |
@@ -332,7 +332,7 @@ All XAML files must be saved as **UTF-8 with BOM**. All colour/font-size referen
 | `SettingsPopup.xaml` | Edit freely | *(XAML AI comments)* | Full-screen overlay modal (semi-transparent `BackgroundColor`). `Frame` (legacy, `.NET 9` obsolete - do not add more Frames) centred panel. 3-row inner `Grid`: title bar, scrollable settings, close button footer. Settings rendered as a 2-column 14-row `Grid` with custom `RadioButton` `ControlTemplate` (outer ring `Ellipse` + inner dot `Ellipse` driven by `{TemplateBinding IsChecked}`). Groups: Unit System (rows 0-1), Color Scheme (rows 3-5), Text Size (rows 7-9), Language (rows 11-13), with spacer rows between. |
 | `SettingsPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `MainViewModel` via constructor; sets `BindingContext`. `_initialising = true` guard blocks `CheckedChanged` callbacks during radio-button seeding. Handlers `OnUnitSystemChanged`, `OnColorSchemeChanged`, `OnTextSizeChanged`, `OnDisplayLanguageChanged` each read the `RadioButton.Value` string and write to the ViewModel setter, which applies the change immediately and persists it. |
 | `ChangeDatePopup.xaml` | Edit freely | *(XAML AI comments)* | Centred (no full-screen overlay) modal. No backdrop-dismiss tap by design - prevents accidental dismissal of an in-progress edit. Contains `Entry` (event name) and `DatePicker` (date) inside `Frame` wrappers (legacy, `.NET 9` obsolete). Cancel and OK `Button` in a 3-column `Grid`. Uses `{x:Static resources:AppResources.Xxx}` (acceptable: popup is freshly constructed each time). |
-| `ChangeDatePopup.xaml.cs` | Edit carefully | `ModalViewController` | Pre-populates `EventNameEntry.Text` and `EventDatePicker.Date` from the ViewModel in constructor. `OnOkClicked` validates the name entry is non-empty, then calls `MainViewModel.SaveDate(name, date)` atomically before `PopModalAsync()`. |
+| `ChangeDatePopup.xaml.cs` | Edit carefully | `ModalViewController` | Pre-populates `EventNameEntry.Text` and `EventDatePicker.Date` from the ViewModel in constructor. `OnOkClicked` validates the name entry is non-empty, then enforces a minimum base date of 1900-01-01: if the selected date is earlier, the picker is reverted and a localized `DisplayAlert` is shown (keys: `Alert_Title_Aeonpulse`, `Alert_Message_Pre1900`, `Alert_Button_Close`); the save is aborted. Otherwise calls `MainViewModel.SaveDate(name, date)` atomically before `PopModalAsync()`. |
 | `MainMenuPopup.xaml` | Edit freely | *(XAML AI comments)* | Full-screen overlay. `Frame` (legacy) panel positioned `HorizontalOptions=End` with top/right `Margin` injected in code-behind to sit below the NavBar hamburger button. Menu items are `Grid` + `TapGestureRecognizer` (not `Button`) to avoid nested hit-testing issues on Android. Items: Change Date, Settings, Exit. Close `Button` in footer. |
 | `MainMenuPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `MainViewModel`, `topOffset`, `rightOffset`, `openChangeDateCallback`, `openSettingsCallback` via constructor. Each menu item first `await`s `PopModalAsync()` to finish its own dismiss animation, **then** invokes the callback. This ordering is mandatory on iOS to avoid `InvalidOperationException`. Exit calls `Application.Current.Quit()`. |
 | `DeepDivePopup.xaml` | Edit freely | *(XAML AI comments)* | Generic info popup reused by all 11 ticker info buttons. Full-screen overlay. `Frame` (legacy) panel with top `Margin` overridden by code-behind. 3-row layout: non-scrollable title, `ScrollView` with two labelled content sections (methodology + sources), footer with close button. All text labels are set by code-behind via `x:Name`. |
@@ -1625,7 +1625,7 @@ AIContext:   (none - localisation hub)
 - Singleton (`static readonly Instance`). Every XAML `{Binding Loc.Xxx}` expression resolves through this instance.
 - Every property is a simple passthrough getter: `public string MyKey => AppResources.MyKey;`
 - `Invalidate()` fires `PropertyChanged(string.Empty)` which causes MAUI's binding engine to re-read **every** property on this object simultaneously - the mechanism that makes language switching instant without page reload.
-- Contains passthrough properties for all 491 string keys in `AppResources.resx`, grouped by: AppName/Badge, Timeline, Sections (4), Ticker titles (11), Settings, ChangeDate, MainMenu, DeepDive/Info (30), Units (metric + imperial), Stars (57), Runes (24), PersonalYear interpretations (9), Tease, Refreshing.
+- Contains passthrough properties for all 490 string keys in `AppResources.resx`, grouped by: AppName/Badge, Timeline, Sections (4), Ticker titles (11), Settings, ChangeDate, MainMenu, DeepDive/Info (30), Units (metric + imperial), Stars (57), Runes (24), PersonalYear interpretations (9), Tease, Refreshing.
 
 **Owns:**
 - The `Invalidate()` mass-rebind mechanism
@@ -1656,7 +1656,7 @@ AIContext:   (none - string repository)
 ```
 
 **Responsibilities:**
-- The **single source of truth for all user-visible strings**. 491 string keys total.
+- The **single source of truth for all user-visible strings**. 490 string keys total.
 - Organised into named groups by prefix (see key prefix table below).
 - `AppResources.Culture` is set globally by `MainViewModel.ApplyLanguage()`. The .NET resource system automatically selects `AppResources.ru.resx` when the culture is `ru`.
 - `AppResources.Designer.cs` provides the strongly-typed `AppResources.SomeKey` accessor used throughout `CalculationService` and `LocalizedResources`.
@@ -1676,6 +1676,7 @@ AIContext:   (none - string repository)
 | `Tease_` | 7 | Tease popup title, button, and 5 randomly-selected tease templates (`Tease_Countdown`, `Tease_Heartbeats`, `Tease_Breaths`, `Tease_GalacticCommute`, `Tease_GlobalExhale`) |
 | `MainMenu_` | 5 | Main menu popup labels |
 | `Section_` | 4 | Section header titles (Lab, Cosmos, Mirror, Eco Echoes) |
+| `Alert_` | 3 | Validation alert strings: `Alert_Title_Aeonpulse`, `Alert_Message_Pre1900`, `Alert_Button_Close`. Used by `ChangeDatePopup.xaml.cs` to reject pre-1900 input dates. |
 | Others | ~22 | `AppName`, `Badge_LIVE`, `Timeline_BaseDatePreposition`, `Default_BaseDateName`, `Refreshing_Message` |
 
 **Template token format:**

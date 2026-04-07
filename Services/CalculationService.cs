@@ -1183,27 +1183,13 @@ namespace Aeonpulse.Services
                2050 | 9,752,000,000 | 120,847,437,072
             */
 
-            // Pre-1900 dates are outside the piecewise model range
-            long days = (long)(baseDate - new DateTime(1900, 1, 1)).TotalDays;
-            if (days < 0)
-            {
-                return new HumanBirthRankResult
-                {
-                    IsPreTwentiethCentury = true,
-                    EstimatedRank = 0,
-                    BriefText = AppResources.Ticker_HumanBirthRankPreXX_Brief,
-                    FullText = AppResources.Ticker_HumanBirthRankPreXX_Full
-                        .Replace("{baseDateName}", baseDateName)
-                };
-            }
-
-            // Use the shared piecewise model for consistent results with CalculateVibrantHumanity
+            // Dates before 1900 are rejected at the input layer (ChangeDatePopup).
+            // All base dates reaching this point are guaranteed >= 1900-01-01.
             double estimatedRank = HumanBirthRankbyDate(baseDate.ToUniversalTime());
             var (chartPoints, markerYear) = BirthRankChartPoints(estimatedRank);
 
             return new HumanBirthRankResult
             {
-                IsPreTwentiethCentury = false,
                 EstimatedRank = estimatedRank,
                 ChartPoints   = chartPoints,
                 MarkerYear    = markerYear,
@@ -1428,24 +1414,8 @@ namespace Aeonpulse.Services
             DateTime year1900 = new DateTime(1900, 1, 1);
             int baseYears = (int)((baseDate - year1900).TotalDays / 365.25);
 
-            double totalCO2 = 11.77; // billion tons of CO2 emitted till 1900
-            string amount = useMetric ? $"{totalCO2} {AppResources.UnitMetric_BTonnes}" : $"{(totalCO2 * 0.984252):F2} {AppResources.UnitImperial_BTons}";
-
-            if (baseYears < 0)
-            {
-                return new GlobalExhaleResult
-                {
-                    IsPreTwentiethCentury   = true,
-                    TotalCO2BillionTonnes   = totalCO2,
-                    FormattedAmount         = amount,
-                    UseMetric               = useMetric,
-                    BriefText = AppResources.Ticker_GlobalExhalePreXX_Brief
-                        .Replace("{amount}", amount),
-                    FullText = AppResources.Ticker_GlobalExhalePreXX_Full
-                        .Replace("{baseDateName}", baseDateName)
-                        .Replace("{amount}", amount)
-                };
-            }
+            // Dates before 1900 are rejected at the input layer (ChangeDatePopup).
+            // All base dates reaching this point are guaranteed >= 1900-01-01.
 
             // Approximation for year >= 1900 (polynomial gives a better R^2 than exponential):
             //    CO2_in_year = 0.0008 * (year - 1900)^2 - 0.0122 * (year - 1900) + 0.6859
@@ -1459,8 +1429,8 @@ namespace Aeonpulse.Services
 
             double totalCO2Base = 0.0008 / 3 * Math.Pow(x1, 3) - 0.0122 / 2 * Math.Pow(x1, 2) + 0.6859 * x1;
             double totalCO2Now = 0.0008 / 3 * Math.Pow(x2, 3) - 0.0122 / 2 * Math.Pow(x2, 2) + 0.6859 * x2;
-            totalCO2 = totalCO2Now - totalCO2Base;
-            amount = useMetric ? $"{totalCO2:F2} {AppResources.UnitMetric_BTonnes}" : $"{(totalCO2 * 0.984252):F2} {AppResources.UnitImperial_BTons}";
+            double totalCO2 = totalCO2Now - totalCO2Base;
+            string amount = useMetric ? $"{totalCO2:F2} {AppResources.UnitMetric_BTonnes}" : $"{(totalCO2 * 0.984252):F2} {AppResources.UnitImperial_BTons}";
 
             // Carbon budget chart data.
             // Pre-1900 constant included so all cumulative figures share the same epoch.
@@ -1498,7 +1468,6 @@ namespace Aeonpulse.Services
 
             return new GlobalExhaleResult
             {
-                IsPreTwentiethCentury   = false,
                 TotalCO2BillionTonnes   = totalCO2,
                 FormattedAmount         = amount,
                 UseMetric               = useMetric,

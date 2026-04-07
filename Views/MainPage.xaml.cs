@@ -768,7 +768,7 @@ namespace Aeonpulse.Views
         private void ApplyBirthRankChart(MainViewModel vm)
         {
             var result = vm.HumanBirthRank;
-            if (result == null || result.IsPreTwentiethCentury || result.ChartPoints.Count == 0)
+            if (result == null || result.ChartPoints.Count == 0)
             {
                 BirthRankChart.Drawable = null;
                 return;
@@ -1216,12 +1216,12 @@ namespace Aeonpulse.Views
         ///
         /// <para>Called on <c>GlobalExhaleExpanded</c>, <c>GlobalExhale</c>, and
         /// <c>DisplayLanguage</c> changes and from the constructor.
-        /// Hidden when the result is pre-1900 or the depletion year is unavailable.</para>
+        /// Hidden when the depletion year is unavailable.</para>
         /// </summary>
         private void ApplyCarbonBudgetChart(MainViewModel vm)
         {
             var result = vm.GlobalExhale;
-            bool show = result != null && !result.IsPreTwentiethCentury && result.DepletionYear > 0;
+            bool show = result != null && result.DepletionYear > 0;
             CarbonBudgetChartContainer.IsVisible = show && vm.GlobalExhaleExpanded;
             if (!show) return;
 

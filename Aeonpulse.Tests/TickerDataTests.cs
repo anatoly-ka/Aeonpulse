@@ -264,25 +264,10 @@ namespace Aeonpulse.Tests
         {
             var result = new HumanBirthRankResult
             {
-                EstimatedRank         = 3_800_000_000.0,
-                IsPreTwentiethCentury = false,
+                EstimatedRank = 3_800_000_000.0,
             };
 
             Assert.Equal(3_800_000_000.0, result.EstimatedRank, precision: 0);
-            Assert.False(result.IsPreTwentiethCentury);
-        }
-
-        [Fact]
-        public void HumanBirthRankResult_PreTwentiethCentury_FlagIsTrue()
-        {
-            var result = new HumanBirthRankResult
-            {
-                EstimatedRank         = 0,
-                IsPreTwentiethCentury = true,
-            };
-
-            Assert.Equal(0, result.EstimatedRank, precision: 0);
-            Assert.True(result.IsPreTwentiethCentury);
         }
 
         // ---------------------------------------------------------------
@@ -357,26 +342,22 @@ namespace Aeonpulse.Tests
                 TotalCO2BillionTonnes = 42.5,
                 FormattedAmount       = "42.50 billion tonnes",
                 UseMetric             = true,
-                IsPreTwentiethCentury = false,
             };
 
             Assert.Equal(42.5, result.TotalCO2BillionTonnes, precision: 10);
             Assert.Equal("42.50 billion tonnes", result.FormattedAmount);
             Assert.True(result.UseMetric);
-            Assert.False(result.IsPreTwentiethCentury);
         }
 
         [Fact]
-        public void GlobalExhaleResult_ImperialAndPre1900Flags_StoredCorrectly()
+        public void GlobalExhaleResult_ImperialFlag_StoredCorrectly()
         {
             var result = new GlobalExhaleResult
             {
-                UseMetric             = false,
-                IsPreTwentiethCentury = true,
+                UseMetric = false,
             };
 
             Assert.False(result.UseMetric);
-            Assert.True(result.IsPreTwentiethCentury);
         }
 
         // ---------------------------------------------------------------

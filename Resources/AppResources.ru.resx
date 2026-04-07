@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Alert_Title_Aeonpulse" xml:space="preserve">
+    <value>Aeonpulse</value>
+    <comment>ChangeDatePopup.xaml.cs</comment>
+  </data>
+  <data name="Alert_Message_Pre1900" xml:space="preserve">
+    <value>Даты до XX века не поддерживаются. Есть много интересного и в наших временах!</value>
+    <comment>ChangeDatePopup.xaml.cs</comment>
+  </data>
+  <data name="Alert_Button_Close" xml:space="preserve">
+    <value>Закрыть</value>
+    <comment>ChangeDatePopup.xaml.cs</comment>
+  </data>
   <data name="Default_BaseDateName" xml:space="preserve">
     <value>Я родился</value>
     <comment>MainViewModel.cs</comment>
@@ -757,14 +769,6 @@
     <value>Один из рожденных</value>
     <comment>MainPage.xaml</comment>
   </data>
-  <data name="Ticker_HumanBirthRankPreXX_Brief" xml:space="preserve">
-    <value>Один из первых &lt;b&gt;104,510,976,956&lt;/b&gt; человек</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Ticker_HumanBirthRankPreXX_Full" xml:space="preserve">
-    <value>Дата "{baseDateName}" относится к периоду до XX века. По некоторым оценкам, число людей, когда-либо родившихся и живших на Земле до 1900 года, составляло &lt;b&gt;104 510 976 956&lt;/b&gt; человек.</value>
-    <comment>CalculationService.cs</comment>
-  </data>
   <data name="Ticker_HumanBirthRankPostXX_Brief" xml:space="preserve">
     <value>Человек №&lt;b&gt;{estimatedRank:N0}&lt;/b&gt; в этот день</value>
     <comment>CalculationService.cs</comment>
@@ -1196,14 +1200,6 @@
   <data name="Ticker_GlobalExhaleTitle" xml:space="preserve">
     <value>Дыхание мира</value>
     <comment>MainPage.xaml</comment>
-  </data>
-  <data name="Ticker_GlobalExhalePreXX_Brief" xml:space="preserve">
-    <value>До 1900 года было выброшено &lt;b&gt;{amount}&lt;/b&gt; CO₂</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Ticker_GlobalExhalePreXX_Full" xml:space="preserve">
-    <value>Дата "{baseDateName}" до XX века. За весь период до 1900 года человечество произвело выброс в атмосферу &lt;b&gt;{amount}&lt;/b&gt; CO₂. Это всё ещё ничтожно мало по сравнению с более поздними периодами.</value>
-    <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_GlobalExhalePostXX_Brief" xml:space="preserve">
     <value>&lt;b&gt;{amount}&lt;/b&gt; выброшенного CO₂</value>

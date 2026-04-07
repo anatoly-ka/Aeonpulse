@@ -301,9 +301,6 @@ namespace Aeonpulse.Models
         /// </summary>
         public double EstimatedRank { get; init; }
 
-        /// <summary><c>true</c> when the base date is before 1900-01-01.</summary>
-        public bool IsPreTwentiethCentury { get; init; }
-
         /// <summary>
         /// Raw historical data points for the birth-history curve.
         /// Each point is a (Year, EverBorn) pair where Year is AD
@@ -371,7 +368,6 @@ namespace Aeonpulse.Models
     {
         /// <summary>
         /// Total CO2 emitted since the base date in billion metric tonnes.
-        /// 0 for pre-1900 base dates (only a fixed total is shown).
         /// </summary>
         public double TotalCO2BillionTonnes { get; init; }
 
@@ -386,20 +382,15 @@ namespace Aeonpulse.Models
         /// <summary><c>true</c> when the result was computed in metric units.</summary>
         public bool UseMetric { get; init; }
 
-        /// <summary><c>true</c> when the base date is before 1900-01-01.</summary>
-        public bool IsPreTwentiethCentury { get; init; }
-
         /// <summary>
         /// Cumulative CO2 (Gt) from the model epoch up to and including <c>baseDate</c>,
         /// including the pre-1900 constant (11.77 Gt). Used as the left Y anchor on the chart.
-        /// Zero for pre-1900 base dates.
         /// </summary>
         public double BaseDateCumCO2Gt { get; init; }
 
         /// <summary>
         /// Cumulative CO2 (Gt) from the model epoch up to today,
         /// including the pre-1900 constant (11.77 Gt).
-        /// Zero for pre-1900 base dates.
         /// </summary>
         public double TodayCumCO2Gt { get; init; }
 

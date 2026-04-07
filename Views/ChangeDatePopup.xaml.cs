@@ -1,4 +1,5 @@
 using Aeonpulse.Attributes;
+using Aeonpulse.Resources;
 using Aeonpulse.ViewModels;
 
 namespace Aeonpulse.Views
@@ -64,11 +65,31 @@ namespace Aeonpulse.Views
         /// <c>UpdateAllCalculations()</c>, so all ticker cards will re-render
         /// with the new base date as soon as this popup is popped.
         /// </para>
+        /// <para>
+        /// <b>Pre-1900 guard:</b> dates before January 1 1900 are rejected with a
+        /// localized <c>DisplayAlert</c>. The picker value is reverted to the
+        /// current <see cref="MainViewModel.BaseDate"/> so no state change occurs.
+        /// </para>
         /// </summary>
         private async void OnOkClicked(object sender, EventArgs e)
         {
+            var selectedDate = EventDatePicker.Date;
+
+            if (selectedDate < new DateTime(1900, 1, 1))
+            {
+                // Revert the picker to the current saved date so no partial state leaks
+                if (DateTime.TryParse(_viewModel.BaseDateValue, out var current))
+                    EventDatePicker.Date = current;
+
+                await Application.Current!.MainPage!.DisplayAlert(
+                    AppResources.Alert_Title_Aeonpulse,
+                    AppResources.Alert_Message_Pre1900,
+                    AppResources.Alert_Button_Close);
+                return;
+            }
+
             var newName = EventNameEntry.Text?.Trim();
-            var newDate = EventDatePicker.Date.ToString("yyyy-MM-dd");
+            var newDate = selectedDate.ToString("yyyy-MM-dd");
 
             // SaveDate atomically updates BaseDateName, BaseDateValue AND BaseDate,
             // then calls UpdateAllCalculations() once with all values consistent.
