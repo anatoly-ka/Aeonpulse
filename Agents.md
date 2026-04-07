@@ -24,15 +24,6 @@
 | **1.4** | User-Configurable Settings | All settings: type, options, `Preferences` persistence key. |
 | **1.5** | Key Architectural Constraints | 8 hard rules every agent must read before making any change. |
 | **2** | Complete File Overview | Every file in the project: edit guidance, `AIContext` role, description. |
-| **2 / Core** | Core Files | `Aeonpulse.csproj`, `App.xaml(.cs)`, `MauiProgram.cs`. |
-| **2 / Models** | Models | `TickerData`, `TickerCardModel`, `SubsectionState`. |
-| **2 / Services** | Services | `CalculationService`, `ThemeService`, `FontSizeService`. |
-| **2 / ViewModels** | ViewModels | `MainViewModel`, `LocalizedResources`. |
-| **2 / Views** | Views | All 5 popup XAML/code-behind pairs + `MainPage`. |
-| **2 / Converters** | Converters | `ValueConverters.cs` (3 converters). |
-| **2 / Helpers** | Helpers | `ImageTint.cs`, `TintBehavior.cs` (tombstone). |
-| **2 / Resources** | Resources | `.resx` files, `Colors.xaml`, `Styles.xaml`, images. |
-| **2 / Platforms** | Platform Files | Android, iOS, MacCatalyst, Windows, Tizen per-platform files. |
 | **3** | Architecture & Patterns | MVVM, data binding, all major data-flow diagrams. |
 | **3.1** | MVVM - Manual Implementation | `INotifyPropertyChanged` pattern, `ICommand` pattern, `BindingContext` wiring. |
 | **3.2** | Data Binding | Two binding modes (`{Binding Loc.Xxx}` vs `{x:Static}`), all three converter registrations. |
@@ -52,7 +43,7 @@
 | **5 / Node 2** | `App` | Startup bootstrap order, preferences restoration, resource dictionary merge. |
 | **5 / Node 3** | `MainPage` | Navigation coordinator, guard flags, `OpenDeepDiveAsync`, `topOffset` measurement. |
 | **5 / Node 4** | `MainViewModel` | Central state hub, all owned symbols, all callers. Extend here for new tickers/sections/settings. |
-| **5 / Node 5** | `CalculationService` | All 11 ticker methods with AIContext and update type. Extend here for new tickers. |
+| **5 / Node 5** | `CalculationService` | All 19 ticker methods with AIContext and update type. Extend here for new tickers. |
 | **5 / Node 6** | `LocalizedResources` | Live binding bridge, `Invalidate()` mechanism. Extend here for new strings. |
 | **5 / Node 7** | `AppResources.resx` | 490 string keys, prefix group table, template token format. Extend here for new strings/languages. |
 | **5 / Node 8** | `ThemeService` + `FontSizeService` | Palette/preset dictionaries, `ApplyScheme`/`ApplyPreset`. Extend here for new schemes/presets. |
@@ -63,7 +54,7 @@
 | **6.2** | Restore | `dotnet restore` command. Package list. |
 | **6.3** | Build Commands | All platforms, Debug/Release, `--no-incremental`. Output path table. |
 | **6.4** | Known Warnings | 4 accepted warning codes (XC0022, CS0618, CS8767, CS0414). Clean-build rule for agents. |
-| **6.5** | Testing | No test project yet. What can/cannot be tested without a device. Create-test-project recipe. |
+| **6.5** | Testing | `Aeonpulse.Tests` xUnit project (299 tests). What can/cannot be tested without a device. Run command. |
 | **6.6** | Run and Deploy | Per-platform run commands, ADB path, APK install command, iOS simulator targeting. |
 | **6.7** | Publish | Release package commands for all 4 platforms including keystore signing. |
 | **6.8** | Clean Build | BOM detection and bulk-fix PowerShell scripts. Full clean commands. |
@@ -148,6 +139,7 @@
 | What is `TintBehavior.cs` and why is it empty? | **§2/Helpers**, **§9.9** |
 | What must I update in `Agents.md` after my change? | **§9.11** |
 | Pre-commit checklist | **§9.12** |
+| How do I run the test suite? How many tests are there? | **§6.5** |
 | Commit signature format for AI agents | **§9.13** |
 
 ---
@@ -201,7 +193,7 @@ MainPage (always present)
 - **Row 1** - TimelineHeading (base date label, tappable to open `ChangeDatePopup`)
 - **Row 2** - `ScrollView` containing four collapsible section cards, each containing ticker cards
 
-### Ticker Cards (11 total)
+### Ticker Cards (19 total)
 
 Each ticker card has a `BriefText` (shown when collapsed) and a `FullText` (shown when expanded). The two are mutually exclusive: `BriefText` binds `IsVisible` to `{Binding XxxExpanded, Converter={StaticResource InverseBool}}`; `FullText` binds `IsVisible` to `{Binding XxxExpanded}`.
 LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
@@ -258,7 +250,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 5. **ASCII-only in comment blocks.** Non-ASCII characters (emoji, Unicode dashes, box-drawing)
    inside `<!-- -->` (XAML) or `//` / `/* */` (C#) comment blocks cause `MSB4018 XamlCTask`
    encoding failures if the file lacks a BOM, and are banned regardless. Non-ASCII is safe only
-   in element attribute values (e.g., `Text="emoji"`).
+   in element attribute values (e.g., `Text="emoji"`). See §9.5 and §9.6 for the full literal UTF-8 rules.
 
 6. **`Frame` is obsolete in .NET 9.** Use `Border` for all new container elements.
 
@@ -307,7 +299,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
 | ``AeonLog.cs`` | Edit freely | ``DiagnosticsGateway`` | Static logging gateway. Zero MAUI dependencies; also linked into ``Aeonpulse.Tests``. Wired by ``AeonLog.Initialise(ILoggerFactory)`` called from ``MauiProgram`` after ``builder.Build()``. Three ``[Conditional("DEBUG")]`` methods: ``Debug(cat, sub, msg, block?)``, ``Info(cat, sub, msg)``, ``Warn(cat, sub, msg)``. Falls back to ``NullLogger.Instance`` before initialisation. See Section 8.1 for message-format convention and ``[BLOCK]`` tag rules. |
-| `CalculationService.cs` | Edit freely | `CoreCalculationEngine` | The single domain-logic class. Stateless - reads `DateTime.Now` internally so every call produces a fresh result. All 11 ticker methods return typed subclasses of `TickerData` (see `TickerResults.cs`). `FindNearestJubilee`, `FindPreviousJubilee`, `ReduceToSingleDigit`, and `GetRandomTeaseText` live here. All output strings are pulled from `AppResources` at call time, so output automatically reflects the active locale. Thread-safe; called from both the UI thread and the 1-second timer (via `MainThread.BeginInvokeOnMainThread`). All 11 public `Calculate*` methods accept an optional `DateTime? now = null` parameter for deterministic testing - production callers omit it and get `DateTime.Now`. `FindNearestJubilee` and `ReduceToSingleDigit` are `internal static` and | `Views/MainPage.xaml` | ~227 | Time Jubilees timeline - 2-column `Grid` (col 0: `AbsoluteLayout` with `BoxView` line and 3 `Ellipse` dots using `DynamicResource` colors; col 1: 3-row `Grid` with Last/Today/Next labels and `VerticalStackLayout` days-context that shifts above/below Today via `IsMoreRoomAtBottom`). All colors use `DynamicResource`. `IsVisible` gated on `TimeJubileesExpanded`. |
+| `CalculationService.cs` | Edit freely | `CoreCalculationEngine` | The single domain-logic class. Stateless - reads `DateTime.Now` internally so every call produces a fresh result. All 19 ticker methods return typed subclasses of `TickerData` (see `TickerResults.cs`). `FindNearestJubilee`, `FindPreviousJubilee`, `ReduceToSingleDigit`, and `GetRandomTeaseText` live here. All output strings are pulled from `AppResources` at call time, so output automatically reflects the active locale. Thread-safe; called from both the UI thread and the 1-second timer (via `MainThread.BeginInvokeOnMainThread`). All 19 public `Calculate*` methods accept an optional `DateTime? now = null` parameter for deterministic testing - production callers omit it and get `DateTime.Now`. `FindNearestJubilee` and `ReduceToSingleDigit` are `internal static` and accessible to `Aeonpulse.Tests` via `[assembly: InternalsVisibleTo]`. |
 | `ThemeService.cs` | Edit freely | - | Singleton (`Instance`). Stores three `Dictionary<string, Color>` palettes: `_defaultColors` (DefaultDark), `_highContrastDarkColors`, `_highContrastLightColors`. `ApplyScheme(string)` iterates the chosen palette and writes each key directly into `Application.Current.Resources`, causing all `DynamicResource` bindings to repaint immediately. To add a new colour scheme: add a new palette dict and a new `const string` identifier, then add a case to the switch in `ApplyScheme`. |
 | `FontSizeService.cs` | Edit freely | - | Singleton (`Instance`). Same pattern as `ThemeService` but for five font-size keys (`FontSizeSmall` through `FontSizeTitle`). `ApplyPreset(string)` mutates the resource dict. Three presets: `Small`, `Normal`, `Large`. |
 
@@ -329,14 +321,14 @@ All XAML files must be saved as **UTF-8 with BOM**. All colour/font-size referen
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
 | `MainPage.xaml` | Edit freely | *(XAML AI comments)* | The application's only persistent page. 3-row root `Grid`: Row 0 = NavBar (`Border` + inner `Grid`, logo `Image` with `ImageTint`, app name `Label`, hamburger `Button`). Row 1 = TimelineHeading (`Border` + `HorizontalStackLayout` with `FormattedString`). Row 2 = `ScrollView` containing four `CardFrame`-styled `Border` elements (Lab, Cosmos, Mirror, Eco Echoes), each holding a header `Grid` and a collapsible `VerticalStackLayout` of ticker card `Border` elements. Uses `BoolToImageSource` converter for chevron icons. |
-| `MainPage.xaml.cs` | Edit carefully | `NavigationCoordinator` | Code-behind for `MainPage`. **Contains no business logic.** Responsibilities: subscribe to `MainViewModel.RefreshRequested` in constructor; implement `OnMenuClicked`, `OnTimelineHeadingTapped`, `OnLogoTapped` (opens `TeasePopup` anchored below NavBar, left-aligned, with Copy-to-clipboard and Close buttons); implement 11 `OnXxxInfoClicked` handlers that push `DeepDivePopup`; implement `OnTickerRefreshRequested` that pushes `RefreshingPopup`. Guard flags (`_isXxxOpen`) on every push prevent double-open. `OpenDeepDiveAsync()` measures `NavBar.Height + TimelineHeading.Height` to pass as `topOffset` to `DeepDivePopup`. Holds 15 guard bools (14 deep-dive/popup guards + `_isTeasePopupOpen`). Overrides `OnAppearing`/`OnDisappearing` to start and abort the `"LiveBadgeBreathing"` `Animation` that pulses all 10 LIVE badge labels (opacity 1.0 -> 0.4 -> 1.0, 2500 ms, `Easing.SinInOut`, repeating). `OnAppearing` also starts the Ambient Sparks loop (`StartAmbientSparks`) if `VibrantCosmosExpanded` is true; `OnDisappearing` stops it. `OnViewModelPropertyChanged` starts or stops the loop on `VibrantCosmosExpanded` changes. `ApplyBirthRankChart` sets `BirthRankChart.Drawable` to a fresh `BirthRankChartDrawable` and calls `Invalidate()` when `HumanBirthRankExpanded` or `HumanBirthRank` changes; clears Drawable for pre-1900 dates. `ApplyWyrdWeb` rebuilds the Web of Wyrd Explorer: populates `WyrdRuneGrid` with 24 `Border`+`Label` tap-targets, sets `WyrdWebView.Drawable` to a new `WyrdWebDrawable`, updates `WyrdRuneName`/`WyrdRuneMeaning`; called on `BirthRuneExpanded`, `BirthRune`, `ColorScheme`, `DisplayLanguage` changes and from constructor. `OnWyrdRuneTapped` updates `_wyrdSelectedIndex`, re-highlights grid borders, updates labels, re-invalidates canvas; no ViewModel mutation. `_wyrdCatalogue`/`_wyrdSelectedIndex` are private UI-state fields. `ApplyEnneagram` sets `EnneagramView.Drawable` to a fresh `EnneagramDrawable(personalYearNumber)` and calls `Invalidate()`; called on `PersonalYearExpanded`, `PersonalYear`, `ColorScheme` changes and from constructor. `ApplyTaxonomyFlow`: sets TaxonomyDiscoveriesLabel/TaxonomyExtinctionsLabel text+colour, calls AssignTaxonomyFlowDrawable (creates TaxonomyFlowDrawable with 7 counts + localised InLabels/OutLabels from AppResources, calls Invalidate); triggered on VibrantNatureExpanded/VibrantNature/ColorScheme/DisplayLanguage. |
+| `MainPage.xaml.cs` | Edit carefully | `NavigationCoordinator` | Code-behind for `MainPage`. **Contains no business logic.** Responsibilities: subscribe to `MainViewModel.RefreshRequested` in constructor; implement `OnMenuClicked`, `OnTimelineHeadingTapped`, `OnLogoTapped` (opens `TeasePopup` anchored below NavBar, left-aligned, with Copy-to-clipboard and Close buttons); implement 11 `OnXxxInfoClicked` handlers that push `DeepDivePopup`; implement `OnTickerRefreshRequested` that pushes `RefreshingPopup`. Guard flags (`_isXxxOpen`) on every push prevent double-open. `OpenDeepDiveAsync()` measures `NavBar.Height + TimelineHeading.Height` to pass as `topOffset` to `DeepDivePopup`. Holds 23 guard bools (14 deep-dive/popup guards + `_isTeasePopupOpen`). Overrides `OnAppearing`/`OnDisappearing` to start and abort the `"LiveBadgeBreathing"` `Animation` that pulses all 10 LIVE badge labels (opacity 1.0 -> 0.4 -> 1.0, 2500 ms, `Easing.SinInOut`, repeating). `OnAppearing` also starts the Ambient Sparks loop (`StartAmbientSparks`) if `VibrantCosmosExpanded` is true; `OnDisappearing` stops it. `OnViewModelPropertyChanged` starts or stops the loop on `VibrantCosmosExpanded` changes. `ApplyBirthRankChart` sets `BirthRankChart.Drawable` to a fresh `BirthRankChartDrawable` and calls `Invalidate()` when `HumanBirthRankExpanded` or `HumanBirthRank` changes; clears Drawable for pre-1900 dates. `ApplyWyrdWeb` rebuilds the Web of Wyrd Explorer: populates `WyrdRuneGrid` with 24 `Border`+`Label` tap-targets, sets `WyrdWebView.Drawable` to a new `WyrdWebDrawable`, updates `WyrdRuneName`/`WyrdRuneMeaning`; called on `BirthRuneExpanded`, `BirthRune`, `ColorScheme`, `DisplayLanguage` changes and from constructor. `OnWyrdRuneTapped` updates `_wyrdSelectedIndex`, re-highlights grid borders, updates labels, re-invalidates canvas; no ViewModel mutation. `_wyrdCatalogue`/`_wyrdSelectedIndex` are private UI-state fields. `ApplyEnneagram` sets `EnneagramView.Drawable` to a fresh `EnneagramDrawable(personalYearNumber)` and calls `Invalidate()`; called on `PersonalYearExpanded`, `PersonalYear`, `ColorScheme` changes and from constructor. `ApplyTaxonomyFlow`: sets TaxonomyDiscoveriesLabel/TaxonomyExtinctionsLabel text+colour, calls AssignTaxonomyFlowDrawable (creates TaxonomyFlowDrawable with 7 counts + localised InLabels/OutLabels from AppResources, calls Invalidate); triggered on VibrantNatureExpanded/VibrantNature/ColorScheme/DisplayLanguage. |
 | `SettingsPopup.xaml` | Edit freely | *(XAML AI comments)* | Full-screen overlay modal (semi-transparent `BackgroundColor`). `Frame` (legacy, `.NET 9` obsolete - do not add more Frames) centred panel. 3-row inner `Grid`: title bar, scrollable settings, close button footer. Settings rendered as a 2-column 14-row `Grid` with custom `RadioButton` `ControlTemplate` (outer ring `Ellipse` + inner dot `Ellipse` driven by `{TemplateBinding IsChecked}`). Groups: Unit System (rows 0-1), Color Scheme (rows 3-5), Text Size (rows 7-9), Language (rows 11-13), with spacer rows between. |
 | `SettingsPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `MainViewModel` via constructor; sets `BindingContext`. `_initialising = true` guard blocks `CheckedChanged` callbacks during radio-button seeding. Handlers `OnUnitSystemChanged`, `OnColorSchemeChanged`, `OnTextSizeChanged`, `OnDisplayLanguageChanged` each read the `RadioButton.Value` string and write to the ViewModel setter, which applies the change immediately and persists it. |
 | `ChangeDatePopup.xaml` | Edit freely | *(XAML AI comments)* | Centred (no full-screen overlay) modal. No backdrop-dismiss tap by design - prevents accidental dismissal of an in-progress edit. Contains `Entry` (event name) and `DatePicker` (date) inside `Frame` wrappers (legacy, `.NET 9` obsolete). Cancel and OK `Button` in a 3-column `Grid`. Uses `{x:Static resources:AppResources.Xxx}` (acceptable: popup is freshly constructed each time). |
 | `ChangeDatePopup.xaml.cs` | Edit carefully | `ModalViewController` | Pre-populates `EventNameEntry.Text` and `EventDatePicker.Date` from the ViewModel in constructor. `OnOkClicked` validates the name entry is non-empty, then enforces a minimum base date of 1900-01-01: if the selected date is earlier, the picker is reverted and a localized `DisplayAlert` is shown (keys: `Alert_Title_Aeonpulse`, `Alert_Message_Pre1900`, `Alert_Button_Close`); the save is aborted. Otherwise calls `MainViewModel.SaveDate(name, date)` atomically before `PopModalAsync()`. |
 | `MainMenuPopup.xaml` | Edit freely | *(XAML AI comments)* | Full-screen overlay. `Frame` (legacy) panel positioned `HorizontalOptions=End` with top/right `Margin` injected in code-behind to sit below the NavBar hamburger button. Menu items are `Grid` + `TapGestureRecognizer` (not `Button`) to avoid nested hit-testing issues on Android. Items: Change Date, Settings, Exit. Close `Button` in footer. |
 | `MainMenuPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `MainViewModel`, `topOffset`, `rightOffset`, `openChangeDateCallback`, `openSettingsCallback` via constructor. Each menu item first `await`s `PopModalAsync()` to finish its own dismiss animation, **then** invokes the callback. This ordering is mandatory on iOS to avoid `InvalidOperationException`. Exit calls `Application.Current.Quit()`. |
-| `DeepDivePopup.xaml` | Edit freely | *(XAML AI comments)* | Generic info popup reused by all 11 ticker info buttons. Full-screen overlay. `Frame` (legacy) panel with top `Margin` overridden by code-behind. 3-row layout: non-scrollable title, `ScrollView` with two labelled content sections (methodology + sources), footer with close button. All text labels are set by code-behind via `x:Name`. |
+| `DeepDivePopup.xaml` | Edit freely | *(XAML AI comments)* | Generic info popup reused by all 19 ticker info buttons. Full-screen overlay. `Frame` (legacy) panel with top `Margin` overridden by code-behind. 3-row layout: non-scrollable title, `ScrollView` with two labelled content sections (methodology + sources), footer with close button. All text labels are set by code-behind via `x:Name`. |
 | `DeepDivePopup.xaml.cs` | Edit freely | `ModalViewController` | Constructor accepts `title`, `section1Title`, `section1Text`, `section2Title`, `section2Text`, `topOffset`. Sets label text and overrides `PopupFrame.Margin` top component. To add more content sections, add new `Label` elements in the XAML and wire them here. |
 | `RefreshingPopup.xaml` | Edit freely | *(XAML AI comments)* | Centred (no full-screen overlay) auto-dismissing overlay. `Frame` (legacy) containing `ActivityIndicator` + message `Label`. No user-dismiss gesture - dismisses automatically after 3 seconds. |
 | `RefreshingPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `Action onDismissed` callback. `OnAppearing()` awaits `Task.Delay(3000)`, awaits `PopModalAsync()`, then invokes `onDismissed`. The callback updates a specific typed ticker result property on the ViewModel. The 3-second delay must remain to give the spinner time to animate. |
@@ -1129,21 +1121,21 @@ a map to navigate without reading every XAML file.
 | `Views/MainPage.xaml` | ~1565 | Birth Rune Web of Wyrd Explorer - `VerticalStackLayout` (`IsVisible`=BirthRuneExpanded): `GraphicsView` x:Name=WyrdWebView 150x300 (1:2 aspect); `Label` x:Name=WyrdRuneName; `Label` x:Name=WyrdRuneMeaning; `FlexLayout` x:Name=WyrdRuneGrid (24 rune tap-targets built imperatively by `ApplyWyrdWeb`). |
 | `Views/MainPage.xaml` | ~1508 | Human Birth Rank history curve `GraphicsView` (x:Name BirthRankChart) - linear-scale polyline, X [-5000, 2050], Y [0, 125B]; Y-axis grid labels and X-axis tick labels drawn inside; left-side point annotations with arrows for 1850-2022; gold marker ellipse at user rank position; `Drawable` set imperatively via `ApplyBirthRankChart`; `IsVisible` bound to `HumanBirthRankExpanded`; `SpaceDarker` background; `HeightRequest=200`; hidden (Drawable=null) for pre-1900 dates. |
 | `Views/MainPage.xaml` | ~1388 | Vibrant Cosmos Ambient Sparks particle canvas `AbsoluteLayout` (x:Name CosmosCanvas) - programmatic Label-based particle system. Star-birth particles (U+2736, 90%) spawned at random positions, fade in, dwell 1-10 s (several visible simultaneously), then fade out; each runs an independent `RunStarLifecycle` Task. Supernova (10%) hijacks a random live star from `_liveStars`: swaps glyph to U+2739, swells, swaps to U+1F4A5 collision flash, then dissipates via `RunSupernovaOnLabel`. Both U+2736 and U+2739 use the `JubileeAccent` resource key colour (gold/white/black per active scheme, same as Photon Path Sun). Loop started/stopped on `VibrantCosmosExpanded` change and `OnAppearing`/`OnDisappearing`. `IsClippedToBounds=True`. `IsVisible` bound to `VibrantCosmosExpanded`. |
-| `Views/SettingsPopup.xaml` | 9 | Full-screen overlay `Grid` - Layer 0/1 z-order explanation |
+| `Views/SettingsPopup.xaml` | 11 | Full-screen overlay `Grid` - Layer 0/1 z-order explanation |
 | `Views/SettingsPopup.xaml` | 25 | `Frame` panel - floats over backdrop, `DynamicResource` theme note |
 | `Views/SettingsPopup.xaml` | 38 | 3-row inner `Grid` - `[Title+Divider|Settings|CloseButton]` row assignments |
 | `Views/SettingsPopup.xaml` | 76 | Settings control `Grid` - 2-column 14-row layout, all row group assignments |
 | `Views/SettingsPopup.xaml` | 121 | `RadioButton.ControlTemplate` - outer ring + inner dot pattern |
 | `Views/SettingsPopup.xaml` | 588 | About section - read-only, all strings live-localised via `Loc` bindings |
-| `Views/DeepDivePopup.xaml` | 16 | Full-screen overlay `Grid` - Layer 0/1 dismiss/panel pattern |
+| `Views/DeepDivePopup.xaml` | 18 | Full-screen overlay `Grid` - Layer 0/1 dismiss/panel pattern |
 | `Views/DeepDivePopup.xaml` | 32 | `Frame` panel - `topOffset` margin injection from code-behind |
 | `Views/DeepDivePopup.xaml` | 44 | 3-row inner `Grid` - `[Title+Divider|ScrollableContent|Footer]` |
 | `Views/MainMenuPopup.xaml` | 1 | Entire file (page-level) - anchoring below NavBar, callback navigation pattern |
-| `Views/MainMenuPopup.xaml` | 16 | Full-screen overlay `Grid` - Layer 0/1 |
+| `Views/MainMenuPopup.xaml` | 18 | Full-screen overlay `Grid` - Layer 0/1 |
 | `Views/MainMenuPopup.xaml` | 30 | `Frame` panel - `HorizontalOptions=End`, right `Margin` injected in code-behind |
 | `Views/MainMenuPopup.xaml` | 59 | Menu item `Grid` - 2-column `[icon|label]`, `TapGestureRecognizer` not `Button` reason |
 | `Views/RefreshingPopup.xaml` | 2 | Entire file (page-level) - transient overlay, auto-dismiss, no `BindingContext` |
-| `Views/RefreshingPopup.xaml` | 15 | Centred card `Grid` - no dismiss gesture, auto-dismissed after 3 s |
+| `Views/RefreshingPopup.xaml` | 17 | Centred card `Grid` - no dismiss gesture, auto-dismissed after 3 s |
 
 #### When Adding New XAML
 
@@ -1474,11 +1466,11 @@ AIContext:   NavigationCoordinator
   - Routes 3 gesture events (`OnLogoTapped`, `OnMenuClicked`, `OnTimelineHeadingTapped`) to modal pushes
   - Implements 10 `OnXxxInfoClicked` handlers, each pushing `DeepDivePopup` with ticker-specific content
   - Implements `OpenDeepDiveAsync` shared helper measuring `NavBar.Height + TimelineHeading.Height` for `topOffset`
-  - Holds 13 `_isXxxOpen` guard bools preventing double-push on rapid taps
+  - Holds 23 `_isXxxOpen` guard bools preventing double-push on rapid taps
 
 **Owns:**
 - Modal navigation stack (pushes and controls all 5 popup types)
-- All 13 popup guard flags
+- All 23 popup guard flags
 - `RefreshRequested` subscription
 
 **Calls:**
@@ -1668,16 +1660,16 @@ AIContext:   (none - string repository)
 |--------|-------|---------|
 | `Star_` | 108 | 57 stars: `_Name`, `_Info` pairs + shared constellation infos |
 | `Rune_` | 72 | 24 Elder Futhark runes: `_Name`, `_Brief`, `_Full` triples |
-| `Ticker_` | 46 | BriefText/FullText templates for all 11 tickers (multi-variant some tickers) |
+| `Ticker_` | 75 | BriefText/FullText templates for all 19 tickers (multi-variant for some tickers) |
 | `Info_` | 36 | DeepDivePopup content: `_Title`, `_Method`, `_Source` per ticker |
 | `Settings_` | 22 | All settings popup labels and values |
-| `Unit_` / `UnitMetric_` / `UnitImperial_` | 20 | Distance, time, and mass unit strings (includes `UnitMetric_Kg`, `UnitImperial_Lbs`, `UnitMetric_BTonnes`, `UnitImperial_BTons`) |
-| `PersonalYear1_` ... `PersonalYear9_` | 18 | Brief + Full interpretations for numerology years 1-9 |
-| `ChangeDate_` | 7 | Change date popup labels |
-| `Tease_` | 7 | Tease popup title, button, and 5 randomly-selected tease templates (`Tease_Countdown`, `Tease_Heartbeats`, `Tease_Breaths`, `Tease_GalacticCommute`, `Tease_GlobalExhale`) |
-| `MainMenu_` | 5 | Main menu popup labels |
-| `Section_` | 4 | Section header titles (Lab, Cosmos, Mirror, Eco Echoes) |
-| `Alert_` | 3 | Validation alert strings: `Alert_Title_Aeonpulse`, `Alert_Message_Pre1900`, `Alert_Button_Close`. Used by `ChangeDatePopup.xaml.cs` to reject pre-1900 input dates. |
+| `Unit_` / `UnitMetric_` / `UnitImperial_` | 22 | Distance, time, and mass unit strings (includes `UnitMetric_Kg`, `UnitImperial_Lbs`, `UnitMetric_BTonnes`, `UnitImperial_BTons`) |
+| `PersonalYear1_` ... `PersonalYear9_` | 20 | Brief + Full interpretations for numerology years 1-9 |
+| `ChangeDate_` | 9 | Change date popup labels |
+| `Tease_` | 9 | Tease popup title, button, and 5 randomly-selected tease templates (`Tease_Countdown`, `Tease_Heartbeats`, `Tease_Breaths`, `Tease_GalacticCommute`, `Tease_GlobalExhale`) |
+| `MainMenu_` | 7 | Main menu popup labels |
+| `Section_` | 6 | Section header titles (Lab, Cosmos, Mirror, Eco Echoes) |
+| `Alert_` | 5 | Validation alert strings: `Alert_Title_Aeonpulse`, `Alert_Message_Pre1900`, `Alert_Button_Close`. Used by `ChangeDatePopup.xaml.cs` to reject pre-1900 input dates. |
 | Others | ~22 | `AppName`, `Badge_LIVE`, `Timeline_BaseDatePreposition`, `Default_BaseDateName`, `Refreshing_Message` |
 
 **Template token format:**
@@ -1929,7 +1921,7 @@ not regressions. Do not treat them as failures.
 | `XC0022` | ~240 | `{Binding}` expressions in `MainPage.xaml` lack `x:DataType`; compiled binding not enabled | Accepted - runtime binding used intentionally |
 | `CS0618` | ~60 | `Frame` (popup XAML), `Application.MainPage` setter (`App.xaml.cs`) deprecated in .NET 9 | Accepted - existing usage, do not add new occurrences |
 | `CS8767` | ~48 | Nullability mismatch on `BoolToImageSourceConverter.ConvertBack` parameter | Accepted - minor nullability annotation difference |
-| `CS0414` | 4 | `MainPage._isSettingsOpen` assigned but never read (guard flag only written, not checked) | Accepted - intentional guard pattern |
+| `CS0414` | 6 | `MainPage._isSettingsOpen` assigned but never read (guard flag only written, not checked) | Accepted - intentional guard pattern |
 
 **Rule for agents:** if a build produces only the above warning codes, it is clean.
 Any warning code not in this table is a new issue and must be investigated.
@@ -1946,7 +1938,7 @@ directly so no TFM-incompatibility issues arise. Run all tests with:
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
 ```
 
-**What can be tested without a device (303 tests):**
+**What can be tested without a device (299 tests):**
 - `FindNearestJubilee()` / `ReduceToSingleDigit()` (pure algorithms, `internal` + `InternalsVisibleTo`)
 - `CalculateTimeJubilees`, `CalculateCountdown`, `CalculateLifeOdometer`
 - `CalculateAlienAnniversaries`, `CalculateHumanBirthRank`
@@ -4155,8 +4147,7 @@ they describe what the code already does and must continue to do.
 - **Do not use `<!-- AI: ... -->` comments in C# files.** Use `///` XML doc
   comments or plain `//` comments there.
 
-- **Do not omit `///` summaries on public symbols.** The project has 125 XML doc
-  comment blocks. Every new public class and public method must add to this count.
+- **Do not omit `///` summaries on public symbols.** Every new public class and public method must have one.
 
 ---
 
@@ -4351,27 +4342,28 @@ the change violates a guardrail and must be corrected first.
 |---|-------|----------|
 | 1 | All new colour/font-size XAML bindings use `DynamicResource`? | YES |
 | 2 | All new user-visible strings are in both `.resx` files and `LocalizedResources.cs`? | YES |
-| 2a | All new `.resx` `<value>` strings and XAML attribute values written as literal UTF-8, not `&#xxxx;` or `\uxxxx` escapes? Both `.resx` files have BOM (`0xEF 0xBB 0xBF`)? | YES |
-| 2b | No suspicious `?` placeholders in any localised string (`.resx` `<value>`, XAML attribute, `Agents.md` example)? Compare `?` counts between the English original and each translation - a mismatch signals a silent encoding failure during a `.ps1` write. | YES |
-| 3 | All new `.xaml` files saved as UTF-8 with BOM? | YES |
-| 4 | All comment blocks (XAML and C#) contain only ASCII characters? | YES |
-| 5 | No business logic added to `*.xaml.cs` code-behind? | YES |
-| 6 | No hardcoded hex colour values in XAML (except `#80000000` backdrop)? | YES |
-| 7 | No hardcoded numeric font sizes in XAML or C#? | YES |
-| 8 | No new `Frame` elements (use `Border` instead)? | YES |
-| 9 | No new NuGet packages without architectural justification? | YES |
-| 10 | No new `#if ANDROID / IOS / WINDOWS` blocks in shared files? | YES |
-| 11 | All new `public` classes and methods have `///` XML doc summaries? | YES |
-| 12 | All new `[AIContext]` roles documented in `Agents.md` Section 4.1? | YES |
-| 13 | All new structural XAML elements have `<!-- AI: ... -->` comments? | YES |
-| 14 | `Agents.md` updated for every structural change? | YES |
-| 15 | Build produces only known warning codes (CS0618, CS8767, CS0414, XC0022)? | YES |
-| 16 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (303 tests, 0 failures)? | YES |
-| 17 | All new `AeonLog` calls use `[Conditional("DEBUG")]` via the gateway (not raw `ILogger` or `Debug.WriteLine`)? `[BLOCK]` tag added only for methods with named internal phases? | YES |
-| 18 | Commit message ends with `AI: GitHub Copilot (<model>)` trailer (§9.13)? If the commit includes **any human-authored edits**, does the trailer read `AI: GitHub Copilot (<model>) + manual changes`? | YES |
-| 19 | Was the PRE-EDIT GATE (§9.14.2) evaluated before every `edit_file` call in this session? Was the three-part post-edit verification (presence, uniqueness, no-deletion) run after each one? Were all "Never use `edit_file`" files in the routing table edited via `.ps1` scripts only? | YES |
-| 20 | Did every `run_command_in_terminal` call in this session pass the Pre-Flight Gate (§9.14.1)? Did any parse error or empty output trigger the Terminal Error Recovery Protocol before continuing? Was the last terminal call confirmed to have produced expected output before finishing? | YES |
-| 21 | **File integrity double-check before commit:** For every file modified in this session, has the line count been verified against the pre-edit baseline (or git HEAD) using `(Get-Content path).Count`? For `Agents.md` specifically: does the post-edit line count equal pre-edit count plus the number of lines added, with zero lines removed unexpectedly? Were all helper `.ps1` scripts removed with `remove_file` before staging? | YES |
+| 3 | All new `.resx` `<value>` strings and XAML attribute values written as literal UTF-8, not `&#xxxx;` or `\uxxxx` escapes? Both `.resx` files have BOM (`0xEF 0xBB 0xBF`)? | YES |
+| 4 | No suspicious `?` placeholders in any localised string (`.resx` `<value>`, XAML attribute, `Agents.md` example)? Compare `?` counts between the English original and each translation - a mismatch signals a silent encoding failure during a `.ps1` write. | YES |
+| 5 | All new `.xaml` files saved as UTF-8 with BOM? | YES |
+| 6 | All comment blocks (XAML and C#) contain only ASCII characters? | YES |
+| 7 | No business logic added to `*.xaml.cs` code-behind? | YES |
+| 8 | No hardcoded hex colour values in XAML (except `#80000000` backdrop)? | YES |
+| 9 | No hardcoded numeric font sizes in XAML or C#? | YES |
+| 10 | No new `Frame` elements (use `Border` instead)? | YES |
+| 11 | No new NuGet packages without architectural justification? | YES |
+| 12 | No new `#if ANDROID / IOS / WINDOWS` blocks in shared files? | YES |
+| 13 | All new `public` classes and methods have `///` XML doc summaries? | YES |
+| 14 | All new `[AIContext]` roles documented in `Agents.md` Section 4.1? | YES |
+| 15 | All new structural XAML elements have `<!-- AI: ... -->` comments? | YES |
+| 16 | `Agents.md` updated for every structural change? | YES |
+| 17 | Build produces only known warning codes (CS0618, CS8767, CS0414, XC0022)? | YES |
+| 18 | `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` passes (0 failures)? Confirm actual count matches the previous run. | YES |
+| 19 | All new `AeonLog` calls use `[Conditional("DEBUG")]` via the gateway (not raw `ILogger` or `Debug.WriteLine`)? `[BLOCK]` tag added only for methods with named internal phases? | YES |
+| 20 | Commit message ends with `AI: GitHub Copilot (<model>)` trailer (§9.13)? If the commit includes **any human-authored edits**, does the trailer read `AI: GitHub Copilot (<model>) + manual changes`? | YES |
+| 21 | Was the PRE-EDIT GATE (§9.14.2) evaluated before every `edit_file` call in this session? Was the three-part post-edit verification (presence, uniqueness, no-deletion) run after each one? Were all "Never use `edit_file`" files in the routing table edited via `.ps1` scripts only? | YES |
+| 22 | Did every `run_command_in_terminal` call in this session pass the Pre-Flight Gate (§9.14.1)? Did any parse error or empty output trigger the Terminal Error Recovery Protocol before continuing? Was the last terminal call confirmed to have produced expected output before finishing? | YES |
+| 23 | **File integrity double-check before commit:** For every file modified in this session, has the line count been verified against the pre-edit baseline (or git HEAD) using `(Get-Content path).Count`? For `Agents.md` specifically: does the post-edit line count equal pre-edit count plus the number of lines added, with zero lines removed unexpectedly? Were all helper `.ps1` scripts removed with `remove_file` before staging? | YES |
+| 24 | After any `.ps1` renumbering of table rows, verified that only the intended table was affected? Row-number patterns like `\| N \|` are not unique - they match every table in the file. After renumbering, run `Select-String -Path "Agents.md" -Pattern "^\| \d"` and confirm row counts for every affected table (ticker table = 19 rows 1-19; checklist = 24 rows 1-24; no gaps or duplicates in either). | YES |
 
 
 ---
