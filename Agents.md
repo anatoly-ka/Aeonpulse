@@ -92,9 +92,9 @@
 | **9.2** | MVVM Pattern | Manual INPC, `Command` construction, `BindingContext` rules. |
 | **9.3** | Colours and Theming | `DynamicResource` mandate, 12 key names, tinting, no hardcoding. |
 | **9.4** | Font Sizes | `DynamicResource` mandate, 5 key names, no hardcoded values. |
-| **9.5** | Localisation | Binding mode rules, `.resx` symmetry, `Loc.Invalidate()` contract. |
-| **9.6** | XAML Structure and Encoding | BOM requirement, `Border` not `Frame`, comment rules, `TapGestureRecognizer` pattern. |
-| **9.7** | Comment Style and Non-ASCII | `///` on all public symbols, ASCII-only in comments, no `///` in XAML. |
+| **9.5** | Localisation | Binding mode rules, `.resx` symmetry, `Loc.Invalidate()` contract. UTF-8 literal string rule. |
+| **9.6** | XAML Structure and Encoding | BOM requirement, UTF-8 literal attribute values, `Border` not `Frame`, comment rules, `TapGestureRecognizer` pattern. |
+| **9.7** | Comment Style and Non-ASCII | `///` on all public symbols, ASCII-only in comments, UTF-8 literal in values, no `///` in XAML. |
 | **9.8** | New NuGet Packages | 3 existing packages, no-internet-copy rule, no Compatibility types. |
 | **9.9** | Platform-Specific Code | `partial` methods only, all 4 platforms, no `#if` in shared files, tombstone rule. |
 | **9.10** | Persistence | `Preferences` only, 4 persisted keys, read-before-`InitializeComponent` rule. |
@@ -140,6 +140,7 @@
 | Can I use `StaticResource` for this colour? | **§9.3** |
 | Can I use `StaticResource` for this font size? | **§9.4** |
 | Where do I put a new user-visible string? | **§9.5**, **§3.4** |
+| How should I write non-ASCII text in `.resx` or XAML attribute values? | **§9.5**, **§9.6**, **§9.7** |
 | Should I use `Frame` or `Border`? | **§9.6** (always `Border`) |
 | Can I put an emoji in a XAML comment? | **§9.7** (no) |
 | Can I add a NuGet package? | **§9.8** |
@@ -3976,6 +3977,39 @@ they describe what the code already does and must continue to do.
   strings to bound labels simultaneously. The `MainViewModel.DisplayLanguage`
   setter already does this. Do not bypass it.
 
+- **Write all `.resx` `<value>` content as literal UTF-8, not as XML numeric character
+  references (`&#xxxx;`) or C# Unicode escapes (`\uxxxx`).** Both `.resx` files must be saved
+  as UTF-8 with BOM (`0xEF 0xBB 0xBF` as the first three bytes). When the file is saved with
+  the correct encoding, every language-specific character - Cyrillic, CJK, Arabic, emoji, etc. -
+  can be written directly:
+
+  ```xml
+  <!-- CORRECT - literal UTF-8 in a BOM-encoded file -->
+  <data name="Alert_Button_Close" xml:space="preserve">
+    <value>Zakryt (example Cyrillic)</value>
+  </data>
+
+  <!-- WRONG - numeric character references obscure the human-readable text -->
+  <data name="Alert_Button_Close" xml:space="preserve">
+    <value>&#1047;&#1072;&#1082;&#1088;&#1099;&#1090;&#1100;</value>
+  </data>
+  ```
+
+  If hexadecimal code points are useful as a cross-reference (e.g. for uncommon symbols),
+  add them as a plain-ASCII XML comment on a separate line above the `<value>` tag - never
+  inside the `<value>` content itself, and never as the encoding of the value:
+
+  ```xml
+  <!-- U+0417 U+0430 U+043A U+0440 U+044B U+0442 U+044C = Zakryt in Cyrillic -->
+  <data name="Alert_Button_Close" xml:space="preserve">
+    <value>Zakryt (example Cyrillic)</value>
+  </data>
+  ```
+
+  Verify the BOM before committing by checking that the first three bytes of the file are
+  `239 187 191` (decimal). Fix missing BOMs with the bulk-fix script in Section 6.8
+  (adapted for `.resx` files by changing the filter from `*.xaml` to `*.resx`).
+
 #### DO NOT
 
 - **Do not hardcode user-visible strings in XAML or C#.** Every string that
@@ -4012,6 +4046,22 @@ they describe what the code already does and must continue to do.
   as the first three bytes). This is verified for all 10 current XAML files. The
   build fails with `MSB4018 XamlCTask` if a XAML file is saved without a BOM.
   In Visual Studio: **File → Save As → Save with Encoding → UTF-8 with signature**.
+
+- **Write non-ASCII text in XAML attribute values as literal UTF-8**, not as XML
+  numeric character references (`&#xxxx;`) or escape sequences. The XAML file is
+  already required to have a UTF-8 BOM (see the rule above), so any attribute
+  value - emoji, Cyrillic, CJK, etc. - can be written directly:
+
+  ```xml
+  <!-- CORRECT - literal UTF-8 character in an attribute value -->
+  <Label Text="???????" />
+
+  <!-- WRONG - numeric character reference is not human-readable -->
+  <Label Text="&#1047;&#1072;&#1082;&#1088;&#1099;&#1090;&#1100;" />
+  ```
+
+  Remember: this rule applies to **attribute values and element text content only**.
+  XAML comment blocks (`<!-- -->`) must remain **ASCII-only** (see Section 9.7).
 
 - **Use `Border` for all new container elements.** `Frame` is obsolete in .NET 9.
   The existing popup XAML files still use `Frame` (accepted technical debt). Do
@@ -4070,6 +4120,12 @@ they describe what the code already does and must continue to do.
 
 - **Keep all comment text ASCII-only.** This applies to `//`, `/* */`, `///`, and
   `<!-- -->` comment blocks in all file types.
+
+- **Distinguish clearly between comment blocks and value content.** The ASCII-only
+  constraint applies exclusively to comment blocks (`//`, `/* */`, `///`, `<!-- -->`).
+  Non-ASCII characters in element attribute values (XAML `Text="..."`) and `.resx`
+  `<value>` tags are not only permitted but required to be written as literal UTF-8 -
+  see Section 9.5 and Section 9.6 for the full rules.
 
 #### DO NOT
 
@@ -4295,6 +4351,7 @@ the change violates a guardrail and must be corrected first.
 |---|-------|----------|
 | 1 | All new colour/font-size XAML bindings use `DynamicResource`? | YES |
 | 2 | All new user-visible strings are in both `.resx` files and `LocalizedResources.cs`? | YES |
+| 2a | All new `.resx` `<value>` strings and XAML attribute values written as literal UTF-8, not `&#xxxx;` or `\uxxxx` escapes? Both `.resx` files have BOM (`0xEF 0xBB 0xBF`)? | YES |
 | 3 | All new `.xaml` files saved as UTF-8 with BOM? | YES |
 | 4 | All comment blocks (XAML and C#) contain only ASCII characters? | YES |
 | 5 | No business logic added to `*.xaml.cs` code-behind? | YES |
