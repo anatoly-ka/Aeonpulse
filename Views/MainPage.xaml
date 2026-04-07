@@ -266,31 +266,39 @@
                                                      Stroke="{DynamicResource JubileeAccent}"
                                                      StrokeThickness="3" />
 
-                                            <!-- Next Jubilee solid dot at bottom (95%) -->
+                                            <!-- Next Jubilee solid dot at bottom (95%) - CyberCyan to match Photon Path next-star colour -->
                                             <Ellipse AbsoluteLayout.LayoutBounds="0.5, 0.95, 14, 14"
                                                      AbsoluteLayout.LayoutFlags="PositionProportional"
-                                                     Fill="{DynamicResource JubileeAccent}" />
+                                                     Fill="{DynamicResource CyberCyan}" />
                                         </AbsoluteLayout>
 
-                                        <!-- Col 1: 3-row Grid for milestone labels and days-context text -->
-                                        <Grid Grid.Column="1"
-                                              RowDefinitions="Auto, *, Auto">
+                                        <!-- Col 1: AbsoluteLayout for milestone labels and days-context text.        -->
+                                        <!-- LastJubileeName is pinned at Y=0.05, NextJubileeName at Y=0.95,           -->
+                                        <!-- matching their dot counterparts. TodayContextBlock (x:Name) Y is set       -->
+                                        <!-- imperatively by ApplyTodayDotPosition() via AbsoluteLayout.SetLayoutBounds -->
+                                        <!-- using the same visualY fraction as TodayDot - no TranslationY, no Grid.   -->
+                                        <AbsoluteLayout x:Name="JubileeLabelsPanel" Grid.Column="1">
 
-                                            <!-- Row 0: Last Jubilee label (top anchor) -->
+                                            <!-- Last Jubilee label - pinned at Y=0.05, same as the Last dot -->
                                             <!-- Binding: MainViewModel.TimeJubilees.LastJubileeName -->
-                                            <Label Grid.Row="0"
-                                                   Margin="15,5,0,0"
-                                                   VerticalOptions="Start"
+                                            <!-- Y set imperatively in px by ApplyTodayDotPosition(); XAML value is placeholder -->
+                                            <Label x:Name="JubileeLabelLast"
+                                                   AbsoluteLayout.LayoutBounds="0, 0, AutoSize, AutoSize"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   Margin="15,0,0,0"
                                                    Text="{Binding TimeJubilees.LastJubileeName}"
                                                    FontAttributes="Bold"
                                                    FontSize="{DynamicResource FontSizeSmall}"
                                                    TextColor="{DynamicResource TextWhite}" />
 
-                                            <!-- Row 1: Today context block - label order shifts via IsMoreRoomAtBottom -->
-                                            <!-- Days-above/Today/Days-below pattern prevents overlap with endpoint dots. -->
-                                            <VerticalStackLayout Grid.Row="1"
+                                            <!-- Today context block - Y set imperatively to match TodayDot position. -->
+                                            <!-- x:Name=TodayContextBlock; ApplyTodayDotPosition calls               -->
+                                            <!-- AbsoluteLayout.SetLayoutBounds with the same visualY as the dot.    -->
+                                            <!-- IsMoreRoomAtBottom drives which days sub-label is visible.          -->
+                                            <VerticalStackLayout x:Name="TodayContextBlock"
+                                                                 AbsoluteLayout.LayoutBounds="0, 0, AutoSize, AutoSize"
+                                                                 AbsoluteLayout.LayoutFlags="None"
                                                                  Margin="15,0,0,0"
-                                                                 VerticalOptions="Center"
                                                                  Spacing="4">
 
                                                 <!-- Days context ABOVE Today - shown when ProgressFraction >= 0.5 -->
@@ -351,16 +359,19 @@
                                                 </Label>
                                             </VerticalStackLayout>
 
-                                            <!-- Row 2: Next Jubilee label (bottom anchor) -->
+                                            <!-- Next Jubilee label - pinned at Y=0.95, same as the Next dot -->
+                                            <!-- TextColor=CyberCyan to match Photon Path next-star colour and the Next dot. -->
                                             <!-- Binding: MainViewModel.TimeJubilees.NextJubileeName -->
-                                            <Label Grid.Row="2"
-                                                   Margin="15,0,0,5"
-                                                   VerticalOptions="End"
+                                            <!-- Y set imperatively in px by ApplyTodayDotPosition(); XAML value is placeholder -->
+                                            <Label x:Name="JubileeLabelNext"
+                                                   AbsoluteLayout.LayoutBounds="0, 0, AutoSize, AutoSize"
+                                                   AbsoluteLayout.LayoutFlags="None"
+                                                   Margin="15,0,0,0"
                                                    Text="{Binding TimeJubilees.NextJubileeName}"
                                                    FontAttributes="Bold"
                                                    FontSize="{DynamicResource FontSizeSmall}"
-                                                   TextColor="{DynamicResource JubileeAccent}" />
-                                        </Grid>
+                                                   TextColor="{DynamicResource CyberCyan}" />
+                                        </AbsoluteLayout>
 
                                     </Grid>
                                 </VerticalStackLayout>

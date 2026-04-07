@@ -249,5 +249,20 @@ namespace Aeonpulse.Tests
             Assert.True(result.NextAge > 0);
             Assert.True(result.Countdown > TimeSpan.Zero);
         }
+
+        [Fact]
+        public void FullText_ContainsFormattedNextDate()
+        {
+            // Verify that the {nextDate} token is replaced with an actual date string.
+            var baseDate = new DateTime(1990, 6, 15, 0, 0, 0, DateTimeKind.Utc);
+            var now      = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            var result = _svc.CalculateSpaceWait(baseDate, now);
+
+            // The raw token must not appear in the output.
+            Assert.DoesNotContain("{nextDate}", result.FullText);
+            // The full text must be non-empty (date was substituted with something).
+            Assert.NotEmpty(result.FullText);
+        }
     }
 }

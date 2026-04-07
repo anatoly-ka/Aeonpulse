@@ -2256,10 +2256,15 @@ namespace Aeonpulse.Services
                 .Replace("{planet}",    nextPlanetLocalized)
                 .Replace("{countdown}", countdownFormatted);
 
+            // Calculate the actual calendar date of the next planetary milestone
+            DateTime nextDate = now_.AddDays(minDaysToNext);
+            string nextDateFormatted = nextDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture);
+
             string fullText = AppResources.Ticker_SpaceWaitFull
                 .Replace("{age}",       ageOrdinal)
                 .Replace("{planet}",    nextPlanetLocalized)
-                .Replace("{countdown}", countdownFormatted);
+                .Replace("{countdown}", countdownFormatted)
+                .Replace("{nextDate}",  nextDateFormatted);
 
             return new SpaceWaitResult
             {

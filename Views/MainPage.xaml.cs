@@ -74,9 +74,18 @@ namespace Aeonpulse.Views
         // Web of Wyrd Explorer state (Birth Rune expanded view).
         // _wyrdCatalogue is rebuilt on each ApplyWyrdWeb call so locale changes
         // are reflected. _wyrdSelectedIndex tracks the current selection; it is
-        // reset to the user's birth rune whenever the card opens.
+        // reset to the user's birth rune on first open or when the calculated rune changes.
+        // _wyrdLastRuneName stores the RuneName from the previous ApplyWyrdWeb call
+        // so that a base-date change that produces a different rune is detected correctly.
         private IReadOnlyList<Models.FutharkRune>? _wyrdCatalogue;
         private int _wyrdSelectedIndex;
+        private string _wyrdLastRuneName = string.Empty;
+
+        // Stored so TodayContextBlock.SizeChanged can re-fire ApplyTodayDotPosition
+        // with the correct fraction after the block's height changes (e.g. when the
+        // visible sub-label switches between 1 line and 3 lines).
+        private double _todayFraction = 0.5;
+
 
         /// <summary>
         /// Constructs the page and subscribes to the ViewModel's
@@ -118,6 +127,13 @@ namespace Aeonpulse.Views
             {
                 if (BindingContext is MainViewModel vmSc) _ = ApplyVolumeCubeAsync(vmSc);
             };
+            // Re-apply Today dot+label position whenever any of the three label
+            // elements change size - TodayContextBlock when IsMoreRoomAtBottom flips
+            // (1-line vs 3-line), and JubileeLabelLast/Next when text or font changes.
+            // All three handlers use the stored _todayFraction.
+            TodayContextBlock.SizeChanged += (_, _) => ApplyTodayDotPosition(_todayFraction);
+            JubileeLabelLast.SizeChanged  += (_, _) => ApplyTodayDotPosition(_todayFraction);
+            JubileeLabelNext.SizeChanged  += (_, _) => ApplyTodayDotPosition(_todayFraction);
         }
 
         private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -198,14 +214,22 @@ namespace Aeonpulse.Views
         }
 
         /// <summary>
-        /// Positions <see cref="TodayDot"/> along the timeline by setting
-        /// <c>AbsoluteLayout.LayoutBounds</c> Y to <paramref name="fraction"/>.
+        /// Positions both <see cref="TodayDot"/> and <see cref="TodayContextBlock"/> to the
+        /// same proportional Y coordinate along the timeline.
         ///
         /// <para>
-        /// <b>Why imperative:</b> <c>AbsoluteLayout.LayoutBounds</c> is a string-typed
-        /// attached property whose four comma-separated components cannot be individually
-        /// data-bound in XAML. This method is the only correct way to position a child
-        /// element at a proportional Y coordinate derived from a ViewModel value at runtime.
+        /// <b>Why imperative:</b> <c>AbsoluteLayout.LayoutBounds</c> is a four-component
+        /// attached property whose individual components cannot be data-bound in XAML.
+        /// Both the dot (Col 0) and the label block (Col 1) live inside
+        /// <c>AbsoluteLayout</c> containers with <c>YProportional</c> flags, so setting
+        /// <c>LayoutBounds.Y = visualY</c> on each is the only correct approach.
+        /// </para>
+        /// <para>
+        /// <b>Geometry:</b> <c>visualY</c> is the fraction clamped to [0.05, 0.95] so
+        /// neither the dot nor the label block ever touches the endpoint dots.
+        /// The dot uses <c>visualY</c> directly. The label block adds a 2 px inset on each
+        /// end (<c>labelGapFraction = 2 / 220.0</c>) so there is always at least 2 extra
+        /// pixels of air between the Today text and the Last / Next milestone labels.
         /// </para>
         /// </summary>
         /// <param name="fraction">
@@ -214,6 +238,9 @@ namespace Aeonpulse.Views
         /// </param>
         private void ApplyTodayDotPosition(double fraction)
         {
+            _todayFraction = fraction;
+
+            // -- Col 0: position the gold ring dot with full proportional range --
             const double dotTop    = 0.05;
             const double dotBottom = 0.95;
             double visualY = dotTop + fraction * (dotBottom - dotTop);
@@ -221,6 +248,47 @@ namespace Aeonpulse.Views
             AbsoluteLayout.SetLayoutBounds(TodayDot, new Rect(0.5, visualY, 14, 14));
             AbsoluteLayout.SetLayoutFlags(TodayDot,
                 Microsoft.Maui.Layouts.AbsoluteLayoutFlags.PositionProportional);
+
+            // -- Col 1: all three labels use AbsoluteLayoutFlags.None (absolute px) --
+            // JubileeLabelsPanel.Height is the real rendered panel height.
+            // Using absolute pixels eliminates the YProportional (containerH-childH)*f
+            // formula that produced incorrect nextTopPx values in earlier attempts.
+            double panelH = JubileeLabelsPanel.Height > 0 ? JubileeLabelsPanel.Height : 220.0;
+
+            // Last label: top edge at dotTop fraction of the panel height.
+            double lastTopPx   = dotTop * panelH;
+            double lastLabelH  = JubileeLabelLast.Height > 0 ? JubileeLabelLast.Height : 18.0;
+            AbsoluteLayout.SetLayoutBounds(JubileeLabelLast,
+                new Rect(0, lastTopPx, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
+            AbsoluteLayout.SetLayoutFlags(JubileeLabelLast,
+                Microsoft.Maui.Layouts.AbsoluteLayoutFlags.None);
+
+            // Next label: BOTTOM edge at dotBottom fraction of the panel height,
+            // so top = dotBottom*panelH - labelHeight.  This mirrors how the dot sits.
+            double nextLabelH  = JubileeLabelNext.Height > 0 ? JubileeLabelNext.Height : 18.0;
+            double nextBotPx   = dotBottom * panelH;
+            double nextTopPx   = nextBotPx - nextLabelH;
+            AbsoluteLayout.SetLayoutBounds(JubileeLabelNext,
+                new Rect(0, nextTopPx, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
+            AbsoluteLayout.SetLayoutFlags(JubileeLabelNext,
+                Microsoft.Maui.Layouts.AbsoluteLayoutFlags.None);
+
+            // TodayContextBlock: clamp top-edge so it never overlaps Last or Next.
+            const double gap   = 2.0;
+            double lastBotPx   = lastTopPx + lastLabelH;
+            double blockH      = TodayContextBlock.Height > 0 ? TodayContextBlock.Height : 18.0;
+            double wantedTopPx = visualY * panelH;
+            double minTopPx    = lastBotPx  + gap;
+            double maxTopPx    = nextTopPx  - blockH - gap;
+
+            if (minTopPx > maxTopPx)
+                minTopPx = maxTopPx = (lastBotPx + nextTopPx - blockH) / 2.0;
+
+            double clampedTopPx = Math.Clamp(wantedTopPx, minTopPx, maxTopPx);
+            AbsoluteLayout.SetLayoutBounds(TodayContextBlock,
+                new Rect(0, clampedTopPx, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));
+            AbsoluteLayout.SetLayoutFlags(TodayContextBlock,
+                Microsoft.Maui.Layouts.AbsoluteLayoutFlags.None);
         }
 
         /// <summary>
@@ -801,12 +869,17 @@ namespace Aeonpulse.Views
 
             // Rebuild the catalogue so localised strings are current.
             var catalogue = Models.FutharkCatalogue.Build();
-            bool isNewResult = _wyrdCatalogue == null
-                            || result.RuneName != (vm.BirthRune?.RuneName ?? string.Empty);
 
-            // On first open or rune change, reset selection to the user's birth rune.
-            if (isNewResult)
+            // Reset selection to the user's birth rune on first open or when the
+            // calculated rune changes (e.g. after a base-date change).
+            bool isNewOrChanged = _wyrdCatalogue == null
+                               || result.RuneName != _wyrdLastRuneName;
+
+            if (isNewOrChanged)
+            {
                 _wyrdSelectedIndex = Models.FutharkCatalogue.IndexOf(catalogue, result.RuneName);
+                _wyrdLastRuneName  = result.RuneName;
+            }
 
             _wyrdCatalogue = catalogue;
 
@@ -1391,7 +1464,7 @@ namespace Aeonpulse.Views
         /// </summary>
         private static Border BuildBar((double StarVal, Color Color)[] segments)
         {
-            var grid = new Grid { HeightRequest = 22 };
+            var grid = new Grid { HeightRequest =  22 };
             foreach (var seg in segments)
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition
@@ -1399,7 +1472,7 @@ namespace Aeonpulse.Views
                     Width = new GridLength(Math.Max(seg.StarVal, 0.001), GridUnitType.Star),
                 });
             }
-            for (int i = 0; i < segments.Length; i++)
+            for ( int i = 0; i < segments.Length; i++)
             {
                 var bv = new BoxView
                 {
@@ -1454,7 +1527,7 @@ namespace Aeonpulse.Views
         }
 
         /// <summary>Reads a named colour from the application resource dictionary at call time.</summary>
-        private static Color GetDynColor(string key, Color fallback)
+        private static Color GetDynColor(String key, Color fallback)
         {
             if (Application.Current?.Resources.TryGetValue(key, out var raw) == true && raw is Color c)
                 return c;

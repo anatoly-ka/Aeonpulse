@@ -28,8 +28,8 @@ namespace Aeonpulse
     ///   <item><description>
     ///     <see cref="MainViewModel"/> is also constructed by XAML inside
     ///     <c>MainPage.xaml</c>'s <c>BindingContext</c>; that second construction re-reads
-    ///     persisted preferences � the language, however, is <b>not</b> re-applied there
-    ///     because it was already set here.
+    ///     persisted preferences including the base date name and value
+    ///     (keys <c>"BaseDateName"</c> / <c>"BaseDateValue"</c>, default <c>2000-01-01</c>).
     ///   </description></item>
     /// </list>
     /// </para>

@@ -57,7 +57,7 @@ namespace Aeonpulse.ViewModels
             set { _baseDateName = value; OnPropertyChanged(); }
         }
 
-        private string _baseDateValue = "1965-07-24";
+        private string _baseDateValue = "2000-01-01";
         public string BaseDateValue
         {
             get => _baseDateValue;
@@ -71,7 +71,7 @@ namespace Aeonpulse.ViewModels
         public string BaseDateDisplay =>
             _baseDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture);
 
-        private DateTime _baseDate = new DateTime(1965, 7, 24);
+        private DateTime _baseDate = new DateTime(2000, 1, 1);
         public DateTime BaseDate
         {
             get => _baseDate;
@@ -527,6 +527,11 @@ namespace Aeonpulse.ViewModels
             // Restore persisted unit system (defaults to true/Metric on first run)
             _useMetric = Preferences.Default.Get("UseMetric", true);
 
+            // Restore persisted base date name and value
+            _baseDateName = Preferences.Default.Get("BaseDateName", AppResources.Default_BaseDateName);
+            _baseDateValue = Preferences.Default.Get("BaseDateValue", "2000-01-01");
+            _baseDate = DateTime.Parse(_baseDateValue);
+
             // Initialize section commands
             ToggleLabCommand = new Command(() => LabExpanded = !LabExpanded);
             ToggleCosmosCommand = new Command(() => CosmosExpanded = !CosmosExpanded);
@@ -685,6 +690,10 @@ namespace Aeonpulse.ViewModels
             _baseDateValue = date;
             _baseDate = DateTime.Parse(date);
             AeonLog.Debug(LogCat, "SaveDate", $"out: BaseDateName={_baseDateName} BaseDateValue={_baseDateValue} BaseDate={_baseDate:d}");
+
+            // Persist the values
+            Preferences.Default.Set("BaseDateName", _baseDateName);
+            Preferences.Default.Set("BaseDateValue", _baseDateValue);
 
             // Notify UI of all changes
             OnPropertyChanged(nameof(BaseDateName));

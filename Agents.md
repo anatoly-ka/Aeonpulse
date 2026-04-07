@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-04-07
+> **Last updated:** 2026-04-09
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -215,7 +215,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | 13 | Cellular Refresh | Lab | Static | Yes |
 | 14 | Vibrant Cosmos | Cosmos | **LIVE** (200 ms) | No |
 | 15 | Global Crowd | Mirror | **LIVE** | No |
-| 16 | Life Log | Mirror | Static | Yes |
+| 16 | Life Log | Lab | Static | Yes |
 | 17 | Space Wait | Cosmos | **LIVE** | No |
 | 18 | Vibrant Humanity | Mirror | **LIVE** | No |
 | 19 | Vibrant Nature | Eco Echoes | Static | Yes |
@@ -922,6 +922,8 @@ All user preferences use `Microsoft.Maui.Storage.Preferences` (maps to
 | `"TextSize"` | `string` | `"Normal"` | `App.xaml.cs` ctor | `MainViewModel.TextSize` setter |
 | `"DisplayLanguage"` | `string` | `"Default"` | `App.xaml.cs` ctor | `MainViewModel.DisplayLanguage` setter |
 | `"UseMetric"` | `bool` | `true` | `MainViewModel` ctor | `MainViewModel.UseMetric` setter |
+| `"BaseDateName"` | `string` | `AppResources.Default_BaseDateName` | `MainViewModel` ctor | `MainViewModel.SaveDate()` |
+| `"BaseDateValue"` | `string` | `"2000-01-01"` | `MainViewModel` ctor | `MainViewModel.SaveDate()` |
 
 ---
 
@@ -1097,14 +1099,14 @@ a map to navigate without reading every XAML file.
 | `Views/MainPage.xaml` | 179 | Ticker card header `Grid` - 3-column `[emoji|title|action buttons]` |
 | `Views/MainPage.xaml` | 910 | Your Breath ticker card header `Grid` - 3-column `[lung emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.YourBreath` (live-updated every second). |
 | `Views/MainPage.xaml` | ~1020 | Global Crowd ticker card header `Grid` - 3-column `[people emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.GlobalCrowd` (live-updated every second). |
-| `Views/MainPage.xaml` | ~1022 | Life Log ticker card header `Grid` - 3-column `[clock emoji|title|info+refresh+expand buttons]`, bound to `MainViewModel.LifeLog` (static, re-randomises on refresh). |
+| `Views/MainPage.xaml` | ~612 | Life Log ticker card header `Grid` - 3-column `[clock emoji|title|info+refresh+expand buttons]`, bound to `MainViewModel.LifeLog` (static, re-randomises on refresh). Last item in the Lab section. |
 | `Views/MainPage.xaml` | ~970 | Cellular Refresh ticker card header
 | `Views/MainPage.xaml` | ~1070 | Space Wait ticker card header `Grid` - 3-column `[planet emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.SpaceWait` (live-updated every second). | `Grid` - 3-column `[DNA emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.CellularRefresh` (live-updated every second). |
 | `Views/MainPage.xaml` | ~1170 | Vibrant Humanity ticker card header `Grid` - 3-column `[globe emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.VibrantHumanity` (live-updated every second). |
 | `Views/MainPage.xaml` | ~1400 | Vibrant Nature ticker card header `Grid` - 3-column `[butterfly emoji|title|info+refresh+expand buttons]`, bound to `MainViewModel.VibrantNature` (static, re-calculates on refresh). |
 | `Views/MainPage.xaml` | ~710 | Vibrant Cosmos ticker card header `Grid` - 3-column `[sparkles emoji|title+LIVE badge|info+expand buttons]`, bound to `MainViewModel.VibrantCosmos` (live-updated every 200 ms). |
 | `Views/MainPage.xaml` | 243 | Title + LIVE badge `HorizontalStackLayout` - badge labels carry `x:Name="LiveBadgeXxx"` for code-behind animation |
-| `Views/MainPage.xaml` | ~227 | Time Jubilees timeline `Grid` - 5-row/2-col layout with `BoxView` timeline line, `Ellipse` dots, `Label` milestone names, and two `VerticalStackLayout` blocks that shift above/below `Today` based on `TimeJubilees.IsMoreRoomAtBottom`. All colors use `DynamicResource` (no `AppThemeBinding`/`StaticResource`). `IsVisible` gated on `TimeJubileesExpanded`. |
+| `Views/MainPage.xaml` | ~237 | Time Jubilees timeline `Grid` - 2-col layout: Col 0 = `AbsoluteLayout` (2px `BoxView` line, Last `Ellipse` Y=0.05, `TodayDot` `Ellipse` x:Name Y set imperatively, Next `Ellipse` Y=0.95). Col 1 = `AbsoluteLayout` (Last label `YProportional` Y=0.05; `TodayContextBlock` `VerticalStackLayout` x:Name `YProportional` Y set imperatively by `ApplyTodayDotPosition()` via `AbsoluteLayout.SetLayoutBounds` - same `visualY` fraction as dot, no Grid rows, no TranslationY; Next label `YProportional` Y=0.95). `IsMoreRoomAtBottom` drives days-passed/days-left sub-label visibility. All colors `DynamicResource`. `IsVisible` gated on `TimeJubileesExpanded`. |
 | `Views/MainPage.xaml` | ~681 | Alien Anniversaries orrery `Grid` containing a 300x300 `AbsoluteLayout` (x:Name="OrreryCanvas"). Contains 5 orbit-ring `Ellipse` elements (r=30/55/80/110/143), gold sun `Ellipse` (r=10), 2px gold `Line` Today indicator at 12 o clock, Today `Label`, 5 planet symbol `Label`s (x:Name="OrreryXxxSymbol"), and 5 name/years `Label`s (x:Name="OrreryXxxLabel"). Planet positions set imperatively via `ApplyOrreryPositions` in code-behind. All colors use `DynamicResource`. `IsVisible` gated on `AlienAnniversariesExpanded`. Binding source: `MainViewModel.AlienAnniversaries` (AlienAnniversariesResult). |
 | `Views/MainPage.xaml` | ~511 | Life Odometer ECG animation `Image` - `Source` is a XAML literal (`anim_ecg_pulse.gif`, not a binding) to prevent GIF decoder restart on each 1-second timer tick; `IsAnimationPlaying=True`; `IsVisible` and `FullText` `Label` are sibling children of the `VerticalStackLayout`, GIF drawn below the text (same flat pattern as Countdown). |
 | `Views/MainPage.xaml` | ~591 | Cellular Refresh mitosis animation `Image` - `Source` is a XAML literal (`anim_mitosis.gif`, not a binding) to prevent MAUI GIF decoder restart on each timer tick or result-object replacement; `IsAnimationPlaying=True`; `IsVisible` bound to `CellularRefreshExpanded`; drawn below the `FullText` label as a sibling in the `VerticalStackLayout` (same flat pattern as Countdown and Life Odometer). |
@@ -4249,10 +4251,9 @@ they describe what the code already does and must continue to do.
   `Preferences`** for the current scope of user settings. The app has no
   structured data storage needs beyond key-value preferences.
 
-- **Do not store base-date name or base-date value in `Preferences`** at this time.
-  These are ViewModel fields reset to defaults on each app launch. If persistence
-  is added for them, follow the same read-in-`App.xaml.cs` / write-in-setter
-  pattern as the other three keys.
+- **Base-date name and value are now persisted** via keys `"BaseDateName"` and `"BaseDateValue"`
+  (default `"2000-01-01"`). They are read in the `MainViewModel` constructor and written
+  in `SaveDate()`. The default base date on a fresh install is `2000-01-01`.
 
 ---
 
