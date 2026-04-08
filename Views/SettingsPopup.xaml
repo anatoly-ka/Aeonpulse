@@ -486,20 +486,10 @@
                                TextColor="{DynamicResource CyberPurple}" />
 
                         <VerticalStackLayout x:Name="AboutContentStack" Spacing="6">
-                            <!-- Binding: MainViewModel.Loc.Settings_AboutVersion (live-localised) -->
-                            <Label x:Name="AboutVersionLabel"
+                            <!-- Binding: MainViewModel.Loc.Settings_AboutText (live-localised, HTML) -->
+                            <Label x:Name="AboutTextLabel"
                                    Text=""
-                                   FontSize="{DynamicResource FontSizeMedium}"
-                                   TextColor="{DynamicResource TextGray}" />
-                            <!-- Binding: MainViewModel.Loc.Settings_AboutDescription (live-localised) -->
-                            <Label x:Name="AboutDescriptionLabel"
-                                   Text=""
-                                   FontSize="{DynamicResource FontSizeMedium}"
-                                   TextColor="{DynamicResource TextGray}"
-                                   LineBreakMode="WordWrap" />
-                            <!-- Binding: MainViewModel.Loc.Settings_AboutTagline (live-localised) -->
-                            <Label x:Name="AboutTaglineLabel"
-                                   Text=""
+                                   TextType="Html"
                                    FontSize="{DynamicResource FontSizeMedium}"
                                    TextColor="{DynamicResource TextGray}"
                                    LineBreakMode="WordWrap" />

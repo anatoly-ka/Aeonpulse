@@ -25,6 +25,8 @@ namespace Aeonpulse.ViewModels
         public string Section_CosmosTitle        => AppResources.Section_CosmosTitle;
         public string Section_MirrorTitle        => AppResources.Section_MirrorTitle;
         public string Section_EcoEchoesTitle     => AppResources.Section_EcoEchoesTitle;
+        public string Section_Favorites          => AppResources.Section_Favorites;
+        public string Favorites_EmptyState       => AppResources.Favorites_EmptyState;
 
         // -- Ticker titles ---------------------------------------------------
         public string Ticker_TimeJubileesTitle         => AppResources.Ticker_TimeJubileesTitle;
@@ -71,9 +73,7 @@ namespace Aeonpulse.ViewModels
         public string Settings_LanguageEnglish         => AppResources.Settings_LanguageEnglish;
         public string Settings_LanguageRussian         => AppResources.Settings_LanguageRussian;
         public string Settings_AboutTitle              => AppResources.Settings_AboutTitle;
-        public string Settings_AboutVersion            => AppResources.Settings_AboutVersion;
-        public string Settings_AboutDescription        => AppResources.Settings_AboutDescription;
-        public string Settings_AboutTagline            => AppResources.Settings_AboutTagline;
+        public string Settings_AboutText               => AppResources.Settings_AboutText;
         public string Settings_ButtonClose             => AppResources.Settings_ButtonClose;
         public string Settings_ButtonResetSettings     => AppResources.Settings_ButtonResetSettings;
 

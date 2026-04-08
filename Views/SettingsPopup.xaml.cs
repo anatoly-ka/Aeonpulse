@@ -225,10 +225,8 @@ namespace Aeonpulse.Views
             LangDefaultLabel.Text         = AppResources.Settings_LanguageDefault;
             LangEnglishLabel.Text         = AppResources.Settings_LanguageEnglish;
             LangRussianLabel.Text         = AppResources.Settings_LanguageRussian;
-            AboutSectionHeader.Text       = AppResources.Settings_AboutTitle;
-            AboutVersionLabel.Text        = AppResources.Settings_AboutVersion;
-            AboutDescriptionLabel.Text    = AppResources.Settings_AboutDescription;
-            AboutTaglineLabel.Text        = AppResources.Settings_AboutTagline;
+            AboutSectionHeader.Text = AppResources.Settings_AboutTitle;
+            AboutTextLabel.Text     = AppResources.Settings_AboutText;
             CloseButton.Text              = AppResources.Settings_ButtonClose;
             ResetSettingsButton.Text      = AppResources.Settings_ButtonResetSettings;
         }

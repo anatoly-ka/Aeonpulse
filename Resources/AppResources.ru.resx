@@ -1512,16 +1512,8 @@
     <value>О программе</value>
     <comment>SettingsPopup.xaml</comment>
   </data>
-  <data name="Settings_AboutVersion" xml:space="preserve">
-    <value>AeonPulse v0.1.0</value>
-    <comment>SettingsPopup.xaml</comment>
-  </data>
-  <data name="Settings_AboutDescription" xml:space="preserve">
-    <value>Отслеживайте показатели, связанные с любым значимым событием в жизни - днем ​​рождения, выпускным, свадьбой или любой другой важной для вас вехой.</value>
-    <comment>SettingsPopup.xaml</comment>
-  </data>
-  <data name="Settings_AboutTagline" xml:space="preserve">
-    <value>Создано с любовью ко времени, данным и космическим чудесам.</value>
+  <data name="Settings_AboutText" xml:space="preserve">
+    <value>&lt;b&gt;© AeonPulse v0.2.0&lt;/b&gt;&lt;br/&gt;Отслеживайте показатели, связанные с любым значимым событием в жизни — днём рождения, выпускным, свадьбой или любой другой важной для вас вехой.&lt;br/&gt;&lt;br/&gt;Создано с любовью ко времени, данным и космическим чудесам.&lt;br/&gt;&lt;br/&gt;Изображения в меню и на кнопках основаны на иллюстрациях Boxicons и Round Icons с Unsplash. Для получения полной юридической информации об авторстве и лицензиях для конкретного тикера, пожалуйста, откройте диалоговое окно «Информация» («Подробности») в этом тикере.</value>
     <comment>SettingsPopup.xaml</comment>
   </data>
   <data name="Settings_ButtonClose" xml:space="preserve">
@@ -1978,4 +1970,10 @@
   </data>
   <data name="Chart_VibrantNature_LabelOthersOut" xml:space="preserve">
     <value>Прочее</value>
+  </data>
+  <data name="Section_Favorites" xml:space="preserve">
+    <value>Избранное</value>
+  </data>
+  <data name="Favorites_EmptyState" xml:space="preserve">
+    <value>Воспользуйтесь кнопкой "Добавить в избранное" на интересующем Вас тикере, и ссылка на него будет здесь для мгновенного доступа.</value>
   </data></root>

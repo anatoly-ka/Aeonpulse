@@ -1439,24 +1439,6 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Track life metrics and milestones in a visually striking cyberpunk aesthetic..
-        /// </summary>
-        public static string Settings_AboutDescription {
-            get {
-                return ResourceManager.GetString("Settings_AboutDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Created with passion for time, data, and cosmic wonder..
-        /// </summary>
-        public static string Settings_AboutTagline {
-            get {
-                return ResourceManager.GetString("Settings_AboutTagline", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
         public static string Settings_AboutTitle {
@@ -1464,13 +1446,13 @@ namespace Aeonpulse.Resources {
                 return ResourceManager.GetString("Settings_AboutTitle", resourceCulture);
             }
         }
-        
+
         /// <summary>
-        ///   Looks up a localized string similar to AeonPulse v0.1.0.
+        ///   Looks up a localized string similar to the merged HTML About text (version, description, tagline, attribution).
         /// </summary>
-        public static string Settings_AboutVersion {
+        public static string Settings_AboutText {
             get {
-                return ResourceManager.GetString("Settings_AboutVersion", resourceCulture);
+                return ResourceManager.GetString("Settings_AboutText", resourceCulture);
             }
         }
         
@@ -3998,6 +3980,24 @@ namespace Aeonpulse.Resources {
         public static string Alert_Button_Close {
             get {
                 return ResourceManager.GetString("Alert_Button_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Favorites.
+        /// </summary>
+        public static string Section_Favorites {
+            get {
+                return ResourceManager.GetString("Section_Favorites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use "Add to Favorites" button on your favored ticker....
+        /// </summary>
+        public static string Favorites_EmptyState {
+            get {
+                return ResourceManager.GetString("Favorites_EmptyState", resourceCulture);
             }
         }
     }

@@ -1521,16 +1521,8 @@
     <value>About</value>
     <comment>SettingsPopup.xaml</comment>
   </data>
-  <data name="Settings_AboutVersion" xml:space="preserve">
-    <value>AeonPulse v0.1.0</value>
-    <comment>SettingsPopup.xaml</comment>
-  </data>
-  <data name="Settings_AboutDescription" xml:space="preserve">
-    <value>Track life metrics and milestones in a visually striking cyberpunk aesthetic.</value>
-    <comment>SettingsPopup.xaml</comment>
-  </data>
-  <data name="Settings_AboutTagline" xml:space="preserve">
-    <value>Created with passion for time, data, and cosmic wonder.</value>
+  <data name="Settings_AboutText" xml:space="preserve">
+    <value>&lt;b&gt;© AeonPulse v0.2.0&lt;/b&gt;&lt;br/&gt;Track life metrics and milestones in a visually striking cyberpunk aesthetic.&lt;br/&gt;&lt;br/&gt;Created with passion for time, data, and cosmic wonder.&lt;br/&gt;&lt;br/&gt;Menu and button images are based on illustrations by Boxicons, Round Icons on Unsplash. For complete legal notices, attribution, and license details for a specific ticker, please open the "Information" ("Details") dialog in that ticker.</value>
     <comment>SettingsPopup.xaml</comment>
   </data>
   <data name="Settings_ButtonClose" xml:space="preserve">
@@ -1998,4 +1990,9 @@
     <value>Others</value>
     <comment>Taxonomy Flow outflow stream label.</comment>
   </data>
-</root>
+  <data name="Section_Favorites" xml:space="preserve">
+    <value>Favorites</value>
+  </data>
+  <data name="Favorites_EmptyState" xml:space="preserve">
+    <value>Use "Add to Favorites" button on your favored ticker, and a link to it will be shown here for immediate access.</value>
+  </data></root>

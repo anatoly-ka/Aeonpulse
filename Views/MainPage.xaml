@@ -130,11 +130,122 @@
              - Header: title + commands (refresh, info, toggle)
              - Content: brief summary + expanded details (collapsible)
              Section data is an ObservableCollection<TickerItem> in MainViewModel. -->
-        <ScrollView Grid.Row="2" Padding="16">
+        <ScrollView x:Name="MainScrollView" Grid.Row="2" Padding="16">
             <VerticalStackLayout Spacing="16">
 
+                <!-- == FAVORITES SECTION =============================================
+                     Binding: MainViewModel.FavoritesCollection (ObservableCollection<FavoriteTickerItem>)
+                     Toggle: MainViewModel.ToggleFavoritesCommand / FavoritesExpanded
+                     Empty state: shown when FavoritesCollection has no items.
+                ================================================================ -->
+                <Border Style="{StaticResource CardFrame}">
+                    <VerticalStackLayout Spacing="12">
+
+                        <!-- AI: Favorites section header row - [title label | expand/collapse chevron].
+                             Section_Favorites is live-localised via Loc binding. -->
+                        <Grid ColumnDefinitions="*,Auto">
+                            <!-- Binding: MainViewModel.Loc.Section_Favorites (live-localised) -->
+                            <Label Grid.Column="0"
+                                   Text="{Binding Loc.Section_Favorites}"
+                                   Style="{StaticResource SubtitleLabel}"
+                                   TextColor="{DynamicResource CyberCyan}"
+                                   VerticalOptions="Center" />
+                            <!-- Binding: MainViewModel.FavoritesExpanded -> BoolToImageSource -> chevron icon.
+                                 Command: MainViewModel.ToggleFavoritesCommand. -->
+                            <ImageButton Grid.Column="1"
+                                         Style="{StaticResource ThemedIconButton}"
+                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                         Source="{Binding FavoritesExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='chevron_up.png|chevron_down.png'}"
+                                         Command="{Binding ToggleFavoritesCommand}" />
+                        </Grid>
+
+                        <!-- AI: Favorites section body - visible only when FavoritesExpanded=true.
+                             Contains a BindableLayout repeater over FavoritesCollection and an
+                             empty-state label shown when the collection has no items. -->
+                        <VerticalStackLayout Spacing="12"
+                                             IsVisible="{Binding FavoritesExpanded}">
+
+                            <!-- Empty state: shown when Favorites is empty.
+                                 Binding: Loc.Favorites_EmptyState (live-localised).
+                                 IsVisible: MainViewModel.HasNoFavorites (true when FavoritesCollection is empty). -->
+                            <!-- Binding: MainViewModel.HasNoFavorites drives empty-state visibility -->
+                            <Label Text="{Binding Loc.Favorites_EmptyState}"
+                                   TextColor="{DynamicResource TextDim}"
+                                   FontSize="{DynamicResource FontSizeMedium}"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap"
+                                   IsVisible="{Binding HasNoFavorites}"
+                                   Margin="8,16" />
+
+                            <!-- AI: Favorites repeater - BindableLayout over FavoritesCollection.
+                                 Each FavoriteTickerItem exposes EmojiGlyph, Title, Data.BriefText,
+                                 JumpToTickerCommand (tile body tap), and RemoveFromFavoritesCommand.
+                                 Tapping the tile expands the section+card and scrolls to it in the main list.
+                                 The in_favorites.png button triggers RemoveFromFavoritesCommand. -->
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding FavoritesCollection}"
+                                                 Spacing="12">
+                                <BindableLayout.ItemTemplate>
+                                    <!-- AI: Favorites DataTemplate - Live Bookmark tile (Brief View only).
+                                         Each tile shows EmojiGlyph, Title, and live BriefText from Data.
+                                         No expand/collapse chevron - the tile is not a card duplicate.
+                                         Tapping the tile body fires JumpToTickerCommand which:
+                                           1. Expands the ticker parent section.
+                                           2. Expands the ticker card (Full View).
+                                           3. Raises ScrollToTickerRequested so MainPage scrolls to it.
+                                         The in_favorites.png button fires RemoveFromFavoritesCommand.
+                                         Binding source: FavoriteTickerItem (per item in FavoritesCollection). -->
+                                    <DataTemplate>
+                                        <Border BackgroundColor="{DynamicResource CardDark}"
+                                                StrokeThickness="1"
+                                                Stroke="{DynamicResource CyberCyan}"
+                                                StrokeShape="RoundRectangle 8"
+                                                Padding="12"
+                                                Margin="0,0,0,0">
+                                            <Border.GestureRecognizers>
+                                                <!-- Tile body tap: jump to the main ticker card -->
+                                                <TapGestureRecognizer Command="{Binding JumpToTickerCommand}" />
+                                            </Border.GestureRecognizers>
+                                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                                <!-- Col 0: Emoji -->
+                                                <Label Grid.Column="0"
+                                                       Text="{Binding EmojiGlyph}"
+                                                       FontSize="{DynamicResource FontSizeTitle}"
+                                                       VerticalOptions="Center"
+                                                       Margin="0,0,8,0" />
+                                                <!-- Col 1: Title + live BriefText stacked vertically -->
+                                                <VerticalStackLayout Grid.Column="1"
+                                                                     Spacing="4"
+                                                                     VerticalOptions="Center">
+                                                    <!-- Binding: FavoriteTickerItem.Title -->
+                                                    <Label Text="{Binding Title}"
+                                                           Style="{StaticResource BaseLabel}"
+                                                           TextColor="{DynamicResource CyberPurple}"
+                                                           FontAttributes="Bold" />
+                                                    <!-- Binding: FavoriteTickerItem.Data.BriefText (live, HTML) -->
+                                                    <Label Text="{Binding Data.BriefText}"
+                                                           TextType="Html"
+                                                           TextColor="{DynamicResource TextGray}"
+                                                           FontSize="{DynamicResource FontSizeSmall}" />
+                                                </VerticalStackLayout>
+                                                <!-- Col 2: Remove from Favorites button only (no expand chevron) -->
+                                                <!-- Binding: FavoriteTickerItem.RemoveFromFavoritesCommand -->
+                                                <ImageButton Grid.Column="2"
+                                                             Style="{StaticResource ThemedIconButton}"
+                                                             helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                             Source="in_favorites.png"
+                                                             Command="{Binding RemoveFromFavoritesCommand}" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
                 <!-- == LAB SECTION ============================================
-                     Tickers: Time Jubilees, Countdown (LIVE), Life Odometer (LIVE), Cellular Refresh
+                     Tickers: Time Jubilees, Countdown (LIVE), Life Odometer (LIVE), Cellular Refresh, Life Log
                      Binding: MainViewModel.LabExpanded -> ToggleLabCommand
                 ================================================================ -->
                 <Border Style="{StaticResource CardFrame}">
@@ -169,7 +280,8 @@
                                  Binding: MainViewModel.TimeJubilees (TickerData)
                                  Commands: RefreshTimeJubileesCommand, ToggleTimeJubileesCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardTimeJubilees"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -203,7 +315,13 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="refresh.png"
                                                          Command="{Binding RefreshTimeJubileesCommand}" />
-                                            <!-- Expand/collapse: toggles TimeJubileesExpanded -->
+                                            <!-- Expand/collapse: toggles TimeJubileesExpanded-->
+                                            <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding TimeJubileesIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="TimeJubilees" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding TimeJubileesExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -382,7 +500,8 @@
                                  Binding: MainViewModel.Countdown (TickerData)
                                  Commands: ToggleCountdownCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardCountdown"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -421,7 +540,13 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
                                                          Clicked="OnCountdownInfoClicked" />
-                                            <!-- Expand/collapse: toggles CountdownExpanded -->
+                                            <!-- Expand/collapse: toggles CountdownExpanded-->
+                                            <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding CountdownIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="Countdown" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding CountdownExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -464,7 +589,8 @@
                                  Binding: MainViewModel.LifeOdometer (TickerData)
                                  Commands: ToggleLifeOdometerCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardLifeOdometer"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -500,7 +626,13 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
                                                          Clicked="OnLifeOdometerInfoClicked" />
-                                            <!-- Expand/collapse: toggles LifeOdometerExpanded -->
+                                            <!-- Expand/collapse: toggles LifeOdometerExpanded-->
+                                            <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding LifeOdometerIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="LifeOdometer" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding LifeOdometerExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -544,7 +676,8 @@
                                  Binding: MainViewModel.CellularRefresh (CellularRefreshResult)
                                  Commands: RefreshCellularRefreshCommand, ToggleCellularRefreshCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardCellularRefresh"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -579,7 +712,13 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="refresh.png"
                                                          Command="{Binding RefreshCellularRefreshCommand}" />
-                                            <!-- Expand/collapse: toggles CellularRefreshExpanded -->
+                                            <!-- Expand/collapse: toggles CellularRefreshExpanded-->
+                                            <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding CellularRefreshIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="CellularRefresh" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding CellularRefreshExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -619,6 +758,93 @@
                                 </VerticalStackLayout>
                             </Border>
 
+                                <!-- == TICKER: LIFE LOG ================================
+                                 Static ticker with refresh button - recalculated on
+                                 base date change or via explicit RefreshLifeLogCommand.
+                                 Brief view randomly picks 2 activities; refresh re-randomises.
+                                 Binding: MainViewModel.LifeLog (LifeLogResult)
+                                 Commands: RefreshLifeLogCommand, ToggleLifeLogCommand
+                            ======================================================== -->
+                            <Border x:Name="TickerCardLifeLog"
+                                    BackgroundColor="{DynamicResource CardDark}"
+                                    StrokeThickness="1"
+                                    Stroke="{DynamicResource CyberCyan}"
+                                    StrokeShape="RoundRectangle 8"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <!-- AI: Ticker card header - 3-column:
+                                         [Col0: clock emoji | Col1: title | Col2: info + refresh + expand buttons]
+                                         Bound to MainViewModel.LifeLog (static, re-randomises on refresh). -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Emoji: &#x1F570; (U+1F570 Mantelpiece Clock) -->
+                                        <Label Grid.Column="0"
+                                               Text="🕰️"
+                                               FontSize="{DynamicResource FontSizeTitle}"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                        <!-- Binding: MainViewModel.Loc.Ticker_LifeLogTitle (live-localised) -->
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Loc.Ticker_LifeLogTitle}"
+                                               Style="{StaticResource BaseLabel}"
+                                               TextColor="{DynamicResource CyberPurple}"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center" />
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                            <!-- Info: opens DeepDivePopup with methodology and sources -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="info.png"
+                                                         Clicked="OnLifeLogInfoClicked" />
+                                            <!-- Refresh: re-randomises the two brief-view activities -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="refresh.png"
+                                                         Command="{Binding RefreshLifeLogCommand}" />
+                                            <!-- Expand/collapse: toggles LifeLogExpanded-->
+                                            <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding LifeLogIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="LifeLog" />
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding LifeLogExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
+                                                         Command="{Binding ToggleLifeLogCommand}" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                    <!-- Binding: MainViewModel.LifeLog.BriefText - hidden when expanded; HTML formatted -->
+                                    <Label Text="{Binding LifeLog.BriefText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           IsVisible="{Binding LifeLogExpanded, Converter={StaticResource InverseBool}}" />
+                                    <!-- Binding: MainViewModel.LifeLog.FullText - visible when expanded; HTML formatted -->
+                                    <Label Text="{Binding LifeLog.FullText}"
+                                           TextType="Html"
+                                           TextColor="{DynamicResource TextGray}"
+                                           FontSize="{DynamicResource FontSizeMedium}"
+                                           LineBreakMode="WordWrap"
+                                           IsVisible="{Binding LifeLogExpanded}" />
+                                    <!-- AI: Two-ring donut chart + legend for Life Log expanded view.
+                                         LifeLogChartView Drawable set imperatively by ApplyLifeLogChart()
+                                         in MainPage.xaml.cs. Legend uses BindableLayout over LifeLog.ActivitySlices.
+                                         IsVisible gated on LifeLogExpanded for both views. -->
+                                    <GraphicsView x:Name="LifeLogChartView"
+                                                  HeightRequest="260"
+                                                  WidthRequest="260"
+                                                  HorizontalOptions="Center"
+                                                  IsVisible="{Binding LifeLogExpanded}"
+                                                  BackgroundColor="{DynamicResource CardDark}" />
+                                    <!-- AI: Legend container - rows built imperatively by ApplyLifeLogChart().
+                                         Each row: colour swatch BoxView + CategoryName Label + YearsToday Label
+                                         + YearsForecast Label in a 4-column Grid. -->
+                                    <VerticalStackLayout x:Name="LifeLogLegend"
+                                                         Spacing="6"
+                                                         Margin="4,0"
+                                                         IsVisible="{Binding LifeLogExpanded}" />
+                                </VerticalStackLayout>
+                            </Border>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
@@ -656,7 +882,8 @@
                                  Binding: MainViewModel.AlienAnniversaries (TickerData)
                                  Commands: RefreshAlienAnniversariesCommand, ToggleAlienAnniversariesCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardAlienAnniversaries"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -686,6 +913,12 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="refresh.png"
                                                          Command="{Binding RefreshAlienAnniversariesCommand}" />
+                                                                                        <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding AlienAnniversariesIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="AlienAnniversaries" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding AlienAnniversariesExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -922,7 +1155,8 @@
                                  Commands: ToggleSpaceWaitCommand
                                  No refresh button - live ticker.
                                  ============================================================= -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardSpaceWait"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -966,7 +1200,13 @@
                                                          Source="info.png"
                                                          Clicked="OnSpaceWaitInfoClicked" />
                                             <!-- Expand/collapse: toggles SpaceWaitExpanded -->
-                                            <!-- Binding: MainViewModel.SpaceWaitExpanded -> BoolToImageSource -> icon -->
+                                            <!-- Binding: MainViewModel.SpaceWaitExpanded -> BoolToImageSource -> icon-->
+                                            <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding SpaceWaitIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="SpaceWait" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding SpaceWaitExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -1010,7 +1250,8 @@
                                  Binding: MainViewModel.GalacticCommute (TickerData)
                                  Commands: ToggleGalacticCommuteCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardGalacticCommute"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -1045,6 +1286,12 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
                                                          Clicked="OnGalacticCommuteInfoClicked" />
+                                                                                        <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding GalacticCommuteIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="GalacticCommute" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding GalacticCommuteExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -1087,7 +1334,8 @@
                                  Binding: MainViewModel.PhotonPath (TickerData)
                                  Commands: TogglePhotonPathCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardPhotonPath"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -1122,6 +1370,12 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
                                                          Clicked="OnPhotonPathInfoClicked" />
+                                                                                        <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding PhotonPathIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="PhotonPath" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding PhotonPathExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -1246,7 +1500,8 @@
                                  Binding: MainViewModel.CosmicStretch (CosmicStretchResult)
                                  Command: ToggleCosmicStretchCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardCosmicStretch"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -1286,7 +1541,13 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
                                                          Clicked="OnCosmicStretchInfoClicked" />
-                                            <!-- Expand/collapses: toggles CosmicStretchExpanded -->
+                                            <!-- Expand/collapses: toggles CosmicStretchExpanded-->
+                                            <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding CosmicStretchIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="CosmicStretch" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding CosmicStretchExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -1335,7 +1596,8 @@
                                  Command: ToggleVibrantCosmosCommand
                                  Note: no refresh button - counts are purely elapsed-time driven.
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardVibrantCosmos"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -1377,7 +1639,13 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
                                                          Clicked="OnVibrantCosmosInfoClicked" />
-                                            <!-- Expand/collapse: toggles VibrantCosmosExpanded -->
+                                            <!-- Expand/collapse: toggles VibrantCosmosExpanded-->
+                                            <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding VibrantCosmosIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="VibrantCosmos" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding VibrantCosmosExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -1458,7 +1726,8 @@
                                  Binding: MainViewModel.HumanBirthRank (TickerData)
                                  Commands: ToggleHumanBirthRankCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardHumanBirthRank"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -1483,6 +1752,12 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
                                                          Clicked="OnHumanBirthRankInfoClicked" />
+                                                                                        <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding HumanBirthRankIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="HumanBirthRank" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding HumanBirthRankExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -1526,7 +1801,8 @@
                                  Binding: MainViewModel.BirthRune (TickerData)
                                  Commands: ToggleBirthRuneCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardBirthRune"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -1551,6 +1827,12 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
                                                          Clicked="OnBirthRuneInfoClicked" />
+                                                                                        <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding BirthRuneIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="BirthRune" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding BirthRuneExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -1615,7 +1897,8 @@
                                  Binding: MainViewModel.PersonalYear (TickerData)
                                  Commands: TogglePersonalYearCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardPersonalYear"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -1640,6 +1923,12 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
                                                          Clicked="OnPersonalYearInfoClicked" />
+                                                                                        <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding PersonalYearIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="PersonalYear" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding PersonalYearExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -1679,7 +1968,8 @@
                                  Binding: MainViewModel.GlobalCrowd (GlobalCrowdResult)
                                  Commands: ToggleGlobalCrowdCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardGlobalCrowd"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -1721,7 +2011,13 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
                                                          Clicked="OnGlobalCrowdInfoClicked" />
-                                            <!-- Expand/collapse: toggles GlobalCrowdExpanded -->
+                                            <!-- Expand/collapse: toggles GlobalCrowdExpanded-->
+                                            <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding GlobalCrowdIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="GlobalCrowd" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding GlobalCrowdExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -1787,92 +2083,13 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                                <!-- == TICKER: LIFE LOG ================================
-                                 Static ticker with refresh button - recalculated on
-                                 base date change or via explicit RefreshLifeLogCommand.
-                                 Brief view randomly picks 2 activities; refresh re-randomises.
-                                 Binding: MainViewModel.LifeLog (LifeLogResult)
-                                 Commands: RefreshLifeLogCommand, ToggleLifeLogCommand
-                            ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
-                                    StrokeThickness="1"
-                                    Stroke="{DynamicResource CyberCyan}"
-                                    StrokeShape="RoundRectangle 8"
-                                    Padding="12">
-                                <VerticalStackLayout Spacing="8">
-                                    <!-- AI: Ticker card header - 3-column:
-                                         [Col0: clock emoji | Col1: title | Col2: info + refresh + expand buttons]
-                                         Bound to MainViewModel.LifeLog (static, re-randomises on refresh). -->
-                                    <Grid ColumnDefinitions="Auto,*,Auto">
-                                        <!-- Emoji: &#x1F570; (U+1F570 Mantelpiece Clock) -->
-                                        <Label Grid.Column="0"
-                                               Text="🕰️"
-                                               FontSize="{DynamicResource FontSizeTitle}"
-                                               VerticalOptions="Center"
-                                               Margin="0,0,8,0" />
-                                        <!-- Binding: MainViewModel.Loc.Ticker_LifeLogTitle (live-localised) -->
-                                        <Label Grid.Column="1"
-                                               Text="{Binding Loc.Ticker_LifeLogTitle}"
-                                               Style="{StaticResource BaseLabel}"
-                                               TextColor="{DynamicResource CyberPurple}"
-                                               FontAttributes="Bold"
-                                               VerticalOptions="Center" />
-                                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
-                                            <!-- Info: opens DeepDivePopup with methodology and sources -->
-                                            <ImageButton Style="{StaticResource ThemedIconButton}"
-                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                         Source="info.png"
-                                                         Clicked="OnLifeLogInfoClicked" />
-                                            <!-- Refresh: re-randomises the two brief-view activities -->
-                                            <ImageButton Style="{StaticResource ThemedIconButton}"
-                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                         Source="refresh.png"
-                                                         Command="{Binding RefreshLifeLogCommand}" />
-                                            <!-- Expand/collapse: toggles LifeLogExpanded -->
-                                            <ImageButton Style="{StaticResource ThemedIconButton}"
-                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
-                                                         Source="{Binding LifeLogExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
-                                                         Command="{Binding ToggleLifeLogCommand}" />
-                                        </HorizontalStackLayout>
-                                    </Grid>
-                                    <!-- Binding: MainViewModel.LifeLog.BriefText - hidden when expanded; HTML formatted -->
-                                    <Label Text="{Binding LifeLog.BriefText}"
-                                           TextType="Html"
-                                           TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}"
-                                           IsVisible="{Binding LifeLogExpanded, Converter={StaticResource InverseBool}}" />
-                                    <!-- Binding: MainViewModel.LifeLog.FullText - visible when expanded; HTML formatted -->
-                                    <Label Text="{Binding LifeLog.FullText}"
-                                           TextType="Html"
-                                           TextColor="{DynamicResource TextGray}"
-                                           FontSize="{DynamicResource FontSizeMedium}"
-                                           LineBreakMode="WordWrap"
-                                           IsVisible="{Binding LifeLogExpanded}" />
-                                    <!-- AI: Two-ring donut chart + legend for Life Log expanded view.
-                                         LifeLogChartView Drawable set imperatively by ApplyLifeLogChart()
-                                         in MainPage.xaml.cs. Legend uses BindableLayout over LifeLog.ActivitySlices.
-                                         IsVisible gated on LifeLogExpanded for both views. -->
-                                    <GraphicsView x:Name="LifeLogChartView"
-                                                  HeightRequest="260"
-                                                  WidthRequest="260"
-                                                  HorizontalOptions="Center"
-                                                  IsVisible="{Binding LifeLogExpanded}"
-                                                  BackgroundColor="{DynamicResource CardDark}" />
-                                    <!-- AI: Legend container - rows built imperatively by ApplyLifeLogChart().
-                                         Each row: colour swatch BoxView + CategoryName Label + YearsToday Label
-                                         + YearsForecast Label in a 4-column Grid. -->
-                                    <VerticalStackLayout x:Name="LifeLogLegend"
-                                                         Spacing="6"
-                                                         Margin="4,0"
-                                                         IsVisible="{Binding LifeLogExpanded}" />
-                                </VerticalStackLayout>
-                            </Border>
                             <!-- == TICKER: VIBRANT HUMANITY =========================
                                  LIVE ticker - recalculated every second by the timer.
                                  Binding: MainViewModel.VibrantHumanity (VibrantHumanityResult)
                                  Command: ToggleVibrantHumanityCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardVibrantHumanity"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -1914,7 +2131,13 @@
                                                          Source="info.png"
                                                          Clicked="OnVibrantHumanityInfoClicked" />
                                             <!-- Expand/collapse: toggles VibrantHumanityExpanded -->
-                                            <!-- Binding: MainViewModel.VibrantHumanityExpanded -> BoolToImageSource -> icon -->
+                                            <!-- Binding: MainViewModel.VibrantHumanityExpanded -> BoolToImageSource -> icon-->
+                                            <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding VibrantHumanityIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="VibrantHumanity" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding VibrantHumanityExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -1992,7 +2215,8 @@
                                  Commands: RefreshGlobalExhaleCommand, ToggleGlobalExhaleCommand
                                  Note: UseMetric affects output units (BTonnes vs BTons).
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardGlobalExhale"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -2022,6 +2246,12 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="refresh.png"
                                                          Command="{Binding RefreshGlobalExhaleCommand}" />
+                                                                                        <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding GlobalExhaleIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="GlobalExhale" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding GlobalExhaleExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -2083,7 +2313,8 @@
                                  Commands: ToggleYourBreathCommand
                                  Note: air volume is always litres; CO2 mass follows UseMetric.
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardYourBreath"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -2126,7 +2357,13 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="info.png"
                                                          Clicked="OnYourBreathInfoClicked" />
-                                            <!-- Expand/collapse: toggles YourBreathExpanded -->
+                                            <!-- Expand/collapse: toggles YourBreathExpanded-->
+                                            <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding YourBreathIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="YourBreath" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding YourBreathExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"
@@ -2193,7 +2430,8 @@
                                  Binding: MainViewModel.VibrantNature (VibrantNatureResult)
                                  Commands: RefreshVibrantNatureCommand, ToggleVibrantNatureCommand
                             ======================================================== -->
-                            <Border BackgroundColor="{DynamicResource CardDark}"
+                            <Border x:Name="TickerCardVibrantNature"
+                                    BackgroundColor="{DynamicResource CardDark}"
                                     StrokeThickness="1"
                                     Stroke="{DynamicResource CyberCyan}"
                                     StrokeShape="RoundRectangle 8"
@@ -2227,7 +2465,13 @@
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="refresh.png"
                                                          Command="{Binding RefreshVibrantNatureCommand}" />
-                                            <!-- Expand/collapse: toggles VibrantNatureExpanded -->
+                                            <!-- Expand/collapse: toggles VibrantNatureExpanded-->
+                                            <!-- Add to Favorites: sends ticker ID to AddToFavoritesCommand -->
+                                            <ImageButton Style="{StaticResource ThemedIconButton}"
+                                                         helpers:ImageTint.Color="{DynamicResource CyberCyan}"
+                                                         Source="{Binding VibrantNatureIsInFavorites, Converter={StaticResource BoolToImageSource}, ConverterParameter='in_favorites.png|to_favorites.png'}"
+                                                         Command="{Binding AddToFavoritesCommand}"
+                                                         CommandParameter="VibrantNature" />
                                             <ImageButton Style="{StaticResource ThemedIconButton}"
                                                          helpers:ImageTint.Color="{DynamicResource CyberCyan}"
                                                          Source="{Binding VibrantNatureExpanded, Converter={StaticResource BoolToImageSource}, ConverterParameter='square_chevron_up.png|square_chevron_down.png'}"

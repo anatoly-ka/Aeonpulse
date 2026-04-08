@@ -116,6 +116,11 @@ namespace Aeonpulse.Views
                 ApplyTaxonomyFlow(vm);
                 ApplyCarbonBudgetChart(vm);
                 _ = ApplyVolumeCubeAsync(vm);
+
+                // Wire scroll-to-ticker: when a Favorites tile is tapped,
+                // JumpToTicker in the VM raises this event so we can call ScrollToAsync.
+                vm.ScrollToTickerRequested += tickerId => _ = ScrollToTickerAsync(tickerId);
+
             }
 
             // Re-apply the dotted fill Line endpoint after the first layout pass,
@@ -590,6 +595,47 @@ namespace Aeonpulse.Views
             finally { setGuard(false); }
         }
 
+        // --- Favorites tile portal: scroll to a ticker card in the main list --------
+
+        /// <summary>
+        /// Scrolls the main ScrollView so the ticker card with the given
+        /// <paramref name="tickerId"/> is visible at the top of the viewport.
+        /// Called when <see cref="MainViewModel.ScrollToTickerRequested"/> fires
+        /// after a Favorites tile is tapped.
+        /// A short delay is inserted so MAUI has time to measure the newly-expanded
+        /// section and card before the scroll position is calculated.
+        /// </summary>
+        private async Task ScrollToTickerAsync(string tickerId)
+        {
+            // Brief yield so the layout engine can process the section/card expansion
+            // that JumpToTicker triggered just before raising this event.
+            await Task.Delay(120);
+            View? target = tickerId switch
+            {
+                "TimeJubilees"       => TickerCardTimeJubilees,
+                "Countdown"          => TickerCardCountdown,
+                "LifeOdometer"       => TickerCardLifeOdometer,
+                "AlienAnniversaries" => TickerCardAlienAnniversaries,
+                "GalacticCommute"    => TickerCardGalacticCommute,
+                "PhotonPath"         => TickerCardPhotonPath,
+                "CosmicStretch"      => TickerCardCosmicStretch,
+                "HumanBirthRank"     => TickerCardHumanBirthRank,
+                "BirthRune"          => TickerCardBirthRune,
+                "PersonalYear"       => TickerCardPersonalYear,
+                "GlobalExhale"       => TickerCardGlobalExhale,
+                "YourBreath"         => TickerCardYourBreath,
+                "CellularRefresh"    => TickerCardCellularRefresh,
+                "VibrantCosmos"      => TickerCardVibrantCosmos,
+                "GlobalCrowd"        => TickerCardGlobalCrowd,
+                "LifeLog"            => TickerCardLifeLog,
+                "SpaceWait"          => TickerCardSpaceWait,
+                "VibrantHumanity"    => TickerCardVibrantHumanity,
+                "VibrantNature"      => TickerCardVibrantNature,
+                _                    => null
+            };
+            if (target != null)
+                await MainScrollView.ScrollToAsync(target, ScrollToPosition.Start, animated: true);
+        }
         // --- Deep Dive handlers - one per ticker card --------------------------
 
         /// <summary>Opens the Time Jubilees deep-dive info panel.</summary>
@@ -1178,8 +1224,8 @@ namespace Aeonpulse.Views
         /// <c>Invalidate()</c> so the isometric cube redraws at the current scale.
         ///
         /// <para>Called on <c>YourBreathExpanded</c>, <c>YourBreath</c>,
-        /// <c>ColorScheme</c>, and <c>DisplayLanguage</c> changes and from the constructor.
-        /// The container remains visible whenever <c>YourBreathExpanded</c> is true.</para>
+        /// <c>ColorScheme</c>, and <c>DisplayLanguage</c> changes and from the
+        /// constructor. The container remains visible whenever <c>YourBreathExpanded</c> is true.</para>
         /// </summary>
         /// <summary>Landmark entry: size in metres, image filename, localised description accessor.</summary>
         private static readonly (double SizeM, string File, Func<string> Desc)[] _landmarks =
