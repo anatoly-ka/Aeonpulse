@@ -378,11 +378,7 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_CountdownBrief_DaysHours" xml:space="preserve">
-    <value>&lt;b&gt;{days} дней {hrs}ч : {mins}м&lt;/b&gt; до следующей годовщины</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Ticker_CountdownBrief_DaysOnly" xml:space="preserve">
-    <value>&lt;b&gt;{days} дней&lt;/b&gt; до следующей годовщины</value>
+    <value>&lt;b&gt;{days} дней {hrs}ч : {mins}м : {secs}с&lt;/b&gt; до следующей годовщины</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_CountdownFull_HoursOnly" xml:space="preserve">

@@ -6,10 +6,9 @@ namespace Aeonpulse.Tests
     /// <summary>
     /// Unit tests for <see cref="CalculationService.CalculateCountdown"/>.
     ///
-    /// The method has three distinct output branches based on seconds remaining:
-    ///   &lt; 86400    -> HH:MM:SS format
-    ///   &lt; 2592000  -> days + HH:MM format
-    ///   >= 2592000  -> days only format
+    /// The method has two distinct output branches based on seconds remaining:
+    ///   &lt; 86400    -> HH:MM:SS format (hours only)
+    ///   >= 86400   -> days + HH:MM format (days and hours, regardless of total duration)
     /// </summary>
     public class CalculateCountdownTests
     {
@@ -49,7 +48,7 @@ namespace Aeonpulse.Tests
         }
 
         [Fact]
-        public void MoreThanOneMonth_BriefTextContainsDaysOnly()
+        public void MoreThanOneMonth_BriefTextContainsDaysAndHours()
         {
             var baseDate = new DateTime(2000, 6, 15);
             // ~3 months before the anniversary
@@ -58,8 +57,9 @@ namespace Aeonpulse.Tests
             var result = _svc.CalculateCountdown(baseDate, now);
 
             Assert.Contains("days", result.BriefText);
-            // HH:MM is NOT present in the days-only branch
-            Assert.DoesNotContain("h :", result.BriefText);
+            // Hours and minutes are always shown when > 1 day, even for >1 month
+            Assert.Contains("h :", result.BriefText);
+            Assert.NotEmpty(result.FullText);
         }
 
         [Fact]

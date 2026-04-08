@@ -636,26 +636,19 @@ namespace Aeonpulse.Services
                     .Replace("{secs}", secs.ToString())
                     .Replace("{nearest:d}", nearest.ToString("d"));
             }
-            else // more than a day
+            else // more than a day - always show days + h : m
             {
+                countdown = AppResources.Ticker_CountdownBrief_DaysHours
+                    .Replace("{days}", days.ToString())
+                    .Replace("{hrs}", hrs.ToString())
+                    .Replace("{mins}", mins.ToString())
+                    .Replace("{secs}", secs.ToString());
                 countdownFull = AppResources.Ticker_CountdownFull_WithDays
                     .Replace("{days}", days.ToString())
                     .Replace("{hrs}", hrs.ToString())
                     .Replace("{mins}", mins.ToString())
                     .Replace("{secs}", secs.ToString())
                     .Replace("{nearest:d}", nearest.ToString("d"));
-                if (seconds < 2592000) // more than a day but less than a month
-                {
-                    countdown = AppResources.Ticker_CountdownBrief_DaysHours
-                        .Replace("{days}", days.ToString())
-                        .Replace("{hrs}", hrs.ToString())
-                        .Replace("{mins}", mins.ToString());
-                }
-                else // more than a month
-                {
-                    countdown = AppResources.Ticker_CountdownBrief_DaysOnly
-                        .Replace("{days}", days.ToString());
-                }
             }
 
             return new CountdownResult
@@ -1443,17 +1436,13 @@ namespace Aeonpulse.Services
 
             double baseDateCumGt = PreIndustrialGt + CumFromPoly(x1);
             double todayCumGt    = PreIndustrialGt + CumFromPoly(x2);
-
-            // IPCC 1.5-degree total budget: historical total to end of 2019 + 400 Gt remaining.
-            // F(120) ~ 547 Gt  =>  11.77 + 547 + 400 = ~959 Gt total ceiling.
-            double budgetGt = PreIndustrialGt + CumFromPoly(120.0) + 400.0;
+            double totalBudgetGt = PreIndustrialGt + CumFromPoly(120.0) + 400.0; // IPCC 1.5-degree total budget
 
             // Depletion year: solve PreIndustrialGt + CumFromPoly(xd) = budgetGt for xd.
             // Rearranges to: CumFromPoly(xd) = budgetGt - PreIndustrialGt.
-            // Use binary search (bracketed in [x2, 1000] years from 1900).
             double depletionYear = 0.0;
-            double targetGt = budgetGt - PreIndustrialGt;
-            if (todayCumGt < budgetGt)
+            double targetGt = totalBudgetGt - PreIndustrialGt;
+            if (todayCumGt < totalBudgetGt)
             {
                 double lo = x2, hi = 1000.0;
                 for (int iter = 0; iter < 60; iter++)
@@ -1473,7 +1462,7 @@ namespace Aeonpulse.Services
                 UseMetric               = useMetric,
                 BaseDateCumCO2Gt        = baseDateCumGt,
                 TodayCumCO2Gt           = todayCumGt,
-                TotalBudgetGt           = budgetGt,
+                TotalBudgetGt           = totalBudgetGt,
                 DepletionYear           = depletionYear,
                 ChartStartYear          = chartStartYear,
                 BriefText = AppResources.Ticker_GlobalExhalePostXX_Brief
@@ -1776,8 +1765,6 @@ namespace Aeonpulse.Services
         ///   <item><description>1900-1950: anchored at 1,650,000,000 on 1900-01-01, growing 47,919/day.</description></item>
         ///   <item><description>1950 onward: anchored at 2,525,149,000 on 1950-01-01, growing 203,206/day (approx 2.35/s net).</description></item>
         /// </list>
-        /// All epoch anchors use UTC midnight to prevent local timezone shifts from
-        /// causing visible population jumps at midnight.
         /// </para>
         /// <para>
         /// <b>Live ticker:</b> called every second by the VM timer. The 1950-onward

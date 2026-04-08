@@ -2789,15 +2789,6 @@ namespace Aeonpulse.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;b&gt;{days} days&lt;/b&gt; until next anniversary.
-        /// </summary>
-        public static string Ticker_CountdownBrief_DaysOnly {
-            get {
-                return ResourceManager.GetString("Ticker_CountdownBrief_DaysOnly", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &lt;b&gt;{hrs}h : {mins}m : {secs}s&lt;/b&gt; until next anniversary.
         /// </summary>
         public static string Ticker_CountdownBrief_HoursOnly {

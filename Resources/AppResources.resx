@@ -378,11 +378,7 @@
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_CountdownBrief_DaysHours" xml:space="preserve">
-    <value>&lt;b&gt;{days} days {hrs}h : {mins}m&lt;/b&gt; until next anniversary</value>
-    <comment>CalculationService.cs</comment>
-  </data>
-  <data name="Ticker_CountdownBrief_DaysOnly" xml:space="preserve">
-    <value>&lt;b&gt;{days} days&lt;/b&gt; until next anniversary</value>
+    <value>&lt;b&gt;{days} days {hrs}h : {mins}m : {secs}s&lt;/b&gt; until next anniversary</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Ticker_CountdownFull_HoursOnly" xml:space="preserve">
