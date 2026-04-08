@@ -1438,8 +1438,7 @@ namespace Aeonpulse.Services
             double todayCumGt    = PreIndustrialGt + CumFromPoly(x2);
             double totalBudgetGt = PreIndustrialGt + CumFromPoly(120.0) + 400.0; // IPCC 1.5-degree total budget
 
-            // Depletion year: solve PreIndustrialGt + CumFromPoly(xd) = budgetGt for xd.
-            // Rearranges to: CumFromPoly(xd) = budgetGt - PreIndustrialGt.
+            // Depletion year: solve PreIndustrialGt + CumFromPoly(xd) = budgetGt - PreIndustrialGt for xd.
             double depletionYear = 0.0;
             double targetGt = totalBudgetGt - PreIndustrialGt;
             if (todayCumGt < totalBudgetGt)
@@ -1930,13 +1929,13 @@ namespace Aeonpulse.Services
         public VibrantHumanityResult CalculateVibrantHumanity(
             DateTime baseDate, string baseDateName, string baseDateValue, DateTime? now = null)
         {
-            DateTime now_        = now ?? DateTime.UtcNow;
+            DateTime today       = now ?? DateTime.UtcNow;
             DateTime baseDateUtc = baseDate.ToUniversalTime();
 
             AeonLog.Debug(LogCat, nameof(CalculateVibrantHumanity), $"baseDate={baseDate:d}");
 
-            double bornBetweenDates  = Math.Max(0, HumanBirthRankbyDate(now_) - HumanBirthRankbyDate(baseDateUtc));
-            double diedBetweenDates  = Math.Max(0, TotalDeathsByDate(now_) - TotalDeathsByDate(baseDateUtc));
+            double bornBetweenDates  = Math.Max(0, HumanBirthRankbyDate(today) - HumanBirthRankbyDate(baseDateUtc));
+            double diedBetweenDates  = Math.Max(0, TotalDeathsByDate(today) - TotalDeathsByDate(baseDateUtc));
 
             double twinsBorn    = bornBetweenDates * 0.024;
             double heartDeaths  = diedBetweenDates * 0.27;
@@ -2158,7 +2157,6 @@ namespace Aeonpulse.Services
 
         #endregion
 
-
         #region Space Wait
 
         /// <summary>
@@ -2233,25 +2231,63 @@ namespace Aeonpulse.Services
 
             TimeSpan countdown = TimeSpan.FromDays(minDaysToNext);
 
-            // Format the countdown readably for mobile: e.g. "12d 14h 32m 10s"
-            string countdownFormatted = FormatCountdown(countdown);
+            // Decompose into individual numeric components for localised template tokens
+            long totalSeconds = (long)countdown.TotalSeconds;
+            long cDays  = (long)countdown.TotalDays;
+            long cHrs   = countdown.Hours;
+            long cMins  = countdown.Minutes;
+            long cSecs  = countdown.Seconds;
 
             // Build ordinal age string: "4th", "21st" etc. in English; plain number otherwise
             string ageOrdinal = FormatOrdinal(nextAge);
 
-            string briefText = AppResources.Ticker_SpaceWaitBrief
-                .Replace("{planet}",    nextPlanetLocalized)
-                .Replace("{countdown}", countdownFormatted);
+            // Select brief and full templates by duration (mirrors Countdown ticker pattern)
+            string briefText;
+            string fullText;
+
+            if (totalSeconds < 86400) // less than a day
+            {
+                briefText = AppResources.Ticker_SpaceWaitBrief_HoursOnly
+                    .Replace("{planet}", nextPlanetLocalized)
+                    .Replace("{hrs}",    cHrs.ToString())
+                    .Replace("{mins}",   cMins.ToString())
+                    .Replace("{secs}",   cSecs.ToString());
+            }
+            else // one day or more
+            {
+                briefText = AppResources.Ticker_SpaceWaitBrief_DaysHours
+                    .Replace("{planet}", nextPlanetLocalized)
+                    .Replace("{days}",   cDays.ToString())
+                    .Replace("{hrs}",    cHrs.ToString())
+                    .Replace("{mins}",   cMins.ToString())
+                    .Replace("{secs}",   cSecs.ToString());
+            }
 
             // Calculate the actual calendar date of the next planetary milestone
             DateTime nextDate = now_.AddDays(minDaysToNext);
             string nextDateFormatted = nextDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture);
 
-            string fullText = AppResources.Ticker_SpaceWaitFull
-                .Replace("{age}",       ageOrdinal)
-                .Replace("{planet}",    nextPlanetLocalized)
-                .Replace("{countdown}", countdownFormatted)
-                .Replace("{nextDate}",  nextDateFormatted);
+            if (totalSeconds < 86400) // less than a day
+            {
+                fullText = AppResources.Ticker_SpaceWaitFull_HoursOnly
+                    .Replace("{age}",     ageOrdinal)
+                    .Replace("{planet}",  nextPlanetLocalized)
+                    .Replace("{hrs}",     cHrs.ToString())
+                    .Replace("{mins}",    cMins.ToString())
+                    .Replace("{secs}",    cSecs.ToString())
+                    .Replace("{nextDate}", nextDateFormatted);
+            }
+            else // one day or more
+            {
+                fullText = AppResources.Ticker_SpaceWaitFull_WithDays
+                    .Replace("{age}",     ageOrdinal)
+                    .Replace("{planet}",  nextPlanetLocalized)
+                    .Replace("{days}",    cDays.ToString())
+                    .Replace("{hrs}",     cHrs.ToString())
+                    .Replace("{mins}",    cMins.ToString())
+                    .Replace("{secs}",    cSecs.ToString())
+                    .Replace("{nextDate}", nextDateFormatted);
+            }
 
             return new SpaceWaitResult
             {
@@ -2261,28 +2297,6 @@ namespace Aeonpulse.Services
                 BriefText  = briefText,
                 FullText   = fullText,
             };
-        }
-
-        /// <summary>
-        /// Formats a <see cref="TimeSpan"/> as a compact, mobile-friendly countdown string.
-        /// Shows only the non-zero components from days down to seconds.
-        /// </summary>
-        /// <param name="ts">The time span to format.</param>
-        /// <returns>A string such as "12d 14h 32m 10s".</returns>
-        private static string FormatCountdown(TimeSpan ts)
-        {
-            int days    = (int)ts.TotalDays;
-            int hours   = ts.Hours;
-            int minutes = ts.Minutes;
-            int seconds = ts.Seconds;
-
-            if (days > 0)
-                return $"{days}d {hours}h {minutes}m {seconds}s";
-            if (hours > 0)
-                return $"{hours}h {minutes}m {seconds}s";
-            if (minutes > 0)
-                return $"{minutes}m {seconds}s";
-            return $"{seconds}s";
         }
 
         /// <summary>
@@ -2404,6 +2418,11 @@ namespace Aeonpulse.Services
         /// Cumulative count of species described by science from 1900-01-01 up to
         /// <paramref name="date"/>, using a 3-epoch piecewise linear daily-rate model.
         /// Rates: 1900-1950 approx. 27.4/day; 1950-2000 approx. 41.1/day; 2000-present approx. 49.3/day.
+        /// </para>
+        /// <para>
+        /// All epoch anchors use UTC midnight to prevent local timezone shifts from
+        /// causing population jumps at midnight.
+        /// </para>
         /// </summary>
         /// <param name="date">UTC date at which to evaluate the cumulative count.</param>
         /// <returns>Cumulative species described up to <paramref name="date"/>.</returns>

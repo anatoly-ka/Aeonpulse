@@ -11,6 +11,11 @@ namespace Aeonpulse.Tests
     /// finds the planet whose next full orbit completes soonest.
     /// Orbital periods (Earth days): Mercury=87.97, Venus=224.70, Mars=686.98,
     /// Jupiter=4332.59, Saturn=10759.22, Uranus=30685.40, Neptune=60189.00.
+    ///
+    /// Brief/Full text branches (mirrors Countdown ticker):
+    ///   &lt; 86400 s  -&gt; HoursOnly template  ({hrs}, {mins}, {secs})
+    ///   &gt;= 86400 s -&gt; DaysHours template  ({days}, {hrs}, {mins}, {secs})
+    /// Both templates are localised via AppResources so language switches correctly.
     /// </summary>
     public class CalculateSpaceWaitTests
     {

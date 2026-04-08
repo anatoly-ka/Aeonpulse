@@ -3598,14 +3598,24 @@ namespace Aeonpulse.Resources {
                 return ResourceManager.GetString("Ticker_SpaceWaitTitle", resourceCulture);
             }
         }
-        public static string Ticker_SpaceWaitBrief {
+        public static string Ticker_SpaceWaitBrief_HoursOnly {
             get {
-                return ResourceManager.GetString("Ticker_SpaceWaitBrief", resourceCulture);
+                return ResourceManager.GetString("Ticker_SpaceWaitBrief_HoursOnly", resourceCulture);
             }
         }
-        public static string Ticker_SpaceWaitFull {
+        public static string Ticker_SpaceWaitBrief_DaysHours {
             get {
-                return ResourceManager.GetString("Ticker_SpaceWaitFull", resourceCulture);
+                return ResourceManager.GetString("Ticker_SpaceWaitBrief_DaysHours", resourceCulture);
+            }
+        }
+        public static string Ticker_SpaceWaitFull_HoursOnly {
+            get {
+                return ResourceManager.GetString("Ticker_SpaceWaitFull_HoursOnly", resourceCulture);
+            }
+        }
+        public static string Ticker_SpaceWaitFull_WithDays {
+            get {
+                return ResourceManager.GetString("Ticker_SpaceWaitFull_WithDays", resourceCulture);
             }
         }
         public static string Info_SpaceWaitTitle {

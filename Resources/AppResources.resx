@@ -1840,12 +1840,20 @@
     <value>Space Wait</value>
     <comment>MainPage.xaml</comment>
   </data>
-  <data name="Ticker_SpaceWaitBrief" xml:space="preserve">
-    <value>Next: &lt;b&gt;{planet}&lt;/b&gt; in &lt;b&gt;{countdown}&lt;/b&gt;</value>
+  <data name="Ticker_SpaceWaitBrief_HoursOnly" xml:space="preserve">
+    <value>Next: &lt;b&gt;{planet}&lt;/b&gt; in &lt;b&gt;{hrs}h : {mins}m : {secs}s&lt;/b&gt;</value>
     <comment>CalculationService.cs</comment>
   </data>
-  <data name="Ticker_SpaceWaitFull" xml:space="preserve">
-    <value>Your next extraterrestrial milestone is your &lt;b&gt;{age}&lt;/b&gt; birthday on &lt;b&gt;{planet}&lt;/b&gt;! It happens in exactly &lt;b&gt;{countdown}&lt;/b&gt; on {nextDate}.</value>
+  <data name="Ticker_SpaceWaitBrief_DaysHours" xml:space="preserve">
+    <value>Next: &lt;b&gt;{planet}&lt;/b&gt; in &lt;b&gt;{days}d {hrs}h : {mins}m : {secs}s&lt;/b&gt;</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_SpaceWaitFull_HoursOnly" xml:space="preserve">
+    <value>Your next extraterrestrial milestone is your &lt;b&gt;{age}&lt;/b&gt; birthday on &lt;b&gt;{planet}&lt;/b&gt;! It happens in exactly &lt;b&gt;{hrs}h {mins}m {secs}s&lt;/b&gt; on {nextDate}.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_SpaceWaitFull_WithDays" xml:space="preserve">
+    <value>Your next extraterrestrial milestone is your &lt;b&gt;{age}&lt;/b&gt; birthday on &lt;b&gt;{planet}&lt;/b&gt;! It happens in exactly &lt;b&gt;{days}d {hrs}h {mins}m {secs}s&lt;/b&gt; on {nextDate}.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_SpaceWaitTitle" xml:space="preserve">

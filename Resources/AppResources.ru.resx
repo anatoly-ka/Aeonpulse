@@ -1828,12 +1828,20 @@
     <value>Внеземные ожидания</value>
     <comment>MainPage.xaml</comment>
   </data>
-  <data name="Ticker_SpaceWaitBrief" xml:space="preserve">
-    <value>Следующая: &lt;b&gt;{planet}&lt;/b&gt; через &lt;b&gt;{countdown}&lt;/b&gt;</value>
+  <data name="Ticker_SpaceWaitBrief_HoursOnly" xml:space="preserve">
+    <value>Следующая: &lt;b&gt;{planet}&lt;/b&gt; через &lt;b&gt;{hrs}ч : {mins}м : {secs}с&lt;/b&gt;</value>
     <comment>CalculationService.cs</comment>
   </data>
-  <data name="Ticker_SpaceWaitFull" xml:space="preserve">
-    <value>Следующая внеземная годовщина - &lt;b&gt;{age}&lt;/b&gt; на планете &lt;b&gt;{planet}&lt;/b&gt;! Она наступит {nextDate} - ровно через &lt;b&gt;{countdown}&lt;/b&gt;.</value>
+  <data name="Ticker_SpaceWaitBrief_DaysHours" xml:space="preserve">
+    <value>Следующая: &lt;b&gt;{planet}&lt;/b&gt; через &lt;b&gt;{days} дней {hrs}ч : {mins}м : {secs}с&lt;/b&gt;</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_SpaceWaitFull_HoursOnly" xml:space="preserve">
+    <value>Следующая внеземная годовщина - &lt;b&gt;{age}&lt;/b&gt; на планете &lt;b&gt;{planet}&lt;/b&gt;! Она наступит {nextDate} - ровно через &lt;b&gt;{hrs}ч {mins}м {secs}с&lt;/b&gt;.</value>
+    <comment>CalculationService.cs</comment>
+  </data>
+  <data name="Ticker_SpaceWaitFull_WithDays" xml:space="preserve">
+    <value>Следующая внеземная годовщина - &lt;b&gt;{age}&lt;/b&gt; на планете &lt;b&gt;{planet}&lt;/b&gt;! Она наступит {nextDate} - ровно через &lt;b&gt;{days} дней {hrs}ч {mins}м {secs}с&lt;/b&gt;.</value>
     <comment>CalculationService.cs</comment>
   </data>
   <data name="Info_SpaceWaitTitle" xml:space="preserve">
