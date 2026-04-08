@@ -1,4 +1,4 @@
-# Aeonpulse - Developer Guide
+﻿# Aeonpulse - Developer Guide
 
 This guide is for humans continuing development of Aeonpulse. It covers how to work with AI effectively, how to debug, how to make manual-only changes, and how to sign and deploy the app on each platform.
 
@@ -539,7 +539,7 @@ The test suite covers all 19 ticker calculation methods. Tests are in `Aeonpulse
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
 ```
 
-Expected output: **303 tests, 0 failures**.
+Expected output: **300 tests, 0 failures**.
 
 ### When to run tests
 
@@ -567,9 +567,9 @@ Run dotnet test after adding the tests.
 
 1. Review the diff with `git diff HEAD` before committing.
 2. Check that `Agents.md` was updated if any structural change was made (AI should do this automatically, but verify).
-3. Run `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` - 303 tests, 0 failures.
+3. Run `dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj` - 300 tests, 0 failures.
 4. Run `dotnet build Aeonpulse.csproj -f net9.0-windows10.0.19041.0 --no-incremental` and confirm only the four known warning codes appear (`CS0618`, `CS8767`, `CS0414`, `XC0022`).
-5. Commit with a descriptive message. AI-only commits include the signature trailer: `AI: GitHub Copilot (claude-sonnet-4-5)`.
+5. Commit with a descriptive message. AI-only commits include the signature trailer: `AI: GitHub Copilot (<model>)` (replace `<model>` with the model identifier reported by the agent, e.g. `gpt-4.1`).
 
 ### When you edit `.resx` files manually
 

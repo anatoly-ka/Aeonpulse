@@ -1,4 +1,4 @@
-# Aeonpulse
+﻿# Aeonpulse
 
 A cross-platform mobile and desktop app that transforms a personal date - typically a birthday - into nineteen richly-contextualised **ticker cards**: live and on-demand views of that moment in time through scientific, astronomical, personal, and ecological lenses.
 
@@ -26,7 +26,7 @@ The user provides a **base date** (a label such as "My Birthday" and an ISO date
 | 12 | Birth Rune | Mirror | Elder Futhark rune governing the birth date period | On demand |
 | 13 | Personal Year | Mirror | Numerological personal year number and its interpretation | On demand |
 | 14 | Global Crowd | Mirror | Estimated number of humans born and who have died since the base date | Every second |
-| 15 | Life Log | Mirror | A structured personal log: time elapsed in every unit, age milestones, and next milestone | On demand |
+| 15 | Life Log | Lab | A structured personal log: time elapsed in every unit, age milestones, and next milestone | On demand |
 | 16 | Vibrant Humanity | Mirror | Estimated births and deaths globally since the base date, with sub-statistics | Every second |
 | 17 | Global Exhale | Eco Echoes | Estimated CO2 emitted globally since the base date | On demand |
 | 18 | Your Breath | Eco Echoes | Estimated CO2 exhaled by the user since the base date | Every second |
@@ -89,7 +89,7 @@ The project follows **manual MVVM** - no MVVM toolkit or code generators:
 | Service | `Services/FontSizeService.cs` | Applies font-size preset to `Application.Current.Resources` at runtime |
 | Service | `Services/AeonLog.cs` | Structured debug logging gateway (`[Conditional("DEBUG")]`, zero production overhead) |
 | Model | `Models/TickerResults.cs` | 19 typed result classes, one per ticker, each extending `TickerData` |
-| Resources | `Resources/AppResources.resx` | All user-visible strings (English master, 491 keys) |
+| Resources | `Resources/AppResources.resx` | All user-visible strings (English master, ~486 keys) |
 | Resources | `Resources/AppResources.ru.resx` | Russian translations |
 | Drawable | `Views/*Drawable.cs` | 8 `IDrawable` implementations for in-card visualizations (WyrdWeb, BirthRankChart, Enneagram, LifeLogChart, PopulationChart, CarbonBudgetChart, VolumeCube, TaxonomyFlow) |
 
@@ -111,7 +111,7 @@ Aeonpulse/
 ├── Attributes/                 AIContextAttribute (codebase navigation marker)
 ├── Converters/                 ValueConverters.cs (bool / visibility / image-source)
 ├── Helpers/                    ImageTint.cs (cross-platform icon tinting via attached property)
-├── Models/                     TickerData, TickerResults (19 typed), TickerCardModel
+├── Models/                     TickerData, TickerResults (19 typed), TickerCardModel, FavoriteTickerItem
 ├── Platforms/
 │   ├── Android/                Entry point, TintHelper (PorterDuff colour filter)
 │   ├── iOS/                    Entry point, TintHelper (UIKit TintColor)
@@ -119,7 +119,7 @@ Aeonpulse/
 │   ├── Windows/                Entry point, TintHelper (Win2D ColorMatrixEffect)
 │   └── Tizen/                  Entry point (disabled by default)
 ├── Resources/
-│   ├── AppResources.resx       English master strings (491 keys)
+│   ├── AppResources.resx       English master strings (~486 keys)
 │   ├── AppResources.ru.resx    Russian translations
 │   ├── Images/                 PNG assets compiled into platform asset bundles
 │   └── Styles/
@@ -153,7 +153,7 @@ Aeonpulse/
 ├── MauiProgram.cs              Host builder, font registration, image tint mapper, AeonLog init
 ├── Aeonpulse.csproj            Multi-targeted project file
 ├── Agents.md                   AI agent navigation guide (authoritative development reference)
-└── Aeonpulse.Tests/            xUnit test project (net9.0, no MAUI dependency, 303 tests)
+└── Aeonpulse.Tests/            xUnit test project (net9.0, no MAUI dependency, 300 tests)
 ```
 
 ---
