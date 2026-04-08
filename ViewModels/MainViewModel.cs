@@ -620,12 +620,14 @@ namespace Aeonpulse.ViewModels
             };
 
             // When any ticker property is replaced by a recalculation, refresh the
+            // matching Favorites tile so its Title and Data reflect the new language/units.
             PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName is null)
                     return;
                 if (e.PropertyName.EndsWith("IsInFavorites"))
                     OnPropertyChanged(nameof(HasFavorites));
+                RefreshFavoriteTile(e.PropertyName);
             };
 
             // Restore persisted colour scheme (defaults to DefaultDark on first run)
@@ -679,7 +681,7 @@ namespace Aeonpulse.ViewModels
             ToggleCellularRefreshCommand = new Command(() => CellularRefreshExpanded = !CellularRefreshExpanded);
             ToggleVibrantCosmosCommand = new Command(() => VibrantCosmosExpanded = !VibrantCosmosExpanded);
             ToggleGlobalCrowdCommand = new Command(() => GlobalCrowdExpanded = !GlobalCrowdExpanded);
-            ToggleSpaceWaitCommand   = new Command(() => SpaceWaitExpanded = !SpaceWaitExpanded);
+            ToggleSpaceWaitCommand = new Command(() => SpaceWaitExpanded = !SpaceWaitExpanded);
             ToggleVibrantHumanityCommand = new Command(() => VibrantHumanityExpanded = !VibrantHumanityExpanded);
             ToggleVibrantNatureCommand = new Command(() => VibrantNatureExpanded = !VibrantNatureExpanded);
 
