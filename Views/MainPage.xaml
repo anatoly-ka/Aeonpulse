@@ -16,6 +16,9 @@
             <converters:InverseBoolConverter x:Key="InverseBool" />
             <!-- Converts bool IsExpanded -> image source for expand/collapse icons -->
             <converters:BoolToImageSourceConverter x:Key="BoolToImageSource" />
+            <!-- Returns GIF filename when expanded, null when collapsed.
+                 Prevents Android from decoding all GIF frames at startup (OOM). -->
+            <converters:BoolToGifSourceConverter x:Key="BoolToGifSource" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -574,7 +577,7 @@
                                          IsAnimationPlaying=True is respected by MAUI's built-in GIF decoder
                                          (ParseGIFBitmapHeaderAsync) on all platforms including Windows.
                                          IsVisible stays data-bound so expand/collapse still works. -->
-                                    <Image Source="anim_countdown.gif"
+                                    <Image Source="{Binding CountdownExpanded, Converter={StaticResource BoolToGifSource}, ConverterParameter='anim_countdown.gif'}"
                                            IsVisible="{Binding CountdownExpanded}"
                                            IsAnimationPlaying="True"
                                            HeightRequest="100"
@@ -660,7 +663,7 @@
                                          IsAnimationPlaying=True is respected by MAUI's built-in GIF decoder
                                          on all platforms including Windows.
                                          IsVisible stays data-bound so expand/collapse still works. -->
-                                    <Image Source="anim_ecg_pulse.gif"
+                                    <Image Source="{Binding LifeOdometerExpanded, Converter={StaticResource BoolToGifSource}, ConverterParameter='anim_ecg_pulse.gif'}"
                                            IsVisible="{Binding LifeOdometerExpanded}"
                                            IsAnimationPlaying="True"
                                            HeightRequest="80"
@@ -747,7 +750,7 @@
                                          IsAnimationPlaying=True is respected by MAUI's built-in GIF decoder
                                          on all platforms including Windows.
                                          IsVisible stays data-bound so expand/collapse still works. -->
-                                    <Image Source="anim_mitosis.gif"
+                                    <Image Source="{Binding CellularRefreshExpanded, Converter={StaticResource BoolToGifSource}, ConverterParameter='anim_mitosis.gif'}"
                                            IsVisible="{Binding CellularRefreshExpanded}"
                                            IsAnimationPlaying="True"
                                            HeightRequest="100"
@@ -1234,7 +1237,7 @@
                                          (anim_spacewait.gif) to distinguish it visually from the Countdown
                                          card (anim_countdown.gif / Courier New font).
                                          IsVisible gated on SpaceWaitExpanded. -->
-                                    <Image Source="anim_spacewait.gif"
+                                    <Image Source="{Binding SpaceWaitExpanded, Converter={StaticResource BoolToGifSource}, ConverterParameter='anim_spacewait.gif'}"
                                            IsVisible="{Binding SpaceWaitExpanded}"
                                            IsAnimationPlaying="True"
                                            HeightRequest="100"
@@ -1319,7 +1322,7 @@
                                          IsAnimationPlaying=True is respected by MAUI's built-in GIF decoder
                                          on all platforms including Windows.
                                          IsVisible stays data-bound so expand/collapse still works. -->
-                                    <Image Source="anim_sun_in_milky_way.gif"
+                                    <Image Source="{Binding GalacticCommuteExpanded, Converter={StaticResource BoolToGifSource}, ConverterParameter='anim_sun_in_milky_way.gif'}"
                                            IsVisible="{Binding GalacticCommuteExpanded}"
                                            IsAnimationPlaying="True"
                                            HeightRequest="100"
@@ -1576,7 +1579,7 @@
                                          IsAnimationPlaying=True is respected by MAUI's built-in GIF decoder
                                          on all platforms including Windows.
                                          IsVisible stays data-bound so expand/collapse still works. -->
-                                    <Image Source="anim_cosmic_stretch.gif"
+                                    <Image Source="{Binding CosmicStretchExpanded, Converter={StaticResource BoolToGifSource}, ConverterParameter='anim_cosmic_stretch.gif'}"
                                            IsVisible="{Binding CosmicStretchExpanded}"
                                            IsAnimationPlaying="True"
                                            HeightRequest="100"

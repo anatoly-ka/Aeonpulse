@@ -1,6 +1,6 @@
-﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
+# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-04-08
+> **Last updated:** 2026-04-09
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -2004,8 +2004,26 @@ The signed debug APK is at:
 Install manually to a connected device:
 
 ```
-"C:\Program Files (x86)\Android\android-sdk\platform-tools\adb.exe" install -r "bin\Debug\net9.0-android\com.aeonpulse.app-Signed.apk"
+"C:\Program Files (x86)\Android\android-sdk\platform-tools\adb.exe" uninstall com.aeonpulse.app
+"C:\Program Files (x86)\Android\android-sdk\platform-tools\adb.exe" install "bin\Debug\net9.0-android\com.aeonpulse.app-Signed.apk"
 ```
+> **Warning - Debug APK requires Fast Deployment:** `libmono-android.debug.so` checks
+> for pre-pushed assemblies in `files/.__override__/` and aborts with SIGABRT if that
+> folder exists but is empty (stale VS session artefact). Always uninstall cleanly first
+> (as shown above).
+>
+> **For standalone testing without VS** use a Release build targeting the emulator ABI:
+>
+> ```
+> dotnet publish Aeonpulse.csproj -f net9.0-android -c Release -r android-x64
+> "C:\Program Files (x86)\Android\android-sdk\platform-tools\adb.exe" uninstall com.aeonpulse.app
+> "C:\Program Files (x86)\Android\android-sdk\platform-tools\adb.exe" install "bin\Release\net9.0-android\android-x64\com.aeonpulse.app-Signed.apk"
+> ```
+>
+> Do **not** add `EmbedAssembliesIntoApk=true` to the csproj - it breaks VS Fast
+> Deployment and makes every Debug build 15-30 s slower with no benefit during normal
+> development. Release builds are already self-contained without it.
+
 
 #### iOS - Run on simulator (requires macOS + Xcode)
 
