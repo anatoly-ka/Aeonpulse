@@ -79,5 +79,54 @@ namespace Aeonpulse
                         (int)(tint.Blue  * 255)),
                     Android.Graphics.PorterDuff.Mode.SrcIn!));
         }
+
+        /// <summary>
+        /// Posts a deferred re-apply of the <c>PorterDuff.SrcIn</c> colour filter via
+        /// <c>View.Post()</c> so it fires after the async <c>AssetManager</c> image decode
+        /// completes and MAUI calls <c>setImageDrawable</c> on the native <c>ImageView</c>.
+        ///
+        /// <para>
+        /// <b>Why deferred:</b> MAUI's Android <c>FileImageSourceService</c> decodes
+        /// the bitmap off the main thread. The <c>"Source"</c> mapper callback fires
+        /// synchronously before decoding finishes, so <c>ApplyImageTint</c> sets the filter
+        /// on a view that has no drawable yet. <c>setImageDrawable</c> re-applies the
+        /// stored <c>mColorFilter</c> internally, so the filter set before decode would
+        /// survive -- however in practice MAUI may call <c>ClearColorFilter()</c> as part
+        /// of its load lifecycle. <c>View.Post()</c> enqueues a runnable that executes
+        /// after the current frame including the async decode callback, guaranteeing the
+        /// filter is applied to the final decoded drawable.
+        /// </para>
+        /// </summary>
+        static partial void ApplyDeferredImageTint(
+            Microsoft.Maui.Handlers.ImageHandler handler, Microsoft.Maui.Graphics.Color? tint)
+        {
+            if (handler is null) return;
+            if (handler.PlatformView is not Android.Widget.ImageView nativeImage) return;
+            if (tint is null) return;
+
+            var filter = new Android.Graphics.PorterDuffColorFilter(
+                AColor.Argb(
+                    (int)(tint.Alpha * 255),
+                    (int)(tint.Red   * 255),
+                    (int)(tint.Green * 255),
+                    (int)(tint.Blue  * 255)),
+                Android.Graphics.PorterDuff.Mode.SrcIn!);
+
+            // Post to the view's message queue: runs after the async decode callback
+            // has called setImageDrawable on the native ImageView.
+            nativeImage.Post(() => nativeImage.SetColorFilter(filter));
+        }
+
+        internal static partial Task PrewarmTintCache(string fileName, Microsoft.Maui.Graphics.Color tint)
+            => Task.CompletedTask;
+
+        /// <summary>
+        /// Android: <c>MauiAsset</c> files live in the APK <c>assets/</c> directory.
+        /// <c>ImageSource.FromFile</c> uses a bare filesystem path which Glide cannot
+        /// resolve; <c>FromStream</c> via <c>OpenAppPackageFileAsync</c> calls
+        /// <c>AssetManager.Open()</c> and is the correct approach on Android.
+        /// </summary>
+        internal static partial ImageSource LandmarkImageSource(string fileName)
+            => ImageSource.FromStream(ct => FileSystem.OpenAppPackageFileAsync(fileName));
     }
 }

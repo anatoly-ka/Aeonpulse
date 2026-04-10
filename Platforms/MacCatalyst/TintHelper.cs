@@ -72,5 +72,19 @@ namespace Aeonpulse
             nativeBtn.SetImage(tintedImg, UIControlState.Normal);
             nativeBtn.TintColor = ToUIColor(tint);
         }
+
+        // Mac Catalyst uses AlwaysTemplate rendering mode; the tint is applied synchronously,
+        // so no deferred post-decode callback is needed.
+        static partial void ApplyDeferredImageTint(
+            Microsoft.Maui.Handlers.ImageHandler handler, Microsoft.Maui.Graphics.Color? tint)
+        {
+        }
+
+        internal static partial Task PrewarmTintCache(string fileName, Microsoft.Maui.Graphics.Color tint)
+            => Task.CompletedTask;
+
+        /// <summary>macCatalyst: <c>MauiAsset</c> files are bundled in the app package; <c>FromFile</c> resolves correctly.</summary>
+        internal static partial ImageSource LandmarkImageSource(string fileName)
+            => ImageSource.FromFile(fileName);
     }
 }

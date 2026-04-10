@@ -1,4 +1,5 @@
 using Aeonpulse.Attributes;
+using Aeonpulse.Services;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Maui.Controls;
@@ -78,7 +79,7 @@ namespace Aeonpulse
         // Per-WinUIButton: the tint params to retry on LayoutUpdated if ApplyTemplate fails.
         private sealed class PendingButtonTint
         {
-            public string File = "";
+            public String File = "";
             public Color? Tint;
             public EventHandler<object>? LayoutHandler;
         }
@@ -90,6 +91,18 @@ namespace Aeonpulse
         /// <c>VirtualView</c>, loads it from the output directory, applies a
         /// Win2D <see cref="ColorMatrixEffect"/>, and replaces <c>Image.Source</c>
         /// with the tinted <see cref="WriteableBitmap"/>.
+        ///
+        /// <para>
+        /// <b>Why AttachAndTint instead of a direct ScheduleTint:</b>
+        /// When <c>LandmarkImage.Source</c> is assigned a <c>StreamImageSource</c>,
+        /// MAUI decodes the stream asynchronously and calls <c>nativeImage.Source =
+        /// decodedBitmap</c> some time after this mapper fires.  A bare
+        /// <c>ScheduleTint</c> would replace the source with the tinted bitmap, but
+        /// MAUI's decode completion then overwrites it with the raw untinted bitmap.
+        /// <c>AttachAndTint</c> subscribes to <c>ImageOpened</c> so the tint is
+        /// re-applied every time WinUI finishes loading a new bitmap â€” the same
+        /// mechanism already used by <c>ApplyImageButtonTint</c>.
+        /// </para>
         /// </summary>
         static partial void ApplyImageTint(
             Microsoft.Maui.Handlers.ImageHandler handler, Color? tint)
@@ -97,17 +110,12 @@ namespace Aeonpulse
             if (handler.PlatformView is not WinUIImage nativeImage)
                 return;
 
-            var file = GetScaledFileName(handler.VirtualView?.Source);
+            var mauiView = handler.VirtualView as BindableObject;
+            var fallback = (mauiView as Microsoft.Maui.Controls.Element)?.AutomationId;
+            var file = GetScaledFileName(handler.VirtualView?.Source, fallback);
             if (file is null) return;
 
-            _ = nativeImage.DispatcherQueue.TryEnqueue(
-                Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal,
-                async () =>
-                {
-                    var wb = await GetTintedBitmapAsync(file, tint);
-                    if (wb is not null)
-                        nativeImage.Source = wb;
-                });
+            AttachAndTint(nativeImage, file, tint, mauiView);
         }
 
         /// <summary>
@@ -115,7 +123,7 @@ namespace Aeonpulse
         /// in <c>Microsoft.Maui.Controls.dll</c>) implements its own frame-by-frame
         /// <see cref="WriteableBitmap"/> renderer driven by a timer, producing native
         /// animated GIF playback on Windows without any platform-side intervention.
-        /// The static PNG swap introduced in the previous session was incorrect — it
+        /// The static PNG swap introduced in the previous session was incorrect ï¿½ it
         /// intercepted the <c>"Source"</c> mapper key and replaced the GIF with a frozen
         /// PNG before MAUI's decoder could run, which is why the GIF appeared static.
         /// Removing the swap lets MAUI's decoder run normally.
@@ -123,6 +131,119 @@ namespace Aeonpulse
         static partial void ApplyGifToStaticPngMapper()
         {
             // Intentionally empty. MAUI handles GIF animation on Windows natively.
+        }
+
+        // Windows handles deferred tinting via the ImageOpened subscription in
+        // AttachAndTint - no additional post-decode callback is needed here.
+        static partial void ApplyDeferredImageTint(
+            Microsoft.Maui.Handlers.ImageHandler handler, Microsoft.Maui.Graphics.Color? tint)
+        {
+        }
+
+        /// <summary>
+        /// Pre-warms the Win2D tint cache for <paramref name="fileName"/> by running
+        /// <see cref="GetTintedBitmapAsync"/> inline on the calling (UI) thread.
+        /// Called from <c>ApplyVolumeCubeAsync</c> and awaited before
+        /// <c>LandmarkImage.Source</c> is assigned, so the cache is hot by the time
+        /// <see cref="ScheduleTint"/> runs in response to the Source change.
+        /// </summary>
+        internal static async partial Task PrewarmTintCache(string fileName, Microsoft.Maui.Graphics.Color tint)
+        {
+            var scaledFile = GetScaledFileName(null, fileName);
+            if (scaledFile is null) return;
+
+            await GetTintedBitmapAsync(scaledFile, tint);
+        }
+
+        /// <summary>
+        /// On Windows, landmark PNGs are <c>MauiAsset</c> files copied verbatim to
+        /// <c>AppContext.BaseDirectory</c>.  <c>FromFile</c> produces a <c>BitmapImage</c>
+        /// which fires <c>ImageOpened</c> on WinUI <c>Image</c>, allowing
+        /// <c>AttachAndTint</c>'s handler to re-apply the tint after every decode.
+        /// <c>FromStream</c> would produce a <c>WriteableBitmap</c> which does NOT fire
+        /// <c>ImageOpened</c>, leaving the raw bitmap visible.
+        /// </summary>
+        internal static partial Microsoft.Maui.Controls.ImageSource LandmarkImageSource(string fileName)
+            => Microsoft.Maui.Controls.ImageSource.FromFile(fileName);
+
+        /// <summary>Number of tinted bitmaps in the cache. Exposed for diagnostics.</summary>
+        internal static int TintCacheCount => _tintCache.Count;
+
+        /// <summary>
+        /// Pre-warns the Win2D tint cache for every image that carries
+        /// <c>helpers:ImageTint.Color</c> in the app, using <paramref name="tint"/>
+        /// as the colour (all tinted images use the same <c>CyberCyan</c> token).
+        ///
+        /// <para>Called from <c>MainPage.OnAppearing</c> on Windows while the
+        /// <c>LoadingOverlay</c> is visible. After this method returns every
+        /// subsequent <see cref="ScheduleTint"/> call is a synchronous cache hit
+        /// and completes before yielding to any competing async continuation.</para>
+        /// </summary>
+        internal static async Task WarmAllTintCachesAsync(Microsoft.Maui.Graphics.Color tint)
+        {
+            AeonLog.Info("TINT", nameof(WarmAllTintCachesAsync),
+                $"START tint={tint.ToArgbHex()}");
+
+            // Fixed MauiImage icons that are tinted in MainPage.xaml.
+            // Resizetizer adds .scale-100 suffix; GetScaledFileName resolves it.
+            var fixedImages = new[]
+            {
+                "aeonpulse.png",
+                "chevron_up.png", "chevron_down.png",
+                "square_chevron_up.png", "square_chevron_down.png",
+                "in_favorites.png", "to_favorites.png",
+                "info.png", "refresh.png",
+                "icon_taxonomy.png",
+            };
+
+            // All landmark MauiAsset PNGs (digit-prefixed, no scale suffix).
+            var landmarkImages = new[]
+            {
+                "01.7_human.png", "04.4_double-decker-bus.png",
+                "07_Stonehenge.png", "10_moai-statues.png",
+                "14_hollywood-sign.png", "15_parthenon.png",
+                "16.5_itsukushima-shrine.png", "20_great-sphinx-of-giza.png",
+                "21_white-house.png", "26_brandenburg-gate.png",
+                "30_blue-whale.png", "38_christ-the-redeemer.png",
+                "46_statue-of-liberty.png", "48_colosseum.png",
+                "50_arc-de-triomphe.png", "53_ruiguang-tower.png",
+                "56_tower-of-pisa.png", "61_egyptian-pyramids-icon.png",
+                "65_tower-bridge.png", "69_notre-dame.png",
+                "73_taj-mahal.png",
+            };
+
+            int ok = 0, fail = 0;
+
+            foreach (var name in fixedImages)
+            {
+                var scaledFile = GetScaledFileName(new FileImageSource { File = name });
+                if (scaledFile is null)
+                {
+                    AeonLog.Warn("TINT", nameof(WarmAllTintCachesAsync),
+                        $"icon not found on disk  name={name}");
+                    fail++;
+                    continue;
+                }
+                var wb = await GetTintedBitmapAsync(scaledFile, tint);
+                if (wb is not null) ok++; else fail++;
+            }
+
+            foreach (var name in landmarkImages)
+            {
+                var scaledFile = GetScaledFileName(null, name);
+                if (scaledFile is null)
+                {
+                    AeonLog.Warn("TINT", nameof(WarmAllTintCachesAsync),
+                        $"landmark not found on disk  name={name}");
+                    fail++;
+                    continue;
+                }
+                var wb = await GetTintedBitmapAsync(scaledFile, tint);
+                if (wb is not null) ok++; else fail++;
+            }
+
+            AeonLog.Info("TINT", nameof(WarmAllTintCachesAsync),
+                $"DONE  cached={ok}  failed={fail}  cacheSize={_tintCache.Count}");
         }
 
         /// <summary>
@@ -238,7 +359,6 @@ namespace Aeonpulse
         {
             var state = _imageStates.GetOrCreateValue(image);
 
-            // Remove old ImageOpened handler before attaching a new one.
             if (state.OpenedHandler is not null)
             {
                 image.ImageOpened -= state.OpenedHandler;
@@ -247,8 +367,6 @@ namespace Aeonpulse
 
             state.File = file;
             state.Tint = tint;
-            // Store or refresh the MAUI view reference so ImageOpened can always
-            // read the live DynamicResource value via ImageTint.GetColor().
             if (mauiView is not null)
                 state.MauiView = mauiView;
 
@@ -257,52 +375,82 @@ namespace Aeonpulse
             {
                 if (!_imageStates.TryGetValue(image, out var st)) return;
 
-                // Prefer the live color from the MAUI DynamicResource binding so that
-                // theme changes that occurred while Handler was null (section collapsed)
-                // are reflected correctly when the section is re-expanded and WinUI
-                // reloads the native image source, firing ImageOpened.
                 var liveTint = st.MauiView is not null
                     ? Helpers.ImageTint.GetColor(st.MauiView)
                     : st.Tint;
 
+                AeonLog.Debug("TINT", "ImageOpened",
+                    $"file={st.File}  liveTint={liveTint?.ToArgbHex() ?? "NULL"}");
                 ScheduleTint(image, st.File, liveTint);
             };
             state.OpenedHandler = openedHandler;
             image.ImageOpened += openedHandler;
 
-            // Immediate tint pass: use the live color if available, falling back to the
-            // passed-in tint for the Image handler path (which has no MauiView reference).
             var immediateTint = mauiView is not null
                 ? Helpers.ImageTint.GetColor(mauiView) ?? tint
                 : tint;
+
             ScheduleTint(image, file, immediateTint);
         }
 
         /// <summary>
-        /// Enqueues the async Win2D tint operation on the element's dispatcher
-        /// and sets the resulting <see cref="WriteableBitmap"/> as the new source.
+        /// Applies the tinted <see cref="WriteableBitmap"/> to <paramref name="image"/>.
+        /// If the cache is already warm the bitmap is set synchronously on the calling
+        /// thread (avoids queuing a dispatcher item when already on the UI thread).
+        /// For a cold cache, file I/O and Win2D rendering run on the UI dispatcher via
+        /// <see cref="GetTintedBitmapAsync"/>; the call is awaited directly so no
+        /// additional dispatcher item is queued behind already-pending work.
         /// </summary>
         private static void ScheduleTint(WinUIImage image, string file, Color? tint)
         {
-            _ = image.DispatcherQueue.TryEnqueue(
-                Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal,
-                async () =>
-                {
-                    var wb = await GetTintedBitmapAsync(file, tint);
-                    if (wb is not null)
-                        image.Source = wb;
-                });
+            var winColour = tint is not null ? (WinUIColor?)ToWinUIColor(tint) : null;
+            if (winColour.HasValue && _tintCache.TryGetValue((file, winColour.Value), out var cached))
+            {
+                AeonLog.Debug("TINT", nameof(ScheduleTint),
+                    $"FAST (cache hit)  file={file}");
+                ApplyWbToImage(image, cached);
+                return;
+            }
+
+            AeonLog.Warn("TINT", nameof(ScheduleTint),
+                $"COLD (cache miss)  file={file}  tint={tint?.ToArgbHex() ?? "NULL"}  " +
+                $"cacheSize={_tintCache.Count}");
+            _ = ApplyTintAsync(image, file, tint);
+        }
+
+        private static async Task ApplyTintAsync(WinUIImage image, string? file, Color? tint)
+        {
+            var wb = await GetTintedBitmapAsync(file, tint);
+            if (wb is null) return;
+            ApplyWbToImage(image, wb);
         }
 
         /// <summary>
-        /// Produces a tinted <see cref="WriteableBitmap"/> for <paramref name="scaledFile"/>
-        /// by running a Win2D <see cref="ColorMatrixEffect"/> that sets every pixel's RGB
-        /// to the tint colour while preserving the source alpha channel.
+        /// Sets <paramref name="wb"/> as <paramref name="image"/>'s source, detaching
+        /// the <c>ImageOpened</c> handler first to prevent re-entrancy, then re-attaching.
+        /// </summary>
+        private static void ApplyWbToImage(WinUIImage image, WriteableBitmap wb)
+        {
+            _imageStates.TryGetValue(image, out var st);
+            if (st?.OpenedHandler is not null)
+                image.ImageOpened -= st.OpenedHandler;
+
+            image.Source = wb;
+
+            if (st?.OpenedHandler is not null)
+                image.ImageOpened += st.OpenedHandler;
+        }
+
+        /// <summary>
+        /// Produces a tinted <see cref="WriteableBitmap"/> for <paramref name="scaledFile"/>.
+        /// Must be called on the UI thread (Win2D APIs and WriteableBitmap require it).
+        /// Results are cached by (filename, colour) so repeated calls for the same
+        /// combination are instant cache hits with no async overhead.
         /// Returns <c>null</c> when <paramref name="tint"/> is <c>null</c> or on error.
         /// </summary>
-        private static async Task<WriteableBitmap?> GetTintedBitmapAsync(string scaledFile, Color? tint)
+        private static async Task<WriteableBitmap?> GetTintedBitmapAsync(string? scaledFile, Color? tint)
         {
-            if (tint is null)
+            if (tint is null || scaledFile is null)
                 return null;
 
             var winColour = ToWinUIColor(tint);
@@ -315,12 +463,15 @@ namespace Aeonpulse
             {
                 _canvasDevice ??= CanvasDevice.GetSharedDevice();
 
-                // Load from the output directory where WindowsPackageType=None copies MauiImage files.
                 var filePath = System.IO.Path.Combine(AppContext.BaseDirectory, scaledFile);
 
-                // Use the Stream overload to avoid Win2D URI resolution issues in unpackaged apps.
-                // CanvasBitmap.LoadAsync(uri) uses WinRT StorageFile internally, which is
-                // unreliable for absolute file:// paths without package identity.
+                if (!System.IO.File.Exists(filePath))
+                {
+                    AeonLog.Warn("TINT", nameof(GetTintedBitmapAsync),
+                        $"file not on disk  path={filePath}");
+                    return null;
+                }
+
                 CanvasBitmap source;
                 using (var fileStream = System.IO.File.OpenRead(filePath))
                 {
@@ -328,18 +479,9 @@ namespace Aeonpulse
                         _canvasDevice, fileStream.AsRandomAccessStream(), 96f);
                 }
 
-                // Use the source pixel dimensions for the render target.
-                // The resulting WriteableBitmap is sized to match; MAUI's Image control
-                // scales it to the declared WidthRequest/HeightRequest on screen.
                 int w = (int)source.SizeInPixels.Width;
                 int h = (int)source.SizeInPixels.Height;
 
-                // ColorMatrixEffect - 5x4 matrix (Win2D convention, input vector [R,G,B,A,1]):
-                //   R_out = M11*R + M21*G + M31*B + M41*A + M51
-                //   G_out = M12*R + M22*G + M32*B + M42*A + M52
-                //   B_out = M13*R + M23*G + M33*B + M43*A + M53
-                //   A_out = M14*R + M24*G + M34*B + M44*A + M54
-                // Goal: R_out=tr, G_out=tg, B_out=tb, A_out=A (preserve alpha).
                 float tr = winColour.R / 255f;
                 float tg = winColour.G / 255f;
                 float tb = winColour.B / 255f;
@@ -349,12 +491,10 @@ namespace Aeonpulse
                     Source      = source,
                     ColorMatrix = new Matrix5x4
                     {
-                        // Zero out source RGB contribution entirely.
                         M11 = 0, M12 = 0, M13 = 0, M14 = 0,
                         M21 = 0, M22 = 0, M23 = 0, M24 = 0,
                         M31 = 0, M32 = 0, M33 = 0, M34 = 0,
-                        M41 = 0, M42 = 0, M43 = 0, M44 = 1,  // preserve alpha unchanged
-                        // Offset column: constant tint colour added to every pixel.
+                        M41 = 0, M42 = 0, M43 = 0, M44 = 1,
                         M51 = tr, M52 = tg, M53 = tb, M54 = 0
                     }
                 };
@@ -367,19 +507,20 @@ namespace Aeonpulse
                 }
 
                 var pixels = rt.GetPixelBytes();
-                var wb     = new WriteableBitmap(w, h);
+                var wb = new WriteableBitmap(w, h);
                 using (var stream = wb.PixelBuffer.AsStream())
                     await stream.WriteAsync(pixels, 0, pixels.Length);
 
                 wb.Invalidate();
                 _tintCache[cacheKey] = wb;
+                AeonLog.Debug("TINT", nameof(GetTintedBitmapAsync),
+                    $"cached  file={scaledFile}  size={w}x{h}");
                 return wb;
             }
             catch (Exception ex)
             {
-                // Log in debug builds so Win2D pipeline errors are visible in Output window.
-                System.Diagnostics.Debug.WriteLine(
-                    $"[TintHelper] GetTintedBitmapAsync failed for '{scaledFile}': {ex.Message}");
+                AeonLog.Warn("TINT", nameof(GetTintedBitmapAsync),
+                    $"FAILED  file={scaledFile}  ex={ex.GetType().Name}: {ex.Message}");
                 return null;
             }
         }
@@ -390,14 +531,30 @@ namespace Aeonpulse
         /// (<c>{stem}.scale-100.{ext}</c>); if that file does not exist on disk, falls
         /// back to the plain filename so <c>MauiAsset</c> files (which are not processed
         /// by Resizetizer and have no scale suffix) are also found.
-        /// Returns <c>null</c> for non-file sources.
+        /// For <see cref="StreamImageSource"/>: the source itself carries no filename,
+        /// so the caller must pass the original filename via <paramref name="fallbackName"/>.
+        /// Returns <c>null</c> when no filename can be resolved.
         /// </summary>
-        private static string? GetScaledFileName(Microsoft.Maui.IImageSource? source)
+        private static string? GetScaledFileName(Microsoft.Maui.IImageSource? source,
+                                                  string? fallbackName = null)
         {
-            if (source is not FileImageSource fis)
-                return null;
+            string? plain;
 
-            var plain = fis.File;
+            if (source is FileImageSource fis)
+            {
+                plain = fis.File;
+            }
+            else if (!string.IsNullOrEmpty(fallbackName))
+            {
+                // StreamImageSource (e.g. landmark PNGs loaded via OpenAppPackageFileAsync):
+                // the source itself has no filename; use the caller-supplied fallback.
+                plain = fallbackName;
+            }
+            else
+            {
+                return null;
+            }
+
             if (string.IsNullOrEmpty(plain))
                 return null;
 

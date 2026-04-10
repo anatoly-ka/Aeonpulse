@@ -1,6 +1,6 @@
-# Agents.md - AI Agent Navigation Guide for Aeonpulse
+﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-04-09
+> **Last updated:** 2026-04-10
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -276,7 +276,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | `Aeonpulse.csproj` | Edit freely | - | SDK-style multi-targeted project file. Declares `<TargetFrameworks>`, min OS versions, NuGet packages, `<MauiXaml>` build actions, and `<EmbeddedResource>` entries for `.resx` files. Also declares `<WindowsPackageType>None</WindowsPackageType>` (Windows-only) so `MauiImage` assets are copied to the output directory next to the exe for unpackaged execution. Explicit `Microsoft.Graphics.Win2D 1.3.2` reference (Windows-only) for Win2D colour-matrix icon tinting. Add new platform targets, packages, or resource files here. |
 | `Aeonpulse.sln` | Do not edit | - | Visual Studio solution file. Managed by IDE. |
 | `App.xaml` | Edit freely | - | Application-level `ResourceDictionary` root. Merges `Colors.xaml` then `Styles.xaml` in load order. Merge order matters: Styles references Colors. |
-| `App.xaml.cs` | Edit freely | `AppBootstrap` | Application entry point. Reads `Preferences` and calls `ThemeService`, `FontSizeService`, and `MainViewModel.ApplyLanguage()` **before** `InitializeComponent()` so the first rendered frame is already correct. Sets `MainPage = new MainPage()`. Contains the `.NET 9` obsolete `MainPage` setter - do not add further usages. |
+| `App.xaml.cs` | Edit freely | `AppBootstrap` | Application entry point. Reads `Preferences` and calls `ThemeService`, `FontSizeService`, and `MainViewModel.ApplyLanguage()` **before** `InitializeComponent()` so the first rendered frame is already correct. On Windows sets `MainPage = new SplashPage()` (pre-warms Win2D tint cache then navigates to `MainPage`); on all other platforms sets `MainPage = new MainPage()` directly. Contains the `.NET 9` obsolete `MainPage` setter - do not add further usages. |
 | `MauiProgram.cs` | Edit freely | `AppBootstrap` | MAUI host builder. Registers OpenSans fonts. Appends `ImageTint.ColorProperty` callbacks to `ImageHandler.Mapper` and `ImageButtonHandler.Mapper` globally. Declares `partial` stubs `ApplyImageTint` and `ApplyImageButtonTint` - implemented per-platform in `TintHelper.cs`. Add new handler mappers or DI registrations here. After `builder.Build()`, calls `AeonLog.Initialise(ILoggerFactory)` to wire the application logging gateway. |
 
 ---
@@ -335,6 +335,8 @@ All XAML files must be saved as **UTF-8 with BOM**. All colour/font-size referen
 | `RefreshingPopup.xaml.cs` | Edit carefully | `ModalViewController` | Accepts `Action onDismissed` callback. `OnAppearing()` awaits `Task.Delay(3000)`, awaits `PopModalAsync()`, then invokes `onDismissed`. The callback updates a specific typed ticker result property on the ViewModel. The 3-second delay must remain to give the spinner time to animate. |
 | `TeasePopup.xaml` | Edit freely | *(XAML AI comments)* | Left-aligned modal panel anchored below the NavBar via `Margin` injection. No fixed width - auto-sizes to content to avoid line-wrapping. Full-screen semi-transparent overlay with backdrop-dismiss tap. 3-row inner layout: title bar with divider, tease stat content label (`x:Name` set by code-behind), right-aligned footer with 2-button row (Copy + Close). Button `TextColor`/`BorderColor` use `{DynamicResource TextWhite}` to match content; `FontSize` uses `{DynamicResource FontSizeLarge}`; `MinimumWidthRequest=140` ensures equal size fitting `To Clipboard` at `FontSize=Large`. |
 | `TeasePopup.xaml.cs` | Edit carefully | `ModalViewController` | Constructor accepts `string teaseText`, `double topOffset` (`NavBar.Height`), `double leftOffset` (NavBar left padding = 16), and `Func<string, Task> onCopiedCallback`. Sets `TeasePanel.Margin` top/left from offsets. `OnOkClicked` (also wired to backdrop tap) calls `PopModalAsync()`. `OnCopyClicked` calls `Clipboard.Default.SetTextAsync`, then `PopModalAsync()`, then invokes `onCopiedCallback` which shows a `DisplayAlert` on `MainPage`s navigation context (mandatory iOS pop-before-alert ordering). |
+| `SplashPage.xaml` | Edit freely | *(XAML AI comments)* | Windows-only startup splash shown while the Win2D tint cache is pre-warmed. Full-screen `ContentPage` with `SpaceDarker` background. Centred `VerticalStackLayout`: tinted `aeonpulse.png` logo (`helpers:ImageTint.Color={DynamicResource CyberCyan}`) and a `SplashLabel` localised to `AppResources.App_Initializing`. Not instantiated on Android/iOS/macCatalyst (`App.xaml.cs` goes directly to `MainPage` there). |
+| `SplashPage.xaml.cs` | Edit carefully | `AppBootstrap` | Code-behind for `SplashPage`. `OnAppearing` fires `RunStartupAsync` (fire-and-forget). On Windows: reads `CyberCyan` from `Application.Current.Resources` (populated by `ThemeService.ApplyScheme` before `InitializeComponent`; must NOT read from `SplashLogo.ImageTint` which is unresolved at `OnAppearing` time), calls `MauiProgram.WarmAllTintCachesAsync(tint)`, then sets `Application.Current.MainPage = new MainPage()`. On non-Windows platforms the `#if WINDOWS` block is absent so `RunStartupAsync` navigates immediately. |
 
 ---
 
@@ -374,6 +376,14 @@ All XAML files must be saved as **UTF-8 with BOM**. All colour/font-size referen
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
 | `Views/BirthRankChartDrawable.cs` | Edit freely | `UIPresentation` | `IDrawable` implementation for the Human Birth Rank history curve `GraphicsView`. Linear X-axis [-5000, 2050], linear Y-axis [0, 125B]. Draws: Y-axis labels only (20B..120B, no grid lines); X-axis tick labels (5000 B.C.E., 2500 B.C.E., 1 C.E., 1200, 2022); PRB data polyline (points outside X domain skipped; MoveTo first in-range point so no baseline from x=-5000); left-side annotations with arrows for 1850/1900/1950/2000/2022 (1900 and 2000 +30 px extra offset); filled ellipse at user rank position. Scheme-aware colours: DefaultDark TextGray curve, TextDim labels, JubileeAccent=#FFD700 marker; HC-Dark all pure white; HC-Light all pure black. Scheme detected via SpaceDarker (Black=HC-Dark, White=HC-Light, other=DefaultDark). |
+
+---
+
+### Scripts - `Scripts/`
+
+| File | Edit? | AIContext | Description |
+|------|-------|-----------|-------------|
+| `Scripts/setup-android-avd.ps1` | Edit freely | - | One-time developer setup script. Patches every AVD `config.ini` under `%USERPROFILE%\.android\avd\` (or `\$ANDROID_AVD_HOME`) to set `hw.ramSize=4096` and `vm.heapSize=512`. Required because the default 1536 MB emulator RAM causes the Android Low Memory Killer to terminate the app during startup. Idempotent - re-running only changes values that differ from the required ones. Run once after cloning or creating a new AVD; restart the emulator afterwards. |
 
 ---
 
@@ -1841,6 +1851,7 @@ All five popups share the same architectural contract. They are listed as one no
 | .NET SDK | 9.0.312 | `dotnet --version` to verify |
 | Visual Studio | 2022 17.12+ | ".NET Multi-platform App UI development" workload required |
 | Android SDK | API 35 | Build tools 35.0.0, OpenJDK 17 |
+| Android Emulator RAM | **4096 MB** | Default 1536 MB causes LMK kills; run `scripts/setup-android-avd.ps1` once |
 | Xcode | 16+ | macOS only; required for iOS and Mac Catalyst builds |
 | Windows App SDK | 1.6 | Installed automatically via NuGet on Windows |
 
@@ -1859,6 +1870,30 @@ To install or update all MAUI workloads:
 dotnet workload install maui
 dotnet workload update
 ```
+
+#### Android Emulator Setup (run once per machine)
+
+A .NET 9 MAUI app requires at least **4096 MB** of emulator RAM. The Android Low
+Memory Killer terminates the app during startup on an emulator configured with the
+default 1536 MB because image loading triggers native bitmap allocation that exhausts
+the available swap.
+
+Run the setup script after cloning the repo or creating a new AVD:
+
+```
+powershell -ExecutionPolicy Bypass -File scripts/setup-android-avd.ps1
+```
+
+The script sets the following values in every `config.ini` under
+`%USERPROFILE%\.android\avd\` (or `\$ANDROID_AVD_HOME` if set):
+
+| Key | Required value | Default |
+|-----|---------------|---------|
+| `hw.ramSize` | `4096` | `1536` |
+| `vm.heapSize` | `512` | `256` |
+
+Re-running is safe - values already at the required level are left unchanged.
+**Restart the emulator after running the script.**
 
 ---
 

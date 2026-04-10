@@ -133,6 +133,10 @@
     <value>Close</value>
     <comment>ChangeDatePopup.xaml.cs</comment>
   </data>
+  <data name="App_Initializing" xml:space="preserve">
+    <value>Initializing...</value>
+    <comment>MainPage.xaml.cs Windows startup overlay</comment>
+  </data>
   <data name="Timeline_BaseDatePreposition" xml:space="preserve">
     <value>on</value>
     <comment>MainPage.xaml</comment>
@@ -322,7 +326,7 @@
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Info_SourceTitle" xml:space="preserve">
-    <value>Data Sources &#38; Attribution</value>
+    <value>Data Sources &amp; Attribution</value>
     <comment>MainPage.xaml.cs</comment>
   </data>
   <data name="Ticker_TimeJubileesTitle" xml:space="preserve">
@@ -1894,7 +1898,7 @@
     <comment>CalculationService.cs - LIVE ticker title</comment>
   </data>
   <data name="Ticker_VibrantHumanityBrief" xml:space="preserve">
-    <value>&lt;b&gt;{births}&lt;/b&gt; born &#8680; &lt;b&gt;{deaths}&lt;/b&gt; passed</value>
+    <value>&lt;b&gt;{births}&lt;/b&gt; born ⇨ &lt;b&gt;{deaths}&lt;/b&gt; passed</value>
     <comment>CalculationService.cs - HTML-formattable brief text; {births} and {deaths} replaced with N0 values</comment>
   </data>
   <data name="Ticker_VibrantHumanityFull" xml:space="preserve">
@@ -1939,7 +1943,7 @@
     <comment>Ticker card title for the biodiversity discovery vs extinction counter</comment>
   </data>
   <data name="Ticker_VibrantNatureBrief" xml:space="preserve">
-    <value>&lt;b&gt;{discovered}&lt;/b&gt; discovered &#8680; &lt;b&gt;{extinct}&lt;/b&gt; extinct</value>
+    <value>&lt;b&gt;{discovered}&lt;/b&gt; discovered ⇨ &lt;b&gt;{extinct}&lt;/b&gt; extinct</value>
     <comment>CalculationService.cs - HTML-formattable brief text; {discovered} and {extinct} replaced with N0 values</comment>
   </data>
   <data name="Ticker_VibrantNatureFull" xml:space="preserve">

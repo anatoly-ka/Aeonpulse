@@ -60,7 +60,15 @@ namespace Aeonpulse
             AeonLog.Info("BOOT", "Language",    $"restored={savedLanguage}");
 
             InitializeComponent();
+#if WINDOWS
+            // On Windows, SplashPage pre-warms the Win2D tint cache before MainPage is shown.
+            // On other platforms tinting is synchronous (PorterDuff/AlwaysTemplate), so
+            // no pre-warming is needed and we go directly to MainPage to avoid the extra
+            // page allocation and transition overhead.
+            MainPage = new Views.SplashPage();
+#else
             MainPage = new Views.MainPage();
+#endif
         }
     }
 }

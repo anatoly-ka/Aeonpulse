@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helpers="clr-namespace:Aeonpulse.Helpers"
+             x:Class="Aeonpulse.Views.SplashPage"
+             BackgroundColor="{DynamicResource SpaceDarker}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <VerticalStackLayout HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Spacing="20">
+
+            <Image x:Name="SplashLogo"
+                   Source="aeonpulse.png"
+                   HeightRequest="96"
+                   WidthRequest="96"
+                   Aspect="AspectFit"
+                   HorizontalOptions="Center"
+                   helpers:ImageTint.Color="{DynamicResource CyberCyan}" />
+
+            <Label x:Name="SplashLabel"
+                   FontSize="{DynamicResource FontSizeMedium}"
+                   TextColor="{DynamicResource TextGray}"
+                   HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </Grid>
+
+</ContentPage>

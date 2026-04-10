@@ -1,4 +1,4 @@
-﻿# Aeonpulse - Developer Guide
+# Aeonpulse - Developer Guide
 
 This guide is for humans continuing development of Aeonpulse. It covers how to work with AI effectively, how to debug, how to make manual-only changes, and how to sign and deploy the app on each platform.
 
@@ -8,6 +8,7 @@ This guide is for humans continuing development of Aeonpulse. It covers how to w
 
 ## Table of Contents
 
+0. [Environment Setup (run once after cloning)](#0-environment-setup-run-once-after-cloning)
 1. [Starting a Session with AI](#1-starting-a-session-with-ai)
 2. [Prompt Templates for Common Tasks](#2-prompt-templates-for-common-tasks)
 3. [What AI Should Do vs What You Should Do Manually](#3-what-ai-should-do-vs-what-you-should-do-manually)
@@ -16,6 +17,90 @@ This guide is for humans continuing development of Aeonpulse. It covers how to w
 6. [Signing and Deploying](#6-signing-and-deploying)
 7. [Running Tests](#7-running-tests)
 8. [Maintenance Habits](#8-maintenance-habits)
+
+---
+
+## 0. Environment Setup (run once after cloning)
+
+These steps must be completed once on every developer machine after cloning the repo.
+They are **not** repeated on subsequent sessions.
+
+### Step 1 - Install prerequisites
+
+| Requirement | Minimum version | How to verify |
+|-------------|----------------|---------------|
+| .NET SDK | 9.0.312 | `dotnet --version` |
+| Visual Studio | 2022 17.12+ | Requires ".NET Multi-platform App UI development" workload |
+| Android SDK | API 35 | Build tools 35.0.0, OpenJDK 17 |
+| Xcode | 16+ | macOS only - required for iOS and Mac Catalyst builds |
+| Windows App SDK | 1.6 | Installed automatically via NuGet on Windows |
+
+### Step 2 - Install .NET MAUI workloads
+
+`powershell
+dotnet workload install maui
+dotnet workload update
+`
+
+Verify the installed workloads:
+
+`powershell
+dotnet workload list
+`
+
+Expected output (versions may differ):
+
+`
+android         35.0.78 / 9.0.100
+ios             26.0.9752 / 9.0.100
+maccatalyst     26.0.9752 / 9.0.100
+maui-windows    9.0.111 / 9.0.100
+`
+
+### Step 3 - Restore NuGet packages
+
+`powershell
+dotnet restore Aeonpulse.csproj
+`
+
+This must be re-run after any `.csproj` change. The project uses:
+
+- `Microsoft.Maui.Controls 9.0.0`
+- `Microsoft.Maui.Controls.Compatibility 9.0.0`
+- `Microsoft.Extensions.Logging.Debug 9.0.0`
+- `Microsoft.Graphics.Win2D 1.3.2` (Windows only)
+
+### Step 4 - Configure the Android emulator RAM (Windows/macOS)
+
+The default Android emulator AVD is configured with only 1536 MB of RAM. A .NET 9 MAUI
+app triggers native bitmap allocation during startup that exhausts this budget, causing
+the Android Low Memory Killer to terminate the app within 15-20 seconds of launch.
+
+Run the provided setup script **once** after cloning or after creating a new AVD:
+
+`powershell
+powershell -ExecutionPolicy Bypass -File scripts/setup-android-avd.ps1
+`
+
+The script patches every AVD `config.ini` under `%USERPROFILE%\.android\avd\`
+(or `` if set) and sets:
+
+| Key | Required value | Default |
+|-----|---------------|---------|
+| `hw.ramSize` | `4096` | `1536` |
+| `vm.heapSize` | `512` | `256` |
+
+Re-running the script is safe - values already at the required level are left unchanged.
+**Restart the emulator after running the script.**
+
+### Step 5 - Verify the build
+
+`powershell
+dotnet build Aeonpulse.csproj -f net9.0-windows10.0.19041.0
+dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
+`
+
+Expected: build succeeds with 0 errors; 300 tests pass.
 
 ---
 

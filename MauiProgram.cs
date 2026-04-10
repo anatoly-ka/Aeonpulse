@@ -72,7 +72,12 @@ namespace Aeonpulse
                             var tint = ImageTint.GetColor(bindable);
                             if (tint is null) return;
                             if (handler is Microsoft.Maui.Handlers.ImageHandler imageHandler)
+                            {
                                 ApplyImageTint(imageHandler, tint);
+                                // Also schedule a deferred re-apply for platforms (Android) where
+                                // the image decode is async and completes after this mapper fires.
+                                ApplyDeferredImageTint(imageHandler, tint);
+                            }
                         });
 
                     // Same pattern for ImageButton (e.g., toolbar icon buttons).
@@ -152,5 +157,65 @@ namespace Aeonpulse
         /// platforms including Windows, so no platform-side intervention is required.
         /// </summary>
         static partial void ApplyGifToStaticPngMapper();
+
+        /// <summary>
+        /// Platform partial: re-applies the image tint after the native image decode
+        /// completes asynchronously.
+        ///
+        /// <para>
+        /// On Android, MAUI's <c>FileImageSource</c> loading is async (AssetManager decode
+        /// runs off the main thread). The <c>"Source"</c> mapper fires synchronously before
+        /// the decoded bitmap is set on the <c>ImageView</c>, so a second deferred call is
+        /// needed. Android overrides this partial to post a <c>View.Post</c> callback that
+        /// re-applies the <c>PorterDuff.SrcIn</c> filter after the decode completes.
+        /// Other platforms handle this via <c>ImageOpened</c> subscription or synchronous
+        /// loading and provide an empty implementation.
+        /// </para>
+        /// </summary>
+        static partial void ApplyDeferredImageTint(
+            Microsoft.Maui.Handlers.ImageHandler handler, Microsoft.Maui.Graphics.Color? tint);
+
+        /// <summary>
+        /// Platform partial: pre-warms the Win2D tint cache for a named image file and
+        /// tint colour so that the first <c>ScheduleTint</c> for that combination hits the
+        /// cache and executes in microseconds rather than performing file I/O and Win2D
+        /// rendering inline on the UI-thread dispatcher queue.
+        ///
+        /// <para>
+        /// Windows implements this by running <see cref="GetTintedBitmapAsync"/> inline
+        /// (awaited directly on the UI thread) so the cache is populated before the
+        /// caller assigns <c>Image.Source</c> and triggers the tint pipeline.
+        /// Other platforms return <see cref="Task.CompletedTask"/>.
+        /// </para>
+        /// </summary>
+        internal static partial Task PrewarmTintCache(string fileName, Microsoft.Maui.Graphics.Color tint);
+
+        /// <summary>
+        /// Platform partial: creates the correct <see cref="ImageSource"/> for a landmark
+        /// PNG so that MAUI's native image pipeline fires <c>ImageOpened</c> on the
+        /// platform's native image control, enabling the tint pipeline to re-apply after
+        /// every async decode.
+        ///
+        /// <para>
+        /// <b>Windows:</b> returns <see cref="FileImageSource"/> (<c>ImageSource.FromFile</c>).
+        /// Landmark PNGs are <c>MauiAsset</c> files copied verbatim to
+        /// <c>AppContext.BaseDirectory</c>; <c>BitmapImage</c> fires <c>ImageOpened</c>
+        /// when loading from a file URI, which lets <c>AttachAndTint</c>'s handler
+        /// retint after every source change. <c>StreamImageSource</c> causes WinUI to use
+        /// <c>WriteableBitmap</c> internally, which does <em>not</em> fire
+        /// <c>ImageOpened</c>, leaving the raw untinted bitmap visible.
+        /// </para>
+        /// <para>
+        /// <b>Android:</b> returns <see cref="StreamImageSource"/> via
+        /// <c>FileSystem.OpenAppPackageFileAsync</c>. <c>ImageSource.FromFile</c> on
+        /// Android uses a bare filesystem path which Glide/BitmapFactory cannot resolve
+        /// for <c>MauiAsset</c> files; the stream API goes through <c>AssetManager</c>.
+        /// </para>
+        /// <para>
+        /// <b>iOS / macCatalyst:</b> returns <see cref="FileImageSource"/>;
+        /// <c>MauiAsset</c> files are bundled in the app package and accessible by name.
+        /// </para>
+        /// </summary>
+        internal static partial ImageSource LandmarkImageSource(string fileName);
     }
 }

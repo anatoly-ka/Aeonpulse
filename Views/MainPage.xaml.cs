@@ -1,4 +1,4 @@
-﻿using Aeonpulse.Attributes;
+using Aeonpulse.Attributes;
 using Aeonpulse.Models;
 using Aeonpulse.ViewModels;
 using Aeonpulse.Resources;
@@ -1284,10 +1284,14 @@ namespace Aeonpulse.Views
 
             // ---- Landmark image: height = LandmarkSizeM * ppm. ----
             double imageH = Math.Max(4.0, lm.SizeM * ppm);
-            // Use FileImageSource so the tint pipeline (MauiProgram "Source" mapper hook)
-            // can resolve the filename via GetScaledFileName. StreamImageSource is opaque
-            // to the tint pipeline and cannot be re-tinted on source or theme changes.
-            LandmarkImage.Source = ImageSource.FromFile(lm.File);
+            // Landmark PNGs are <MauiAsset> files. The correct ImageSource type differs
+            // per platform: Windows needs FileImageSource (so WinUI uses BitmapImage which
+            // fires ImageOpened, letting AttachAndTint retint after every decode); Android
+            // needs StreamImageSource via OpenAppPackageFileAsync (AssetManager path).
+            // MauiProgram.LandmarkImageSource encapsulates the per-platform choice.
+            string fileName = lm.File;
+            LandmarkImage.AutomationId = fileName;
+            LandmarkImage.Source = MauiProgram.LandmarkImageSource(fileName);
             LandmarkImage.HeightRequest = imageH;
             LandmarkImage.Margin = new Thickness(8, 0, 0, 4);
 
@@ -1709,7 +1713,7 @@ namespace Aeonpulse.Views
         }
 
         /// <summary>
-        /// Runs the full lifecycle of a single star-birth particle: fade in, dwell for
+        /// Runs the full lifecycle of a star-birth particle: fade in, dwell for
         /// <paramref name="dwellMs"/> milliseconds, then fade out and remove.
         /// If the label has already been removed from <c>_liveStars</c> by a supernova
         /// hijack, this task still holds a reference to the label; the supernova task
@@ -1848,7 +1852,10 @@ namespace Aeonpulse.Views
             StartLiveBadgeAnimation();
             if (BindingContext is MainViewModel vm2 && vm2.VibrantCosmosExpanded)
                 StartAmbientSparks();
+
         }
+
+
 
         /// <inheritdoc/>
         protected override void OnDisappearing()

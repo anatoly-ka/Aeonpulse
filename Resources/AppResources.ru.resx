@@ -129,6 +129,10 @@
     <value>Закрыть</value>
     <comment>ChangeDatePopup.xaml.cs</comment>
   </data>
+  <data name="App_Initializing" xml:space="preserve">
+    <value>И н и ц и а л и з а ц и я...</value>
+    <comment>MainPage.xaml.cs Windows startup overlay</comment>
+  </data>
   <data name="Default_BaseDateName" xml:space="preserve">
     <value>Я родился</value>
     <comment>MainViewModel.cs</comment>
@@ -1883,7 +1887,7 @@
     <comment>CalculationService.cs - LIVE ticker title (ru)</comment>
   </data>
   <data name="Ticker_VibrantHumanityBrief" xml:space="preserve">
-    <value>&lt;b&gt;{births}&lt;/b&gt; родилось &#8680; &lt;b&gt;{deaths}&lt;/b&gt; ушло</value>
+    <value>&lt;b&gt;{births}&lt;/b&gt; родилось ⇨ &lt;b&gt;{deaths}&lt;/b&gt; ушло</value>
     <comment>CalculationService.cs - HTML-formattable brief text (ru)</comment>
   </data>
   <data name="Ticker_VibrantHumanityFull" xml:space="preserve">
@@ -1929,7 +1933,7 @@
     <comment>Ticker card title (ru)</comment>
   </data>
   <data name="Ticker_VibrantNatureBrief" xml:space="preserve">
-    <value>&lt;b&gt;{discovered}&lt;/b&gt; открыто &#8680; &lt;b&gt;{extinct}&lt;/b&gt; вымерло</value>
+    <value>&lt;b&gt;{discovered}&lt;/b&gt; открыто ⇨ &lt;b&gt;{extinct}&lt;/b&gt; вымерло</value>
     <comment>CalculationService.cs - HTML-formattable brief text (ru)</comment>
   </data>
   <data name="Ticker_VibrantNatureFull" xml:space="preserve">
