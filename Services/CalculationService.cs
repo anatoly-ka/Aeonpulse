@@ -558,7 +558,7 @@ namespace Aeonpulse.Services
                 JubileeUnit         = string.Empty,
                 JubileeDate         = nearestJubileeDate,
                 DaysUntil           = daysTillNext,
-                IllustrationSource  = "img_timejubilees.png",
+                IllustrationSource  = "",
                 LastJubileeValue    = daysSinceLast,
                 LastJubileeUnit     = string.Empty,
                 LastJubileeDate     = lastJubileeDate,
@@ -707,7 +707,7 @@ namespace Aeonpulse.Services
             {
                 Heartbeats = heartbeats,
                 Breaths    = breaths,
-                IllustrationSource = "heartbeat.png",
+                IllustrationSource = "",
                 BriefText = AppResources.Ticker_LifeOdometerBrief
                     .Replace("{heartbeats:N0}", heartbeats.ToString("N0"))
                     .Replace("{breaths:N0}", breaths.ToString("N0")),

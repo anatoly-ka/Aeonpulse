@@ -446,12 +446,26 @@ Please analyse the log and identify the root cause.
 
 1. Run with **F5** (Debug configuration).
 2. Open **View → Output** → select **Debug** from the dropdown.
-3. Filter by `[BOOT]`, `[VM]`, or `[CALC]` in the search bar to isolate app output from MAUI framework noise.
+3. Filter by `[BOOT]`, `[VM]`, `[TINT]`, or `[CALC]` in the search bar to isolate app output from MAUI framework noise.
 
 **Without Visual Studio** - use Sysinternals DebugView:
 1. Download from `https://learn.microsoft.com/sysinternals/downloads/debugview`
 2. Run as Administrator, enable **Capture Win32** and **Capture Global Win32**.
 3. Run the app. All log output appears in real time.
+
+**File log sink `AEONPULSE_LOG` - no debugger required:**
+
+Set `AEONPULSE_LOG=1` in the environment before launching to capture the full
+debug log to `%TEMP%\aeonpulse_debug.log`:
+
+```powershell
+$env:AEONPULSE_LOG = "1"
+& 'bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Aeonpulse.exe'
+```
+
+Every line is timestamped to the millisecond. All `[BOOT]`, `[TINT]`, `[CALC]`,
+and `[VM]` entries appear in order. Useful for startup timing analysis, tint
+pipeline diagnostics, and CI-style log capture. Active only in Debug builds.
 
 ### Android - adb logcat
 

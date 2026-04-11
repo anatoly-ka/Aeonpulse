@@ -181,6 +181,7 @@ namespace Aeonpulse
         /// </summary>
         internal static async Task WarmAllTintCachesAsync(Microsoft.Maui.Graphics.Color tint)
         {
+            var swTotal = System.Diagnostics.Stopwatch.StartNew();
             AeonLog.Info("TINT", nameof(WarmAllTintCachesAsync),
                 $"START tint={tint.ToArgbHex()}");
 
@@ -194,6 +195,8 @@ namespace Aeonpulse
                 "in_favorites.png", "to_favorites.png",
                 "info.png", "refresh.png",
                 "icon_taxonomy.png",
+                // MainMenuPopup.xaml icons - pre-warmed so first menu open is a cache hit.
+                "profiles.png", "settings.png", "exit.png",
             };
 
             // All landmark MauiAsset PNGs (digit-prefixed, no scale suffix).
@@ -213,9 +216,12 @@ namespace Aeonpulse
             };
 
             int ok = 0, fail = 0;
+            int imgNum = 0;
+            var swImg = new System.Diagnostics.Stopwatch();
 
             foreach (var name in fixedImages)
             {
+                imgNum++;
                 var scaledFile = GetScaledFileName(new FileImageSource { File = name });
                 if (scaledFile is null)
                 {
@@ -224,12 +230,27 @@ namespace Aeonpulse
                     fail++;
                     continue;
                 }
+                swImg.Restart();
                 var wb = await GetTintedBitmapAsync(scaledFile, tint);
-                if (wb is not null) ok++; else fail++;
+                swImg.Stop();
+                if (wb is not null)
+                {
+                    ok++;
+                    AeonLog.Debug("TINT", nameof(WarmAllTintCachesAsync),
+                        $"img#{imgNum:D2} icon  name={scaledFile}  ms={swImg.ElapsedMilliseconds}  total_ms={swTotal.ElapsedMilliseconds}",
+                        "IMG_TIMING");
+                }
+                else
+                {
+                    fail++;
+                    AeonLog.Warn("TINT", nameof(WarmAllTintCachesAsync),
+                        $"img#{imgNum:D2} icon FAILED  name={scaledFile}  ms={swImg.ElapsedMilliseconds}");
+                }
             }
 
             foreach (var name in landmarkImages)
             {
+                imgNum++;
                 var scaledFile = GetScaledFileName(null, name);
                 if (scaledFile is null)
                 {
@@ -238,12 +259,27 @@ namespace Aeonpulse
                     fail++;
                     continue;
                 }
+                swImg.Restart();
                 var wb = await GetTintedBitmapAsync(scaledFile, tint);
-                if (wb is not null) ok++; else fail++;
+                swImg.Stop();
+                if (wb is not null)
+                {
+                    ok++;
+                    AeonLog.Debug("TINT", nameof(WarmAllTintCachesAsync),
+                        $"img#{imgNum:D2} landmark  name={scaledFile}  ms={swImg.ElapsedMilliseconds}  total_ms={swTotal.ElapsedMilliseconds}",
+                        "IMG_TIMING");
+                }
+                else
+                {
+                    fail++;
+                    AeonLog.Warn("TINT", nameof(WarmAllTintCachesAsync),
+                        $"img#{imgNum:D2} landmark FAILED  name={scaledFile}  ms={swImg.ElapsedMilliseconds}");
+                }
             }
 
+            swTotal.Stop();
             AeonLog.Info("TINT", nameof(WarmAllTintCachesAsync),
-                $"DONE  cached={ok}  failed={fail}  cacheSize={_tintCache.Count}");
+                $"DONE  cached={ok}  failed={fail}  cacheSize={_tintCache.Count}  total_ms={swTotal.ElapsedMilliseconds}");
         }
 
         /// <summary>
@@ -461,6 +497,8 @@ namespace Aeonpulse
 
             try
             {
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+
                 _canvasDevice ??= CanvasDevice.GetSharedDevice();
 
                 var filePath = System.IO.Path.Combine(AppContext.BaseDirectory, scaledFile);
@@ -478,6 +516,7 @@ namespace Aeonpulse
                     source = await CanvasBitmap.LoadAsync(
                         _canvasDevice, fileStream.AsRandomAccessStream(), 96f);
                 }
+                var msLoad = sw.ElapsedMilliseconds;
 
                 int w = (int)source.SizeInPixels.Width;
                 int h = (int)source.SizeInPixels.Height;
@@ -505,16 +544,18 @@ namespace Aeonpulse
                     ds.Clear(WinUIColor.FromArgb(0, 0, 0, 0));
                     ds.DrawImage(effect);
                 }
+                var msRender = sw.ElapsedMilliseconds - msLoad;
 
                 var pixels = rt.GetPixelBytes();
                 var wb = new WriteableBitmap(w, h);
                 using (var stream = wb.PixelBuffer.AsStream())
                     await stream.WriteAsync(pixels, 0, pixels.Length);
+                var msPixelCopy = sw.ElapsedMilliseconds - msLoad - msRender;
 
                 wb.Invalidate();
                 _tintCache[cacheKey] = wb;
                 AeonLog.Debug("TINT", nameof(GetTintedBitmapAsync),
-                    $"cached  file={scaledFile}  size={w}x{h}");
+                    $"cached  file={scaledFile}  size={w}x{h}  ms_load={msLoad}  ms_render={msRender}  ms_pixel={msPixelCopy}  ms_total={sw.ElapsedMilliseconds}");
                 return wb;
             }
             catch (Exception ex)

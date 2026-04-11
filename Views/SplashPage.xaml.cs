@@ -45,7 +45,9 @@ namespace Aeonpulse.Views
 
         private async Task RunStartupAsync()
         {
-            AeonLog.Info(LogCat, nameof(RunStartupAsync), "START");
+            var t0 = DateTime.Now;
+            AeonLog.Info(LogCat, nameof(RunStartupAsync),
+                $"START  wall={t0:HH:mm:ss.fff}");
             SplashLabel.Text = AppResources.App_Initializing;
 
 #if WINDOWS
@@ -72,11 +74,21 @@ namespace Aeonpulse.Views
             }
             else
             {
+                var tWarmStart = DateTime.Now;
+                AeonLog.Info(LogCat, nameof(RunStartupAsync),
+                    $"WARM_START  wall={tWarmStart:HH:mm:ss.fff}  ms_since_appear={(tWarmStart - t0).TotalMilliseconds:F0}");
+
                 await MauiProgram.WarmAllTintCachesAsync(tint);
+
+                var tWarmEnd = DateTime.Now;
+                AeonLog.Info(LogCat, nameof(RunStartupAsync),
+                    $"WARM_END  wall={tWarmEnd:HH:mm:ss.fff}  ms_warm={(tWarmEnd - tWarmStart).TotalMilliseconds:F0}  ms_since_appear={(tWarmEnd - t0).TotalMilliseconds:F0}");
             }
 #endif
 
-            AeonLog.Info(LogCat, nameof(RunStartupAsync), "DONE - navigating to MainPage");
+            var tNav = DateTime.Now;
+            AeonLog.Info(LogCat, nameof(RunStartupAsync),
+                $"NAVIGATE  wall={tNav:HH:mm:ss.fff}  ms_splash_visible={(tNav - t0).TotalMilliseconds:F0}");
             Application.Current!.MainPage = new MainPage();
         }
     }

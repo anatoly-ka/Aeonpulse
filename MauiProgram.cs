@@ -121,6 +121,21 @@ namespace Aeonpulse
 
 #if DEBUG
             builder.Logging.AddDebug();
+            // Opt-in file sink for diagnostics. Set env var AEONPULSE_LOG=1 before
+            // launching the app to write all Debug/Info/Warn output to a log file.
+            // Windows: %TEMP%\aeonpulse_debug.log
+            // Useful for capturing timing data or diagnosing startup issues without
+            // an attached debugger. See Agents.md §8.4 and IMPLEMENTATION_GUIDE.md §5.
+#if WINDOWS
+            if (Environment.GetEnvironmentVariable("AEONPULSE_LOG") == "1")
+            {
+                var logPath = System.IO.Path.Combine(
+                    System.IO.Path.GetTempPath(), "aeonpulse_debug.log");
+                builder.Logging.AddProvider(new FileLoggerProvider(logPath));
+                builder.Logging.SetMinimumLevel(LogLevel.Debug);
+                System.Diagnostics.Debug.WriteLine($"[AEONPULSE_LOG] file sink active  path={logPath}");
+            }
+#endif
 #endif
 
             var app = builder.Build();
@@ -218,4 +233,51 @@ namespace Aeonpulse
         /// </summary>
         internal static partial ImageSource LandmarkImageSource(string fileName);
     }
+
+#if DEBUG && WINDOWS
+    /// <summary>
+    /// Minimal file-based <see cref="ILoggerProvider"/> used only when
+    /// <c>AEONPULSE_LOG=1</c> is set in the environment. Writes every log entry
+    /// as a single timestamped line; flushed after each write.
+    /// Compiled out in Release builds via <c>#if DEBUG</c>.
+    /// </summary>
+    internal sealed class FileLoggerProvider : ILoggerProvider
+    {
+        private readonly System.IO.StreamWriter _writer;
+
+        public FileLoggerProvider(string path)
+        {
+            _writer = new System.IO.StreamWriter(path, append: false) { AutoFlush = true };
+        }
+
+        public ILogger CreateLogger(string categoryName) => new FileLogger(_writer, categoryName);
+
+        public void Dispose() => _writer.Dispose();
+
+        private sealed class FileLogger : ILogger
+        {
+            private readonly System.IO.StreamWriter _w;
+            private readonly string _cat;
+            public FileLogger(System.IO.StreamWriter w, string cat) { _w = w; _cat = cat; }
+
+            public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+            public bool IsEnabled(LogLevel level) => level >= LogLevel.Debug;
+
+            public void Log<TState>(LogLevel level, EventId id, TState state,
+                Exception? ex, Func<TState, Exception?, string> formatter)
+            {
+                if (!IsEnabled(level)) return;
+                var prefix = level switch
+                {
+                    LogLevel.Debug       => "dbg",
+                    LogLevel.Information => "inf",
+                    LogLevel.Warning     => "wrn",
+                    LogLevel.Error       => "err",
+                    _                    => "???"
+                };
+                _w.WriteLine($"{DateTime.Now:HH:mm:ss.fff} {prefix} [{_cat}] {formatter(state, ex)}");
+            }
+        }
+    }
+#endif
 }

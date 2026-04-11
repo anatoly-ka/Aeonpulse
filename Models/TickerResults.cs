@@ -128,7 +128,7 @@ namespace Aeonpulse.Models
 
         /// <summary>
         /// Optional filename of an illustration shown inside the expanded card view.
-        /// Empty string means no illustration. Resolved as a MAUI image asset (e.g. "heartbeat.svg").
+        /// Empty string means no illustration. Resolved as a MAUI image asset.
         /// </summary>
         public string IllustrationSource { get; init; } = string.Empty;
 

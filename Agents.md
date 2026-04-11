@@ -1,6 +1,6 @@
 ﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-04-10
+> **Last updated:** 2026-04-11
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -435,16 +435,12 @@ All images are in `Resources/Images/` and are declared as `<MauiImage>` in the `
 | `settings.png` | `MainMenuPopup` menu item | Settings menu item icon |
 | `profiles.png` | `MainMenuPopup` menu item | Change Date menu item icon |
 | `exit.png` | `MainMenuPopup` menu item | Exit menu item icon |
-| `heartbeat.png` | Superseded - no longer referenced in XAML | ECG waveform PNG illustration. Retained in `Resources/Images/` as a fallback asset. Replaced by `anim_ecg_pulse.gif` for animated playback. |
 | `anim_ecg_pulse.gif` | Life Odometer expanded card `Image` | Minimalist animated ECG heartbeat pulse trace shown in the expanded Life Odometer card. `IsAnimationPlaying=True` drives looping playback. Source is a XAML literal (not a binding) to prevent MAUI GIF decoder restart on each 1-second timer tick. Drawn below the `FullText` label as a sibling in the `VerticalStackLayout` (same flat pattern as `anim_countdown.gif`). **Replace placeholder file with a permissively-licensed GIF before release.** |
-| `img_timejubilees.png` | Time Jubilees expanded card `Image` | Golden mechanical watch-gears illustration shown in the expanded Time Jubilees card. |
 | `anim_countdown.gif` | Countdown expanded card `Image` | Animated split-flap (Solari) digit counter shown in the expanded Countdown card; `IsAnimationPlaying=True` drives animation. Source is a XAML literal (not a binding) to prevent MAUI GIF decoder restart on each 1-second timer tick. |
-| `img_countdown_static.png` | Countdown Windows static fallback | First-frame static PNG exported alongside `anim_countdown.gif`. Reserved for future Windows-specific fallback use. |
 | `anim_mitosis.gif` | Cellular Refresh expanded card `Image` | Animated cell-division (mitosis) loop shown in the expanded Cellular Refresh card. `IsAnimationPlaying=True` drives looping playback. Source is a XAML literal (not a binding) to prevent MAUI GIF decoder restart on each timer tick. `IsVisible` bound to `CellularRefreshExpanded`. Drawn below the `FullText` label as a sibling in the `VerticalStackLayout` (same flat pattern as `anim_countdown.gif`). |
 | `anim_spacewait.gif` | Space Wait expanded card `Image` | Animated split-flap digit counter shown in the expanded Space Wait card; same layout as `anim_countdown.gif` but uses the Predator TTF Bold 58px font for digit glyphs. `IsAnimationPlaying=True` drives animation. Source is a XAML literal (not a binding) to prevent GIF decoder restart on each 1-second timer tick. |
 | `anim_sun_in_milky_way.gif` | Galactic Commute expanded card `Image` | Animated Milky Way galaxy scene shown in the expanded Galactic Commute card. `IsAnimationPlaying=True` drives looping playback. Source is a XAML literal (not a binding) to prevent MAUI GIF decoder restart on each 1-second timer tick. `IsVisible` bound to `GalacticCommuteExpanded`. Drawn below the `FullText` label as a sibling in the `VerticalStackLayout` (same flat pattern as `anim_countdown.gif`). |
 | `anim_cosmic_stretch.gif` | Cosmic Stretch expanded card `Image` | Animated universe-expansion scene shown in the expanded Cosmic Stretch card. `IsAnimationPlaying=True` drives looping playback. Source is a XAML literal (not a binding) to prevent MAUI GIF decoder restart on each 1-second timer tick. `IsVisible` bound to `CosmicStretchExpanded`. Drawn below the `FullText` label as a sibling in the `VerticalStackLayout` (same flat pattern as `anim_countdown.gif`). |
-| `img_spacewait_static.png` | Space Wait Windows static fallback | First-frame static PNG exported alongside `anim_spacewait.gif`. Reserved for future Windows-specific fallback use. |
 | `in_favorites.png` | Favorites tile ImageButton, ticker card Add/Remove button (active state) | Star/bookmark icon shown when a ticker is already in Favorites. Tinted via `ImageTint.Color`. |
 | `to_favorites.png` | Ticker card Add/Remove button (inactive state) | Star/bookmark icon shown when a ticker is not yet in Favorites. Tinted via `ImageTint.Color`. |
 | `calendar.png`, `menu.png`, `picture.png`, `send.png`, `share.png`, `tease.png`, `text.png` | Unused / reserved | Available for future features |
@@ -3535,6 +3531,21 @@ log messages to isolate application lines from MAUI framework noise.
 2. Run as Administrator.
 3. Enable **Capture → Capture Win32** and **Capture → Capture Global Win32**.
 4. Run the app. All `Debug.WriteLine` output appears in the DebugView window.
+
+**File log sink (`AEONPULSE_LOG`) - without Visual Studio or DebugView:**
+
+Set `AEONPULSE_LOG=1` in the environment before launching to redirect all
+`Debug`/`Info`/`Warn` output to `%TEMP%\aeonpulse_debug.log`:
+
+```powershell
+$env:AEONPULSE_LOG = "1"
+& 'bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Aeonpulse.exe'
+```
+
+Every line is timestamped to the millisecond. All `[BOOT]`, `[TINT]`,
+`[CALC]`, and `[VM]` entries appear in order of emission. The variable is
+read once at startup; restart the app to activate or deactivate. This sink is
+active only in `DEBUG` builds (`#if DEBUG && WINDOWS` in `MauiProgram.cs`).
 
 #### Android
 
