@@ -3345,6 +3345,7 @@ Every log message follows one of two patterns:
 | `THEME` | Theme and font-size changes (reserved) |
 | `LOCALE` | Language switching (reserved) |
 | `TINT` | Image tinting pipeline (reserved) |
+| `MEM` | Memory snapshots - managed heap, GC counts, OS working set, tint cache size |
 
 #### `[BLOCK]` tag rule
 
@@ -3377,6 +3378,12 @@ All other methods use only `[CATEGORY]` and `[SUBCATEGORY]`.
 | `CalculatePhotonPath` - phase decision | `CALC` | Debug | `[PHASE_LOOKUP]` `phase=...` |
 | `CalculatePhotonPath` - star catalogue walk | `CALC` | Debug | `[STAR_MATCH]` `star=... starLy=...` |
 | `CalculatePhotonPath` - before return | `CALC` | Debug | `[RESULT]` `phase=... starName=... ly=...` |
+| `SplashPage.RunStartupAsync` - after tint warm done | `MEM` | Info | `[POST_WARM]` managed heap, GC counts, OS working set, tint cache entry count |
+| `MainPage.OnAppearing` - end of method | `MEM` | Info | `[MAIN_READY]` same fields as POST_WARM |
+| Background task at T+30 s after `OnAppearing` | `MEM` | Info | `[T30]` same fields; captures steady-state after first 30 s of live-ticker operation |
+| Background task at T+120 s after `OnAppearing` | `MEM` | Info | `[T120]` same fields; extended steady-state snapshot for Android (Android GC headroom grows over 2 min) |
+| `MemSnapshot.Emit` (Android only) | `MEM` | Info | `[NATIVE_HEAP]` Dalvik/ART native heap allocated + total size via `Android.OS.Debug` |
+| `MemSnapshot.Emit` (Android only) | `MEM` | Info | `[PSS]` process PSS, private dirty, private clean via `Android.OS.Debug.MemoryInfo` |
 
 ---
 
@@ -3576,6 +3583,20 @@ Filter to application `Debug.WriteLine` output (tag `mono-stdout`):
 ```
 adb logcat -s mono-stdout:D -v time
 ```
+
+**Direct logcat sink (`Aeonpulse` tag) - no debugger required:**
+
+On Android, `AddDebug()` only emits to the Mono debugger channel (requires an
+attached debugger). A direct `AndroidLogcatLoggerProvider` (`Platforms/Android/`)
+is registered in all `DEBUG` Android builds and writes every `AeonLog` entry
+to `android.util.Log` under the tag `Aeonpulse`. Filter with:
+
+```
+adb logcat -s Aeonpulse:V
+```
+
+All `[BOOT]`, `[VM]`, `[CALC]`, `[MEM]` lines appear in real time
+without Visual Studio attached.
 
 **Via Visual Studio Android Device Log:**
 

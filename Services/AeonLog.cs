@@ -90,6 +90,19 @@ namespace Aeonpulse.Services
             => Logger.LogInformation("[{Cat}] [{Sub}] {Msg}", category, sub, message);
 
         /// <summary>
+        /// Emits a <c>LogInformation</c> entry with an optional <c>[BLOCK]</c> phase tag.
+        /// Use for long multi-phase diagnostics (e.g. memory snapshots) where each
+        /// dimension needs a named block for independent filtering.
+        /// </summary>
+        /// <param name="category">Top-level category token.</param>
+        /// <param name="sub">Method or event name.</param>
+        /// <param name="message">Structured message with <c>key=value</c> pairs.</param>
+        /// <param name="block">Internal phase tag, e.g. <c>"HEAP"</c>.</param>
+        [System.Diagnostics.Conditional("DEBUG")]
+        internal static void Info(string category, string sub, string message, string block)
+            => Logger.LogInformation("[{Cat}] [{Sub}] [{Block}] {Msg}", category, sub, block, message);
+
+        /// <summary>
         /// Emits a <c>LogWarning</c> entry: unexpected but recoverable states.
         /// </summary>
         /// <param name="category">Top-level category token.</param>

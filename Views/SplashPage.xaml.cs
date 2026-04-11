@@ -83,6 +83,9 @@ namespace Aeonpulse.Views
                 var tWarmEnd = DateTime.Now;
                 AeonLog.Info(LogCat, nameof(RunStartupAsync),
                     $"WARM_END  wall={tWarmEnd:HH:mm:ss.fff}  ms_warm={(tWarmEnd - tWarmStart).TotalMilliseconds:F0}  ms_since_appear={(tWarmEnd - t0).TotalMilliseconds:F0}");
+#if DEBUG
+                MemSnapshot.Emit("POST_WARM");
+#endif
             }
 #endif
 

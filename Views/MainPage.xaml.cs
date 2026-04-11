@@ -1852,7 +1852,18 @@ namespace Aeonpulse.Views
             StartLiveBadgeAnimation();
             if (BindingContext is MainViewModel vm2 && vm2.VibrantCosmosExpanded)
                 StartAmbientSparks();
-
+#if DEBUG
+            MemSnapshot.Emit("MAIN_READY");
+            // Fire one-shot T+30 s and T+120 s snapshots on a background task.
+            // Captured on the thread pool; AeonLog is thread-safe.
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(30_000);
+                MemSnapshot.Emit("T30");
+                await Task.Delay(90_000);   // 90 s more = 120 s from MAIN_READY
+                MemSnapshot.Emit("T120");
+            });
+#endif
         }
 
 

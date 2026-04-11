@@ -136,6 +136,14 @@ namespace Aeonpulse
                 System.Diagnostics.Debug.WriteLine($"[AEONPULSE_LOG] file sink active  path={logPath}");
             }
 #endif
+#if ANDROID
+            // AddDebug() on Android only emits to the Mono debugger channel, which
+            // requires an attached debugger. Add a direct android.util.Log sink so
+            // structured AeonLog output (MEM, BOOT, CALC, etc.) is always visible
+            // in adb logcat under the tag "Aeonpulse" without requiring VS attached.
+            builder.Logging.AddProvider(new AndroidLogcatLoggerProvider());
+            builder.Logging.SetMinimumLevel(LogLevel.Debug);
+#endif
 #endif
 
             var app = builder.Build();
@@ -233,6 +241,77 @@ namespace Aeonpulse
         /// </summary>
         internal static partial ImageSource LandmarkImageSource(string fileName);
     }
+
+#if DEBUG
+    /// <summary>
+    /// Captures a point-in-time memory snapshot and emits it via <see cref="AeonLog"/>
+    /// under the <c>MEM</c> category. All fields use <c>[BLOCK]</c> tags so each
+    /// dimension can be filtered independently.
+    ///
+    /// <para>Compiled in only for <c>DEBUG</c> builds.
+    /// Zero Release overhead.</para>
+    /// </summary>
+    internal static class MemSnapshot
+    {
+        /// <summary>
+        /// Emits one memory snapshot log group. Blocks are:
+        /// HEAP (managed GC bytes), GC (collection counts per generation),
+        /// PROCESS (OS working set), TINT_CACHE (Win2D WriteableBitmap pool, Windows only),
+        /// NATIVE_HEAP (Dalvik/ART native heap, Android only).
+        /// </summary>
+        /// <param name="label">
+        /// Free-form label for the snapshot point, e.g. <c>"POST_WARM"</c>,
+        /// <c>"MAIN_READY"</c>, <c>"T30"</c>, <c>"T120"</c>.
+        /// </param>
+        [System.Diagnostics.Conditional("DEBUG")]
+        internal static void Emit(string label)
+        {
+            // Managed heap - do NOT force a GC; non-intrusive measurement.
+            long heapBytes = GC.GetTotalMemory(forceFullCollection: false);
+            int  gen0      = GC.CollectionCount(0);
+            int  gen1      = GC.CollectionCount(1);
+            int  gen2      = GC.CollectionCount(2);
+
+            // OS working set via Environment (no System.Diagnostics.Process needed).
+            long wsBytes   = Environment.WorkingSet;
+
+            AeonLog.Info("MEM", label, $"snapshot  wall={DateTime.Now:HH:mm:ss.fff}");
+            AeonLog.Info("MEM", label,
+                $"managed_heap_MB={heapBytes / 1_048_576.0:F2}  heap_bytes={heapBytes:N0}",
+                "HEAP");
+            AeonLog.Info("MEM", label,
+                $"gen0={gen0}  gen1={gen1}  gen2={gen2}",
+                "GC");
+            AeonLog.Info("MEM", label,
+                $"working_set_MB={wsBytes / 1_048_576.0:F2}  working_set_bytes={wsBytes:N0}",
+                "PROCESS");
+
+#if WINDOWS
+            // Win2D WriteableBitmap pixel-buffer pool (Windows only).
+            int tintCount = MauiProgram.TintCacheCount;
+            AeonLog.Info("MEM", label,
+                $"tint_cache_entries={tintCount}",
+                "TINT_CACHE");
+#endif
+
+#if ANDROID
+            // Dalvik/ART heap and native heap sizes via Android.OS.Debug.
+            // getNativeHeapAllocatedSize / getNativeHeapSize are always available
+            // without permissions and reflect the current process's native allocations.
+            long nativeAlloc = Android.OS.Debug.NativeHeapAllocatedSize;
+            long nativeSize  = Android.OS.Debug.NativeHeapSize;
+            var  mi          = new Android.OS.Debug.MemoryInfo();
+            Android.OS.Debug.GetMemoryInfo(mi);
+            AeonLog.Info("MEM", label,
+                $"native_alloc_MB={nativeAlloc / 1_048_576.0:F2}  native_size_MB={nativeSize / 1_048_576.0:F2}",
+                "NATIVE_HEAP");
+            AeonLog.Info("MEM", label,
+                $"pss_MB={mi.TotalPss / 1024.0:F2}  private_dirty_MB={mi.TotalPrivateDirty / 1024.0:F2}  private_clean_MB={mi.TotalPrivateClean / 1024.0:F2}",
+                "PSS");
+#endif
+        }
+    }
+#endif
 
 #if DEBUG && WINDOWS
     /// <summary>
