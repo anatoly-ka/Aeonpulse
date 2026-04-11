@@ -1,5 +1,6 @@
-using Aeonpulse.Attributes;
+﻿using Aeonpulse.Attributes;
 using Aeonpulse.Models;
+using Aeonpulse.Services;
 using Aeonpulse.ViewModels;
 using Aeonpulse.Resources;
 
@@ -1257,8 +1258,12 @@ namespace Aeonpulse.Views
         {
             var result = vm.YourBreath;
             bool show = vm.YourBreathExpanded;
-            VolumeCubeContainer.IsVisible = show;
             if (!show || result == null) return;
+
+#if DEBUG
+            AeonLog.Debug("VM", "ApplyVolumeCube",
+                $"edge={result.CubeEdgeMeters:F3}  useMetric={vm.UseMetric}");
+#endif
 
             double edge = Math.Max(result.CubeEdgeMeters, 0.001);
             bool useMetric = vm.UseMetric;
@@ -1290,7 +1295,6 @@ namespace Aeonpulse.Views
             // needs StreamImageSource via OpenAppPackageFileAsync (AssetManager path).
             // MauiProgram.LandmarkImageSource encapsulates the per-platform choice.
             string fileName = lm.File;
-            LandmarkImage.AutomationId = fileName;
             LandmarkImage.Source = MauiProgram.LandmarkImageSource(fileName);
             LandmarkImage.HeightRequest = imageH;
             LandmarkImage.Margin = new Thickness(8, 0, 0, 4);

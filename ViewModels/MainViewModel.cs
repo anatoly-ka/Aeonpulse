@@ -13,7 +13,6 @@ namespace Aeonpulse.ViewModels
     {
         private readonly CalculationService _calculationService;
         private IDispatcherTimer _updateTimer;
-        private IDispatcherTimer _vibrantCosmosTimer;
         private const string LogCat = "VM";
 
         #region Language constants
@@ -764,19 +763,12 @@ namespace Aeonpulse.ViewModels
             _updateTimer.Interval = TimeSpan.FromSeconds(1);
             _updateTimer.Tick += (s, e) => UpdateLiveCalculations();
             _updateTimer.Start();
-
-            // Setup 200ms timer for Vibrant Cosmos - non-uniform rhythmic pulse
-            _vibrantCosmosTimer = Application.Current!.Dispatcher.CreateTimer();
-            _vibrantCosmosTimer.Interval = TimeSpan.FromMilliseconds(200);
-            _vibrantCosmosTimer.Tick += (s, e) => UpdateVibrantCosmos();
-            _vibrantCosmosTimer.Start();
         }
 
         public void UpdateAllCalculations()
         {
             UpdateStaticCalculations();
             UpdateLiveCalculations();
-            UpdateVibrantCosmos();
         }
 
         public void UpdateStaticCalculations()
@@ -795,15 +787,16 @@ namespace Aeonpulse.ViewModels
         public void UpdateLiveCalculations()
         {
             AeonLog.Debug(LogCat, "Timer", $"thread={Environment.CurrentManagedThreadId} isMainThread={MainThread.IsMainThread}");
-            Countdown    = _calculationService.CalculateCountdown(BaseDate);
-            LifeOdometer = _calculationService.CalculateLifeOdometer(BaseDate, BaseDateName, BaseDateValue);
+            Countdown       = _calculationService.CalculateCountdown(BaseDate);
+            LifeOdometer    = _calculationService.CalculateLifeOdometer(BaseDate, BaseDateName, BaseDateValue);
             GalacticCommute = _calculationService.CalculateGalacticCommute(BaseDate, BaseDateValue, UseMetric);
-            PhotonPath   = _calculationService.CalculatePhotonPath(BaseDate, BaseDateValue, UseMetric);
-            CosmicStretch = _calculationService.CalculateCosmicStretch(BaseDate, BaseDateValue, UseMetric);
-            YourBreath   = _calculationService.CalculateYourBreath(BaseDate, BaseDateValue, UseMetric);
-            GlobalCrowd  = _calculationService.CalculateGlobalCrowd(BaseDate);
-            SpaceWait    = _calculationService.CalculateSpaceWait(BaseDate);
+            PhotonPath      = _calculationService.CalculatePhotonPath(BaseDate, BaseDateValue, UseMetric);
+            CosmicStretch   = _calculationService.CalculateCosmicStretch(BaseDate, BaseDateValue, UseMetric);
+            YourBreath      = _calculationService.CalculateYourBreath(BaseDate, BaseDateValue, UseMetric);
+            GlobalCrowd     = _calculationService.CalculateGlobalCrowd(BaseDate);
+            SpaceWait       = _calculationService.CalculateSpaceWait(BaseDate);
             VibrantHumanity = _calculationService.CalculateVibrantHumanity(BaseDate, BaseDateName, BaseDateValue);
+            VibrantCosmos   = _calculationService.CalculateVibrantCosmos(BaseDate);
 
             TeaseText = _calculationService.GetRandomTeaseText(
                 Countdown,
@@ -813,11 +806,6 @@ namespace Aeonpulse.ViewModels
                 BaseDateName,
                 BaseDate
             );
-        }
-
-        public void UpdateVibrantCosmos()
-        {
-            VibrantCosmos = _calculationService.CalculateVibrantCosmos(BaseDate);
         }
 
         /// <summary>
@@ -1177,7 +1165,7 @@ namespace Aeonpulse.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
-        /// Stops both background timers immediately. Must be called before the
+        /// Stops the background update timer immediately. Must be called before the
         /// UI visual tree is torn down (e.g. from <c>Window.Destroying</c>) to
         /// prevent in-flight <see cref="PropertyChanged"/> notifications from
         /// reaching already-disposed WinRT UI elements.
@@ -1185,7 +1173,6 @@ namespace Aeonpulse.ViewModels
         public void StopTimers()
         {
             _updateTimer?.Stop();
-            _vibrantCosmosTimer?.Stop();
         }
 
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
