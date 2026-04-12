@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    App-level Android style overrides.
+    These declarations take priority over identically-named styles in MAUI's
+    bundled library resources.
+
+    android:windowOptOutEdgeToEdgeEnforcement (API 35+):
+        Opts the activity out of Android 15's forced edge-to-edge window mode.
+        When targetSdkVersion >= 35 Android enforces edge-to-edge, making the
+        app draw behind the status bar and navigation bar so UI content in those
+        regions becomes obscured.
+        Setting this to true restores the traditional window model where the
+        app content occupies the "body region" between the system bars.
+
+    Maui.MainTheme.NoActionBar is the theme MAUI activates on the activity
+    window after the splash screen completes. Overriding it here is sufficient
+    to cover the entire post-splash lifetime of the app.
+-->
+<resources>
+
+    <style name="Maui.MainTheme.NoActionBar" parent="Maui.MainTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+    </style>
+
+</resources>

@@ -1,4 +1,4 @@
-﻿# Agents.md - AI Agent Navigation Guide for Aeonpulse
+# Agents.md - AI Agent Navigation Guide for Aeonpulse
 
 > **Last updated:** 2026-04-11
 > **Maintained by:** AI Agents and human developers collaboratively.
@@ -2042,6 +2042,22 @@ Install manually to a connected device:
 > for pre-pushed assemblies in `files/.__override__/` and aborts with SIGABRT if that
 > folder exists but is empty (stale VS session artefact). Always uninstall cleanly first
 > (as shown above).
+>
+> **Warning - Debug APK aborts if the VS debugger is not listening (timeout=30 s):**
+> A VS-deployed Debug APK embeds a `--debugger-agent=...address=10.0.2.2:52503,timeout=30000`
+> option in its launch intent. If the app is started via `adb shell am start` (or by
+> tapping the icon) while VS is not actively listening on that port, the Mono debug agent
+> waits 30 seconds then calls `abort()`. The emulator output looks like:
+>
+> ```
+> [monodroid-debug] Trying to initialize the debugger with options:
+>     --debugger-agent=transport=dt_socket,...,address=10.0.2.2:52503,timeout=30000
+> [libc] Requested dump for pid <N>
+> ```
+>
+> **Fix:** always launch a VS-deployed Debug APK via **F5 in Visual Studio** so the
+> debugger host is already listening. For manual/standalone testing use the Release APK
+> (see below) — it contains no debug agent and starts instantly from the icon or adb.
 >
 > **For standalone testing without VS** use a Release build targeting the emulator ABI:
 >
