@@ -366,8 +366,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
 # MAUI resizetizer output artifacts - never commit these
 Resources/Images/*_own.*
 Resources/Images/*_auto.*
-.vs/
 Resources/Images/_originals_160/
