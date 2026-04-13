@@ -1,0 +1,609 @@
+- to fix <1900 numbers (to forbid earlier dates)
+- instruction to add texts to RESX in human-readable form
+- to move Life Log to the Lab section
+- to change default to 01.01.2000
+- to add "Favorites" category
+- to unify make brief in Countdown and Space Wait (d-h-m-s multilang)
+- introduction of splash screen on Windows
+- tilt time and memory consumption analysis
+- to make all live tickers renewing once in 1 sec, not more frequent
+- bugs:
+-- label "Today" on Time Jubilees is in the middle always
+-- the Birth Rune panel opens with Uruz by default - not the calculated rune
+-- to add target date to Space Wait
+-- to fix Favorites sync with origin tickers
+-- to fix work on Android emulator
+-- to fix coloring landmarks in Your Breath
+-- In Your Breath, the graphical part is not changing on recalculation (e.g. the labels under the drawn cube and landmark are not changing upon switch of language, the numbers do not change on base date change, etc.)
+-- On Android, the app is using the full screen size, but the standard OS top-level Status Bar and bottom Navigation Bar are shown over the app screen. thus making some items badly visible and not clickable/tappable
+
+------------------
+
++ to fix <1900 numbers (to forbid earlier dates)
+
+1)
+[META] Base Date Restriction (1900+) Refactoring
+Please read Agents.md fully before making any changes.
+It is the authoritative navigation guide for this codebase.
+Please pay a special attention to follow the Sections 9.11 and 9.14 of Agents.md recipes exactly for modifying files.
+
+**Task:** Refactor the application to enforce a strict minimum base date of January 1, 1900. Prevent the user from setting a date prior to this, display a localized warning popup if attempted, and clean up all legacy UI/logic that was specifically built to handle pre-1900 base dates.
+
+**1. Input Validation & UI Feedback:**
+- Locate the ViewModel or Code-Behind handling the base date input/selection (e.g., where the `DatePicker` binding or custom date entry is processed).
+- Implement validation: If the user attempts to set a date earlier than `new DateTime(1900, 1, 1)`, intercept the change.
+- Revert or reject the date change so the underlying `BaseDate` property does not update.
+- Trigger a modal popup (using `Application.Current.MainPage.DisplayAlert` or your custom modal service) with the following specifications:
+  - **TitleKey:** `Alert_Title_Aeonpulse` (Value: "Aeonpulse")
+  - **MessageKey:** `Alert_Message_Pre1900` 
+  - **CancelKey:** `Alert_Button_Close` (Value: "Close")
+
+**2. Localization Updates (.RESX files):**
+Add the new strings to the application's resource files.
+- **English (Default .resx):**
+  - `Alert_Title_Aeonpulse` : "Aeonpulse"
+  - `Alert_Message_Pre1900` : "Dates before the 20th century are not supported. There's plenty of interesting stuff in our own time, too!"
+  - `Alert_Button_Close` : "Close"
+- **Russian (.ru.resx):**
+  - `Alert_Title_Aeonpulse` : "Aeonpulse"
+  - `Alert_Message_Pre1900` : "Даты до XX века не поддерживаются. Есть много интересного и в наших временах!"
+  - `Alert_Button_Close` : "Закрыть"
+
+**3. Codebase Cleanup (C# & XAML):**
+Perform a careful sweep of the codebase to remove obsolete pre-1900 logic.
+- **UI/XAML:** Remove any specific views, layout triggers, or text blocks in the Full/Expanded views that were conditionally displayed *only* when the base date was < 1900 (e.g., alternative historical tickers, specific disclaimers about ancient dates).
+- **ViewModels/Models:** Remove conditional branches (`if (BaseDate.Year < 1900) { ... }`) that served different datasets or altered ticker behaviors for ancient dates. 
+- **CRITICAL SAFEGUARD - Math & Epochs:** Do **NOT** modify or remove historical constants, epoch dates, or baseline datasets (e.g., historical population data, CO2 baseline data, or numerology constants) that occur before 1900 if they are used as part of the *current* math to calculate the user's ticker values. Only remove logic that relies on the *user's input base date* being prior to 1900.
+
+**4. Testing & Verification:**
+- Build and run the app.
+- Attempt to enter December 31, 1899. Verify the localized popup appears, the input is rejected, and the app state remains stable.
+- Verify that tickers relying on long-term historical math (like Global Exhale or Global Crowd) still function correctly using the allowed 1900+ base dates.
+
+2)
+It seems you have not completed the work. If you did not - please continue. If you completed - please explain the current status.
+
+3)
+Please clean-up unused PreXX texts (e.g. Ticker_HumanBirthRankPreXX_Brief) from RESX files.
+
+4)
+Perfect, thanks! In addition, the following manual changes were made:
+- AppResources.ru.resx: manually changed newly added texts to make them human-resadable.
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+
+------------------
+
++ instruction to add texts to RESX in human-readable form
+1)
+Please add to Agents.md an instruction to add new texts to RESX/XAML files in human-readable form and not ASCII encoded - it means to ensure that the files in UTF-8 BOM (has EF BB BF in its first bytes), and then to add the text in UTF-8 not using encodings like "&#xxxx;" or "\uxxxx". If agent think the hexadecimal codes will be useful, add them as comments. Please do not forget that comments in XAML and C# must be ASCII only (as stated in 9.12 of Agent.md).
+
+2)
+There are wrong `?` placeholders instead of real characters in the example you added - see line 4057 of Agents.md. If this is intentionally - please explain, otherwise please fix and add another point to pre-commit checklist - to double check whether the `?` in the texts (e.g. by comarison the use `?` in English original and translated text).
+
+------------------
+
++ Check for Agents.md possible improvement
+
+1)
+Taking into account the Agents.md is intended for use by AI Agents, and not humans, please verify that it is not excessive. Please propose improvements that will make Agents.md clearer and more usable by AI Agents.
+Please do not commit any change until it is confirmed by me.
+
+2)
+Won't the proposed removal of "By Section Number" ToC make the reference to a specific section of Agents.md in a prompt more effort consuming?
+
+3)
+The proposed change 4 - Remove the duplicate "Concrete forbidden pattern" block in §9.14: please double check that there is the duplication.
+
+4)
+The proposed change 5 - Trim AppResources.Designer.cs duplicate sentence in §2: please double check that there is the duplication.
+
+5)
+Please proceed with changes 1, 2, 3, 6, 7, 8, 9 in Agents.md, but do not commit them.
+
+6)
+Please explain the ticker renumeration you made in ### Ticker Cards in Section 1.
+
+7)
+Please add this lesson to the appropriate place in Agents.md - whichever of 9.11 or 9.12 you find better.
+
+8)
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+
+------------------
+
+- to move Life Log to the Lab section
+- to change default to 01.01.2000
+- bugs:
+-- label "Today" on Time Jubilees is in the middle always
+-- the Birth Rune panel opens with Uruz by default - not the calculated rune
+-- to add target date to Space Wait
+
+1)
+[META] UI/UX Fixes & Logic Refinements (Batch 1)
+Please read Agents.md fully before making any changes.
+It is the authoritative navigation guide for this codebase.
+Please pay a special attention to follow the Sections 9.11 and 9.14 of Agents.md recipes exactly for modifying files.
+
+**Task:** Perform a batch of UI adjustments, state persistence updates, and localization fixes across the application. Execute these changes in the following phases.
+
+**Phase 1: Ticker Reorganization & Default State**
+1. **Move "Life Log":** Locate the configuration, service, or ViewModel responsible for defining the ticker categories. Move the `LifeLogTicker` out of its current section and place it as the *last* item in the "Lab" section.
+2. **Persistent Default Base Date:** - Update the application's base date initialization logic. The default base date must be explicitly set to `January 1, 2000`.
+   - Implement state persistence for the base date using `Microsoft.Maui.Storage.Preferences` (or the app's existing settings service). When the user changes their base date, save it. On app launch, retrieve the saved date; if no date is saved, fallback to `01.01.2000`.
+
+**Phase 2: Birth Rune Explorer Default Selection**
+1. Locate the initialization logic for the "Birth Rune" Full View or its associated ViewModel.
+2. Currently, the rune panel defaults to the first rune in the array (e.g., Uruz or Fehu). Update this logic so that the `SelectedExplorerRune` property is immediately initialized to match the user's actual `CalculatedRune` when the Full View opens.
+
+**Phase 3: Space Wait Localization Updates**
+1. **Resource Files:** Update the `Ticker_SpaceWaitFull` string in the `.resx` files to include the `{nextDate}` parameter.
+   - **English (Default .resx):** `Your next extraterrestrial milestone is your <b>{age}</b> birthday on <b>{planet}</b>! It happens in exactly <b>{countdown}</b> on {nextDate}.`
+   - **Russian (.ru.resx):** `Следующая внеземная годовщина - <b>{age}</b> на планете <b>{planet}</b>! Она наступит {nextDate} - ровно через <b>{countdown}</b>.`
+2. **Code-Behind/ViewModel:** Update the `string.Format` or string replacement logic in the Space Wait ViewModel to properly pass the calculated `nextDate` (formatted as a localized short or long date string) into the updated resource string.
+
+**Phase 4: Time Jubilees "Today" Proportional Positioning**
+1. Locate the UI layout for the "Time Jubilees" Full View where the "Last Jubilee", "Today", and "Next Jubilee" markers are drawn.
+2. **Calculate the Proportion:** In the ViewModel or code-behind, calculate the proportional distance of "Today" between the last and next jubilees. 
+   - `Ratio = (Today - LastJubilee) / (NextJubilee - LastJubilee)` (using Ticks or TotalDays).
+3. **Clamp the Value:** To prevent the "Today" label from visually overlapping the top or bottom jubilee labels, clamp the `Ratio` between a safe minimum and maximum (e.g., `0.15` and `0.85`).
+4. **Update the XAML:** Modify the layout containing the "Today" label to use proportional positioning. 
+   - *Recommendation:* If using an `AbsoluteLayout`, use `AbsoluteLayout.LayoutFlags="PositionProportional"` and bind `AbsoluteLayout.LayoutBounds` to a calculated `Rect(0.5, ClampedRatio, AutoSize, AutoSize)`. Alternatively, if using a `Grid` or `VerticalStackLayout`, adjust the `TranslationY` or margins based on the calculated ratio.
+
+**Phase 5: Verification**
+- Build and run the app.
+- Verify "Life Log" is at the bottom of the "Lab" section.
+- Verify changing the base date survives an app restart, and a fresh install defaults to 01.01.2000.
+- Verify the Birth Rune explorer highlights the user's actual birth rune on open.
+- Verify the Space Wait text correctly displays the formatted date in both English and Russian.
+- Verify the Time Jubilees "Today" label shifts physically closer to the respective jubilee without overlapping the text.
+
+2)
+**Phase 4: Time Jubilees "Today" Proportional Positioning** is not done or completed. Please do it.
+
+3)
+Nothing of the 3-lines `Today` label is drawn now - please diagnose and fix.
+
+4)
+The same - nothing of the 3-lines `Today` label is drawn. Please diagnose and fix.
+
+5)
+- Please make the minimal gap between the 3-lines `Today` label larger by 2 px - both from the topmost jubilee and from the bottommost jubilee.
+- Please make the ellipse and the label of the next jubilee in the same color as the next star in the `Photon Path` ticker.
+
+6)
+You changed the gap in opposite - instead amking the 3-lines `Today` label farer from the prev/next jubilee label, you made it closer (and thus overlapping more). Please make it 4 px lower in case of being close to the prev jubilee label and 4 px upper in case of being close to the next jubilee label.
+
+7)
+The lables are still overlap. Please make them never overlap and having minimum 2px between them.
+
+8)
+The minimal gap to the prev jubilee topmost label is ~1px now - ot's OK. But the minimal gap to the next jubilee bottom label is ~30px - too large now. Please diagnose and fix the minimal gap to the bottom label - make it ~2px with no overlap.
+
+9)
+The minimal gap from the bottom label below became even larger now - ~35 px. Please correct your calculations.
+
+10)
+Good, thanks! FYI: no following manual changes were made.
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+
+------------------
+
++ to add "Favorites" category
+
+1)
+[META] Favorites Section & State Persistence Refactoring
+Please read Agents.md fully before making any changes.
+It is the authoritative navigation guide for this codebase.
+Please pay a special attention to follow the Sections 9.11 and 9.14 of Agents.md recipes exactly for modifying files.
+
+**Task:** Introduce a "Favorites" section to the top of the application, allow users to duplicate tickers into this section, and implement global state persistence for both the Favorites list and the Brief/Full (Expanded) view state of all tickers.
+
+**Phase 1: Localization & Resource Preparation**
+1. Update `.resx` files (English and Russian) with the new strings:
+   - `Section_Favorites`: "Favorites" / "Избранное"
+   - `Favorites_EmptyState`: "Use "Add to Favorites" button on your favored ticker, and it will be shown here on each start of AeonPulse." / "Воспользуйтесь кнопкой "Добавить в избранное" на интересующем Вас тикере, и он будет показываться здесь при каждом запуске AeonPulse."
+2. Ensure `to_favorites.png` and `in_favorites.png` are added to the `Resources/Images` folder.
+
+**Phase 2: Model & State Persistence Refactoring**
+To persist dynamic UI state across sessions, the app must track unique IDs for tickers.
+1. **Ticker ID:** Ensure your base Ticker Model/ViewModel has a unique identifier (e.g., `TickerId = "TimeJubilees"`).
+2. **State Storage:** Create a mechanism (using `Microsoft.Maui.Storage.Preferences` or a local JSON file) to save and load user preferences. We need to store:
+   - A list of `TickerId`s that are currently in the Favorites section.
+   - A dictionary or list mapping `TickerId` to its `IsExpanded` (Full View) boolean state. **Crucial:** Because a ticker can exist in the main list AND in the Favorites list simultaneously, you must store their expansion states separately (e.g., `State_Main_TimeJubilees_IsExpanded` vs `State_Fav_TimeJubilees_IsExpanded`).
+3. **Initialization/Defaults:** On the very first app launch (when no saved state exists):
+   - Default Favorites list: `["TimeJubilees", "AlienAnniversaries"]` (or whatever the exact IDs are for Time Jubilees and Space Wait).
+   - Default View State: All tickers in all sections default to Brief View (`IsExpanded = false`), **EXCEPT** the two default items in the Favorites section, which must initialize to Full View (`IsExpanded = true`).
+
+**Phase 3: ViewModel & Collection Management**
+Refactor the main ViewModel that binds to the page structure.
+1. **Collections:** You need distinct ObservableCollections. One for the `Favorites` section, and others for the standard categorical sections.
+2. **Duplication Logic:** When a ticker is added to Favorites, you must create a *new instance* (or a deep copy/wrapper) of the ticker's ViewModel. It cannot just be a reference to the exact same object in memory, otherwise expanding the favorite will automatically expand the original in the UI, violating the separation of states.
+3. **Commands:** Implement two commands:
+   - `AddToFavoritesCommand`: Takes the source ticker, duplicates it, adds the duplicate to the `FavoritesCollection`, and saves the updated list of favorite IDs to local storage.
+   - `RemoveFromFavoritesCommand`: Takes the favored ticker, removes it from the `FavoritesCollection`, and updates local storage.
+
+**Phase 4: XAML UI Layout & Data Templates**
+Update the main scroll view or `CollectionView` that renders the app's sections.
+1. **The Favorites Section:** Add the topmost section using the localized `Section_Favorites` title.
+2. **Empty State:** Use an `EmptyView` on the Favorites collection (or a conditional layout) to display the `Favorites_EmptyState` text label if the `FavoritesCollection.Count == 0`.
+3. **Ticker Header/Title Bar Refactoring:** Modify the `DataTemplate` for the tickers to include the new buttons. 
+   - Ensure the layout places the new button to the immediate left of the existing collapse/expand (chevron) button.
+   - **For Standard Tickers (Main Lists):** Show the `to_favorites.png` button. Bind its command to `AddToFavoritesCommand`.
+   - **For Favorited Tickers (Favorites List):** Show the `in_favorites.png` button. Bind its command to `RemoveFromFavoritesCommand`.
+   - *Implementation Tip:* You can achieve this by adding a property `IsFavoriteInstance` to the ticker ViewModel, and using DataTriggers in XAML to toggle the visibility and Command binding of the respective ImageButtons.
+
+**Phase 5: Verification & Testing**
+1. Launch the app fresh (clear storage if needed). Verify "Time Jubilees" and "Alien Anniversaries" are in the topmost "Favorites" section and are expanded. Verify all other tickers below are collapsed.
+2. Expand a ticker in the main list. Restart the app. Verify it remembers it was expanded.
+3. Click "Add to Favorites" on a new ticker. Verify it appears at the bottom of the Favorites section. Expand it. Verify the original ticker in the main list remains collapsed.
+4. Click "Remove from Favorites" on a ticker in the Favorites section. Verify it disappears, and the Empty State text appears if the section becomes empty. Restart the app and verify the removal persists.
+
+2)
+It seems you have not completed the work. If you did not - please continue. If you completed - please explain the current status.
+
+3)
+The graphical part of the ticker's Full view is not duplicated to the ticker in `Favorites` - please diagnose and fix
+
+4)
+Nothing changed - only the texts of Brief/Full view and collapse/expand button are duplicated (and "remove from Favorites" button added), nothing more: no other action buttons, no "deep dive" popup, no illustration part of the Full view. If to make the full ticker duplication is technically impossible - please explain why. If it is possible - please make the full duplication with the only difference in the `Add to/Remove from Favorites` button.
+
+5)
+[META] Favorites "Live Bookmark" Refactoring
+Please read Agents.md fully before making any changes. 
+We are implementing a "Live Bookmark/Portal" architecture for the Favorites section.
+
+**Task:** Implement a "Favorites" section at the top of the app that acts as a quick-access dashboard. Instead of duplicating complex tickers, Favorites will show "Live Tiles" (using the standard Brief View) that act as clickable shortcuts to the main content.
+
+**1. Data Architecture (Single Source of Truth):**
+- Do **NOT** duplicate ViewModel instances.
+- Add an `IsFavorite` (bool) property to the base `TickerViewModel`.
+- The `MainViewModel` should maintain a `FavoritesList` which is dynamically populated/filtered based on existing tickers where `IsFavorite == true`.
+- **Persistence:** Save the `TickerId` of all favorited items to `Maui.Storage.Preferences`. On startup, find the tickers with those IDs and set `IsFavorite = true`.
+
+**2. The Favorites UI & "Brief View" Tile:**
+- Add a section at the very top called **"Favorites"** (Localized: "Избранное").
+- **Empty State Text:**
+  - English (`.resx`): `Use "Add to Favorites" button on your favored ticker, and a link to it will be shown here for immediate access.`
+  - Russian (`.ru.resx`): `Воспользуйтесь кнопкой "Добавить в избранное" на интересующем Вас тикере, и ссылка на него будет здесь для мгновенного доступа.`
+- **The "FavoriteTile" Template:** - Reuse the existing **Brief View** UI layout of the ticker. 
+  - **Button Modification:** Hide the standard expand/collapse (chevron) button. Only display the "Remove from Favorites" button (`in_favorites.png`).
+  - **Clickable Tile:** Make the entire body of the Favorite Tile clickable (e.g., using `TapGestureRecognizer` on the root Grid/Border, or a transparent command button). Bind this to a `JumpToTickerCommand`.
+
+**3. The Interaction (The "Portal" Jump):**
+- When a user taps the body of a "Favorite Tile":
+    1. Identify the "Target Ticker" instance in the main list.
+    2. Identify the **Parent Section** of that Target Ticker.
+    3. Set the Parent Section's expanded state to true (e.g., `IsSectionExpanded = true`).
+    4. Set the Target Ticker's expanded state to true (`IsExpanded = true` -> Full View).
+    5. Use `MainScrollView.ScrollToAsync()` to scroll the page until the Target Ticker is visible at the top of the screen.
+
+**4. The "Favorite" Button Logic & Bidirectional Sync:**
+- Add an `ImageButton` to every ticker header (next to the expand/collapse button).
+- **Behavior & Syncing:**
+    - If `IsFavorite == false`: Show `to_favorites.png`. Clicking sets `IsFavorite = true`, instantly adding the link tile to the Favorites section.
+    - If `IsFavorite == true`: Show `in_favorites.png`. Clicking sets `IsFavorite = false`.
+- **CRITICAL SYNC:** Because the Bookmark Tile and the Main Ticker share the same underlying state, clicking "Remove from Favorites" on the Bookmark Tile MUST immediately delete the tile from the topmost section AND revert the button on the Main Ticker back to "Add to Favorites" (`to_favorites.png`). Clicking "Remove" on the Main Ticker must also instantly delete the Bookmark Tile.
+
+**5. Defaults:**
+- On the very first run (no saved preferences), set `IsFavorite = true` for "Time Jubilees" and "Alien Anniversaries".
+
+**6. Implementation Note:**
+- Follow `Agents.md` precisely. Ensure that the `ScrollTo` logic is handled in the Page's code-behind or via a Service to keep the ViewModel clean.
+
+6)
+It seems you have not completed the work. If you did not - please continue. If you completed - please explain the current status.
+
+7)
+- The button based on `to_favorites.png` and `in_favorites.png` are not handled like other buttons - they look ugly, not processing the color according to the color-scheme. Please diagnose and fix.
+- The symbol in the ticker tile is not always the same as in the ticker itself.  Please diagnose and fix.
+
+8)
+The introduced changes broke the handling of buttons - now on Windows, if a section is collapsed and the color scheme changes, the buttons in its tickers remain unchanged. This part worked OK - you should just add the tile button to the existing hanling. Please diagnose and fix.
+
+9)
+The implementation of N4 of the prompt is partially only: the button in the ticker itself does not switch, and threfore does not work when the tile is added. Please fix.
+
+10)
+Currently, the tile follows changes of color-scheme only. Please make the tile's title and text changed upon re-calculation of the ticker itself - this way, the tile will show correct language, units, etc.
+
+11)
+Let's clarify the persistance and rest:
+- To make the default (on the first start) state of the tiles and tickers: all tikers are collaplsed (Brief view), section Favorites is exanded and all other sections are collapsed; the tiles in Favorites: Time Jubilees, Alien Anniversaries, Vibrant Humanity, Vibramt Nature, Vibrant Cosmos.
+- To ensure that the status of sectins, tickers and tiles (collapsed/expanded, etc.) is persistent, i.e. stored on its change and retrieved on the next app start.
+- To add to the "Reset Settings" button functionality the reset of the Sections, Tickers and Tiles status to its default (as on the first start).
+
+12)
+**Move "Life Log":** Locate the configuration, service, or ViewModel responsible for defining the ticker categories. Move the `LifeLogTicker` out of its current section and place it as the *last* item in the "Lab" section.
+
+13)
+The button "Add/Remove to Favorites" in a ticker works OK, but does not switch its image. Please diagnose and fix.
+
+14)
+Please add another paragraph to the About section of the Settings dialog with the following text:
+- English: `Menu and button images are based on illustrations by Boxicons, Round Icons on Unsplash. For complete legal notices, attribution, and license details for a specific ticker, please open the "Information" ("Details") dialog in that ticker.`
+- Russian: `Изображения в меню и на кнопках основаны на иллюстрациях Boxicons и Round Icons с Unsplash. Для получения полной юридической информации об авторстве и лицензиях для конкретного тикера, пожалуйста, откройте диалоговое окно "Информация" ("Подробности") в этом тикере.`
+Please consider merging all the texts in the About section of the Settings dialog into a single HTML formatted section (not mandatory).
+
+15)
+Perfect, thanks! In addition, the following manual changes were made:
+- AppResources.resx and AppResources.ru.resx: manually changed the text about app version.
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+
+------------------
+
++ Update MD docs
+
+1)
+Please check the consistency of Agents.md content with the latest changes and status of the project.
+
+2)
+Please check whether README.md and IMPLEMENTATION_GUIDE.md are complient with the latest state of Agents.md and the project itself.
+
+------------------
+
+- to unify make brief in Countdown and Space Wait (d-h-m-s multilang)
+- to fix Favorites sync with origin tickers
+- to fix work on Android emulator
+- to fix coloring landmarks in Your Breath
+- introduction of splash screen on Windows
+
+1)
+Please read Agents.md first.
+
+Bug: Countdown Brief view in case of next jubilee is in >1month, it is shown in days only.
+Expected: No need to distinguish >1month or less - in case it is >1day to show days-hours-min-sec as it is done for <1month now
+Relevant file(s): Services/CalculationService.cs, RESX files
+
+Please diagnose and fix the issue. Please remove unneeded texts from RESX files (seems to be Ticker_CountdownBrief_DaysOnly). Run the build and tests before finishing.
+Please do not commit the changes until the fix is confirmed by me.
+
+2)
+Good, thanks! FYI: no manual changes were made.
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+
+3)
+Please read Agents.md first.
+Bug: Currently, the tiles in Favorites follow changes of color-scheme only, but not language, units, etc.
+Expected: The tile's title and text are changed upon each re-calculation of the ticker itself - this way, the tile will show correct language, units, etc.
+Please diagnose and fix the issue. Please remove unneeded texts from RESX files (seems to be Ticker_CountdownBrief_DaysOnly). Run the build and tests before finishing.
+Please do not commit the changes until the fix is confirmed by me.
+
+4)
+Good, thanks! FYI: no manual changes were made.
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+
+5)
+Please read Agents.md first.
+Bug: Space Wait both Brief view and Full view show the left time in English always.
+Expected: To support multi-language fully in Space Wait Brief view. Please implement a logics similar to the implementation of the Countdown. It seems that texts Ticker_SpaceWaitBrief and Ticker_SpaceWaitFull will have to be split and modified.
+Relevant file(s): Services/CalculationService.cs, RESX files
+Please diagnose and fix the issue. Please remove unneeded texts from RESX files (seems to be Ticker_CountdownBrief_DaysOnly). Run the build and tests before finishing.
+Please do not commit the changes until the fix is confirmed by me.
+
+6)
+Good, thanks! FYI: no manual changes were made.
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+
+7)
+Please read Agents.md first.
+Bug: While on Windows the app seems to work OK, on Android emulator its Debug build crashes on the first start, and on Android device its Release build starts OK first time and crashes on any subsequent start.
+Expected: No crashes on Android.
+Please diagnose and fix the issue. Please remove unneeded texts from RESX files (seems to be Ticker_CountdownBrief_DaysOnly). Run the build and tests before finishing.
+Please do not commit the changes until the fix is confirmed by me.
+
+8)
+Now the app on Android emulator is stuck after the splash image is shown. Please diagnose and fix.
+
+9)
+The changes you made look reasonable, but the app on Android emulator continues to stuck after the splash image is shown. Please start it in debugger and diagnose the issue.
+
+10)
+Should the paramters for Android build be modifed to embed assemblies always?
+
+11)
+Good, thanks! FYI: no manual changes were made.
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+
+12)
+Please read Agents.md first.
+Bug: Your Breath Full view do not show the landmarks on Android (both emulator and device). On Windows, the landmarks are down OK.
+Expected: The landmarks to be drawn on all platormms.
+Relevant file(s): MainPage.xaml.cs, possible others.
+Please diagnose and fix the issue. Please remove unneeded texts from RESX files (seems to be Ticker_CountdownBrief_DaysOnly). Run the build and tests before finishing.
+Please do not commit the changes until the fix is confirmed by me.
+
+13)
+The landmarks are drawn in color black always, not according to the color scheme as it was. Please diagnose and fix.
+
+14)
+Now we are back to the bug: the landmarks are drawn OK on Windows, and not drawn at all on Android. Please diagnose and fix.
+
+15)
+Now, on Windows, the landmark image on start appears in black color, but on swtich color-scheme, it changes it color corectly. Please diagnose and fix.
+
+16)
+The last problem is not fixed: still, on Windows, the landmark image on start appears in black color, but on swtich color-scheme, it changes it color corectly. Please diagnose and fix.
+
+17)
+Same issue remains: on Windows, the landmark image on start appears in black color, but on swtich color-scheme, it changes it color corectly. Please diagnose and fix.
+
+18)
+The fix does not work - still, on Windows, the landmark image on start appears in black color, but on swtich color-scheme, it changes it color corectly. Please diagnose and fix. (Perhaps, a good solution would be to make the initial tint of all images syncronous, and to show the splash image for that time in the style Android shows it? And perhaps to write under the spash image `Initializing...`?)
+
+19)
+It seems you have not completed the work. If you did not - please continue. If you completed - please explain the current status.
+
+20)
+The build fails. Please diagnose and fix.
+
+21)
+The app behavior the the same: no splash, and the landmarks are in black. Please check your implementation of the new fully synched approach to tint.
+
+22)
+Now on the start a white window with the standard OS "wait" mouse pointer appears for >15 sec, then our spash shows for ~1 sec, and then the app with the landmark image still in black color! Please change the behavior as decided: 1. to show splash, 2. one-by-one tint the images synchronously before they are used anywhere, 3. to close the spash and to show the app main screen.
+
+23)
+The splash is shown for ~2-3 secs only, and then the main screen apeears with the landmark image in black - it seems the step `one-by-one tint the images synchronously before they are used anywhere` is not implemented or behave not as expected. Please add necessary logging according to section 8 of Agents.md, debug, diagnose and fix the tint of the images.
+
+24)
+It seems you have not completed the work. If it is so - please continue. If you completed - please explain the current status.
+
+25)
+It works OK on Windows now, thanks! But on Android emulator, the app is fails after the splash image is shown for ~10-20 sec. Please diagnose and fix.
+
+26)
+Great, thanks! Please make this `pixel_7_-_api_35.avd/config.ini` update be a part of Android build - to keep it applied after emulator reset or on another machine?
+
+27)
+You violated instructions from section 9.11 od Agents.md, and so corrupted Agents.md. Please restore it from repository, re-read Agents.md as the authoritative navigation guide for this codebase and pay special attention to section 9.11, and make the necessary changes in Agents.md.
+
+28)
+Please fix AppResources.ru.resx according to section 9.5 of Agents.md.
+
+29)
+Please fix AppResources.resx according to section 9.5 of Agents.md.
+
+30)
+The `IMPLEMENTATION_GUIDE.md` misses a section with one-time manual human actions to initialize the environment - please add such a section to `IMPLEMENTATION_GUIDE.md` based on sections 6.1 and 6.2 of Agents.md.
+
+31)
+Great, thanks!
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+FYI: no manual changes were made.
+As there are multiple changes during long session, please review all changes made and create a good summary commit message.
+
+------------------
+
+- Analisys of tinting time on Windows
+- Extending logging abilities
+
+1)
+Please list the 78 images the app has to tilt on Start on Windows in a table with number, image ID/name, image source (Resources\Images, Resources\Splash, ...)
+
+2)
+Please read Agents.md first.
+Please report the time cunsumption for tint process on Windows - time per each image, average time per image, and total time, and comparison with the time of spash appearing and closing.
+Please check for sufficient logging of the tint procedures, add more logging if needed according to section 8 of Agents.md, run on Windows, and analyze the logs to create the report.
+
+3)
+- The possibility to redirect logging to a file is good - please keep it. Please change the managing env.variable to have a common name wihtout `TINT`, and add the corresponding instructions to `Agents.md` and `IMPLEMENTATION_GUIDE.md`. Please follow section 9.11 of Agents.md for editing it.
+- The log in `%Temp%\aeonpulse_tint_perf.log` shows `[TINT]` activity, after it `[CALC]` activity, and after it `[TINT]` activity again. Is that by our design with the synchronous initial tint?
+
+4)
+Please resize all the images used for menu buttons from 4000x4000 to 96x96. Please pay attention to high quality of resizing, including keeping of transparet color. Please rebuild, and perform the initial tilt time analysis again: time per each image, average time per image, and total time, and comparison with the time of spash appearing and closing.
+
+5)
+- Should other images (not landmarks) used by UI be resized - profiles.png, settings.png, exit.png?
+- Please list the files in Resources/Images that are not used by the app for now.
+
+6)
+- Are heartbeat.png and img_timejubilees.png needed (Life Odometer expanded card uses anim_ecg_pulse.gif, and Time Jubilees expanded card has its own graphics)? The references to them look either incorrect or redundant. Please check.
+- Please resize the currently used profiles.png, settings.png, exit.png and the images to be used in future: menu.png, tease.png, calendar.png, send.png, share.png, text.png, picture.png. Please pay attention to high quality of resizing, including keeping of transparet color.
+
+7)
+Please add the three currently-used tinted icons (profiles, settings, exit) to WarmAllTintCachesAsync so the first menu open is a cache hit.
+
+8)
+Please delete from the project heartbeat.png, img_timejubilees.png, img_countdown_static.png, and img_spacewait_static.png. Please double-check references to them, and fix them correspondingly (e.g. replacing project heartbeat.png with anim_ecg_pulse.gif, etc.).
+
+9)
+Great, thanks! We completed the analysis and improvment of image handling, and extending of logging functionality.
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+FYI: no manual changes were made.
+As there are multiple changes during the session, please review all changes made and create a good summary commit message.
+
+------------------
+
+- Analysis of memory consumption
+- Extending logging abilities
+
+1)
+Please read Agents.md first.
+Please report the memory consumption for the allocted objects/respurces on Windows - please let appliation to work ~30 sec after start to make allocations.
+Please check for sufficient logging for this, add more logging if needed according to section 8 of Agents.md, run on Windows, and analyze the logs to create the report.
+
+2)
+Please make the same analysis on Android emulator. Please let app to work ~2 min after start to make allocations.
+
+3)
+Great, thanks!
+Please explain why the RAM of Android emulatr must be enlarged to be 4GB if the app memory consumption is about 0.5GB according to you analysis.
+
+4)
+Please create a new file `MemoryConsumption.md` for future comparison and references with the results you produced in this session recently, nanely:
+- Date of report;
+- Windows memory consumption report;
+- Android emulator memory consumption report;
+- Windows and Android comparison;
+- Analysis of RAM needed for Android emulator;
+- Propmt how to repeat the analysis.
+
+5)
+Great, thanks! We completed the analysis of memory consumption, and extending of logging functionality.
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+FYI: no manual changes were made.
+There are multiple changes made - please review them and create a good summary commit message.
+
+------------------
+
+bugs:
+-- In Your Breath, the graphical part is not changing on recalculation (e.g. the labels under the drawn cube and landmark are not changing upon switch of language, the numbers do not change on base date change, etc.)
+
+1)
+Please make the VibrantCosmos update frequency unified with other tickers - 1Hz. Please ensure the frequency of the graphical illustration of newborn stars and supernovi continues the same behavior with the new ticker update frequency.
+
+2)
+Please read Agents.md first.
+Bug: In Your Breath Full, the graphical part is not changing on recalculation (e.g. the labels under the drawn cube and landmark are not changing upon switch of language, the numbers do not change on base date change, etc.).
+Expected: All content of the ticker to be changed together.
+Please diagnose and fix the issue.
+Please do not commit the changes until the fix is confirmed by me.
+
+3)
+The behavior remains the same: the landmark image and number under the cube are not changing upon change of the BaseDate, the labels under the cube and the landmark are not changing upon witch of language, etc. Please diagnose and fix the issue.
+
+4)
+Well done, thanks!
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+FYI: no manual changes were made.
+
+------------------
+
+bugs:
+-- On Android, the app is using the full screen size, but the standard OS top-level Status Bar and bottom Navigation Bar are shown over the app screen. thus making some items badly visible and not clickable/tappable
+
+1)
+Please read Agents.md first.
+Bug: On Android, the app is using the full screen size, thus putting part of its screen under the standard OS top-level Status Bar and bottom Navigation Bar.
+Expected: The app to use the standard available space - the `body region` of Android `App Anatomy`.
+Please diagnose and fix the issue.
+Please do not commit the changes until the fix is confirmed by me.
+
+2)
+The app failed on start on Android emulator. Emulator said that the dump is collected. Please diagnose and fix the issue.
+
+3)
+Still the app does not start - here is the last lines of the emulator output:
+```
+[nativeloader] Load /data/app/~~kkLCLXAvtEeNyoXpQ9PMyQ==/com.aeonpulse.app-9Z73MJYeHukPnTstEMG-jA==/lib/x86_64/libSystem.Security.Cryptography.Native.Android.so using ns clns-7 from class loader (caller=/data/app/~~kkLCLXAvtEeNyoXpQ9PMyQ==/com.aeonpulse.app-9Z73MJYeHukPnTstEMG-jA==/base.apk!classes2.dex): ok
+[DOTNET] AndroidCryptoNative_InitLibraryOnLoad: jint AndroidCryptoNative_InitLibraryOnLoad(JavaVM *, void *) in /__w/1/s/src/native/libs/System.Security.Cryptography.Native.Android/pal_jni.c
+[DOTNET] GetOptionalClassGRef: optional class com/android/org/conscrypt/OpenSSLEngineImpl was not found
+[nativeloader] Load /data/app/~~kkLCLXAvtEeNyoXpQ9PMyQ==/com.aeonpulse.app-9Z73MJYeHukPnTstEMG-jA==/lib/x86_64/libmonodroid.so using ns clns-7 from class loader (caller=/data/app/~~kkLCLXAvtEeNyoXpQ9PMyQ==/com.aeonpulse.app-9Z73MJYeHukPnTstEMG-jA==/base.apk!classes2.dex): ok
+[monodroid] Failed to create directory '/data/user/0/com.aeonpulse.app/files/.__override__/x86_64'. File exists
+[monodroid] Creating public update directory: `/data/user/0/com.aeonpulse.app/files/.__override__/x86_64`
+[m.aeonpulse.app] Attempt to remove non-JNI local reference
+[monodroid-debug] Trying to initialize the debugger with options: --debugger-agent=transport=dt_socket,loglevel=0,address=10.0.2.2:52503,embedding=1,timeout=30000
+[libc] Requested dump for pid 8860 (m.aeonpulse.app)
+```
+Please diagnose and fix the issue.
+
+4)
+Still, the app UI takes all the screen including the area under the top-level Status Bar, thus e.g. making the main menu inaccessible. Please diagnose and fix the issue.
+
+5)
+It seems `obj` dir has some redundant dirs `gifgen*` now, and `Aeonpulse.csproj` contains newly added references to them. Please recheck, and either remove unneeded files and records, or explain why they are needed.
+
+6)
+Well done, thanks!
+Please commit and push the changes with the corresponding comment - see Sections 9.12 and 9.13 of Agents.md.
+FYI: no manual changes were made.
