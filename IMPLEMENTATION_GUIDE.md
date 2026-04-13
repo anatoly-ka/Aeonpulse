@@ -1,22 +1,65 @@
-# Aeonpulse - Developer Guide
 
-This guide is for humans continuing development of Aeonpulse. It covers how to work with AI effectively, how to debug, how to make manual-only changes, and how to sign and deploy the app on each platform.
 
-> **Before every session:** direct the AI to read `Agents.md` first. That file is the single authoritative source of truth for the codebase. Everything in this guide references it.
+# Aeonpulse - Human Developer Guide
+
+This guide is for human developers working on Aeonpulse. It explains the mental model, architecture, and how to safely extend or modify the app.
 
 ---
 
+
+
+
 ## Table of Contents
 
-0. [Environment Setup (run once after cloning)](#0-environment-setup-run-once-after-cloning)
-1. [Starting a Session with AI](#1-starting-a-session-with-ai)
-2. [Prompt Templates for Common Tasks](#2-prompt-templates-for-common-tasks)
-3. [What AI Should Do vs What You Should Do Manually](#3-what-ai-should-do-vs-what-you-should-do-manually)
-4. [Debugging with AI and the Logging System](#4-debugging-with-ai-and-the-logging-system)
-5. [Viewing Logs Per Platform](#5-viewing-logs-per-platform)
-6. [Signing and Deploying](#6-signing-and-deploying)
-7. [Running Tests](#7-running-tests)
-8. [Maintenance Habits](#8-maintenance-habits)
+- [0. Environment Setup (run once after cloning)](#0-environment-setup-run-once-after-cloning)
+- [1. Mental Model & Architecture](#1-mental-model--architecture)
+- [2. How Tickers, Views, and Favorites Interact](#2-how-tickers-views-and-favorites-interact)
+- [3. Interacting with AI](#3-interacting-with-ai)
+  - [3.1 Starting a session - the mandatory first prompt](#31-starting-a-session---the-mandatory-first-prompt)
+    - [3.1.1 Why this matters](#311-why-this-matters)
+    - [3.1.2 Orientation prompts for a new AI session](#312-orientation-prompts-for-a-new-ai-session)
+  - [3.2 Prompt Templates for Common Tasks](#32-prompt-templates-for-common-tasks)
+    - [3.2.1 Fix a bug](#321-fix-a-bug)
+    - [3.2.2 Add a new ticker card](#322-add-a-new-ticker-card)
+    - [3.2.3 Add a new colour scheme](#323-add-a-new-colour-scheme)
+    - [3.2.4 Add a new language](#324-add-a-new-language)
+    - [3.2.5 Add a new collapsible section](#325-add-a-new-collapsible-section)
+    - [3.2.6 Change a text size or color scheme default](#326-change-a-text-size-or-color-scheme-default)
+    - [3.2.7 Refactor or clean up a specific file](#327-refactor-or-clean-up-a-specific-file)
+    - [3.2.8 Update Agents.md after a manual change you made](#328-update-agentsmd-after-a-manual-change-you-made)
+- [4. What AI Should Do vs What You Should Do Manually](#4-what-ai-should-do-vs-what-you-should-do-manually)
+- [5. Build, Run, and Deploy](#5-build-run-and-deploy)
+  - [5.1 All platforms build](#51-all-platforms-build)
+  - [5.2 Windows](#52-windows)
+    - [5.2.1 Debug run (unpackaged, no signing needed)](#521-debug-run-unpackaged-no-signing-needed)
+    - [5.2.2 Release - MSIX for sideload or Store](#522-release---msix-for-sideload-or-store)
+  - [5.3 Android](#53-android)
+    - [5.3.1 Debug (sideload APK to a connected device)](#531-debug-sideload-apk-to-a-connected-device)
+    - [5.3.2 Release - Google Play (AAB)](#532-release---google-play-aab)
+    - [5.3.3 Release - Sideload APK](#533-release---sideload-apk)
+  - [5.4 iOS (requires a Mac with Xcode)](#54-ios-requires-a-mac-with-xcode)
+    - [5.4.1 Prerequisites](#541-prerequisites)
+    - [5.4.2 Run on simulator (no signing required)](#542-run-on-simulator-no-signing-required)
+    - [5.4.3 Release - App Store IPA](#543-release---app-store-ipa)
+  - [5.5 Mac Catalyst (requires macOS)](#55-mac-catalyst-requires-macos)
+    - [5.5.1 Run locally](#551-run-locally)
+    - [5.5.2 Release - Mac App Store PKG](#552-release---mac-app-store-pkg)
+- [6. Debugging with AI and the Logging System](#6-debugging-with-ai-and-the-logging-system)
+  - [6.1 How the logging system works](#61-how-the-logging-system-works)
+  - [6.2 Diagnosing a bug with AI](#62-diagnosing-a-bug-with-ai)
+  - [6.3 What the log tells you](#63-what-the-log-tells-you)
+  - [6.4 Common failure modes and log signatures](#64-common-failure-modes-and-log-signatures)
+  - [6.5 Windows - Visual Studio Output window](#65-windows---visual-studio-output-window)
+  - [6.6 Android - adb logcat](#66-android---adb-logcat)
+  - [6.7 iOS and Mac Catalyst - Xcode Console (macOS only)](#67-ios-and-mac-catalyst---xcode-console-macos-only)
+- [7. Running Tests](#7-running-tests)
+  - [7.1 When to run tests](#71-when-to-run-tests)
+  - [7.2 Asking AI to add tests](#72-asking-ai-to-add-tests)
+- [8. Maintenance Habits](#8-maintenance-habits)
+  - [8.1 After every AI-assisted session](#81-after-every-ai-assisted-session)
+  - [8.2 When you edit `.resx` files manually](#82-when-you-edit-resx-files-manually)
+  - [8.3 When a XAML file loses its BOM (MSB4018 build error)](#83-when-a-xaml-file-loses-its-bom-msb4018-build-error)
+  - [8.4 Keeping Agents.md current](#84-keeping-agentsmd-current)
 
 ---
 
@@ -24,6 +67,13 @@ This guide is for humans continuing development of Aeonpulse. It covers how to w
 
 These steps must be completed once on every developer machine after cloning the repo.
 They are **not** repeated on subsequent sessions.
+
+### Step 0 - Clone the repository
+
+```sh
+git clone https://github.com/anatoly-ka/Aeonpulse.git
+cd Aeonpulse
+```
 
 ### Step 1 - Install prerequisites
 
@@ -37,31 +87,29 @@ They are **not** repeated on subsequent sessions.
 
 ### Step 2 - Install .NET MAUI workloads
 
-`powershell
+```powershell
 dotnet workload install maui
 dotnet workload update
-`
+```
 
 Verify the installed workloads:
-
-`powershell
+```powershell
 dotnet workload list
-`
+```
 
 Expected output (versions may differ):
-
-`
+```
 android         35.0.78 / 9.0.100
 ios             26.0.9752 / 9.0.100
 maccatalyst     26.0.9752 / 9.0.100
 maui-windows    9.0.111 / 9.0.100
-`
+```
 
 ### Step 3 - Restore NuGet packages
 
-`powershell
+```powershell
 dotnet restore Aeonpulse.csproj
-`
+```
 
 This must be re-run after any `.csproj` change. The project uses:
 
@@ -78,12 +126,12 @@ the Android Low Memory Killer to terminate the app within 15-20 seconds of launc
 
 Run the provided setup script **once** after cloning or after creating a new AVD:
 
-`powershell
+```powershell
 powershell -ExecutionPolicy Bypass -File scripts/setup-android-avd.ps1
-`
+```
 
 The script patches every AVD `config.ini` under `%USERPROFILE%\.android\avd\`
-(or `` if set) and sets:
+(or `$ANDROID_AVD_HOME` if set) and sets:
 
 | Key | Required value | Default |
 |-----|---------------|---------|
@@ -95,18 +143,44 @@ Re-running the script is safe - values already at the required level are left un
 
 ### Step 5 - Verify the build
 
-`powershell
+```powershell
 dotnet build Aeonpulse.csproj -f net9.0-windows10.0.19041.0
 dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
-`
+```
 
 Expected: build succeeds with 0 errors; 300 tests pass.
 
 ---
 
-## 1. Starting a Session with AI
+## 1. Mental Model & Architecture
 
-### The mandatory first prompt
+Aeonpulse is a single-page .NET MAUI app using manual MVVM. All UI state lives in `MainViewModel`. All calculations are stateless and live in `CalculationService`. Views (`*.xaml` and `*.xaml.cs`) handle only UI structure and navigation - never business logic.
+
+- **Live tickers** update every second (1 Hz) via a timer in the ViewModel.
+- **Static tickers** recalculate on demand (refresh button or settings change).
+- **Favorites** are "live bookmarks" - each tile is a live reference to the ticker's data, never a snapshot.
+- **All user-visible strings** are in `AppResources.resx` (English) and `AppResources.ru.resx` (Russian).
+- **All theming and font sizes** use `DynamicResource` for instant UI updates.
+
+---
+
+## 2. How Tickers, Views, and Favorites Interact
+
+- **Ticker cards** are grouped into four collapsible sections. Each card has a brief and expanded view.
+- **Favorites** section pins any ticker for quick access. Tapping a favorite expands the main card and scrolls to it.
+- **All updates** (live or static) flow: ViewModel property set → PropertyChanged → UI binding updates.
+
+---
+
+## 3. Interacting with AI
+
+`Agents.md` is the authoritative technical protocol for all AI-driven and automated changes in this codebase. It documents every file, architectural constraint, extension recipe, and the pre-commit checklist.
+
+**Humans do not need to read or edit Agents.md directly** — but every AI or automation must read and follow it before making any change. If you ask the AI to make a change, always start your prompt with:
+
+---
+
+### 3.1 Starting a session - the mandatory first prompt
 
 Every session - no exceptions - begin with:
 
@@ -118,7 +192,9 @@ Please pay a special attention to follow the Sections 9.11 and 9.14 of Agents.md
 
 This one step prevents the AI from inventing file paths, missing architectural constraints, or duplicating work already documented.
 
-### Why this matters
+---
+
+#### 3.1.1 Why this matters
 
 `Agents.md` contains:
 - The complete file inventory with edit guidance (Section 2)
@@ -129,31 +205,35 @@ This one step prevents the AI from inventing file paths, missing architectural c
 
 An AI that has not read `Agents.md` will produce structurally incorrect changes. One that has read it will implement changes correctly on the first attempt.
 
-### Orientation prompts for a new AI session
+---
 
-If the AI needs context beyond just `Agents.md`, add one of these:
+#### 3.1.2 Orientation prompts for a new AI session
+
+If the AI needs context beyond just `Agents.md`, add a line such as:
 
 ```
 Please also read Services/CalculationService.cs - I want to add a new ticker.
 ```
-
+or
 ```
 Please also read ViewModels/MainViewModel.cs - I want to understand the settings flow.
 ```
-
+or
 ```
 Please also read Resources/AppResources.resx - I want to understand how strings are structured.
 ```
 
+This ensures the AI has all the context it needs to make correct, protocol-compliant changes.
+
 ---
 
-## 2. Prompt Templates for Common Tasks
+### 3.2 Prompt Templates for Common Tasks
 
 Copy and adapt these prompts. The more specific you are about the desired outcome, the better the result.
 
 ---
 
-### Fix a bug
+#### 3.2.1 Fix a bug
 
 ```
 Please read Agents.md first.
@@ -174,13 +254,43 @@ Bug: after changing the base date in ChangeDatePopup, the Time Jubilees ticker s
 shows the old date's jubilee until the app is restarted.
 Expected: all tickers should update immediately after SaveDate is called.
 
-Please diagnose and fix. Run dotnet test after the fix.
+Please diagnose and fix. Run the build and tests before finishing.
 Please do not commit the changes until the fix is confirmed by me.
+```
+
+**Upon bug fix is checked and confirmed:**
+```
+Please read Agents.md first.
+There are multiple changes made - please review them:
+- update the relevant sections of Agents.md, **if needed** (run Get-Date first to get today's date);
+- create a good human-readable summary for commit message.
+FYI: I manually made these changes:
+- [describe].
+Please commit and push the changes with the corresponding commit message - see Sections 9.12 and 9.13 of Agents.md.
+```
+For example:
+```
+Please read Agents.md first.
+There are multiple changes made - please review them:
+- update the relevant sections of Agents.md, **if needed** (run Get-Date first to get today's date);
+- create a good human-readable summary for commit message.
+FYI: no manual changes were made.
+Please commit and push the changes with the corresponding commit message - see Sections 9.12 and 9.13 of Agents.md.
+```
+or
+```
+Please read Agents.md first.
+There are multiple changes made - please review them:
+- update the relevant sections of Agents.md, **if needed** (run Get-Date first to get today's date);
+- create a good human-readable summary for commit message.
+FYI: I manually made these changes:
+- AppResources.resx and AppResources.ru.resx: manually changed the text about app version.
+Please commit and push the changes with the corresponding commit message - see Sections 9.12 and 9.13 of Agents.md.
 ```
 
 ---
 
-### Add a new ticker card
+#### 3.2.2 Add a new ticker card
 
 ```
 [META] [Ticker Name] ticker
@@ -254,7 +364,7 @@ Run the build and all tests before finishing.
 
 ---
 
-### Add a new colour scheme
+#### 3.2.3 Add a new colour scheme
 
 ```
 Please read Agents.md first, specifically Section 7.3 (Adding a New Colour Scheme).
@@ -271,7 +381,7 @@ Please follow Section 7.3 exactly. Run the build before finishing.
 
 ---
 
-### Add a new language
+#### 3.2.4 Add a new language
 
 ```
 Please read Agents.md first, specifically Sections 7.4 and 6.11 (Adding a New Language).
@@ -292,7 +402,7 @@ Run the build before finishing.
 
 ---
 
-### Add a new collapsible section
+#### 3.2.5 Add a new collapsible section
 
 ```
 Please read Agents.md first, specifically Section 7.1 (Adding a New Section).
@@ -306,12 +416,12 @@ MainViewModel, MainPage.xaml, and Agents.md. Run the build before finishing.
 
 ---
 
-### Change a text size or colour scheme default
+#### 3.2.6 Change a text size or color scheme default
 
 ```
 Please read Agents.md first, specifically Sections 9.3 and 9.4.
 
-I want to change the default value of [colour key / font size key].
+I want to change the default value of [color key / font size key].
 Current value: [...]
 New value: [...]
 
@@ -321,7 +431,7 @@ Run the build before finishing.
 
 ---
 
-### Refactor or clean up a specific file
+#### 3.2.7 Refactor or clean up a specific file
 
 ```
 Please read Agents.md first, paying special attention to Sections 9 (Guardrails).
@@ -334,7 +444,7 @@ Run the build and all tests before finishing.
 
 ---
 
-### Update Agents.md after a manual change you made
+#### 3.2.8 Update Agents.md after a manual change you made
 
 ```
 Please read Agents.md first.
@@ -346,36 +456,167 @@ Update the "Last updated" date by running Get-Date first.
 
 ---
 
-## 3. What AI Should Do vs What You Should Do Manually
+## 4. What AI Should Do vs What You Should Do Manually
 
-Most work in this project should be done by AI. Here is a clear split:
+Most structural and code changes should be handled by AI, following the strict protocol in `Agents.md`. Humans should focus on tasks that require judgment, language, or design. Use the table below to decide:
 
-### Let AI handle entirely
+| Task | Who | Notes |
+|------|-----|-------|
+| Add new ticker card, section, color scheme, font size, or language | AI | Use prompt templates below; AI will follow Agents.md protocol |
+| Fixing bugs | AI | Use prompt templates below; AI will follow Agents.md protocol |
+| Write or edit `.resx` string values | Human | You know the correct wording, tone, and target audience |
+| Translate strings to other languages (Russian, etc.) | Human | Native speaker quality required |
+| Choose color values for a new scheme | Human | Aesthetic judgment |
+| Write DeepDive (methodology + sources) text for a ticker | Human | Domain knowledge and sourcing |
+| Change app icon or splash screen images | Human | Design work |
+| Update Info.plist or Package.appxmanifest for new permissions | Human | Platform-specific policy knowledge |
+| Update Agents.md after a structural change | AI | AI will follow Agents.md protocol |
+| Update Agents.md after a manual change | AI | Use the prompt template below |
 
-- Adding new ticker cards (full 8-step recipe)
-- Adding colour schemes, font size presets, languages
-- Fixing bugs in `CalculationService.cs` or `MainViewModel.cs`
-- Writing and updating unit tests
-- All `Agents.md` updates after structural changes
-- Build and commit after every change
-- Diagnosing issues from log output (paste the log, ask AI to analyse)
-
-### Do manually, then ask AI to update docs
-
-| Task | Why manual | AI follow-up prompt |
-|------|-----------|---------------------|
-| Writing or editing `.resx` string values | You know the correct wording, tone, and target audience | "Please review the strings I added to AppResources.resx and AppResources.ru.resx for placeholder completeness and update LocalizedResources.cs if any new keys are missing." |
-| Translating strings to Russian (or other languages) | Native speaker quality required | "Please check that every key in AppResources.resx has a corresponding key in AppResources.ru.resx. List any missing or empty keys." |
-| Choosing colour values for a new scheme | Aesthetic judgment | "I have added the colour values for the new scheme. Please add it to ThemeService.cs, SettingsPopup, and both .resx files following Section 7.3." |
-| Writing the DeepDive (methodology + sources) text for a new ticker | Domain knowledge and sourcing | "The deep-dive text for [ticker] is now in AppResources.resx. Please wire it to the info button in MainPage.xaml.cs and update Agents.md." |
-| Changing app icon or splash screen images | Design work | "I have replaced Resources/AppIcon/appicon.png. Please confirm no build changes are needed and update README.md if the visual identity section changes." |
-| Updating `Info.plist` or `Package.appxmanifest` for new permissions | Platform-specific policy knowledge | "Please check that Info.plist and PrivacyInfo.xcprivacy are consistent with the new [permission] I added." |
+**If you make a manual change, always ask the AI to update Agents.md to keep the protocol in sync.**
 
 ---
 
-## 4. Debugging with AI and the Logging System
+## 5. Build, Run, and Deploy
 
-### How the logging system works
+### 5.1 All platforms build
+
+1. **Restore dependencies:**
+   ```sh
+   dotnet restore
+   ```
+2. **Build the app:**
+   ```sh
+   dotnet build
+   ```
+
+### 5.2 Windows
+
+#### 5.2.1 Debug run (unpackaged, no signing needed)
+
+```
+dotnet build Aeonpulse.csproj -f net9.0-windows10.0.19041.0 -c Debug -t:Run
+```
+
+Or press **F5** in Visual Studio with the Windows target selected.
+
+#### 5.2.2 Release - MSIX for sideload or Store
+
+```
+dotnet publish Aeonpulse.csproj -f net9.0-windows10.0.19041.0 -c Release ^
+  -p:RuntimeIdentifier=win10-x64 ^
+  -p:WindowsPackageType=MSIX
+```
+
+For Store submission, the MSIX must be signed with a trusted certificate. The publisher in `Platforms\Windows\Package.appxmanifest` must match your certificate's Subject field exactly. Use `signtool.exe` from the Windows SDK:
+
+```
+signtool sign /fd SHA256 /a /f your_cert.pfx /p your_password ^
+  bin\Release\net9.0-windows10.0.19041.0\win10-x64\AppPackages\Aeonpulse_x.x.x.x_x64.msix
+```
+
+---
+
+### 5.3 Android
+
+#### 5.3.1 Debug (sideload APK to a connected device)
+
+```
+dotnet build Aeonpulse.csproj -f net9.0-android -c Debug
+adb install bin\Debug\net9.0-android\com.aeonpulse.app-Signed.apk
+```
+
+#### 5.3.2 Release - Google Play (AAB)
+
+```
+dotnet publish Aeonpulse.csproj -f net9.0-android -c Release ^
+  -p:AndroidKeyStore=true ^
+  -p:AndroidSigningKeyStore=your.keystore ^
+  -p:AndroidSigningKeyAlias=your_alias ^
+  -p:AndroidSigningKeyPass=your_key_password ^
+  -p:AndroidSigningStorePass=your_store_password
+```
+
+Output: `bin\Release\net9.0-android\com.aeonpulse.app-Signed.aab`
+
+Upload the `.aab` to the Google Play Console.
+
+#### 5.3.3 Release - Sideload APK
+
+```
+dotnet publish Aeonpulse.csproj -f net9.0-android -c Release -p:AndroidPackageFormats=apk ^
+  -p:AndroidKeyStore=true ^
+  -p:AndroidSigningKeyStore=your.keystore ^
+  -p:AndroidSigningKeyAlias=your_alias ^
+  -p:AndroidSigningKeyPass=your_key_password ^
+  -p:AndroidSigningStorePass=your_store_password
+```
+
+Output: `bin\Release\net9.0-android\publish\com.aeonpulse.app-Signed.apk`
+
+---
+
+### 5.4 iOS (requires a Mac with Xcode)
+
+#### 5.4.1 Prerequisites
+
+- Xcode installed and accepted license
+- Apple Developer account with a valid provisioning profile and signing certificate
+- `.NET MAUI iOS workload`: `dotnet workload install maui-ios`
+
+#### 5.4.2 Run on simulator (no signing required)
+
+```
+dotnet build Aeonpulse.csproj -f net9.0-ios -t:Run \
+  -p:_DeviceSpecificBuild=true \
+  -p:RuntimeIdentifier=iossimulator-arm64
+```
+
+#### 5.4.3 Release - App Store IPA
+
+```
+dotnet publish Aeonpulse.csproj -f net9.0-ios -c Release \
+  -p:ArchiveOnBuild=true \
+  -p:RuntimeIdentifier=ios-arm64 \
+  -p:CodesignKey="iPhone Distribution: Your Name (TEAMID)" \
+  -p:CodesignProvision="Your Provisioning Profile Name"
+```
+
+Output: `bin\Release\net9.0-ios\ios-arm64\publish\Aeonpulse.ipa`
+
+Upload via Xcode Organizer or `xcrun altool`.
+
+---
+
+### 5.5 Mac Catalyst (requires macOS)
+
+#### 5.5.1 Run locally
+
+```
+dotnet build Aeonpulse.csproj -f net9.0-maccatalyst -t:Run
+```
+
+#### 5.5.2 Release - Mac App Store PKG
+
+```
+dotnet publish Aeonpulse.csproj -f net9.0-maccatalyst -c Release \
+  -p:MtouchArch=x86_64 \
+  -p:CreatePackage=true \
+  -p:CodesignKey="Apple Distribution: Your Name (TEAMID)" \
+  -p:CodesignEntitlements=Platforms/MacCatalyst/Entitlements.plist
+```
+
+---
+
+## 6. Debugging with AI and the Logging System
+
+**Logging:** All debug logs are routed through `AeonLog` (Debug builds only). See below for log analysis tips.
+
+**Testing:**
+- Run `dotnet test Aeonpulse.Tests/Aeonpulse.Tests.csproj` after any calculation or ViewModel change.
+- All ticker logic is covered by unit tests (300+ tests).
+
+### 6.1 How the logging system works
 
 The app uses a structured logging gateway called `AeonLog` in `Services/AeonLog.cs`. It is active only in **Debug builds** - in Release, all log calls are compiled out entirely via `[Conditional("DEBUG")]`.
 
@@ -395,10 +636,15 @@ Current category tokens:
 | Token | Where it appears |
 |-------|-----------------|
 | `BOOT` | App startup, preferences restore (`App.xaml.cs`) |
-| `VM` | `MainViewModel` - settings changes, date saves, timer health |
+| `VM` | `MainViewModel` - user actions, date saves, timer health |
 | `CALC` | `CalculationService` - all 19 ticker method entries and phase transitions |
+| `NAV` | Modal navigation (reserved for future use) |
+| `THEME` | Theme and font-size changes (reserved) |
+| `LOCALE` | Language switching (reserved) |
+| `TINT` | Image tinting pipeline (reserved) |
+| `MEM` | Memory snapshots - managed heap, GC counts, OS working set, tint cache size |
 
-### Diagnosing a bug with AI
+### 6.2 Diagnosing a bug with AI
 
 1. **Run the app in Debug** on the target platform.
 2. **Reproduce the issue** - trigger the specific user action.
@@ -413,10 +659,12 @@ Here is the log output captured while reproducing it:
 
 [paste log lines here]
 
-Please analyse the log and identify the root cause.
+Please analyze the log and identify the root cause.
 ```
 
-### What the log tells you
+### 6.3 What the log tells you
+
+Examples:
 
 | Filter | What you learn |
 |--------|---------------|
@@ -428,7 +676,7 @@ Please analyse the log and identify the root cause.
 | `grep "[CALC] [CalculateTimeJubilees] [UNIT_SCAN]"` | All 7 unit candidates and their days-until values |
 | `grep "[CALC] [CalculateTimeJubilees] [WINNER]"` | Which unit won the jubilee tournament |
 
-### Common failure modes and log signatures
+### 6.4 Common failure modes and log signatures
 
 | Symptom | What to look for in the log |
 |---------|-----------------------------|
@@ -438,11 +686,7 @@ Please analyse the log and identify the root cause.
 | Wrong jubilee unit shown | `[CALC] [CalculateTimeJubilees] [UNIT_SCAN]` - look at all 7 candidates and the `[WINNER]` line |
 | Photon Path shows wrong phase | `[CALC] [CalculatePhotonPath] [PHASE_LOOKUP]` - check which threshold was hit |
 
----
-
-## 5. Viewing Logs Per Platform
-
-### Windows - Visual Studio Output window
+### 6.5 Windows - Visual Studio Output window
 
 1. Run with **F5** (Debug configuration).
 2. Open **View → Output** → select **Debug** from the dropdown.
@@ -467,7 +711,7 @@ Every line is timestamped to the millisecond. All `[BOOT]`, `[TINT]`, `[CALC]`,
 and `[VM]` entries appear in order. Useful for startup timing analysis, tint
 pipeline diagnostics, and CI-style log capture. Active only in Debug builds.
 
-### Android - adb logcat
+### 6.6 Android - adb logcat
 
 Make sure `adb` is on your PATH:
 ```powershell
@@ -494,7 +738,7 @@ Confirm the device or emulator is visible:
 2. **View → Other Windows → Android Device Log**.
 3. Filter by package name `com.aeonpulse.app`.
 
-### iOS and Mac Catalyst - Xcode Console (macOS only)
+### 6.7 iOS and Mac Catalyst - Xcode Console (macOS only)
 
 1. Open Xcode → **Window → Devices and Simulators**.
 2. Select the device or simulator.
@@ -510,126 +754,6 @@ Confirm the device or emulator is visible:
 
 ---
 
-## 6. Signing and Deploying
-
-### Android
-
-#### Debug (sideload APK to a connected device)
-
-```
-dotnet build Aeonpulse.csproj -f net9.0-android -c Debug
-adb install bin\Debug\net9.0-android\com.aeonpulse.app-Signed.apk
-```
-
-#### Release - Google Play (AAB)
-
-```
-dotnet publish Aeonpulse.csproj -f net9.0-android -c Release ^
-  -p:AndroidKeyStore=true ^
-  -p:AndroidSigningKeyStore=your.keystore ^
-  -p:AndroidSigningKeyAlias=your_alias ^
-  -p:AndroidSigningKeyPass=your_key_password ^
-  -p:AndroidSigningStorePass=your_store_password
-```
-
-Output: `bin\Release\net9.0-android\com.aeonpulse.app-Signed.aab`
-
-Upload the `.aab` to the Google Play Console.
-
-#### Release - Sideload APK
-
-```
-dotnet publish Aeonpulse.csproj -f net9.0-android -c Release -p:AndroidPackageFormats=apk ^
-  -p:AndroidKeyStore=true ^
-  -p:AndroidSigningKeyStore=your.keystore ^
-  -p:AndroidSigningKeyAlias=your_alias ^
-  -p:AndroidSigningKeyPass=your_key_password ^
-  -p:AndroidSigningStorePass=your_store_password
-```
-
-Output: `bin\Release\net9.0-android\publish\com.aeonpulse.app-Signed.apk`
-
----
-
-### iOS (requires a Mac with Xcode)
-
-#### Prerequisites
-
-- Xcode installed and accepted license
-- Apple Developer account with a valid provisioning profile and signing certificate
-- `.NET MAUI iOS workload`: `dotnet workload install maui-ios`
-
-#### Run on simulator (no signing required)
-
-```
-dotnet build Aeonpulse.csproj -f net9.0-ios -t:Run \
-  -p:_DeviceSpecificBuild=true \
-  -p:RuntimeIdentifier=iossimulator-arm64
-```
-
-#### Release - App Store IPA
-
-```
-dotnet publish Aeonpulse.csproj -f net9.0-ios -c Release \
-  -p:ArchiveOnBuild=true \
-  -p:RuntimeIdentifier=ios-arm64 \
-  -p:CodesignKey="iPhone Distribution: Your Name (TEAMID)" \
-  -p:CodesignProvision="Your Provisioning Profile Name"
-```
-
-Output: `bin\Release\net9.0-ios\ios-arm64\publish\Aeonpulse.ipa`
-
-Upload via Xcode Organizer or `xcrun altool`.
-
----
-
-### Mac Catalyst (requires macOS)
-
-#### Run locally
-
-```
-dotnet build Aeonpulse.csproj -f net9.0-maccatalyst -t:Run
-```
-
-#### Release - Mac App Store PKG
-
-```
-dotnet publish Aeonpulse.csproj -f net9.0-maccatalyst -c Release \
-  -p:MtouchArch=x86_64 \
-  -p:CreatePackage=true \
-  -p:CodesignKey="Apple Distribution: Your Name (TEAMID)" \
-  -p:CodesignEntitlements=Platforms/MacCatalyst/Entitlements.plist
-```
-
----
-
-### Windows
-
-#### Debug run (unpackaged, no signing needed)
-
-```
-dotnet build Aeonpulse.csproj -f net9.0-windows10.0.19041.0 -c Debug -t:Run
-```
-
-Or press **F5** in Visual Studio with the Windows target selected.
-
-#### Release - MSIX for sideload or Store
-
-```
-dotnet publish Aeonpulse.csproj -f net9.0-windows10.0.19041.0 -c Release ^
-  -p:RuntimeIdentifier=win10-x64 ^
-  -p:WindowsPackageType=MSIX
-```
-
-For Store submission, the MSIX must be signed with a trusted certificate. The publisher in `Platforms\Windows\Package.appxmanifest` must match your certificate's Subject field exactly. Use `signtool.exe` from the Windows SDK:
-
-```
-signtool sign /fd SHA256 /a /f your_cert.pfx /p your_password ^
-  bin\Release\net9.0-windows10.0.19041.0\win10-x64\AppPackages\Aeonpulse_x.x.x.x_x64.msix
-```
-
----
-
 ## 7. Running Tests
 
 The test suite covers all 19 ticker calculation methods. Tests are in `Aeonpulse.Tests/` and target plain `net9.0` - no MAUI dependency, runs on any CI machine.
@@ -640,13 +764,13 @@ dotnet test Aeonpulse.Tests\Aeonpulse.Tests.csproj
 
 Expected output: **300 tests, 0 failures**.
 
-### When to run tests
+### 7.1 When to run tests
 
 - After **any** change to `Services/CalculationService.cs`
 - After adding a new calculation method
 - Before every commit (it is item 16 in the `Agents.md` Section 9.12 checklist)
 
-### Asking AI to add tests
+### 7.2 Asking AI to add tests
 
 ```
 Please read Agents.md first.
@@ -662,7 +786,7 @@ Run dotnet test after adding the tests.
 
 ## 8. Maintenance Habits
 
-### After every AI-assisted session
+### 8.1 After every AI-assisted session
 
 1. Review the diff with `git diff HEAD` before committing.
 2. Check that `Agents.md` was updated if any structural change was made (AI should do this automatically, but verify).
@@ -670,7 +794,7 @@ Run dotnet test after adding the tests.
 4. Run `dotnet build Aeonpulse.csproj -f net9.0-windows10.0.19041.0 --no-incremental` and confirm only the four known warning codes appear (`CS0618`, `CS8767`, `CS0414`, `XC0022`).
 5. Commit with a descriptive message. AI-only commits include the signature trailer: `AI: GitHub Copilot (<model>)` (replace `<model>` with the model identifier reported by the agent, e.g. `gpt-4.1`).
 
-### When you edit `.resx` files manually
+### 8.2 When you edit `.resx` files manually
 
 Always check that:
 - Every key added to `AppResources.resx` (English) also exists in `AppResources.ru.resx`.
@@ -684,7 +808,7 @@ Please check LocalizedResources.cs for any missing passthrough properties and ad
 Run the build after.
 ```
 
-### When a XAML file loses its BOM (MSB4018 build error)
+### 8.3 When a XAML file loses its BOM (MSB4018 build error)
 
 ```powershell
 # Find XAML files missing BOM
@@ -706,7 +830,7 @@ Get-ChildItem -Path "C:\Dev\Aeonpulse" -Filter "*.xaml" -Recurse |
   }
 ```
 
-### Keeping Agents.md current
+### 8.4 Keeping Agents.md current
 
 `Agents.md` is only useful if it accurately reflects the codebase. Any structural change - new file, renamed method, new setting, new string key group - requires an update. AI agents handle this automatically when instructed. For manual changes you make, use:
 

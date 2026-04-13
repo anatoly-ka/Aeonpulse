@@ -1,6 +1,6 @@
 # Agents.md - AI Agent Navigation Guide for Aeonpulse
 
-> **Last updated:** 2026-04-11
+> **Last updated:** 2026-04-13
 > **Maintained by:** AI Agents and human developers collaboratively.
 > **Rule:** Update this file and all appropriate markup blocks upon each change.
 
@@ -63,12 +63,12 @@
 | **6.11** | Adding a New Language (Build Only) | `.csproj` `EmbeddedResource` entry, `ApplyLanguage` wiring, build verification. |
 | **6.12** | Enabling the Tizen Target | Workload install, `.csproj` uncomment, manifest update, build command. |
 | **7** | How to Extend | Step-by-step recipes for all extension types. |
-| **7.1** | Adding a New Section | 5-step recipe: `.resx` x2, `LocalizedResources`, `MainViewModel`, `MainPage.xaml`. |
-| **7.2** | Adding a New Ticker Card | 8-step recipe: `.resx` x2, `LocalizedResources`, `CalculationService`, `MainViewModel`, `MainPage.xaml`, `MainPage.xaml.cs`, `Aeonpulse.Tests`. |
-| **7.3** | Adding a New Colour Scheme | 7-step recipe: `ThemeService`, `.resx` x2, `LocalizedResources`, `SettingsPopup.xaml`, `SettingsPopup.xaml.cs`. |
-| **7.4** | Adding a New Language | 9-step recipe: `.resx` x3, `.csproj`, `MainViewModel`, `LocalizedResources`, `SettingsPopup.xaml`, `SettingsPopup.xaml.cs`. |
-| **7.5** | Adding a New Font Size Preset | 2-step recipe + reference to 7.3 pattern for settings UI wiring. |
-| **7.6** | Files-Changed Checklist | Matrix of extension type vs file - which files to touch for each recipe. |
+| **7.1** | Adding a New Section | MUST update: `.resx` (all languages), `LocalizedResources`, `MainViewModel`, `MainPage.xaml`. |
+| **7.2** | Adding a New Ticker Card | MUST update: `.resx` (all languages), `LocalizedResources`, `CalculationService`, `MainViewModel`, `MainPage.xaml`, `MainPage.xaml.cs`, `Aeonpulse.Tests`. |
+| **7.3** | Adding a New Colour Scheme | MUST update: `ThemeService`, `.resx` (all languages), `LocalizedResources`, `SettingsPopup.xaml`, `SettingsPopup.xaml.cs`. |
+| **7.4** | Adding a New Language | MUST update: `.resx` (all languages), `.csproj`, `MainViewModel`, `LocalizedResources`, `SettingsPopup.xaml`, `SettingsPopup.xaml.cs`. |
+| **7.5** | Adding a New Font Size Preset | MUST update: `FontSizeService`, `.resx` (all languages), `LocalizedResources`, `SettingsPopup.xaml`, `SettingsPopup.xaml.cs`. |
+| **7.6** | Files-Changed Checklist | MUST follow: matrix of extension type vs file. All listed files MUST be updated for the extension to be valid. |
 | **8** | Debugging | Logging infrastructure, instrumentation points, per-platform log viewing. |
 | **8.1** | Logging Infrastructure and `AeonLog` Gateway | `AeonLog` static gateway, message-format convention, `[BLOCK]` tag rules. `AddDebug()` wiring in `MauiProgram`. |
 | **8.2** | Enabling Debug Logging | Option A (resolve from `IPlatformApplication`), Option B (DI injection). Log level table. |
@@ -213,7 +213,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | 11 | Global Exhale | Eco Echoes | Static | Yes |
 | 12 | Your Breath | Eco Echoes | **LIVE** | No |
 | 13 | Cellular Refresh | Lab | Static | Yes |
-| 14 | Vibrant Cosmos | Cosmos | **LIVE** (200 ms) | No |
+| 14 | Vibrant Cosmos | Cosmos | **LIVE** | No |
 | 15 | Global Crowd | Mirror | **LIVE** | No |
 | 16 | Life Log | Lab | Static | Yes |
 | 17 | Space Wait | Cosmos | **LIVE** | No |
@@ -231,41 +231,34 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 | Text size | `string TextSize` | `Small`, `Normal`, `Large` | `"TextSize"` |
 | Display language | `string DisplayLanguage` | `Default`, `English`, `Russian` | `"DisplayLanguage"` |
 
-### Key Architectural Constraints for AI Agents
 
-1. **No business logic in code-behind.** `*.xaml.cs` files contain only modal navigation
-   and event-to-command bridging. All computation lives in `CalculationService`; all state
-   lives in `MainViewModel`.
+### Key Architectural Constraints for AI Agents (Strict Protocol)
 
-2. **All colours via `DynamicResource`.** `ThemeService` mutates `Application.Current.Resources`
-   at runtime. Any `StaticResource` reference to a colour key will **not** respond to theme changes.
-
-3. **All font sizes via `DynamicResource`.** `FontSizeService` mutates font-size resource keys.
-   Same rule applies.
-
-4. **All user-visible strings via `AppResources`.** Hardcoded strings break localisation.
-   XAML binds via `{Binding Loc.Xxx}` (live-switching) or `{x:Static resources:AppResources.Xxx}`
-   (static, acceptable only in popups that are always freshly constructed).
-
-5. **ASCII-only in comment blocks.** Non-ASCII characters (emoji, Unicode dashes, box-drawing)
-   inside `<!-- -->` (XAML) or `//` / `/* */` (C#) comment blocks cause `MSB4018 XamlCTask`
-   encoding failures if the file lacks a BOM, and are banned regardless. Non-ASCII is safe only
-   in element attribute values (e.g., `Text="emoji"`). See §9.5 and §9.6 for the full literal UTF-8 rules.
-
-6. **`Frame` is obsolete in .NET 9.** Use `Border` for all new container elements.
-
-7. **`Application.MainPage` setter is obsolete in .NET 9.** Do not add new usages.
-
-8. **`SaveDate()` is the only correct way to update the base date.** It sets all three
-   backing fields (`_baseDateName`, `_baseDateValue`, `_baseDate`) atomically before
-   calling `UpdateAllCalculations()` once, avoiding stale intermediate recalculations.
+- MUST NOT place any business logic in code-behind (`*.xaml.cs`). Code-behind is limited to modal navigation and event-to-command bridging. ALL computation MUST reside in `CalculationService`. ALL state MUST reside in `MainViewModel`.
+- MUST use ONLY `DynamicResource` for all colour and font size references in XAML. `ThemeService` and `FontSizeService` mutate `Application.Current.Resources` at runtime. Any use of `StaticResource` for these keys is a violation.
+- MUST use ONLY `AppResources` for all user-visible strings. Hardcoded strings are forbidden. XAML MUST bind via `{Binding Loc.Xxx}` (for live-switching) or `{x:Static resources:AppResources.Xxx}` (for popups that are always freshly constructed).
+- MUST use ASCII-only in all comment blocks. Non-ASCII in comments is forbidden and will cause build failures. Non-ASCII is allowed ONLY in element attribute values (e.g., `Text="emoji"`).
+- MUST use `Border` for all new container elements. `Frame` is obsolete in .NET 9 and MUST NOT be used for new code.
+- MUST NOT use `Application.MainPage` setter. This API is obsolete in .NET 9. Do not add new usages.
+- MUST update the base date ONLY via `SaveDate()`. This method sets all three backing fields atomically and calls `UpdateAllCalculations()` once. Direct property mutation is forbidden.
+- ALL live tickers, including `VibrantCosmos`, MUST update at 1 Hz (every second) via the main timer in `MainViewModel`. No ticker may update at a higher frequency unless explicitly documented and justified in this file.
+- The Live Bookmark (Favorites) pattern MUST be implemented as follows:
+  - Each Favorites tile is a live reference to the corresponding ticker's `BriefText` (single source of truth).
+  - Tapping a Favorites tile MUST expand the parent section, expand the ticker card, and scroll to it.
+  - The Favorites collection MUST NOT duplicate or snapshot ticker data.
+- ViewModel classes MUST NOT hold UI references or perform any UI operations. All UI logic is restricted to Views and code-behind.
 
 ---
 
 ## 2. Complete File Overview
 
-> Legend: **Edit freely** = safe to modify when extending the app. **Do not edit** = auto-generated
-> or infrastructure-only. **Tombstone** = intentionally empty, do not delete.
+
+
+#### File Edit Protocol
+- **Edit freely**: File is safe to modify when extending the app. All changes MUST follow architectural constraints and update all relevant documentation blocks.
+- **Edit carefully**: File is critical or platform-specific. Changes MUST be minimal, justified, and follow all architectural constraints.
+- **Do not edit**: File is auto-generated or infrastructure-only. MUST NOT be modified by agents or humans.
+- **Tombstone**: File is intentionally empty. MUST NOT be deleted or repurposed.
 
 ---
 
@@ -310,7 +303,7 @@ LIVE tickers update every second via a `System.Timers.Timer` in `MainViewModel`.
 
 | File | Edit? | AIContext | Description |
 |------|-------|-----------|-------------|
-| `MainViewModel.cs` | Edit freely | - | The central state hub. Implements `INotifyPropertyChanged` manually (no toolkit). Owns: all 19 typed ticker result properties (`TimeJubileesResult`, `CountdownResult`, `CosmicStretchResult`, `YourBreathResult`, `VibrantCosmosResult`, etc. - see `TickerResults.cs`); 4 section `bool XxxExpanded` properties; 13 card `bool XxxExpanded` properties; settings properties (`UseMetric`, `ColorScheme`, `TextSize`, `DisplayLanguage`, `BaseDateName`, `BaseDateValue`, `BaseDate`); all `ICommand` instances (toggle + refresh); the 1-second `System.Timers.Timer`; and the `event Func<Action, Task>? RefreshRequested` event used to coordinate the `RefreshingPopup` lifecycle. `SaveDate()` is the only correct entry point for changing the base date. `UpdateStaticCalculations()` recalculates 8 tickers; `UpdateLiveCalculations()` recalculates 6 tickers + `TeaseText`; `UpdateVibrantCosmos()` is called every 200 ms by a dedicated `_vibrantCosmosTimer`. |
+| `MainViewModel.cs` | Edit freely | - | Central state hub. Implements `INotifyPropertyChanged` manually. Owns all ticker result properties, section/card expanded states, settings, all `ICommand` instances, and the 1 Hz timer for live tickers. `SaveDate()` is the ONLY entry point for changing the base date. `UpdateStaticCalculations()` and `UpdateLiveCalculations()` MUST be used for ticker updates. No UI references allowed. |
 | `LocalizedResources.cs` | Edit freely | - | Singleton (`Instance`). A thin passthrough wrapper: every property is `=> AppResources.SomeKey`. Bound in XAML as `{Binding Loc.PropertyName}`. `Invalidate()` fires `PropertyChanged(string.Empty)` which causes every bound property to re-read from `AppResources` with the newly-set culture. When adding a new localised string: add the `AppResources` key, then add the passthrough property here. |
 
 ---
@@ -554,73 +547,19 @@ ow\. Covers correct km expansion formula (elapsed seconds * 3,300,000), metric b
 
 ## 3. Architecture & Patterns
 
-### 3.1 MVVM - Manual Implementation
 
-The project uses MVVM **without** CommunityToolkit.Mvvm, Prism, or any other framework.
-Every pattern is implemented by hand.
+### 3.1 MVVM - Manual Implementation (Strict Protocol)
 
-| Layer | Class | Responsibilities |
-|-------|-------|-----------------|
-| **View** | `*.xaml` + `*.xaml.cs` | Declare UI structure; bind to ViewModel properties and commands; handle navigation gestures only |
-| **ViewModel** | `MainViewModel` | Own all application state; expose `ICommand` instances; fire `PropertyChanged`; coordinate the timer |
-| **Service** | `CalculationService`, `ThemeService`, `FontSizeService` | Stateless domain logic; no UI references; no `INotifyPropertyChanged` |
-| **Model** | `TickerData` (base), `TickerResults` (12 typed subclasses), `TickerCardModel`, `SubsectionState` | `TickerData` is the INPC base; typed subclasses add raw computed fields per ticker |
-
-#### INotifyPropertyChanged pattern used throughout
-
-Every settable property in `MainViewModel` and `TickerData` follows the same
-boilerplate - no source generators, no base class helper beyond:
-
-```csharp
-public event PropertyChangedEventHandler? PropertyChanged;
-protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-```
-
-Setters call `OnPropertyChanged()` with no argument - `[CallerMemberName]` fills the
-property name automatically at the call site.
-
-#### ICommand pattern used throughout
-
-All commands are `System.Windows.Input.Command` instances created inline in the
-`MainViewModel` constructor. No `RelayCommand`, no `AsyncCommand`:
-
-```csharp
-// Pattern: Simple toggle command
-ToggleLabCommand = new Command(() => LabExpanded = !LabExpanded);
-
-// Pattern: Refresh command with popup lifecycle coordination
-// Note: the 'else' branch runs during startup before MainPage subscribes to RefreshRequested.
-RefreshTimeJubileesCommand = new Command(async () =>
-{
-    if (RefreshRequested != null)
-        await RefreshRequested.Invoke(() =>
-            TimeJubilees = _calculationService.CalculateTimeJubilees(...));
-    else
-        TimeJubilees = _calculationService.CalculateTimeJubilees(...);
-});
-```
-
-#### BindingContext wiring
-
-`MainViewModel` is instantiated **inline in XAML** inside `MainPage.xaml`:
-
-```xml
-<ContentPage.BindingContext>
-    <viewmodels:MainViewModel />
-</ContentPage.BindingContext>
-```
-
-`MainPage.xaml.cs` accesses the XAML-constructed instance by casting `BindingContext`:
-
-```csharp
-if (BindingContext is MainViewModel vm)
-    vm.RefreshRequested += OnTickerRefreshRequested;
-```
-
-For popup pages (`SettingsPopup`, `ChangeDatePopup`, `MainMenuPopup`), the ViewModel
-is passed as a **constructor argument** and assigned to `BindingContext` in
-code-behind - not constructed by XAML.
+- MUST use manual MVVM. No CommunityToolkit.Mvvm, Prism, or any other framework. No source generators.
+- View layer (`*.xaml`, `*.xaml.cs`) MUST declare UI structure, bind to ViewModel properties/commands, and handle navigation gestures ONLY. No business logic.
+- ViewModel (`MainViewModel`) MUST own all application state, expose all `ICommand` instances, fire `PropertyChanged`, and coordinate the timer. MUST NOT reference UI elements or perform UI operations.
+- Service layer (`CalculationService`, `ThemeService`, `FontSizeService`) MUST be stateless, contain all domain logic, and have NO UI references. No `INotifyPropertyChanged` in services.
+- Model layer (`TickerData`, `TickerResults`, `TickerCardModel`, `SubsectionState`) MUST be pure data containers. `TickerData` is the INPC base; typed subclasses add raw computed fields per ticker.
+- All settable properties in `MainViewModel` and `TickerData` MUST use the standard INPC pattern:
+  - `public event PropertyChangedEventHandler? PropertyChanged;`
+  - `protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));`
+- All commands MUST be `System.Windows.Input.Command` instances created inline in the ViewModel constructor. No `RelayCommand`, no `AsyncCommand`.
+- `MainViewModel` MUST be instantiated inline in XAML inside `MainPage.xaml`. For popups, the ViewModel MUST be passed as a constructor argument and assigned to `BindingContext` in code-behind.
 
 ---
 
@@ -656,63 +595,15 @@ Left of `|` = image when value is `true`. Right of `|` = image when value is `fa
 
 ---
 
-### 3.3 Data Flow
 
-```
-USER ACTION
-    |
-    +-- Taps TimelineHeading / menu "Change Date"
-    |       --> MainPage.OnTimelineHeadingTapped
-    |               --> Navigation.PushModalAsync(new ChangeDatePopup(vm))
-    |                       --> ChangeDatePopup.OnOkClicked
-    |                               --> MainViewModel.SaveDate(name, date)
-    |                                       sets _baseDateName, _baseDateValue, _baseDate
-    |                                       --> UpdateAllCalculations()
-    |                                               --> UpdateStaticCalculations() [9 tickers]
-    |                                               --> UpdateLiveCalculations()   [9 tickers + TeaseText]
-    |
-    +-- Taps refresh icon on a static ticker card
-    |       --> RefreshXxxCommand.Execute()
-    |               --> RefreshRequested.Invoke(callback)
-    |                       --> MainPage.OnTickerRefreshRequested(callback)
-    |                               --> Navigation.PushModalAsync(new RefreshingPopup(callback))
-    |                                       [3-second auto-dismiss in RefreshingPopup.OnAppearing]
-    |                                       --> callback()
-    |                                               --> Typed result property set on ViewModel
-    |
-    +-- Taps section chevron
-    |       --> ToggleXxxCommand.Execute()
-    |               --> XxxExpanded = !XxxExpanded --> OnPropertyChanged()
-    |                       --> IsVisible on collapsible VerticalStackLayout updates
-    |
-    +-- Taps ticker card chevron
-            --> ToggleXxxCommand.Execute() [card level]
-                    --> XxxExpanded = !XxxExpanded --> OnPropertyChanged()
-                            --> IsVisible on FullText Label updates
-                            --> BoolToImageSource on ImageButton source updates
+### 3.3 Data Flow (Strict Protocol)
 
-TIMER (every 1 second, thread-pool thread)
-    |
-    --> System.Timers.Timer.Elapsed
-            --> MainThread.BeginInvokeOnMainThread(UpdateLiveCalculations)
-                    --> CalculateCountdown()       --> Countdown.BriefText/FullText
-                    --> CalculateLifeOdometer()    --> LifeOdometer.BriefText/FullText
-                    --> CalculateGalacticCommute() --> GalacticCommute.BriefText/FullText
-                    --> CalculatePhotonPath()      --> PhotonPath.BriefText/FullText
-                    --> CalculateCosmicStretch()   --> CosmicStretch.BriefText/FullText
-                    --> CalculateYourBreath()      --> YourBreath.BriefText/FullText
-                    --> CalculateGlobalCrowd()     --> GlobalCrowd.BriefText/FullText
-                    --> CalculateSpaceWait()       --> SpaceWait.BriefText/FullText
-                    --> CalculateVibrantHumanity() --> VibrantHumanity.BriefText/FullText
-                    --> GetRandomTeaseText()       --> TeaseText
-                    --> (LIVE badge breathing animation runs independently via Animation.Commit in MainPage.OnAppearing)
-                            each setter fires PropertyChanged
-                                --> {Binding Xxx.BriefText} Labels repaint
-```
-
-**Critical constraint:** the timer fires on a thread-pool thread. `UpdateLiveCalculations`
-is always marshalled back via `MainThread.BeginInvokeOnMainThread` before any bound
-property is set. Never set a bound ViewModel property from a background thread.
+- ALL user actions MUST be routed through ViewModel commands. No direct state mutation from Views.
+- ALL ticker updates MUST be performed by calling `UpdateStaticCalculations()` (for static tickers) and `UpdateLiveCalculations()` (for live tickers) on the ViewModel.
+- The main timer in `MainViewModel` MUST fire at 1 Hz (every second) and update ALL live tickers, including `VibrantCosmos`, at this interval. No ticker may update at a higher frequency unless explicitly documented.
+- ALL property changes in the ViewModel MUST fire `OnPropertyChanged` to update XAML bindings.
+- The timer thread MUST marshal all property updates to the main thread using `MainThread.BeginInvokeOnMainThread`. NEVER set a bound ViewModel property from a background thread.
+- The Live Bookmark (Favorites) pattern MUST be implemented as a live reference to the ticker's BriefText. Tapping a Favorites tile MUST expand the parent section, expand the ticker card, and scroll to it.
 
 ---
 
