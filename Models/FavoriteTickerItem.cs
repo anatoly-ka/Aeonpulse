@@ -6,36 +6,10 @@ using Aeonpulse.Attributes;
 namespace Aeonpulse.Models
 {
     /// <summary>
-    /// Represents a single "Live Bookmark" tile in the Favorites section.
-    ///
-    /// <para>
-    /// <b>Design note (Live Bookmark / Portal architecture):</b> each favorite
-    /// is a lightweight tile that shows the ticker's live <c>BriefText</c> only.
-    /// It does not duplicate the full card. Tapping the tile body triggers
-    /// <see cref="JumpToTickerCommand"/>, which expands the ticker's parent section,
-    /// expands the ticker card itself, and scrolls the main content to it.
-    /// </para>
-    /// <para>
-    /// <b>Single Source of Truth:</b> <see cref="Data"/> is a live reference to the
-    /// same <see cref="TickerData"/> instance updated by the ViewModel timer, so
-    /// <c>BriefText</c> bindings update automatically without any extra wiring.
-    /// </para>
-    /// <para>
-    /// <b>Side effects / Hidden dependencies:</b>
-    /// <list type="bullet">
-    ///   <item><description>
-    ///     <see cref="JumpToTickerCommand"/> is wired to a callback provided by
-    ///     <c>MainViewModel</c> at construction time. It expands the section and card,
-    ///     then raises <c>MainViewModel.ScrollToTickerRequested</c> so that
-    ///     <c>MainPage.xaml.cs</c> can call <c>ScrollToAsync</c> on the named element.
-    ///   </description></item>
-    ///   <item><description>
-    ///     <see cref="RemoveFromFavoritesCommand"/> removes this tile from the
-    ///     Favorites collection and reverts the <c>to_favorites.png</c> button on the
-    ///     main ticker card by setting its <c>IsFavorite</c> property to <c>false</c>.
-    ///   </description></item>
-    /// </list>
-    /// </para>
+    /// [ARCHITECTURE] Represents a single Live Bookmark tile in Favorites.
+    /// [RULE] Each tile references the live TickerData instance (single source of truth for BriefText).
+    /// [RULE] Tapping the tile expands the parent section, expands the ticker card, and scrolls to it (via JumpToTickerCommand).
+    /// [DEPENDENCY] JumpToTickerCommand and RemoveFromFavoritesCommand are wired to MainViewModel callbacks at construction.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class FavoriteTickerItem : INotifyPropertyChanged

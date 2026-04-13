@@ -7,26 +7,10 @@ using Aeonpulse.Resources;
 namespace Aeonpulse.Views
 {
     /// <summary>
-    /// Code-behind for the application's single main page.
-    /// Owns the modal navigation lifecycle for all popups: settings, date change,
-    /// main menu, deep-dive info panels, and the refreshing overlay.
-    ///
-    /// <para>
-    /// <b>Architecture note:</b> all business logic lives in <see cref="MainViewModel"/>.
-    /// This class is strictly a navigation coordinator - it translates user gesture
-    /// events into modal push/pop operations and routes ViewModel events
-    /// (<see cref="MainViewModel.RefreshRequested"/>) to the UI layer.
-    /// </para>
-    /// <para>
-    /// <b>Guard flags</b> (<c>_isXxxOpen</c>) prevent double-opening any popup if the
-    /// user taps rapidly before the push animation completes. Each flag is set before
-    /// <c>PushModalAsync</c> and cleared in a <c>finally</c> block after the await.
-    /// </para>
-    /// <para>
-    /// <b>Hidden dependency:</b> <see cref="MainViewModel.RefreshRequested"/> is an
-    /// <c>event Func&lt;Action, Task&gt;</c> wired in the constructor. If the ViewModel
-    /// is reconstructed (e.g., hot-reload), the subscription must be re-established.
-    /// </para>
+    /// [ARCHITECTURE] MainPage.xaml.cs is a strict navigation coordinator. No business logic allowed. All business logic must reside in MainViewModel or CalculationService.
+    /// [NAVIGATION] Owns modal navigation for all popups (settings, date change, menu, deep-dive, refreshing overlay).
+    /// [STATE] Guard flags (_isXxxOpen) prevent double-opening popups. Each flag is set before PushModalAsync and cleared after await.
+    /// [DEPENDENCY] MainViewModel.RefreshRequested must be wired in constructor. If ViewModel is reconstructed, re-subscribe.
     /// </summary>
     [AIContext("NavigationCoordinator")]
     public partial class MainPage : ContentPage

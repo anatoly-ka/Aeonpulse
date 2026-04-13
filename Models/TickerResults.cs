@@ -3,9 +3,7 @@
 namespace Aeonpulse.Models
 {
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateTimeJubilees</c>.
-    /// Carries the nearest jubilee milestone data in addition to the
-    /// formatted <see cref="TickerData.BriefText"/> and <see cref="TickerData.FullText"/>.
+    /// [DATA] Result for CalculateTimeJubilees. Contains milestone data and formatted BriefText/FullText.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class TimeJubileesResult : TickerData
@@ -75,8 +73,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateCountdown</c>.
-    /// Carries the decomposed time components of the countdown to the next anniversary.
+    /// [DATA] Result for CalculateCountdown. Decomposed time components for next anniversary. [LIVE TICKER] Updated at 1 Hz.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class CountdownResult : TickerData
@@ -113,9 +110,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateLifeOdometer</c>.
-    /// Carries the raw physiological totals so callers (e.g. tease-text generation)
-    /// can use numeric values directly without parsing formatted strings.
+    /// [DATA] Result for CalculateLifeOdometer. Raw physiological totals. [LIVE TICKER] Updated at 1 Hz.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class LifeOdometerResult : TickerData
@@ -140,10 +135,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateAlienAnniversaries</c>.
-    /// Carries equivalent planetary ages in Mars and Venus years.
-    /// Extended with all five inner/outer planet years and orbital fractions
-    /// to drive the orrery visualization in the expanded card view.
+    /// [DATA] Result for CalculateAlienAnniversaries. Planetary ages and orbital fractions.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class AlienAnniversariesResult : TickerData
@@ -180,9 +172,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateGalacticCommute</c>.
-    /// Carries the raw distance travelled through the Milky Way and the
-    /// active unit system so consumers do not need to re-derive it.
+    /// [DATA] Result for CalculateGalacticCommute. Raw distance and unit system. [LIVE TICKER] Updated at 1 Hz.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class GalacticCommuteResult : TickerData
@@ -201,7 +191,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Phase of the photon's cosmic journey, used by <see cref="PhotonPathResult"/>.
+    /// [ENUM] Phase of photon's journey for PhotonPathResult.
     /// </summary>
     public enum PhotonPhase
     {
@@ -218,10 +208,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculatePhotonPath</c>.
-    /// Carries the raw travel data and the named star most recently passed (if any),
-    /// enabling tease-text and cross-ticker logic to reference cosmic milestones
-    /// without re-parsing the formatted strings.
+    /// [DATA] Result for CalculatePhotonPath. Raw travel data, star context. [LIVE TICKER] Updated at 1 Hz.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class PhotonPathResult : TickerData
@@ -288,9 +275,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateHumanBirthRank</c>.
-    /// Carries the estimated ordinal birth rank as a numeric value so callers
-    /// can perform comparisons or format it independently of the display strings.
+    /// [DATA] Result for CalculateHumanBirthRank. Estimated ordinal birth rank and chart data.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class HumanBirthRankResult : TickerData
@@ -323,9 +308,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateBirthRune</c>.
-    /// Carries the matched Elder Futhark rune data so callers can reference
-    /// the rune name, symbol, and interpretations without parsing display strings.
+    /// [DATA] Result for CalculateBirthRune. Rune name, symbol, and interpretations.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class BirthRuneResult : TickerData
@@ -344,9 +327,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculatePersonalYear</c>.
-    /// Carries the computed numerology number and the current calendar year
-    /// so downstream logic can reuse them without re-computing.
+    /// [DATA] Result for CalculatePersonalYear. Numerology number and current year.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class PersonalYearResult : TickerData
@@ -359,9 +340,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateGlobalExhale</c>.
-    /// Carries the raw CO2 figure in billion metric tonnes so downstream logic
-    /// (tease text, cross-ticker comparisons) can use the numeric value directly.
+    /// [DATA] Result for CalculateGlobalExhale. Raw CO2 figure and chart anchors.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class GlobalExhaleResult : TickerData
@@ -418,9 +397,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateCosmicStretch</c>.
-    /// Carries the raw expansion distance in kilometres so callers can use
-    /// the numeric value directly without parsing the formatted display strings.
+    /// [DATA] Result for CalculateCosmicStretch. Raw expansion distance. [LIVE TICKER] Updated at 1 Hz.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class CosmicStretchResult : TickerData
@@ -439,9 +416,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateYourBreath</c>.
-    /// Carries the raw breath count, air volume, and CO2 mass so callers can
-    /// use the numeric values directly without parsing the formatted display strings.
+    /// [DATA] Result for CalculateYourBreath. Raw breath count, air volume, CO2 mass. [LIVE TICKER] Updated at 1 Hz.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class YourBreathResult : TickerData
@@ -472,9 +447,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateCellularRefresh</c>.
-    /// Carries the raw skin cycle count and red blood cell count so callers can
-    /// use the numeric values directly without parsing the formatted display strings.
+    /// [DATA] Result for CalculateCellularRefresh. Skin cycle count, RBC count.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class CellularRefreshResult : TickerData
@@ -494,9 +467,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateVibrantCosmos</c>.
-    /// Carries the raw astronomical counts so callers can use the numeric values
-    /// directly without parsing the formatted display strings.
+    /// [DATA] Result for CalculateVibrantCosmos. Astronomical counts. [LIVE TICKER] Updated at 1 Hz.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class VibrantCosmosResult : TickerData
@@ -509,10 +480,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateGlobalCrowd</c>.
-    /// Carries the estimated human population at the base date and at the
-    /// current moment so callers can use the numeric values directly without
-    /// parsing the formatted display strings.
+    /// [DATA] Result for CalculateGlobalCrowd. Population at base date and now. [LIVE TICKER] Updated at 1 Hz.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class GlobalCrowdResult : TickerData
@@ -555,10 +523,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateLifeLog</c>.
-    /// Carries the raw computed total hours per activity and the two activity
-    /// names/hours chosen for the brief view so callers can re-randomise without
-    /// re-running the full calculation.
+    /// [DATA] Result for CalculateLifeLog. Activity hours and slices.
     /// </summary>
     [AIContext("DataTransferObject")]
     /// <summary>
@@ -622,10 +587,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateSpaceWait</c>.
-    /// Carries the name of the next planet, the ordinal age milestone, and
-    /// the countdown TimeSpan so callers can use the values directly without
-    /// parsing the formatted display strings.
+    /// [DATA] Result for CalculateSpaceWait. Next planet, age milestone, countdown. [LIVE TICKER] Updated at 1 Hz.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class SpaceWaitResult : TickerData
@@ -641,10 +603,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateVibrantHumanity</c>.
-    /// Carries the raw demographic counts between the base date and now
-    /// so callers can use the numeric values directly without parsing the
-    /// formatted display strings.
+    /// [DATA] Result for CalculateVibrantHumanity. Demographic counts. [LIVE TICKER] Updated at 1 Hz.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class VibrantHumanityResult : TickerData
@@ -666,9 +625,7 @@ namespace Aeonpulse.Models
     }
 
     /// <summary>
-    /// Typed result for <c>CalculationService.CalculateVibrantNature</c>.
-    /// Carries the raw species discovery and extinction counts so callers can
-    /// use the numeric values directly without parsing the formatted display strings.
+    /// [DATA] Result for CalculateVibrantNature. Species discovery/extinction counts.
     /// </summary>
     [AIContext("DataTransferObject")]
     public class VibrantNatureResult : TickerData

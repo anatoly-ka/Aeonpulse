@@ -1,14 +1,26 @@
-﻿# Aeonpulse
+﻿
+# Aeonpulse
 
-A cross-platform mobile and desktop app that transforms a personal date - typically a birthday - into nineteen richly-contextualised **ticker cards**: live and on-demand views of that moment in time through scientific, astronomical, personal, and ecological lenses.
+**Aeonpulse** is a cross-platform .NET 9 MAUI app that transforms a personal date (like a birthday) into a dashboard of 19 live and on-demand "ticker cards". Each card gives a unique, real-time perspective on your journey through time—scientific, astronomical, personal, and ecological.
 
-Built with **.NET 9 MAUI**. Runs on Android, iOS, Mac Catalyst, and Windows from a single shared codebase.
+Runs on Android, iOS, Mac Catalyst, and Windows from a single shared codebase.
 
 ---
 
-## What the App Does
 
-The user provides a **base date** (a label such as "My Birthday" and an ISO date). The app continuously recalculates:
+## Key Features
+
+- Enter any base date (e.g., your birthday, an anniversary, or a historical event)
+- Instantly see 19 contextualized "ticker cards"—from heartbeats taken to stars born since your date
+- Live tickers update every second; static tickers recalculate on demand
+- Four collapsible sections: Lab, Cosmos, Mirror, Eco Echoes
+- All settings (units, theme, text size, language) persist across sessions
+- Favorites: pin any ticker for instant access
+- Modern, accessible UI with dynamic theming and font scaling
+
+## Ticker Cards Overview
+
+Each ticker card shows a brief summary and expands for full detail. Static cards have a refresh button; live cards update every second.
 
 | # | Ticker | Section | What it shows | Updates |
 |---|--------|---------|---------------|---------|
@@ -20,7 +32,7 @@ The user provides a **base date** (a label such as "My Birthday" and an ISO date
 | 6 | Galactic Commute | Cosmos | Distance the Solar System has carried you through the Milky Way | Every second |
 | 7 | Photon Path | Cosmos | How far a photon of light has travelled since the base date, with named star milestones | Every second |
 | 8 | Cosmic Stretch | Cosmos | How much the observable universe has expanded since the base date | Every second |
-| 9 | Vibrant Cosmos | Cosmos | Estimated new exoplanets confirmed, stars born, stars collapsed since the base date | Every 200 ms |
+| 9 | Vibrant Cosmos | Cosmos | Estimated new exoplanets confirmed, stars born, stars collapsed since the base date | Every second |
 | 10 | Space Wait | Cosmos | Estimated cumulative wait time humanity has spent queuing for orbital flights | Every second |
 | 11 | Human Birth Rank | Mirror | Estimated ordinal birth rank among all humans ever born | On demand |
 | 12 | Birth Rune | Mirror | Elder Futhark rune governing the birth date period | On demand |
@@ -36,6 +48,19 @@ Ticker cards are grouped into four collapsible sections: **Lab**, **Cosmos**, **
 
 ---
 
+
+## Getting Started
+
+**Clone the repository:**
+
+```sh
+git clone https://github.com/anatoly-ka/Aeonpulse.git
+cd Aeonpulse
+```
+
+For build, run, and deployment instructions, see [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md).
+
+To install and run the app, follow the platform-specific steps in the guide. The app runs on Windows, Android, iOS, and Mac Catalyst.
 ## Platforms
 
 | Platform | Minimum OS |
@@ -49,6 +74,7 @@ Ticker cards are grouped into four collapsible sections: **Lab**, **Cosmos**, **
 
 ---
 
+
 ## User Settings
 
 All settings persist across sessions via the platform `Preferences` API:
@@ -61,6 +87,7 @@ All settings persist across sessions via the platform `Preferences` API:
 | Display language | System default, English, Russian |
 
 ---
+
 
 ## Application Structure
 
@@ -103,6 +130,7 @@ The project follows **manual MVVM** - no MVVM toolkit or code generators:
 - **XAML files** must be saved as UTF-8 with BOM or the build will fail with `MSB4018`.
 
 ---
+
 
 ## Project Layout
 
@@ -158,9 +186,10 @@ Aeonpulse/
 
 ---
 
-## Development Reference
 
-**`Agents.md`** in the repository root is the authoritative development reference. It documents every file, every architectural pattern, all extension recipes, build commands, debugging procedures, and a pre-commit checklist. Read it before making any structural change.
+## Contributing & Technical Reference
+
+For architecture, extension recipes, and all technical details, see [`Agents.md`](Agents.md). This file is always up to date and is the authoritative reference for contributors and AI agents.
 
 ---
 

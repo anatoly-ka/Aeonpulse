@@ -9,10 +9,17 @@ using System.Windows.Input;
 
 namespace Aeonpulse.ViewModels
 {
+    /// <summary>
+    /// [ARCHITECTURE] MainViewModel owns all application state and exposes all bindable properties.
+    /// [RULE] No UI references or platform-specific logic allowed. All business logic is delegated to CalculationService.
+    /// [STATE] All ticker properties are updated via UpdateStaticCalculations (static tickers) and UpdateLiveCalculations (live tickers).
+    /// [PERFORMANCE] Live tickers are updated at 1 Hz (every second) by a DispatcherTimer.
+    /// [DEPENDENCY] FavoritesCollection is a live collection of FavoriteTickerItem (Live Bookmark pattern).
+    /// </summary>
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly CalculationService _calculationService;
-        private IDispatcherTimer _updateTimer;
+        private IDispatcherTimer _updateTimer; // [PERFORMANCE] 1 Hz timer for live ticker updates
         private const string LogCat = "VM";
 
         #region Language constants
@@ -45,9 +52,7 @@ namespace Aeonpulse.ViewModels
         #region Properties
 
         /// <summary>
-        /// Live-bindable wrapper for all AppResources strings.
-        /// Call <see cref="LocalizedResources.Invalidate"/> after a language change
-        /// to push every new string to the UI at once.
+        /// [DEPENDENCY] Live-bindable wrapper for AppResources strings. Call Loc.Invalidate() after language change to update all UI labels.
         /// </summary>
         public LocalizedResources Loc { get; } = LocalizedResources.Instance;
 
@@ -66,8 +71,7 @@ namespace Aeonpulse.ViewModels
         }
 
         /// <summary>
-        /// Culture-aware short date string for display only.
-        /// Formatted using the current UI culture so it respects the active locale.
+        /// [STATE] Culture-aware short date string for display only. Formatted using current UI culture.
         /// </summary>
         public string BaseDateDisplay =>
             _baseDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture);
@@ -467,21 +471,18 @@ namespace Aeonpulse.ViewModels
         }
 
         /// <summary>
-        /// The ordered collection of tickers pinned to the Favorites section.
-        /// Each item owns its own independent IsExpanded state so expanding a favorite
-        /// does not affect the same ticker in its original section.
+        /// [STATE] Ordered collection of FavoriteTickerItem (Live Bookmark pattern). Each tile is a live reference to the corresponding ticker's BriefText. Expanding a favorite does not affect the main card.
         /// </summary>
         public ObservableCollection<Aeonpulse.Models.FavoriteTickerItem> FavoritesCollection { get; }
             = new ObservableCollection<Aeonpulse.Models.FavoriteTickerItem>();
 
-        /// <summary>Returns true when FavoritesCollection has at least one item.</summary>
+        /// <summary>[STATE] True when FavoritesCollection has at least one item.</summary>
         public bool HasFavorites => FavoritesCollection.Count > 0;
 
-        /// <summary>Returns true when FavoritesCollection is empty (drives empty-state label).</summary>
+        /// <summary>[STATE] True when FavoritesCollection is empty (drives empty-state label).</summary>
         public bool HasNoFavorites => FavoritesCollection.Count == 0;
 
-        // Per-ticker "is already in Favorites" flags - bound to the star/bookmark button Source
-        // via BoolToImageSource("in_favorites.png|to_favorites.png").
+        // [STATE] Per-ticker "is already in Favorites" flags. Bound to star/bookmark button Source via BoolToImageSource("in_favorites.png|to_favorites.png").
         public bool TimeJubileesIsInFavorites       => FavoritesCollection.Any(f => f.TickerId == "TimeJubilees");
         public bool CountdownIsInFavorites          => FavoritesCollection.Any(f => f.TickerId == "Countdown");
         public bool LifeOdometerIsInFavorites       => FavoritesCollection.Any(f => f.TickerId == "LifeOdometer");
@@ -502,7 +503,7 @@ namespace Aeonpulse.ViewModels
         public bool YourBreathIsInFavorites         => FavoritesCollection.Any(f => f.TickerId == "YourBreath");
         public bool VibrantNatureIsInFavorites      => FavoritesCollection.Any(f => f.TickerId == "VibrantNature");
 
-        // Used by AddToFavoritesCommand to build a FavoriteTickerItem from just the ticker ID.
+        // [DEPENDENCY] Used by AddToFavoritesCommand to build a FavoriteTickerItem from ticker ID.
         private (string Emoji, Func<string> TitleGetter, Func<Aeonpulse.Models.TickerData> DataGetter)
             GetTickerMeta(string tickerId) => tickerId switch
         {
@@ -573,15 +574,12 @@ namespace Aeonpulse.ViewModels
         public ICommand AddToFavoritesCommand { get; }
 
         /// <summary>
-        /// Raised when a live refresh is requested, so the View layer can show
-        /// the RefreshingPopup before recalculation fires via the callback.
+        /// [EVENT] Raised when a live refresh is requested. View must show RefreshingPopup before recalculation fires via callback.
         /// </summary>
         public event Func<Action, Task>? RefreshRequested;
 
         /// <summary>
-        /// Raised when a Favorites tile is tapped and the View layer must scroll
-        /// the main ScrollView to the specified ticker card.
-        /// The string argument is the ticker ID (e.g., "TimeJubilees").
+        /// [EVENT] Raised when a Favorites tile is tapped. View must scroll main ScrollView to the specified ticker card. Argument is ticker ID.
         /// </summary>
         public event Action<string>? ScrollToTickerRequested;
 
@@ -758,19 +756,25 @@ namespace Aeonpulse.ViewModels
             // Load persisted favorites AFTER initial calculations so TickerData refs are populated
             LoadFavorites();
 
-            // Setup timer for live updates (every second)
+            // [PERFORMANCE] Setup timer for live updates (1 Hz). All live tickers, including VibrantCosmos, update every second.
             _updateTimer = Application.Current!.Dispatcher.CreateTimer();
-            _updateTimer.Interval = TimeSpan.FromSeconds(1);
+            _updateTimer.Interval = TimeSpan.FromSeconds(1); // [PERFORMANCE] 1 Hz
             _updateTimer.Tick += (s, e) => UpdateLiveCalculations();
             _updateTimer.Start();
         }
 
+        /// <summary>
+        /// [STATE] Updates all ticker properties. Static tickers: UpdateStaticCalculations. Live tickers: UpdateLiveCalculations (1 Hz).
+        /// </summary>
         public void UpdateAllCalculations()
         {
             UpdateStaticCalculations();
             UpdateLiveCalculations();
         }
 
+        /// <summary>
+        /// [STATE] Updates all static ticker properties. Called on settings/base date change and at startup.
+        /// </summary>
         public void UpdateStaticCalculations()
         {
             TimeJubilees = _calculationService.CalculateTimeJubilees(BaseDate, BaseDateName, BaseDateValue);
@@ -784,19 +788,22 @@ namespace Aeonpulse.ViewModels
             VibrantNature = _calculationService.CalculateVibrantNature(BaseDate);
         }
 
+        /// <summary>
+        /// [PERFORMANCE] Updates all live ticker properties. Called every second (1 Hz) by the timer. VibrantCosmos is updated at 1 Hz.
+        /// </summary>
         public void UpdateLiveCalculations()
         {
             AeonLog.Debug(LogCat, "Timer", $"thread={Environment.CurrentManagedThreadId} isMainThread={MainThread.IsMainThread}");
-            Countdown       = _calculationService.CalculateCountdown(BaseDate);
-            LifeOdometer    = _calculationService.CalculateLifeOdometer(BaseDate, BaseDateName, BaseDateValue);
-            GalacticCommute = _calculationService.CalculateGalacticCommute(BaseDate, BaseDateValue, UseMetric);
-            PhotonPath      = _calculationService.CalculatePhotonPath(BaseDate, BaseDateValue, UseMetric);
-            CosmicStretch   = _calculationService.CalculateCosmicStretch(BaseDate, BaseDateValue, UseMetric);
-            YourBreath      = _calculationService.CalculateYourBreath(BaseDate, BaseDateValue, UseMetric);
-            GlobalCrowd     = _calculationService.CalculateGlobalCrowd(BaseDate);
-            SpaceWait       = _calculationService.CalculateSpaceWait(BaseDate);
-            VibrantHumanity = _calculationService.CalculateVibrantHumanity(BaseDate, BaseDateName, BaseDateValue);
-            VibrantCosmos   = _calculationService.CalculateVibrantCosmos(BaseDate);
+            Countdown       = _calculationService.CalculateCountdown(BaseDate); // 1 Hz
+            LifeOdometer    = _calculationService.CalculateLifeOdometer(BaseDate, BaseDateName, BaseDateValue); // 1 Hz
+            GalacticCommute = _calculationService.CalculateGalacticCommute(BaseDate, BaseDateValue, UseMetric); // 1 Hz
+            PhotonPath      = _calculationService.CalculatePhotonPath(BaseDate, BaseDateValue, UseMetric); // 1 Hz
+            CosmicStretch   = _calculationService.CalculateCosmicStretch(BaseDate, BaseDateValue, UseMetric); // 1 Hz
+            YourBreath      = _calculationService.CalculateYourBreath(BaseDate, BaseDateValue, UseMetric); // 1 Hz
+            GlobalCrowd     = _calculationService.CalculateGlobalCrowd(BaseDate); // 1 Hz
+            SpaceWait       = _calculationService.CalculateSpaceWait(BaseDate); // 1 Hz
+            VibrantHumanity = _calculationService.CalculateVibrantHumanity(BaseDate, BaseDateName, BaseDateValue); // 1 Hz
+            VibrantCosmos   = _calculationService.CalculateVibrantCosmos(BaseDate); // 1 Hz
 
             TeaseText = _calculationService.GetRandomTeaseText(
                 Countdown,

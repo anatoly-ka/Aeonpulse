@@ -261,7 +261,7 @@ Please do not commit the changes until the fix is confirmed by me.
 **Upon bug fix is checked and confirmed:**
 ```
 Please read Agents.md first.
-There are multiple changes made - please review them:
+There are multiple changes made - please compare the project files with the repository, and review the detailed diff:
 - update the relevant sections of Agents.md, **if needed** (run Get-Date first to get today's date);
 - create a good human-readable summary for commit message.
 FYI: I manually made these changes:
@@ -271,7 +271,7 @@ Please commit and push the changes with the corresponding commit message - see S
 For example:
 ```
 Please read Agents.md first.
-There are multiple changes made - please review them:
+There are multiple changes made - please compare the project files with the repository, and review the detailed diff:
 - update the relevant sections of Agents.md, **if needed** (run Get-Date first to get today's date);
 - create a good human-readable summary for commit message.
 FYI: no manual changes were made.
@@ -280,7 +280,7 @@ Please commit and push the changes with the corresponding commit message - see S
 or
 ```
 Please read Agents.md first.
-There are multiple changes made - please review them:
+There are multiple changes made - please compare the project files with the repository, and review the detailed diff:
 - update the relevant sections of Agents.md, **if needed** (run Get-Date first to get today's date);
 - create a good human-readable summary for commit message.
 FYI: I manually made these changes:

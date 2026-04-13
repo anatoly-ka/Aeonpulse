@@ -10,32 +10,10 @@ using Aeonpulse.Resources;
 namespace Aeonpulse.Services
 {
     /// <summary>
-    /// Core domain-logic engine that converts a user-supplied base date into
-    /// a collection of richly-formatted <see cref="TickerData"/> objects,
-    /// each representing a distinct temporal or cosmological perspective.
-    ///
-    /// <para>
-    /// <b>Hidden dependencies / side effects:</b>
-    /// <list type="bullet">
-    ///   <item><description>
-    ///     All text output is pulled from <see cref="AppResources"/> at call time,
-    ///     so the strings automatically reflect whichever culture
-    ///     <see cref="ViewModels.MainViewModel.ApplyLanguage"/> has applied to
-    ///     <c>AppResources.Culture</c>.
-    ///   </description></item>
-    ///   <item><description>
-    ///     Every method reads <see cref="DateTime.Now"/> internally; they are
-    ///     therefore not pure functions and will produce different results on
-    ///     every invocation - intentional for live-update scenarios.
-    ///   </description></item>
-    ///   <item><description>
-    ///     No global state is written; this service is stateless and safe to
-    ///     call from any thread (the 1-second timer in
-    ///     <see cref="ViewModels.MainViewModel"/> marshals calls back to the
-    ///     main thread via <c>MainThread.BeginInvokeOnMainThread</c>).
-    ///   </description></item>
-    /// </list>
-    /// </para>
+    /// [ARCHITECTURE] Stateless core calculation engine. Converts a user-supplied base date into a set of TickerData objects.
+    /// [RULE] No UI, no platform-specific logic, no global state. All output is culture-dependent via AppResources.Culture.
+    /// [PERFORMANCE] All live ticker methods are called at 1 Hz (every second) by MainViewModel.
+    /// [DEPENDENCY] All methods read DateTime.Now unless an explicit 'now' parameter is provided (for testing).
     /// </summary>
     [AIContext("CoreCalculationEngine")]
     public class CalculationService
@@ -583,19 +561,8 @@ namespace Aeonpulse.Services
         #region Countdown
 
         /// <summary>
-        /// Computes a countdown to the next calendar anniversary of <paramref name="baseDate"/>
-        /// in the current year (or the following year if the anniversary has already passed).
-        ///
-        /// <para>
-        /// The display format adapts to the remaining time:
-        /// <list type="bullet">
-        ///   <item><description>Less than 1 day -> HH:MM:SS only</description></item>
-        ///   <item><description>1 day – 1 month -> days + HH:MM</description></item>
-        ///   <item><description>More than 1 month -> days only</description></item>
-        /// </list>
-        /// This is a <b>live ticker</b> - called every second by the
-        /// <see cref="ViewModels.MainViewModel"/> timer.
-        /// </para>
+        /// [LIVE TICKER] Computes countdown to next calendar anniversary. Called at 1 Hz by MainViewModel timer.
+        /// [PERFORMANCE] Update interval: 1 Hz.
         /// </summary>
         /// <param name="baseDate">The origin date whose annual anniversary is being counted down to.</param>
         /// <param name="now">Optional <see cref="DateTime"/> parameter for testing: substitutes an alternate "current time".</param>
@@ -670,21 +637,8 @@ namespace Aeonpulse.Services
         #region Life Odometer
 
         /// <summary>
-        /// Estimates the total number of heartbeats and breaths accumulated since
-        /// <paramref name="baseDate"/>, using population-average physiological rates:
-        /// 70 bpm and 14 breaths/min (NCBI midpoint of the 12-16 resting range).
-        ///
-        /// <para>
-        /// This is a <b>live ticker</b> - called every second by the VM timer.
-        /// Results are intentionally approximate; the goal is experiential impact,
-        /// not medical precision.
-        /// </para>
-        /// <para>
-        /// <b>Side effect:</b> breath count is computed via
-        /// <see cref="CalculateBreaths"/>, the same helper used by
-        /// <see cref="CalculateYourBreath"/>, so both tickers always show
-        /// the same breath total.
-        /// </para>
+        /// [LIVE TICKER] Estimates total heartbeats and breaths since base date. Called at 1 Hz by MainViewModel timer.
+        /// [PERFORMANCE] Update interval: 1 Hz.
         /// </summary>
         /// <param name="baseDate">The start of the lifespan being measured.</param>
         /// <param name="baseDateName">Human-readable label for display in the full text.</param>
@@ -792,19 +746,8 @@ namespace Aeonpulse.Services
         #region Galactic Commute
 
         /// <summary>
-        /// Calculates the distance the Solar System has travelled through the Milky Way
-        /// since <paramref name="baseDate"/>, based on the Sun's galactic orbital velocity
-        /// of approximately 225 km/s.
-        ///
-        /// <para>
-        /// <b>Unit toggling:</b> when <paramref name="useMetric"/> is <c>false</c>, all
-        /// output distances are converted to miles. The <c>fullDistance</c> parenthetical
-        /// is suppressed when the primary unit already gives the raw figure (i.e., when
-        /// no scaling prefix like "million" is needed).
-        /// </para>
-        /// <para>
-        /// This is a <b>live ticker</b> - called every second to update the VM timer.
-        /// </para>
+        /// [LIVE TICKER] Calculates galactic distance travelled since base date. Called at 1 Hz by MainViewModel timer.
+        /// [PERFORMANCE] Update interval: 1 Hz.
         /// </summary>
         /// <param name="baseDate">The origin date from which galactic travel is measured.</param>
         /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
@@ -873,27 +816,8 @@ namespace Aeonpulse.Services
         #region Photon Path
 
         /// <summary>
-        /// Determines how far a photon emitted on <paramref name="baseDate"/> would have
-        /// travelled by now (light travels at 299,792.458 km/s), then contextualises that
-        /// distance against a curated catalogue of named stars ordered by light-year distance.
-        ///
-        /// <para>
-        /// <b>Output narrative phases</b> (driven by <c>lightYears</c> thresholds):
-        /// <list type="number">
-        ///   <item><description>Still within the Solar System / approaching the Heliopause</description></item>
-        ///   <item><description>Within the Oort Cloud (&lt; 1.5 ly)</description></item>
-        ///   <item><description>Interstellar space (&lt; 4.246 ly - Proxima Centauri)</description></item>
-        ///   <item><description>Past a named star in the catalogue (up to ~139 ly / Achernar)</description></item>
-        /// </list>
-        /// </para>
-        /// <para>
-        /// The 57-star catalogue is defined inline (anonymous-type array) to keep it
-        /// co-located with the logic that consumes it. Star data (name, distance in light-years,
-        /// descriptive info) is sourced entirely from <see cref="AppResources"/>.
-        /// </para>
-        /// <para>
-        /// This is a <b>live ticker</b> - called every second by the VM timer.
-        /// </para>
+        /// [LIVE TICKER] Calculates photon travel distance and context. Called at 1 Hz by MainViewModel timer.
+        /// [PERFORMANCE] Update interval: 1 Hz.
         /// </summary>
         /// <param name="baseDate">The origin date from which photon travel is measured.</param>
         /// <param name="baseDateValue">ISO-8601 string for display in the full text.</param>
