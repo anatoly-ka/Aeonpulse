@@ -180,7 +180,10 @@ Aeonpulse/
 ├── App.xaml / App.xaml.cs      App bootstrap: applies persisted settings before first frame
 ├── MauiProgram.cs              Host builder, font registration, image tint mapper, AeonLog init
 ├── Aeonpulse.csproj            Multi-targeted project file
-├── Agents.md                   AI agent navigation guide (authoritative development reference)
+├── Agents.md                   AI agent navigation guide and router (authoritative development reference)
+├── Agent_Architecture.md       The complete file inventory and architectural patterns
+├── Agent_Recipes.md            Step-by-step extension recipes and verification checklists
+├── Agent_Ops.md                Development, debugging, and ops workflows
 └── Aeonpulse.Tests/            xUnit test project (net9.0, no MAUI dependency, 300 tests)
 ```
 
@@ -189,7 +192,13 @@ Aeonpulse/
 
 ## Contributing & Technical Reference
 
-For architecture, extension recipes, and all technical details, see [`Agents.md`](Agents.md). This file is always up to date and is the authoritative reference for contributors and AI agents.
+For architecture, extension recipes, and all technical details, see the **Agent Documentation Suite** (anchored by `Agents.md`) contains:
+- The Prime Directives, Commit Protocol, and Tool-Use Guardrails (in `Agents.md`)
+- The complete file inventory and architectural patterns (in `Agent_Architecture.md`)
+- Step-by-step extension recipes and verification checklists (in `Agent_Recipes.md`)
+- Development, debugging, and ops workflows (in `Agent_Ops.md`).
+
+These files are always up to date and are the authoritative reference for contributors and AI agents.
 
 ---
 
