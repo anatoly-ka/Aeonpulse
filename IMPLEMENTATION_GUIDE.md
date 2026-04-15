@@ -187,7 +187,7 @@ Every session - no exceptions - begin with:
 ```
 Please read Agents.md fully before making any changes.
 It is the authoritative navigation guide for this codebase.
-Please pay a special attention to follow the Sections 9.11 and 9.14 of Agents.md recipes exactly for modifying files.
+Please pay special attention to follow the [PART A] PRIME DIRECTIVES and [PART B] AGENT TOOL-USE GUARDRAILS in Agents.md exactly for modifying files.
 ```
 
 This one step prevents the AI from inventing file paths, missing architectural constraints, or duplicating work already documented.
@@ -196,14 +196,13 @@ This one step prevents the AI from inventing file paths, missing architectural c
 
 #### 3.1.1 Why this matters
 
-`Agents.md` contains:
-- The complete file inventory with edit guidance (Section 2)
-- Every hard architectural constraint (Sections 1.5 and 9)
-- Step-by-step extension recipes (Section 7)
-- The pre-commit checklist (Section 9.12)
-- The commit signature convention (Section 9.13)
+The **Agent Documentation Suite** (anchored by `Agents.md`) contains:
+- The Prime Directives, Commit Protocol, and Tool-Use Guardrails (in `Agents.md`)
+- The complete file inventory and architectural patterns (in `Agent_Architecture.md`)
+- Step-by-step extension recipes and verification checklists (in `Agent_Recipes.md`)
+- Development, debugging, and ops workflows (in `Agent_Ops.md`)
 
-An AI that has not read `Agents.md` will produce structurally incorrect changes. One that has read it will implement changes correctly on the first attempt.
+An AI that has not read Agents.md (and the sub-files it routes to) will produce structurally incorrect changes. One that follows the routing index will implement changes correctly on the first attempt.
 
 ---
 
@@ -212,11 +211,7 @@ An AI that has not read `Agents.md` will produce structurally incorrect changes.
 If the AI needs context beyond just `Agents.md`, add a line such as:
 
 ```
-Please also read Services/CalculationService.cs - I want to add a new ticker.
-```
-or
-```
-Please also read ViewModels/MainViewModel.cs - I want to understand the settings flow.
+Please fetch `Agent_Recipes.md` and read `Services/CalculationService.cs` - I want to add a new ticker.
 ```
 or
 ```
@@ -262,30 +257,30 @@ Please do not commit the changes until the fix is confirmed by me.
 ```
 Please read Agents.md first.
 There are multiple changes made - please compare the project files with the repository, and review the detailed diff:
-- update the relevant sections of Agents.md, **if needed** (run Get-Date first to get today's date);
+- fetch Agent_Architecture.md and update the relevant sections, then update the Node Map in Agents.md, **if needed** (run Get-Date first to get today's date);
 - create a good human-readable summary for commit message.
 FYI: I manually made these changes:
 - [describe].
-Please commit and push the changes with the corresponding commit message - see Sections 9.12 and 9.13 of Agents.md.
+Please commit and push the changes with the corresponding commit message - see the COMMIT PROTOCOL in [PART A] PRIME DIRECTIVES of Agents.md.
 ```
 For example:
 ```
 Please read Agents.md first.
 There are multiple changes made - please compare the project files with the repository, and review the detailed diff:
-- update the relevant sections of Agents.md, **if needed** (run Get-Date first to get today's date);
+- fetch Agent_Architecture.md and update the relevant sections, then update the Node Map in Agents.md, **if needed** (run Get-Date first to get today's date);
 - create a good human-readable summary for commit message.
 FYI: no manual changes were made.
-Please commit and push the changes with the corresponding commit message - see Sections 9.12 and 9.13 of Agents.md.
+Please commit and push the changes with the corresponding commit message - see the COMMIT PROTOCOL in [PART A] PRIME DIRECTIVES of Agents.md.
 ```
 or
 ```
 Please read Agents.md first.
 There are multiple changes made - please compare the project files with the repository, and review the detailed diff:
-- update the relevant sections of Agents.md, **if needed** (run Get-Date first to get today's date);
+- fetch Agent_Architecture.md and update the relevant sections, then update the Node Map in Agents.md, **if needed** (run Get-Date first to get today's date);
 - create a good human-readable summary for commit message.
 FYI: I manually made these changes:
 - AppResources.resx and AppResources.ru.resx: manually changed the text about app version.
-Please commit and push the changes with the corresponding commit message - see Sections 9.12 and 9.13 of Agents.md.
+Please commit and push the changes with the corresponding commit message - see the COMMIT PROTOCOL in [PART A] PRIME DIRECTIVES of Agents.md.
 ```
 
 ---
@@ -296,24 +291,24 @@ Please commit and push the changes with the corresponding commit message - see S
 [META] [Ticker Name] ticker
 Please read Agents.md fully before making any changes.
 It is the authoritative navigation guide for this codebase.
-Please pay a special attention to follow the Sections 9.11 and 9.14 of Agents.md recipes exactly for modifying files.
+Please pay special attention to follow the [PART A] PRIME DIRECTIVES and [PART B] AGENT TOOL-USE GUARDRAILS in Agents.md exactly.
 Please don't start any change before completing a full read of this prompt and plan of every affected location.
 
-Add a new ticker card called "[Ticker Name]" in the [Lab / Cosmos / Mirror / Eco Echoes] section, following guidelines in the Section 7.2 of Agents.md.
+Add a new ticker card called "[Ticker Name]" in the [Lab / Cosmos / Mirror / Eco Echoes] section, following guidelines in the *Adding a New Ticker Card* section of Agent_Recipes.md (fetch it first).
 It should show: [describe what the ticker calculates and displays]
 Ticker Details & Content:
 - UNICODE Symbol: [ ] (U+????)
 - Brief Text Template: "ılıb"
 
-Please follow the Section 7.2 of Agents.md recipe exactly, including:
-- Both .resx files (AppResources.resx and AppResources.ru.resx); please follow the Section 9.5 of Agents.md.
+Please follow the *Adding a New Ticker Card* recipe in Agent_Recipes.md exactly, including:
+- Both .resx files (AppResources.resx and AppResources.ru.resx); please follow the UI & DATA BINDING rules in [PART A] PRIME DIRECTIVES of Agents.md.
 - LocalizedResources.cs
 - Models/TickerResults.cs (new typed result subclass)
 - CalculationService.cs (new Calculate* method)
 - MainViewModel.cs
 - MainPage.xaml and MainPage.xaml.cs
 - A test in Aeonpulse.Tests
-- Agents.md; please follow the Section 9.11 of Agents.md.
+- Agent_Architecture.md and Agents.md; please follow the post-recipe update instructions in Agent_Recipes.md.
 
 Run the build and all tests before finishing.
 ```
@@ -323,10 +318,10 @@ Run the build and all tests before finishing.
 [META] Vibrant Nature ticker
 Please read Agents.md fully before making any changes.
 It is the authoritative navigation guide for this codebase.
-Please pay a special attention to follow the Sections 9.11 and 9.14 of Agents.md recipes exactly for modifying files.
+Please pay special attention to follow the [PART A] PRIME DIRECTIVES and [PART B] AGENT TOOL-USE GUARDRAILS in Agents.md exactly.
 Please don't start any change before completing a full read of this prompt and plan of every affected location.
 
-Add a new ticker card called "Vibrant Nature" in the Eco Echoes section, following guidelines in the Section 7.2 of Agents.md.
+Add a new ticker card called "Vibrant Nature" in the Eco Echoes section, following guidelines in the *Adding a New Ticker Card* section of Agent_Recipes.md (fetch it first).
 It should show: estimated number of new biological species described by science, and species driven to extinction globally, since the user's base date. Also show taxonomic breakdowns: insects/invertebrates, plants, and vertebrates.
 Ticker Details & Content:
 - UNICODE Symbol: 🦋 (U+1F98B)
@@ -348,8 +343,8 @@ Optional graphical part in Full view:
 - Any interactive elements: none; static diagram
 - Wiring in MainPage.xaml.cs: ApplyTaxonomyFlow() called on VibrantNatureExpanded / VibrantNature / ColorScheme / DisplayLanguage property changes; also called from constructor; sets TaxonomyDiscoveriesLabel and TaxonomyExtinctionsLabel text+colour; calls AssignTaxonomyFlowDrawable which creates TaxonomyFlowDrawable with counts + localised InLabels/OutLabels, then calls Invalidate()
 
-Please follow the Section 7.2 of Agents.md recipe exactly, including:
-- Both .resx files (AppResources.resx and AppResources.ru.resx); please follow the Section 9.5 of Agents.md.
+Please follow the *Adding a New Ticker Card* recipe in Agent_Recipes.md exactly, including:
+- Both .resx files (AppResources.resx and AppResources.ru.resx); please follow the UI & DATA BINDING rules in [PART A] PRIME DIRECTIVES of Agents.md.
 - LocalizedResources.cs
 - Models/TickerResults.cs (new typed result subclass)
 - CalculationService.cs (new Calculate* method)
@@ -357,7 +352,7 @@ Please follow the Section 7.2 of Agents.md recipe exactly, including:
 - MainPage.xaml and MainPage.xaml.cs
 - Views/TaxonomyFlowDrawable.cs (IDrawable implementation for the Sankey flow diagram)
 - A test in Aeonpulse.Tests
-- Agents.md; please follow the Section 9.11 of Agents.md.
+- Agent_Architecture.md and Agents.md; please follow the post-recipe update instructions in Agent_Recipes.md.
 
 Run the build and all tests before finishing.
 ```
@@ -367,7 +362,7 @@ Run the build and all tests before finishing.
 #### 3.2.3 Add a new colour scheme
 
 ```
-Please read Agents.md first, specifically Section 7.3 (Adding a New Colour Scheme).
+Please read Agents.md first, then fetch Agent_Recipes.md and read the *Adding a New Colour Scheme* section.
 
 Add a new colour scheme called "[Name]".
 Colours:
@@ -376,7 +371,7 @@ Colours:
   Secondary accent: #...
   [list all 12 colour keys from ThemeService]
 
-Please follow Section 7.3 exactly. Run the build before finishing.
+Please follow the *Adding a New Colour Scheme* recipe exactly. Run the build before finishing.
 ```
 
 ---
@@ -384,8 +379,8 @@ Please follow Section 7.3 exactly. Run the build before finishing.
 #### 3.2.4 Add a new language
 
 ```
-Please read Agents.md first, specifically Sections 7.4 and 6.11 (Adding a New Language).
-Please pay a special attention to follow the Sections 9.11 and 9.14 of Agents.md recipes exactly for modifying files.
+Please read Agents.md first. Then fetch Agent_Recipes.md and read *Adding a New Language*, and fetch Agent_Ops.md and read *Adding a New Language (Build Steps Only)*.
+Please pay special attention to follow the [PART A] PRIME DIRECTIVES and [PART B] AGENT TOOL-USE GUARDRAILS in Agents.md exactly for modifying files.
 
 Add [language name] ([ISO code, e.g. "de"]) as a new display language.
 I will provide the translated strings separately.
@@ -395,7 +390,7 @@ Please:
 2. Add the language constant and ApplyLanguage case in MainViewModel
 3. Add the radio button in SettingsPopup.xaml and its handler in SettingsPopup.xaml.cs
 4. Update LocalizedResources.cs
-5. Update Agents.md (Sections 1.1, 5/Node 7, 7.4)
+5. Update Agent_Architecture.md and Agents.md as instructed in Agent_Recipes.md
 Leave the translated string values as placeholders - I will fill them in manually.
 Run the build before finishing.
 ```
@@ -405,13 +400,13 @@ Run the build before finishing.
 #### 3.2.5 Add a new collapsible section
 
 ```
-Please read Agents.md first, specifically Section 7.1 (Adding a New Section).
+Please read Agents.md first, then fetch Agent_Recipes.md and read the *Adding a New Collapsible Section* section.
 
 Add a new collapsible section called "[Name]" after the [Lab / Cosmos / Mirror / Eco Echoes] section.
 It will initially contain no ticker cards.
 
-Please follow Section 7.1 exactly, including .resx updates, LocalizedResources,
-MainViewModel, MainPage.xaml, and Agents.md. Run the build before finishing.
+Please follow the *Adding a New Collapsible Section* recipe exactly, including .resx updates, LocalizedResources,
+MainViewModel, MainPage.xaml, Agent_Architecture.md, and Agents.md. Run the build before finishing.
 ```
 
 ---
@@ -419,7 +414,7 @@ MainViewModel, MainPage.xaml, and Agents.md. Run the build before finishing.
 #### 3.2.6 Change a text size or color scheme default
 
 ```
-Please read Agents.md first, specifically Sections 9.3 and 9.4.
+Please read Agents.md first, then fetch Agent_Architecture.md and read the *Theme and Font Size Flow* section.
 
 I want to change the default value of [color key / font size key].
 Current value: [...]
@@ -434,7 +429,7 @@ Run the build before finishing.
 #### 3.2.7 Refactor or clean up a specific file
 
 ```
-Please read Agents.md first, paying special attention to Sections 9 (Guardrails).
+Please read Agents.md first, paying special attention to [PART A] PRIME DIRECTIVES and [PART B] AGENT TOOL-USE GUARDRAILS.
 
 Please refactor [filename]. Goal: [describe what you want improved, e.g.
 "reduce duplication in the three refresh command lambdas in MainViewModel"].
@@ -450,7 +445,7 @@ Run the build and all tests before finishing.
 Please read Agents.md first.
 
 I manually made the following change: [describe what you changed and in which file].
-Please update Agents.md to reflect this change, following the rules in Section 9.11.
+Please fetch Agent_Architecture.md and update the relevant sections to reflect this change. Then update the Node Map in Agents.md.
 Update the "Last updated" date by running Get-Date first.
 ```
 
@@ -648,11 +643,11 @@ Current category tokens:
 
 1. **Run the app in Debug** on the target platform.
 2. **Reproduce the issue** - trigger the specific user action.
-3. **Capture the log output** (see Section 5 below for per-platform instructions).
+3. **Capture the log output** (see below for per-platform instructions).
 4. **Paste the relevant log lines** into the AI chat with this prompt:
 
 ```
-Please read Agents.md first, specifically Sections 8.1 and 8.5.
+Please read Agents.md first, then fetch Agent_Ops.md and read the *Logging Infrastructure and AeonLog Gateway* and *Diagnosing Common Failure Modes* sections.
 
 I am seeing [describe the symptom].
 Here is the log output captured while reproducing it:
@@ -768,7 +763,7 @@ Expected output: **300 tests, 0 failures**.
 
 - After **any** change to `Services/CalculationService.cs`
 - After adding a new calculation method
-- Before every commit (it is item 16 in the `Agents.md` Section 9.12 checklist)
+- Before every commit (as required by the COMMIT PROTOCOL in [PART A] PRIME DIRECTIVES of `Agents.md`)
 
 ### 7.2 Asking AI to add tests
 
@@ -837,4 +832,4 @@ Get-ChildItem -Path "C:\Dev\Aeonpulse" -Filter "*.xaml" -Recurse |
 ```
 Please read Agents.md first.
 I manually made these changes: [describe]
-Please update the relevant sections of Agents.md (run Get-Date first to get today's date).
+Please fetch Agent_Architecture.md and update the relevant sections, then update the Node Map in Agents.md (run Get-Date first to get today's date).
